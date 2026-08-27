@@ -4314,25 +4314,49 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         '<div class="pop-picker-body">' + items + '</div></div>';
       root.appendChild(overlay);
 
-      /* 锚定定位：picker 出现在触发按钮下方、右对齐；渲染后重新测量确保不溢出 */
+      /* 锚定定位：picker 默认出现在触发按钮下方、右对齐；下方空间不足则翻转到上方；
+         两侧都放不下时夹回视口内（picker 自带 overflow:auto 兜底）。
+         关键：用真实 offsetHeight 计算，并打开前把触发按钮滚到留有足够空间的位置，
+         避免首帧 offsetHeight=0 估算导致选项被屏幕底缘切掉。 */
       if (anchor && anchor.getBoundingClientRect) {
         var picker = overlay.querySelector('.pop-picker');
-        /* 用 right 代替 left 做右对齐：从视口右边缘往左算，天然防溢出 */
+        /* 视口高度优先用 visualViewport（iOS Safari URL 栏伸缩时仍准确） */
+        function _vh() {
+          return (window.visualViewport && window.visualViewport.height)
+            ? Math.min(window.innerHeight, window.visualViewport.height)
+            : window.innerHeight;
+        }
+        /* 先把触发按钮滚到下方留有足够空间的位置，避免贴着屏幕底 */
+        try {
+          var ar0 = anchor.getBoundingClientRect();
+          var SPACE = 240;   // picker 大致所需下方空间（2-3 个选项 + 头部）
+          if (ar0.bottom > _vh() - SPACE && ar0.top > SPACE) {
+            anchor.scrollIntoView({ block: 'center', behavior: 'instant' });
+          }
+        } catch (e) {}
         function positionPicker() {
           var ar = anchor.getBoundingClientRect();
           var vw = window.innerWidth;
-          var vh = window.innerHeight;
-          /* right = 视口宽度 - 锚点右边缘 + 小间距 */
+          var vh = _vh();
           picker.style.right = Math.max(8, vw - ar.right + 8) + 'px';
           picker.style.left = 'auto';
+          var ph = picker.offsetHeight;
           var top = ar.bottom + 6;
-          /* 超出屏幕底部则翻转到上方 */
-          if (top + (picker.offsetHeight || 220) > vh - 8) top = Math.max(8, ar.top - (picker.offsetHeight || 220) - 6);
+          if (ph > 0) {
+            /* 真实高度已知：先尝试下方；溢出则翻转上方；都不够则夹回视口 */
+            if (top + ph > vh - 8) {
+              var flipTop = ar.top - ph - 6;
+              top = flipTop >= 8 ? flipTop : Math.max(8, vh - ph - 8);
+            }
+          } else {
+            /* 首帧兜底：用 220 估算先定位，rAF 后用真实值重定位 */
+            if (top + 220 > vh - 8) top = Math.max(8, ar.top - 220 - 6);
+          }
           picker.style.top = top + 'px';
         }
-        /* 首次定位（可能 offsetWidth 尚不准确），渲染帧后重新定位 */
         positionPicker();
-        requestAnimationFrame(positionPicker);
+        /* 双 rAF 确保 layout 完成、offsetHeight 已准确（首帧的 0 估算不再生效） */
+        requestAnimationFrame(function () { requestAnimationFrame(positionPicker); });
       }
 
       UI.lock();
