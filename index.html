@@ -7004,6 +7004,12 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
               if (!x) return;
               var imp = (window.JWLink && window.JWLink.impactText) ? window.JWLink.impactText('task', x) : [];
               function doDel() {
+                if (x.caseTodoId && window.JWLink) {
+                  try {
+                    var c = window.JWLink.find(x.caseId);
+                    if (c) c.todos = (c.todos || []).filter(function (td) { return td.id !== x.caseTodoId; });
+                  } catch (e) {}
+                }
                 if (window.JWLink) { try { window.JWLink.cascadeFromTask(x.id); } catch (e) {} }
                 D().tasks = D().tasks.filter(function (a) { return a.id !== x.id; });
                 Store.save(); App.refresh(); if (redraw) redraw();
@@ -7045,7 +7051,38 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           Object.keys(v).forEach(function (k) { x[k] = v[k]; });
           // 编辑时若改为「已完成」则补 doneAt；其余状态清空，与勾选切换语义一致
           if (v.status === 'done') { if (!x.doneAt) x.doneAt = U.today(); } else { x.doneAt = ''; }
-          /* 关联案件且刚被改为已完成：先退回待办，弹窗登记后再置为已完成（登记时已写好案件进度+留痕，无需再 syncEdit） */
+          // 同步更新关联的案件待办
+          if (x.caseTodoId && window.JWLink) {
+            try {
+              var c = window.JWLink.find(x.caseId);
+              if (c) {
+                var td = (c.todos || []).filter(function (o) { return o.id === x.caseTodoId; })[0];
+                if (td) { td.t = x.title; td.due = x.due || ''; }
+              }
+            } catch (e) {}
+          }
+          /* 关联案件待办且刚被改为已完成：同步完成案件待办 */
+          if (!wasDone0 && x.status === 'done' && x.caseTodoId && window.JWLink) {
+            try {
+              var c2 = window.JWLink.find(x.caseId);
+              if (c2) {
+                var td2 = null, rest = [];
+                (c2.todos || []).forEach(function (o) { if (o.id === x.caseTodoId) td2 = o; else rest.push(o); });
+                if (td2) {
+                  c2.todos = rest;
+                  if (!Array.isArray(c2.logs)) c2.logs = [];
+                  c2.logs.push({
+                    id: U.uid(), d: U.today(),
+                    t: td2.t + (td2.due ? '（原定 ' + td2.due + '）' : ''),
+                    src: 'task', srcId: x.id
+                  });
+                }
+              }
+            } catch (e) {}
+            Store.save(); App.refresh(); U.toast('已完成，并同步到案件办理进度');
+            return;
+          }
+          /* 关联案件（但没有对应待办）且刚被改为已完成：弹窗登记办理进度 */
           if (!wasDone0 && x.status === 'done' && tLinked(x)) {
             x.status = 'todo'; x.doneAt = '';
             Store.save();
@@ -7062,6 +7099,12 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         if (!x) return;
         var imp = (window.JWLink && window.JWLink.impactText) ? window.JWLink.impactText('task', x) : [];
         function doDel() {
+          if (x.caseTodoId && window.JWLink) {
+            try {
+              var c = window.JWLink.find(x.caseId);
+              if (c) c.todos = (c.todos || []).filter(function (td) { return td.id !== x.caseTodoId; });
+            } catch (e) {}
+          }
           if (window.JWLink) { try { window.JWLink.cascadeFromTask(x.id); } catch (e) {} }
           D().tasks = D().tasks.filter(function (a) { return a.id !== x.id; });
           Store.save(); App.refresh();
@@ -7074,14 +7117,44 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       done: function (t) {
         var x = D().tasks.filter(function (a) { return a.id === t.dataset.id; })[0];
         if (!x) return;
-        /* 取消完成：撤掉案件办理进度里由本任务同步的那条 */
+        /* 取消完成：撤掉案件办理进度里由本任务同步的那条，并恢复关联的案件待办 */
         if (x.status === 'done') {
           x.status = 'todo'; x.doneAt = '';
+          if (x.caseTodoId && window.JWLink) {
+            try {
+              var c = window.JWLink.find(x.caseId);
+              if (c && c.status !== '已了结' && !(c.todos || []).some(function (td) { return td.id === x.caseTodoId; })) {
+                c.todos.push({ id: x.caseTodoId, t: x.title, due: x.due || '', done: false, created: U.today(), taskId: x.id });
+              }
+            } catch (e) {}
+          }
           if (window.JWLink) { try { window.JWLink.removeBySrc('task', x.id); } catch (e) {} }
           Store.save(); App.refresh();
           return;
         }
-        /* 关联了案件：弹窗登记办理进度（完成日期 / 起止时间 / 工作分类 / 办理内容） */
+        /* 关联了具体案件待办：直接同步完成案件待办，无需再次弹窗登记 */
+        if (x.caseTodoId && window.JWLink) {
+          try {
+            var c2 = window.JWLink.find(x.caseId);
+            if (c2) {
+              var td = null, rest = [];
+              (c2.todos || []).forEach(function (o) { if (o.id === x.caseTodoId) td = o; else rest.push(o); });
+              if (td) {
+                c2.todos = rest;
+                if (!Array.isArray(c2.logs)) c2.logs = [];
+                c2.logs.push({
+                  id: U.uid(), d: U.today(),
+                  t: td.t + (td.due ? '（原定 ' + td.due + '）' : ''),
+                  src: 'task', srcId: x.id
+                });
+              }
+            }
+          } catch (e) {}
+          x.status = 'done'; x.doneAt = U.today();
+          Store.save(); App.refresh(); U.toast('已完成，并同步到案件办理进度');
+          return;
+        }
+        /* 关联了案件（但没有对应待办）：弹窗登记办理进度（完成日期 / 起止时间 / 工作分类 / 办理内容） */
         if (tLinked(x)) {
           var rep = repeatDays(x);
           tAskDone(x, function () {
@@ -15810,10 +15883,12 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       var t = U.today();
       var items = [];
       (D().tasks || []).forEach(function (x) {
+        if (x.caseTodoId) return; // 案件待办已同步到纪检监察，避免在首页重复出现
         if (x.status !== 'done' && x.due && U.dayDiff(t, x.due) < 0)
           items.push({ kind: '逾期', name: x.title, go: 'tasks', warn: true });
       });
       (D().tasks || []).filter(function (x) {
+        if (x.caseTodoId) return false;
         return x.status !== 'done' && x.due && U.dayDiff(t, x.due) === 0;
       }).slice(0, 3).forEach(function (x) {
         items.push({ kind: '今天', name: x.title, go: 'tasks' });
@@ -16505,17 +16580,26 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   function findSubmit(id) { return findIn(J().submits, id); }
   function findPun(id) { return findIn(J().punish, id); }
 
-  /* 待办「完成」→ 自动归类到办理进展（数据层操作，非渲染函数） */
+  /* 待办「完成」→ 自动归类到办理进展（数据层操作，非渲染函数）
+     若该待办通过「同时创建待办」关联了任务，则同步把任务标记为完成。 */
   function doneTodo(cid, tid) {
     var x = findCase(cid); if (!x) return;
     var td = null, rest = [];
     (x.todos || []).forEach(function (o) { if (o.id === tid) td = o; else rest.push(o); });
     if (!td) return;
     x.todos = rest;
+    if (td.taskId) {
+      var task = (D().tasks || []).filter(function (a) { return a.id === td.taskId; })[0];
+      if (task && task.status !== 'done') {
+        task.status = 'done';
+        task.doneAt = U.today();
+      }
+    }
     if (!Array.isArray(x.logs)) x.logs = [];
     x.logs.push({
       id: U.uid(), d: U.today(),
-      t: td.t + (td.due ? '（原定 ' + td.due + '）' : '')
+      t: td.t + (td.due ? '（原定 ' + td.due + '）' : ''),
+      src: td.taskId ? 'task' : '', srcId: td.taskId || ''
     });
     Store.save(); App.refresh(); U.toast('已完成');
   }
@@ -17282,7 +17366,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         window.ListPager.resetPg('jiwei:logs:' + t.dataset.id);
         App.refresh();
       },
-      /* 待办节点：改内容与期限 */
+      /* 待办节点：改内容与期限；若关联了任务则同步更新任务 */
       cTodoEdit: function (t) {
         var x = findCase(t.dataset.id); if (!x) return;
         var td = findIn(x.todos || [], t.dataset.tid); if (!td) return;
@@ -17296,11 +17380,17 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         }).then(function (v) {
           if (!v || !v.t) return;
           td.t = v.t; td.due = v.due || '';
+          if (td.taskId) {
+            var task = (D().tasks || []).filter(function (a) { return a.id === td.taskId; })[0];
+            if (task) { task.title = v.t; task.due = v.due || ''; }
+          }
           Store.save(); App.refresh(); U.toast('待办已更新');
         });
       },
 
-      /* ---- 新增工作内容：类似工作留痕，可选同步生成案件待办 ---- */
+      /* ---- 新增工作内容：可选同步生成案件待办 + 任务待办 ----
+         勾选「同时创建待办」时：工作内容变成待办，写入案件 todos 并同步创建 D().tasks 任务；
+         不勾选时：仅作为一条办理进度记录写入 logs。 */
       cAdd: function (t) {
         var x = findCase(t.dataset.id); if (!x) return;
         UI.form({
@@ -17317,26 +17407,46 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           ]
         }).then(function (v) {
           if (!v || !v.t) return;
-          if (!Array.isArray(x.logs)) x.logs = [];
-          x.logs.push({
-            id: U.uid(),
-            d: v.d || U.today(),
-            start: v.start || '',
-            end: v.end || '',
-            cat: v.cat || '',
-            t: v.t
-          });
           if (v.addTodo) {
+            var todoId = U.uid(), taskId = U.uid();
             if (!Array.isArray(x.todos)) x.todos = [];
             x.todos.push({
-              id: U.uid(),
+              id: todoId,
               t: v.t,
               due: v.todoDue || '',
               done: false,
-              created: U.today()
+              created: U.today(),
+              taskId: taskId
+            });
+            D().tasks.push({
+              id: taskId,
+              title: v.t,
+              status: 'todo',
+              due: v.todoDue || '',
+              created: U.today(),
+              tag: '工作',
+              desc: '',
+              subs: [],
+              isRepeat: false,
+              repeat: 'none',
+              repeatN: null,
+              caseId: x.id,
+              caseTodoId: todoId,
+              wcat: v.cat || '',
+              startTime: v.start || '',
+              endTime: v.end || ''
             });
             U.toast('已记录工作内容，并创建待办');
           } else {
+            if (!Array.isArray(x.logs)) x.logs = [];
+            x.logs.push({
+              id: U.uid(),
+              d: v.d || U.today(),
+              start: v.start || '',
+              end: v.end || '',
+              cat: v.cat || '',
+              t: v.t
+            });
             U.toast('已记录工作内容');
           }
           Store.save(); App.refresh();
@@ -17430,7 +17540,11 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       cTodoDoneToday: function (t) { doneTodo(t.dataset.id, t.dataset.tid); },
       cTodoDel: function (t) {
         var x = findCase(t.dataset.id); if (!x) return;
+        var td = (x.todos || []).filter(function (o) { return o.id === t.dataset.tid; })[0];
         x.todos = (x.todos || []).filter(function (td) { return td.id !== t.dataset.tid; });
+        if (td && td.taskId) {
+          D().tasks = (D().tasks || []).filter(function (a) { return a.id !== td.taskId; });
+        }
         Store.save(); App.refresh();
       },
 
