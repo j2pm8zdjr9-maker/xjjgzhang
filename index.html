@@ -16995,7 +16995,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   function logSortKey(l) { return (l.d || '0000-00-00') + ' ' + (l.start || '99:99'); }
   function recordsHTML(x) {
     var pendTodos = (x.todos || []).filter(function (td) { return !td.done; });
-    var allLogs = x.logs || [];
+    /* 「办结」日志已取消自动生成（阶段条显示办结时间），旧数据在此过滤不再展示 */
+    var allLogs = (x.logs || []).filter(function (l) { return l.t !== '办结'; });
     var total = pendTodos.length + allLogs.length;
     var desc = jwLogDesc[x.id] !== false;   // 默认最新在上
     var ns = 'jiwei:logs:' + x.id;
@@ -17624,7 +17625,12 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       },
       cEdit: function (t) {
         var x = findCase(t.dataset.id); if (!x) return;
-        UI.form({ title: '编辑案件', values: Object.assign({}, x), fields: caseFields(), danger: true, dangerText: '删除案件',
+        /* 已了结案件：编辑表单追加「处理结果」，可直接修改 */
+        var fields = caseFields();
+        if (x.status === '已了结') fields = fields.concat([
+          { k: 'suggest', label: '处理结果', type: 'textarea', full: true, rows: 3 }
+        ]);
+        UI.form({ title: '编辑案件', values: Object.assign({}, x), fields: fields, danger: true, dangerText: '删除案件',
           onDanger: function () {
             UI.del(x.title || '该案件', function () {
               J().cases = J().cases.filter(function (a) { return a.id !== x.id; });
@@ -17843,14 +17849,13 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
             x.stageLog = [
               { id: U.uid(), d: v.d, stage: '线索处置' },
               { id: U.uid(), d: v.d, stage: '初步核实' },
-              { id: U.uid(), d: v.d, stage: '予以了结' }
+              { id: U.uid(), d: v.d, stage: '予以了结', note: v.result || '' }
             ];
             x.stage = '予以了结';
             x.status = '已了结';
             x.closeDate = v.d || U.today();
             x.suggest = v.result || '';
-            if (!Array.isArray(x.logs)) x.logs = [];
-            x.logs.push({ id: U.uid(), d: x.closeDate, t: '办结' });
+            /* 不再生成「办结」日志：阶段条已展示办结时间（兼容旧数据在渲染时过滤） */
             U.toast('已办结并登记处理结果');
           } else {
             addStage(x, v.d, v.stage);
@@ -17869,13 +17874,14 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         if (sid) s = findIn(arr, sid);
         if (!s && !isNaN(idx) && arr[idx]) s = arr[idx];
         if (!s) return;
+        var isClose = s.stage === '予以了结';
         UI.form({
           title: '调整阶段日期 · ' + (s.stage || ''), okText: '保存',
           danger: true, dangerText: '删除',
-          values: { d: s.d || U.today(), note: s.note || '' },
+          values: { d: s.d || U.today(), note: s.note || (isClose ? (x.suggest || '') : '') },
           fields: [
             { k: 'd', label: '阶段日期', type: 'date', req: true, def: U.today() },
-            { k: 'note', label: '阶段说明', type: 'textarea', full: true, rows: 3 }
+            { k: 'note', label: isClose ? '处理结果' : '阶段说明', type: 'textarea', full: true, rows: 3 }
           ],
           onDanger: function () {
             UI.confirm('删除阶段节点', '确定删除「' + (s.stage || '') + '」阶段节点？删除后不可恢复。', '删除', true).then(function (yes) {
@@ -17899,7 +17905,9 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           if (!v) return;
           s.d = v.d || U.today();
           s.note = v.note || '';
-          Store.save(); App.refresh(); U.toast('「' + (s.stage || '') + '」日期已更新');
+          /* 予以了结节点：说明即处理结果，同步到案件 suggest 保持一致 */
+          if (isClose) x.suggest = s.note;
+          Store.save(); App.refresh(); U.toast('「' + (s.stage || '') + '」已更新');
         });
       },
 
