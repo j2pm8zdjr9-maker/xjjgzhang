@@ -491,7 +491,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 }
 .body-card .body-card-info{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
 .body-card .body-card-t{ font-size:11.5px; color:var(--brown-3); font-weight:600; letter-spacing:.2px; line-height:1.2; }
-.body-card .body-card-v{ font-size:16px; color:var(--brown-1); font-weight:700; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.body-card .body-card-v{ font-size:16px; color:var(--brown); font-weight:700; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .body-card .body-card-s{ font-size:10.5px; color:var(--brown-3); line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .body-card.on{ border-color:var(--bd-c); background:var(--bd-bg); box-shadow:0 2px 8px rgba(60,40,20,.06); }
 /* 4 子项目主色：体重=绿、饮水=蓝、运动=橙、饮食=粉 */
@@ -552,7 +552,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .cat-cap-ic{ font-size:16px; line-height:1; }
 .cat-cap-name{ flex:1; font-weight:600; }
 .cat-cap-count{ font-size:11px; color:#fff; background:var(--olive); border-radius:10px; padding:1px 7px; min-width:18px; text-align:center; }
-.cat-cap-caret{ font-size:11px; color:var(--grey); }
+.cat-cap-caret{ font-size:11px; color:var(--brown-3); }
 .cat-detail{
   padding:10px 12px 12px; margin:-4px 0 6px;
   border:1px solid var(--olive-24); border-top:none;
@@ -1030,7 +1030,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .charge-ops, .refuel-ops{
   display:flex; flex-wrap:wrap; gap:6px; align-items:center;
   padding-bottom:8px; margin-bottom:6px;
-  border-bottom:1px solid var(--line-soft);
+  border-bottom:1px solid var(--line);
 }
 .fold-ops .link-btn, .buy-item-ops .link-btn,
 .consum-ops .link-btn, .task-ops-row .link-btn,
@@ -1139,7 +1139,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .cat-rec-main{ flex:1; min-width:0; display:flex; align-items:center; }
 .cat-rec-caret{ flex-shrink:0; color:#bbb; font-size:12px; margin-top:3px; line-height:1; }
 .cat-rec-detail{ padding:10px 12px 12px; border-radius:0 0 10px 10px; background:var(--card); border:1px solid var(--line); border-top:none; }
-.cat-rec-ops{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:8px; padding-bottom:8px; border-bottom:1px solid var(--line-soft); }
+.cat-rec-ops{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:8px; padding-bottom:8px; border-bottom:1px solid var(--line); }
 .cat-rec-ops .link-btn{ font-size:13px; padding:3px 10px; border-radius:6px; }
 
 /* 愿望清单折叠行（参考 task-row / stock-ov-row 模式） */
@@ -1153,7 +1153,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .wish-row-meta{ display:flex; flex-wrap:wrap; gap:5px; align-items:center; font-size:12px; line-height:1.45; color:var(--brown-3); }
 .wish-row-caret{ flex-shrink:0; color:#bbb; font-size:12px; margin-top:3px; line-height:1; }
 .wish-detail{ padding:10px 12px 12px; border-radius:0 0 10px 10px; background:var(--card); border:1px solid var(--line); border-top:none; }
-.wish-ops{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:8px; padding-bottom:8px; border-bottom:1px solid var(--line-soft); }
+.wish-ops{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:8px; padding-bottom:8px; border-bottom:1px solid var(--line); }
 .wish-ops .link-btn{ font-size:13px; padding:3px 10px; border-radius:6px; }
 
 /* 身材测量记录行（参考 task-row / stock-ov-row 模式） */
@@ -1530,7 +1530,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .diary-item .di-pin{ font-size:20px; flex:0 0 54px; text-align:center; }
 .diary-item.pinned{ border-color:var(--olive-24); background:linear-gradient(0deg,var(--olive-05),var(--olive-05)); }
 .wl-hist-row.pinned{ border-color:var(--olive-24); background:linear-gradient(0deg,var(--olive-05),var(--olive-05)); }
-.wl-hist-row.pinned.open{ background:var(--olive-06); }
+.wl-hist-row.pinned.open{ background:var(--olive-10); }
 .di-emoji{ font-size:15px; }
 .di-tags{ display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
 .item-note{ color:var(--brown-2); }
@@ -1950,7 +1950,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   font-size:12.5px; color:var(--brown-2); background:none; border:none;
   cursor:pointer; padding:2px 8px; border-radius:6px; font-weight:500;
 }
-.sch-today-btn:active{ background:var(--olive-06); color:var(--brown); }
+.sch-today-btn:active{ background:var(--olive-10); color:var(--brown); }
 .sch-week{
   display:grid; grid-template-columns:repeat(7,1fr); gap:2px;
   margin-bottom:4px;
@@ -2061,7 +2061,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .sch-note-body{
   margin-top:6px; font-size:13px; color:var(--brown);
   line-height:1.65; word-break:break-word; white-space:pre-wrap;
-  background:var(--olive-04); border-radius:8px; padding:8px 10px;
+  background:var(--olive-05); border-radius:8px; padding:8px 10px;
 }
 .sch-item-ops-inline{
   display:flex; gap:6px; align-items:center; margin-top:8px;
@@ -2119,7 +2119,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   padding:14px 14px; border-radius:14px; border:1px solid var(--line);
   background:var(--card); cursor:pointer; transition:background .15s, border-color .15s;
 }
-.sync-opt:active{ background:var(--olive-06); border-color:var(--olive); }
+.sync-opt:active{ background:var(--olive-10); border-color:var(--olive); }
 .sync-ico{
   flex:0 0 44px; width:44px; height:44px; border-radius:12px;
   display:flex; align-items:center; justify-content:center; font-size:22px;
@@ -2156,7 +2156,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .sch-vtab{ flex:1; padding:8px 0; font-size:13.5px; font-weight:560; color:var(--brown-2); background:none; border:none; border-right:1px solid var(--line); cursor:pointer; transition:background .15s, color .15s; }
 .sch-vtab:last-child{ border-right:none; }
 .sch-vtab.on{ background:var(--olive-soft); color:var(--olive-deep); }
-.sch-vtab:active{ background:var(--olive-06); }
+.sch-vtab:active{ background:var(--olive-10); }
 
 /* 全部视图工具栏 */
 .sch-all-toolbar{ display:flex; gap:8px; align-items:center; margin-bottom:8px; }
@@ -2228,7 +2228,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   cursor:pointer; transition:background .15s, color .15s; white-space:nowrap; }
 .baby-sntab:last-child{ border-right:none; }
 .baby-sntab.on{ background:var(--olive-soft); color:var(--olive-deep); font-weight:650; }
-.baby-sntab:active{ background:var(--olive-06); }
+.baby-sntab:active{ background:var(--olive-10); }
 
 /* 里程碑 */
 .milestone-tag{ display:inline-block; font-size:11px; font-weight:600;
@@ -2253,7 +2253,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .dim-bar-label{ display:flex; justify-content:space-between; align-items:center;
   font-size:13px; margin-bottom:4px; }
 .dim-dot{ display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:5px; }
-.dim-track{ height:8px; background:var(--line-soft); border-radius:4px; overflow:hidden; }
+.dim-track{ height:8px; background:var(--line); border-radius:4px; overflow:hidden; }
 .dim-fill{ height:100%; border-radius:4px; transition:width .3s; }
 
 /* 早教任务卡片 */
@@ -2440,103 +2440,105 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 </style>
 
 <style data-page-node-id="jwStyleNode">
-  /* ================= ⚖️ 纪检监察工作模块 ================= */
-  .jw-kv{ margin-top:8px; border-top:1px dashed var(--line); padding-top:8px; }
+  /* ================= ⚖️ 纪检监察工作模块 =================
+     色调调整：保持柔和底色的同时，增强边界、文字、分组的对比度，
+     让待办/已办/阶段/信息区层次更清晰，避免一片米糊。 */
+  .jw-kv{ margin-top:8px; border-top:1px dashed var(--line-2); padding-top:8px; }
   .jw-kv-row{ display:flex; gap:10px; align-items:flex-start; padding:3px 0; font-size:13px; line-height:1.6; }
-  .jw-k{ flex:0 0 92px; color:var(--brown-3); }
+  .jw-k{ flex:0 0 92px; color:var(--brown-2); font-weight:500; }
   .jw-v{ flex:1; min-width:0; color:var(--brown); word-break:break-word; overflow-wrap:anywhere; }
-  .jw-logs{ margin-top:10px; border-top:1px dashed var(--line); padding-top:8px; }
-  .jw-logs-h{ font-size:12.5px; color:var(--brown-3); margin-bottom:4px; }
+  .jw-logs{ margin-top:10px; border-top:1px dashed var(--line-2); padding-top:8px; }
+  .jw-logs-h{ font-size:13px; color:var(--brown-2); font-weight:600; margin-bottom:6px; }
   .jw-log{ display:flex; align-items:center; gap:8px; padding:5px 0; border-bottom:1px solid var(--line-2); font-size:13px; }
   .jw-log:last-child{ border-bottom:0; }
-  .jw-log-d{ flex:0 0 auto; color:var(--brown-3); font-size:12px; }
+  .jw-log-d{ flex:0 0 auto; color:var(--brown-2); font-size:12px; }
   .jw-log-t{ flex:1; min-width:0; color:var(--brown); word-break:break-word; overflow-wrap:anywhere; }
   .jw-table{ width:100%; border-collapse:collapse; font-size:13px; margin-top:10px; }
   .jw-table th,.jw-table td{ border:1px solid var(--line-2); padding:7px 8px; text-align:left; vertical-align:top; line-height:1.55; }
-  .jw-table th{ background:var(--olive-05); color:var(--brown-2); font-weight:600; font-size:12.5px; white-space:nowrap; }
+  .jw-table th{ background:var(--olive-10); color:var(--brown); font-weight:600; font-size:12.5px; white-space:nowrap; }
   .jw-table td.jw-c{ white-space:nowrap; }
-  .jw-calc-out{ margin-top:10px; border:1px solid var(--line); border-radius:11px; background:var(--olive-05); padding:10px 12px; }
+  .jw-calc-out{ margin-top:10px; border:1px solid var(--line-2); border-radius:11px; background:var(--olive-10); padding:10px 12px; }
   .jw-co-row{ display:flex; justify-content:space-between; gap:10px; padding:4px 0; font-size:13px; border-bottom:1px dashed var(--line-2); }
   .jw-co-row:last-child{ border-bottom:0; }
-  .jw-co-row span{ color:var(--brown-3); flex:0 0 auto; }
+  .jw-co-row span{ color:var(--brown-2); flex:0 0 auto; }
   .jw-co-row b{ color:var(--brown); text-align:right; }
-  .jw-note{ border:1px solid var(--line-2); border-left:3px solid var(--olive-soft); background:var(--olive-05); border-radius:9px; padding:9px 11px; font-size:12.5px; line-height:1.75; color:var(--brown-2); margin-bottom:10px; }
+  .jw-note{ border:1px solid var(--line-2); border-left:3px solid var(--olive); background:var(--olive-10); border-radius:9px; padding:9px 11px; font-size:12.5px; line-height:1.75; color:var(--brown); margin-bottom:10px; }
   /* 已办结案件：折叠态也展示处理结果摘要 */
-  .jw-suggest{ margin-top:6px; font-size:12.5px; line-height:1.55; color:var(--brown-2); background:var(--olive-05); border-left:3px solid var(--olive-soft); border-radius:6px; padding:6px 9px; }
+  .jw-suggest{ margin-top:6px; font-size:12.5px; line-height:1.55; color:var(--brown); background:var(--olive-10); border-left:3px solid var(--olive); border-radius:6px; padding:6px 9px; }
   .jw-demo-bar{ display:flex; justify-content:flex-end; margin:0 0 10px; }
   /* 案件待办：完成即归入办理进展 */
-  .jw-todo{ display:flex; align-items:flex-start; gap:8px; padding:5px 0; border-bottom:1px solid var(--line-2); font-size:13px; }
+  .jw-todo{ display:flex; align-items:flex-start; gap:8px; padding:8px 10px; border-bottom:1px solid var(--line-2); font-size:13px; background:var(--card); border-radius:8px; margin-bottom:6px; }
   .jw-todo:last-of-type{ border-bottom:0; }
   .jw-tk{
     flex:0 0 auto; width:34px; height:34px; min-width:34px; padding:0; margin-top:1px;
-    border:1.5px solid var(--olive-soft); border-radius:50%; background:#fff; color:var(--olive);
+    border:2px solid var(--olive); border-radius:50%; background:#fff; color:var(--olive);
     font-size:15px; line-height:1; display:inline-flex; align-items:center; justify-content:center; cursor:pointer;
   }
-  .jw-tk:hover{ background:var(--olive-10); border-color:var(--olive); }
-  .jw-todo.od .jw-tk{ border-color:var(--danger); color:var(--danger); }
-  .jw-todo-t{ flex:1; min-width:0; color:var(--brown); word-break:break-word; overflow-wrap:anywhere; padding-top:8px; line-height:1.5; }
-  .jw-todo.od .jw-todo-t{ color:#94402D; }
+  .jw-tk:hover{ background:var(--olive-10); border-color:var(--olive-deep); }
+  .jw-todo.od .jw-tk{ border-color:var(--danger); color:var(--danger); background:#FFF5F3; }
+  .jw-todo-t{ flex:1; min-width:0; color:var(--brown); word-break:break-word; overflow-wrap:anywhere; padding-top:8px; line-height:1.5; font-weight:500; }
+  .jw-todo.od .jw-todo-t{ color:var(--danger); }
   .jw-todo-b{ flex:0 0 auto; padding-top:8px; }
   .jw-quick{ display:flex; flex-wrap:wrap; gap:6px; margin-top:9px; }
   .jw-qb{
-    border:1px dashed var(--line); background:transparent; color:var(--brown-2);
+    border:1px dashed var(--brown-3); background:#fff; color:var(--brown-2);
     border-radius:20px; padding:6px 11px; font-size:12px; line-height:1.2; cursor:pointer; white-space:nowrap;
   }
-  .jw-qb:hover{ border-color:var(--olive-soft); color:var(--olive-darker); background:var(--olive-05); }
+  .jw-qb:hover{ border-color:var(--olive); color:var(--olive-darker); background:var(--olive-10); }
   /* 阶段进度条 */
-  .jw-stage-bar{ margin:6px 0 2px; padding:8px 10px; background:var(--bg-2); border-radius:8px; }
+  .jw-stage-bar{ margin:8px 0 4px; padding:10px 12px; background:var(--olive-10); border-radius:10px; border:1px solid var(--olive-16); }
   .jw-stage-track{ display:flex; align-items:flex-start; overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:2px; }
   .jw-stage-node{ flex:0 0 auto; width:62px; display:flex; flex-direction:column; align-items:center; }
   .jw-stage-dot{ width:26px; height:26px; min-width:26px; border-radius:50%; font-size:12px; display:inline-flex; align-items:center; justify-content:center;
-    background:#fff; border:2px solid var(--line); color:var(--muted); }
-  .jw-stage-dot.done{ background:var(--olive-05); border-color:var(--olive-soft); color:var(--olive); }
-  .jw-stage-dot.active{ background:var(--primary-08); border-color:var(--primary); color:var(--primary); font-weight:700; }
-  .jw-stage-name{ font-size:10px; color:var(--muted); margin-top:3px; line-height:1.2; text-align:center; }
-  .jw-stage-date{ font-size:9px; color:#aaa; margin-top:1px; }
-  .jw-stage-sep{ flex:0 0 18px; height:2px; background:var(--line); margin-top:12px; border-radius:2px; }
-  .jw-stage-sep.done{ background:var(--olive-soft); }
+    background:#fff; border:2px solid var(--line-2); color:var(--brown-3); }
+  .jw-stage-dot.done{ background:var(--olive-10); border-color:var(--olive); color:var(--olive-deep); }
+  .jw-stage-dot.active{ background:var(--olive-10); border-color:var(--olive); color:var(--olive-deep); font-weight:700; }
+  .jw-stage-name{ font-size:10px; color:var(--brown-2); font-weight:500; margin-top:3px; line-height:1.2; text-align:center; }
+  .jw-stage-date{ font-size:9px; color:var(--brown-3); margin-top:1px; }
+  .jw-stage-sep{ flex:0 0 18px; height:2px; background:var(--line-2); margin-top:12px; border-radius:2px; }
+  .jw-stage-sep.done{ background:var(--olive); }
   /* 办结日志高亮 */
-  .jw-log-close{ background:var(--bg-2); border-radius:6px; padding:4px 6px; }
+  .jw-log-close{ background:var(--olive-10); border-radius:6px; padding:4px 6px; }
   .jw-log-t-close{ color:var(--brown) !important; font-weight:600; }
 
   /* ---- 办理进度时间轴：点节点即可改时间 / 内容 ---- */
   .jw-logs-h{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
-  .jw-sort-btn{ flex:0 0 auto; border:1px solid var(--line); background:#fff; color:var(--brown-2);
+  .jw-sort-btn{ flex:0 0 auto; border:1px solid var(--line-2); background:#fff; color:var(--brown-2);
     border-radius:20px; padding:4px 10px; font-size:11.5px; line-height:1.2; cursor:pointer; white-space:nowrap; }
-  .jw-sort-btn:hover{ border-color:var(--olive-soft); color:var(--olive-darker); background:var(--olive-05); }
+  .jw-sort-btn:hover{ border-color:var(--olive); color:var(--olive-darker); background:var(--olive-10); }
   .jw-tl{ margin-top:4px; }
-  .jw-tl-group{ font-size:11.5px; color:var(--brown-3); margin:6px 0 2px; padding-left:2px; }
+  .jw-tl-group{ font-size:12px; color:var(--brown-2); font-weight:600; margin:8px 0 4px; padding-left:2px; }
   .jw-tl-group:first-child{ margin-top:0; }
   .jw-tl-item{ display:flex; gap:8px; }
   .jw-tl-rail{ flex:0 0 auto; width:14px; display:flex; flex-direction:column; align-items:center; }
-  .jw-tl-dot{ width:9px; height:9px; min-width:9px; border-radius:50%; background:var(--primary);
-    margin-top:5px; box-shadow:0 0 0 3px var(--primary-08); }
-  .jw-tl-dot.todo{ width:11px; height:11px; min-width:11px; background:#fff; border:2px solid var(--olive-soft); box-shadow:none; margin-top:4px; }
-  .jw-tl-dot.close{ background:var(--olive); box-shadow:0 0 0 3px var(--olive-10); }
+  .jw-tl-dot{ width:9px; height:9px; min-width:9px; border-radius:50%; background:var(--olive);
+    margin-top:5px; box-shadow:0 0 0 3px var(--olive-16); }
+  .jw-tl-dot.todo{ width:11px; height:11px; min-width:11px; background:#fff; border:2.5px solid var(--olive); box-shadow:none; margin-top:4px; }
+  .jw-tl-dot.close{ background:var(--olive); box-shadow:0 0 0 3px var(--olive-16); }
   .jw-tl-line{ flex:1 1 auto; width:2px; background:var(--line-2); margin:2px 0 0; min-height:14px; }
   .jw-tl-body{ flex:1; min-width:0; padding-bottom:6px; }
-  .jw-tl-main{ border:1px solid var(--line-2); border-radius:8px; background:#fff; padding:6px 8px; cursor:pointer; }
-  .jw-tl-main:hover{ border-color:var(--olive-soft); background:var(--olive-05); }
+  .jw-tl-main{ border:1px solid var(--line-2); border-radius:8px; background:#fff; padding:8px 10px; cursor:pointer; }
+  .jw-tl-main:hover{ border-color:var(--olive); background:var(--olive-10); }
   .jw-tl-head{ display:flex; flex-wrap:wrap; align-items:center; gap:5px; margin-bottom:2px; }
-  .jw-tl-date{ font-size:11.5px; color:var(--brown-3); font-variant-numeric:tabular-nums; }
+  .jw-tl-date{ font-size:11.5px; color:var(--brown-2); font-variant-numeric:tabular-nums; }
   .jw-tl-text{ font-size:13px; color:var(--brown); line-height:1.45; word-break:break-word; overflow-wrap:anywhere; }
   .jw-tl-item.close .jw-tl-text{ font-weight:600; }
   .jw-tl-item.od .jw-tl-date{ color:var(--danger); }
   .jw-tl-ops{ display:flex; flex-wrap:wrap; gap:10px; margin-top:3px; padding-left:2px; }
-  .jw-tl-todo .jw-tl-main{ border-style:dashed; background:var(--bg-2); }
+  .jw-tl-todo .jw-tl-main{ border-style:dashed; background:var(--olive-10); border-color:var(--olive-16); }
   .jw-tl-src{ font-size:10px; }
   /* 办理进度已办：按日期分组 + 卡片式记录（参考记账记录） */
   .jw-tl-date-hd{ display:flex; align-items:center; justify-content:space-between; padding:5px 4px 3px; margin-left:23px; }
   .jw-tl-date-text{ font-size:14px; font-weight:650; color:var(--brown); }
-  .jw-tl-date-count{ font-size:12px; color:var(--brown-3); font-variant-numeric:tabular-nums; }
+  .jw-tl-date-count{ font-size:12px; color:var(--brown-2); font-variant-numeric:tabular-nums; }
   .jw-tl-card{ padding:7px 9px; border-radius:9px; background:var(--card); border:1px solid var(--line-2); cursor:pointer; transition:background .12s, border-color .15s; }
-  .jw-tl-card:hover{ border-color:var(--olive-soft); background:var(--olive-05); }
-  .jw-tl-card:active{ background:var(--olive-08); }
+  .jw-tl-card:hover{ border-color:var(--olive); background:var(--olive-10); }
+  .jw-tl-card:active{ background:var(--olive-16); }
   .jw-tl-card .jw-tl-head{ margin-bottom:3px; }
   .jw-tl-card .jw-tl-text{ font-size:13.5px; }
   /* 阶段进度条：节点可点击调整时间 */
   .jw-stage-node{ cursor:pointer; border-radius:8px; padding:2px 0; }
-  .jw-stage-node:hover .jw-stage-dot{ box-shadow:0 0 0 3px var(--primary-08); }
+  .jw-stage-node:hover .jw-stage-dot{ box-shadow:0 0 0 3px var(--olive-16); }
   .jw-stage-node:hover .jw-stage-name{ color:var(--brown-2); }
   .jw-stage-node:hover .jw-stage-date{ color:var(--brown-3); }
 
@@ -2554,33 +2556,33 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     cursor:pointer; transition:background .12s, border-color .15s, color .12s;
   }
   .jw-edit-btn:hover{ border-color:var(--olive-soft); background:var(--olive-05); color:var(--olive-darker); }
-  .jw-edit-btn:active{ background:var(--olive-08); transform:scale(.96); }
+  .jw-edit-btn:active{ background:var(--olive-16); transform:scale(.96); }
   /* 案件信息：两列网格，手机端更紧凑 */
   .jw-info-grid{
     display:grid; grid-template-columns:repeat(2, 1fr); gap:6px 10px;
-    margin-top:6px; padding:6px 8px; background:var(--bg-2); border-radius:10px;
+    margin-top:8px; padding:8px 10px; background:var(--olive-10); border:1px solid var(--olive-16); border-radius:10px;
   }
   .jw-info-cell{ display:flex; flex-direction:column; gap:1px; min-width:0; }
-  .jw-info-k{ font-size:11px; color:var(--brown-3); line-height:1.35; }
-  .jw-info-v{ font-size:12.5px; color:var(--brown); line-height:1.45; word-break:break-word; overflow-wrap:anywhere; }
+  .jw-info-k{ font-size:11px; color:var(--brown-2); font-weight:500; line-height:1.35; }
+  .jw-info-v{ font-size:12.5px; color:var(--brown); font-weight:500; line-height:1.45; word-break:break-word; overflow-wrap:anywhere; }
   /* 底部操作按钮：三列网格，大点击区 */
   .jw-action-grid{
     display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;
-    margin-top:8px; padding-top:8px; border-top:1px dashed var(--line-2);
+    margin-top:10px; padding-top:10px; border-top:1px dashed var(--line-2);
   }
   .jw-action-grid.single{ grid-template-columns:1fr; }
   .jw-action-grid.two{ grid-template-columns:repeat(2, 1fr); }
   .jw-action-btn{
     display:inline-flex; align-items:center; justify-content:center; gap:5px;
-    min-height:44px; padding:8px 6px; border-radius:10px; border:1px solid var(--line);
+    min-height:44px; padding:8px 6px; border-radius:10px; border:1px solid var(--line-2);
     background:#fff; color:var(--brown-2); font-size:12.5px; font-weight:500;
     cursor:pointer; transition:background .12s, border-color .15s, color .12s;
     white-space:nowrap;
   }
-  .jw-action-btn:hover{ border-color:var(--olive-soft); background:var(--olive-05); color:var(--olive-darker); }
-  .jw-action-btn:active{ background:var(--olive-08); }
-  .jw-action-btn.primary{ border-color:var(--primary-24); background:var(--primary-05); color:var(--primary); }
-  .jw-action-btn.primary:hover{ background:var(--primary-08); }
+  .jw-action-btn:hover{ border-color:var(--olive); background:var(--olive-10); color:var(--olive-darker); }
+  .jw-action-btn:active{ background:var(--olive-16); }
+  .jw-action-btn.primary{ border-color:var(--olive); background:var(--olive-10); color:var(--olive-deep); }
+  .jw-action-btn.primary:hover{ background:var(--olive-16); }
   .jw-action-btn svg{ flex:0 0 auto; }
   .jw-action-btn span{ min-width:0; overflow:hidden; text-overflow:ellipsis; }
 
@@ -2626,6 +2628,30 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   @media (max-width: 600px){
     :root{ --gap: 12px; }
   }
+
+  /* 深色模式：把硬编码的浅色表面（#fff / #FFF5F3）改回深色卡片，避免暗色背景下出现刺眼的白块 */
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .jw-tk,
+    :root:not([data-theme="light"]) .jw-tl-main,
+    :root:not([data-theme="light"]) .jw-qb,
+    :root:not([data-theme="light"]) .jw-edit-btn,
+    :root:not([data-theme="light"]) .jw-action-btn,
+    :root:not([data-theme="light"]) .jw-sort-btn,
+    :root:not([data-theme="light"]) .jw-stage-dot{
+      background:var(--card);
+    }
+    :root:not([data-theme="light"]) .jw-todo.od .jw-tk{ background:rgba(217,112,90,.16); }
+  }
+  :root[data-theme="dark"] .jw-tk,
+  :root[data-theme="dark"] .jw-tl-main,
+  :root[data-theme="dark"] .jw-qb,
+  :root[data-theme="dark"] .jw-edit-btn,
+  :root[data-theme="dark"] .jw-action-btn,
+  :root[data-theme="dark"] .jw-sort-btn,
+  :root[data-theme="dark"] .jw-stage-dot{
+    background:var(--card);
+  }
+  :root[data-theme="dark"] .jw-todo.od .jw-tk{ background:rgba(217,112,90,.16); }
 </style>
 </head>
 <body data-page-node-id="k17xPH9tcBxJoIx0pey0qQ">
@@ -2726,13 +2752,13 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       },
       jiwei: { cases: [], inspects: [], submits: [], punish: [] },
       jwSources: ['信访举报', '上级交办', '巡察移交', '监督检查发现', '司法机关移送', '审计移交', '其他'],
-      jwStages: ['线索处置', '初步核实', '立案审查调查', '案件审理', '处分执行', '已了结'],
+      jwStages: ['线索处置', '初步核实', '立案审查调查', '案件审理', '处分执行', '已了结', '信访反馈'],
       jwMeasures: ['谈话', '函询', '查询', '调取', '暂扣封存', '冻结', '留置', '鉴定'],
       jwInspectTypes: ['日常监督', '专项监督', '巡察整改监督', '作风建设督查', '纠治四风督查', '其他'],
       jwSubmitWays: ['线上系统', '邮箱', '纸质报送', '现场报送', '其他'],
       jwPunDisc: ['党内警告', '党内严重警告', '撤销党内职务', '留党察看一年', '留党察看二年', '开除党籍'],
       jwPunGov: ['警告', '记过', '记大过', '降级', '撤职', '开除'],
-      jwPunJm: ['诫勉谈话', '书面诫勉'],
+      jwPunJm: ['书面诫勉'],
       settings: { privacy: false, nick: '', created: '', fontScale: 1.15, topFixed: false, statItem: {} },
       ui: { last: 'checkin', tabs: {}, timefilter: {}, catPin: 3 }
     };
@@ -3001,6 +3027,62 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           var charges = this.data.vehicles && this.data.vehicles.ev && this.data.vehicles.ev.charges;
           if (Array.isArray(charges)) charges.forEach(function (c) { if (c && c.place && PLACE_MAP[c.place]) c.place = PLACE_MAP[c.place]; });
           this.data.settings._evPlaceRename = true;
+          localStorage.setItem(KEY, JSON.stringify(this.data));
+        }
+      } catch (e) {}
+      // 纪检监察处分台账：党纪处分旧种类名称迁移（警告→党内警告，严重警告→党内严重警告，避免影响期查不到）
+      try {
+        if (!this.data.settings._punishKindMigrated) {
+          (this.data.jiwei && this.data.jiwei.punish || []).forEach(function (x) {
+            if (x.cat !== '党纪处分') return;
+            if (x.kind === '警告') x.kind = '党内警告';
+            else if (x.kind === '严重警告') x.kind = '党内严重警告';
+          });
+          this.data.settings._punishKindMigrated = true;
+          localStorage.setItem(KEY, JSON.stringify(this.data));
+        }
+      } catch (e) {}
+      // 纪检监察处分台账：党纪处分「种类分类列表」旧名称迁移（警告→党内警告，严重警告→党内严重警告）
+      // 下拉框由 Cats.get('jwPunDisc') 直接读取持久化的 Store.data.jwPunDisc，仅改 defaults 不会生效，故在此迁移列表本身
+      try {
+        if (!this.data.settings._punishCatMigrated) {
+          if (Array.isArray(this.data.jwPunDisc)) {
+            var PUN_CAT_MAP = { '警告': '党内警告', '严重警告': '党内严重警告' };
+            var mapped = this.data.jwPunDisc.map(function (c) { return PUN_CAT_MAP[c] || c; });
+            // 去重，避免旧名与新名共存时产生重复项
+            var seen = {}, uniq = [];
+            mapped.forEach(function (c) { if (!seen[c]) { seen[c] = 1; uniq.push(c); } });
+            this.data.jwPunDisc = uniq;
+          }
+          this.data.settings._punishCatMigrated = true;
+          localStorage.setItem(KEY, JSON.stringify(this.data));
+        }
+      } catch (e) {}
+      // 纪检监察处分台账：诫勉处理形式精简为「书面诫勉」单一选项，并将旧记录同步迁移
+      try {
+        if (!this.data.settings._punishJmMigrated) {
+          // 分类列表只保留「书面诫勉」
+          if (Array.isArray(this.data.jwPunJm)) {
+            this.data.jwPunJm = this.data.jwPunJm.filter(function (c) { return c === '书面诫勉'; });
+            if (this.data.jwPunJm.indexOf('书面诫勉') < 0) this.data.jwPunJm.push('书面诫勉');
+          }
+          // 历史记录中的「诫勉谈话」统一改为「书面诫勉」，避免编辑表单时下拉选项不兼容
+          (this.data.jiwei && this.data.jiwei.punish || []).forEach(function (x) {
+            if (x.cat === '诫勉处理' && x.kind === '诫勉谈话') x.kind = '书面诫勉';
+          });
+          this.data.settings._punishJmMigrated = true;
+          localStorage.setItem(KEY, JSON.stringify(this.data));
+        }
+      } catch (e) {}
+      // 纪检监察案件办理进度：在阶段末尾追加「信访反馈」（实名举报办结后反馈）
+      try {
+        if (!this.data.settings._stageXfFeedbackMigrated) {
+          if (Array.isArray(this.data.jwStages)) {
+            // 移除旧位置（如有），再追加到末尾，确保排在「已了结」之后
+            this.data.jwStages = this.data.jwStages.filter(function (s) { return s !== '信访反馈'; });
+            this.data.jwStages.push('信访反馈');
+          }
+          this.data.settings._stageXfFeedbackMigrated = true;
           localStorage.setItem(KEY, JSON.stringify(this.data));
         }
       } catch (e) {}
@@ -16532,7 +16614,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     { k: '撤销党内职务', m: 24 },
     { k: '留党察看一年', m: 12, extra: 24 },
     { k: '留党察看二年', m: 24, extra: 24 },
-    { k: '开除党籍', m: 60 }
+    { k: '开除党籍', m: 0 }
   ];
   var PUN_GOV = [
     { k: '警告', m: 6 }, { k: '记过', m: 12 }, { k: '记大过', m: 18 },
@@ -16548,6 +16630,11 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   function punInfo(cat, kind) {
     var L = punDefs(cat);
     for (var i = 0; i < L.length; i++) if (L[i].k === kind) return L[i];
+    /* 兜底：旧党纪处分种类名兼容（未迁移到的导入数据） */
+    if (cat === '党纪处分') {
+      if (kind === '警告') return { k: kind, m: 12 };
+      if (kind === '严重警告') return { k: kind, m: 18 };
+    }
     /* 诫勉处理不论具体形式，影响期统一半年 */
     if (cat === '诫勉处理') return { k: kind || '诫勉', m: 6 };
     return null;
@@ -16726,8 +16813,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     seq.forEach(function (s, i) {
       var last = i === seq.length - 1;
       var cls = last ? 'active' : 'done';
-      /* 予以了结代表案件办理结束，强制显示对号 */
-      var mark = (s.stage === '予以了结') ? '✓' : (last ? '●' : '✓');
+      /* 予以了结、信访反馈代表案件办理结束/闭环，强制显示对号 */
+      var mark = (s.stage === '予以了结' || s.stage === '信访反馈') ? '✓' : (last ? '●' : '✓');
       var dTxt = s.d ? s.d.slice(5) : '待定';
       bar += '<div class="jw-stage-node tap" data-act="cStageEdit" data-id="' + x.id + '"' +
           ' data-sid="' + esc(s.id || '') + '" data-idx="' + i + '"' +
@@ -16918,8 +17005,9 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     if (x.code) pairs.push(['姓名', x.code]);
     if (x.date) pairs.push([x.cat === '诫勉处理' ? '诫勉日期' : '决定日期', cnDate(x.date)]);
     if (x.unit) pairs.push(['单位 / 职务', x.unit]);
+    if (x.idCard) pairs.push(['身份证号码', x.idCard]);
     if (mon) pairs.push(['影响期', mon % 12 === 0 ? (mon / 12) + ' 年（' + mon + ' 个月）' : mon + ' 个月']);
-    if (end) pairs.push(['影响期届满', cnDate(end) + '（' + (n < 0 ? '已届满 ' + (-n) + ' 天' : (n === 0 ? '今天届满' : '还剩 ' + n + ' 天')) + '）']);
+    if (end) pairs.push(['影响期届满', cnDate(end) + '（' + (n < 0 ? '已届满' : (n === 0 ? '今天届满' : '还剩 ' + n + ' 天')) + '）']);
     if (x.note) pairs.push(['内容摘要', x.note]);
     var ttl = x.code || x.docNo || x.kind || '处分记录';
     /* 折叠外 meta：分类 + 种类 + 处分决定时间 + 影响期状态胶囊 */
@@ -17002,7 +17090,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         var n = dLeft(e);
         var nm = (x.code ? x.code + '·' : '') + (x.kind || '处分');
         if (n < 0) { if (n >= -30) items.push({ kind: '影响期已届满', n: n, name: nm, tab: 'punish', id: x.id, warn: false }); }
-        else if (n <= 30) items.push({ kind: '影响期将届满', n: n, name: nm, tab: 'punish', id: x.id, warn: n <= 7 });
+        /* 影响期将届满不纳入「今天要处理」，仅在台账列表胶囊中提示 */
       });
       items.sort(function (a, b) { return a.n - b.n; });
       if (!items.length) {
@@ -17192,9 +17280,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         return [x.docNo, x.code, x.unit, x.kind, x.cat, x.note].join(' ').toLowerCase().indexOf(q) >= 0;
       });
       arr.sort(function (a, b) {
-        var ae = punEndDate(a.cat, a.kind, a.date) || '9999-12-31';
-        var be = punEndDate(b.cat, b.kind, b.date) || '9999-12-31';
-        return ae < be ? -1 : (ae > be ? 1 : 0);
+        /* 按处分决定日期（给处分时间）倒序：最近给处分的排最前面 */
+        return (b.date || '').localeCompare(a.date || '');
       });
       return ListPager.out({
         ns: 'jiwei:pun', items: arr, defSize: 5,
@@ -17243,17 +17330,17 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       /* ---- 案件 ---- */
       cExp: function (t) { jwExp[t.dataset.id] = !jwExp[t.dataset.id]; App.refresh(); },
       cnew: function () {
-        UI.form({ title: '新增案件 / 问题线索', values: { status: '办理中', stage: '线索处置', acceptDate: U.today() }, fields: caseFields() })
+        UI.form({ title: '新增案件 / 问题线索', values: { acceptDate: U.today() }, fields: caseFields() })
           .then(function (v) {
             if (!v) return;
             v.id = U.uid(); v.logs = []; v.todos = [];
+            v.status = '办理中'; v.stage = '线索处置';
             J().cases.push(v); Store.save(); App.refresh();
           });
       },
       cEdit: function (t) {
         var x = findCase(t.dataset.id); if (!x) return;
-        var vals = Object.assign({ status: '办理中', stage: '线索处置' }, x);
-        UI.form({ title: '编辑案件', values: vals, fields: caseFields(), danger: true, dangerText: '删除案件',
+        UI.form({ title: '编辑案件', values: Object.assign({}, x), fields: caseFields(), danger: true, dangerText: '删除案件',
           onDanger: function () {
             UI.del(x.title || '该案件', function () {
               J().cases = J().cases.filter(function (a) { return a.id !== x.id; });
@@ -17455,8 +17542,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       /* ---- 记录办理进度（阶段节点 + 日期） ---- */
       cStage: function (t) {
         var x = findCase(t.dataset.id); if (!x) return;
-        var std = Store.data.jwStages || ['线索处置', '初步核实', '立案审查调查', '案件审理', '处分执行', '已了结'];
-        var stageOpts = std.filter(function (s) { return s !== '已了结'; }).concat(['予以了结']);
+        var std = Store.data.jwStages || ['线索处置', '初步核实', '立案审查调查', '案件审理', '处分执行', '已了结', '信访反馈'];
+        var stageOpts = std.filter(function (s) { return s !== '已了结' && s !== '信访反馈'; }).concat(['予以了结', '信访反馈']);
         UI.form({
           title: '记录办理进度（阶段）', okText: '记录',
           values: { d: U.today() },
@@ -17634,7 +17721,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         var x = findPun(t.dataset.id); if (!x) return;
         var vals = {
           cat: x.cat || '党纪处分', date: x.date || U.today(),
-          docNo: x.docNo || '', code: x.code || '', unit: x.unit || '', note: x.note || ''
+          docNo: x.docNo || '', code: x.code || '', unit: x.unit || '', idCard: x.idCard || '', note: x.note || ''
         };
         if (x.cat === '政务处分') vals.kindG = x.kind;
         else if (x.cat === '诫勉处理') vals.kindJ = x.kind;
@@ -17642,7 +17729,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         UI.form({ title: '编辑处分台账记录', values: vals, fields: punFields() }).then(function (v) {
           if (!v) return;
           var o = punFromForm(v);
-          ['cat', 'kind', 'docNo', 'date', 'code', 'unit', 'note'].forEach(function (k) { x[k] = o[k]; });
+          ['cat', 'kind', 'docNo', 'date', 'code', 'unit', 'idCard', 'note'].forEach(function (k) { x[k] = o[k]; });
           Store.save(); App.refresh();
         });
       },
@@ -17662,15 +17749,9 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       { k: 'no', label: '线索 / 案件编号' },
       { k: 'title', label: '案件名称', req: true, full: true },
       Cats.field('jwSources', '线索来源', { k: 'source' }),
-      Cats.field('jwStages', '当前阶段', { k: 'stage', def: '线索处置' }),
-      { k: 'status', label: '办理状态', type: 'select', options: CASE_STATUS, def: '办理中' },
+      { k: 'acceptDate', label: '受理时间', type: 'date', req: true, def: U.today() },
       { k: 'partyPerson', label: '被反映人' },
       { k: 'partyUnit', label: '被反映单位' },
-      { k: 'acceptDate', label: '受理时间', type: 'date', req: true, def: U.today() },
-      { k: 'fileDate', label: '立案时间', type: 'date', clearable: true },
-      { k: 'closeDate', label: '办结日期', type: 'date', when: { key: 'status', val: '已了结' } },
-      { k: 'suggest', label: '处理结果', type: 'textarea', full: true, rows: 3,
-        when: { key: 'status', val: '已了结' } },
       { k: 'note', label: '问题摘要', type: 'textarea', full: true, rows: 3 }
     ];
   }
@@ -17709,12 +17790,13 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       { k: 'kindG', label: '政务处分种类', type: 'select', catns: 'jwPunGov', def: '警告',
         options: Cats.get('jwPunGov').map(function (c) { return { v: c, t: c }; }),
         when: { key: 'cat', val: '政务处分' } },
-      { k: 'kindJ', label: '诫勉形式', type: 'select', catns: 'jwPunJm', def: '诫勉谈话',
+      { k: 'kindJ', label: '诫勉形式', type: 'select', catns: 'jwPunJm', def: '书面诫勉',
         options: Cats.get('jwPunJm').map(function (c) { return { v: c, t: c }; }),
         when: { key: 'cat', val: '诫勉处理' } },
       { k: 'docNo', label: '文号' },
       { k: 'code', label: '姓名' },
       { k: 'unit', label: '单位 / 职务' },
+      { k: 'idCard', label: '身份证号码' },
       { k: 'date', label: '决定日期', type: 'date', req: true, def: U.today() },
       { k: 'note', label: '内容摘要', type: 'textarea', full: true, rows: 3 }
     ];
@@ -17724,7 +17806,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     var kind = cat === '政务处分' ? v.kindG : (cat === '诫勉处理' ? v.kindJ : v.kindD);
     return {
       cat: cat, kind: kind || '',
-      docNo: v.docNo || '', code: v.code || '', unit: v.unit || '',
+      docNo: v.docNo || '', code: v.code || '', unit: v.unit || '', idCard: v.idCard || '',
       date: v.date || '', note: v.note || ''
     };
   }
