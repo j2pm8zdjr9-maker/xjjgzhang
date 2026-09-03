@@ -125,7 +125,16 @@ html{ -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; 
 :root[data-theme="dark"] .cal-cell.miss{ background:rgba(217,112,90,.16); border-color:rgba(217,112,90,.4); color:#E89B7E; }
 :root[data-theme="dark"] .cal-cell.broken{ background:rgba(217,52,38,.22); border-color:rgba(217,52,38,.5); color:#FF7A6E; }
 :root[data-theme="dark"] .chk-cal .cal-cell.broken .cal-count{ color:#fff; background:rgba(217,52,38,.5); }
-:root[data-theme="dark"] .badge.grey{ background:rgba(255,255,255,.08); color:var(--brown-2); }
+:root[data-theme="dark"] .badge.grey{ background:rgba(255,255,255,.12); color:var(--brown); border-color:rgba(255,255,255,.12); }
+:root[data-theme="dark"] .big-num.future{ color:var(--brown); }
+:root[data-theme="dark"] .big-num.soon{ color:var(--olive-darker); }
+:root[data-theme="dark"] .big-num.past{ color:#FF9B8A; }
+:root[data-theme="dark"] .small.muted{ color:var(--brown-2); }
+:root[data-theme="dark"] .item{ background:rgba(43,37,29,.85); border-color:rgba(255,255,255,.12); }
+:root[data-theme="dark"] .item.hl,
+:root[data-theme="dark"] .item.open{ background:rgba(168,200,74,.10); border-color:var(--olive-24); }
+:root[data-theme="dark"] .input::placeholder,
+:root[data-theme="dark"] .textarea::placeholder{ color:var(--brown-3); }
 :root[data-theme="dark"] .font-range::-webkit-slider-runnable-track{ background:rgba(255,255,255,.16); }
 :root[data-theme="dark"] .font-range::-moz-range-track{ background:rgba(255,255,255,.16); }
 :root[data-theme="dark"] .topbar{ background:rgba(33,28,22,.92); }
@@ -396,13 +405,18 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .ev-cfg-item b{ font-weight:650; color:var(--brown); font-variant-numeric:tabular-nums; }
 .ev-cfg-item span{ font-size:11.5px; }
 
-.section-gap{ display:flex; flex-direction:column; gap:14px; }
+.section-gap{ display:flex; flex-direction:column; gap:10px; }
+/* section-gap 已用 flex gap 控制纵向间距，卡片头自带 margin-bottom 会与之叠加造成过大空隙 */
+.section-gap .card-head{ margin-bottom:0; }
 .row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
 .row.between{ justify-content:space-between; }
 .grow{ flex:1; min-width:0; }
 .muted{ color:var(--brown-3); }
 .small{ font-size:12.5px; }
 .big-num{ font-size:26px; font-weight:700; letter-spacing:.5px; line-height:1.2; }
+.big-num.future{ color:#331915; }
+.big-num.soon{ color:#6E8A28; }
+.big-num.past{ color:#B4553F; font-size:13px; line-height:1.35; }
 .hr{ height:1px; background:var(--line); margin:4px 0; border:0; }
 
 /* 按钮 */
@@ -1599,6 +1613,10 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .di-dbody{ white-space:pre-wrap; line-height:1.85; color:var(--brown); font-size:15.5px; }
 .di-detail .di-tags{ margin-top:12px; }
 
+/* 事件记录：展开区最近记录预览 */
+.ev-preview{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
+.ev-chip{ font-size:12px; line-height:1.5; color:var(--brown-2); background:var(--olive-05); border:1px solid var(--line); border-radius:8px; padding:3px 9px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+
 /* 日历 — 紧凑等高设计：星期头与日期行统一行高，消除首行间距过大 */
 .cal{
   display:grid; grid-template-columns:repeat(7,minmax(0,1fr));
@@ -2463,8 +2481,6 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   .jw-co-row span{ color:var(--brown-2); flex:0 0 auto; }
   .jw-co-row b{ color:var(--brown); text-align:right; }
   .jw-note{ border:1px solid var(--line-2); border-left:3px solid var(--olive); background:var(--olive-10); border-radius:9px; padding:9px 11px; font-size:12.5px; line-height:1.75; color:var(--brown); margin-bottom:10px; }
-  /* 已办结案件：折叠态也展示处理结果摘要 */
-  .jw-suggest{ margin-top:6px; font-size:12.5px; line-height:1.55; color:var(--brown); background:var(--olive-10); border-left:3px solid var(--olive); border-radius:6px; padding:6px 9px; }
   .jw-demo-bar{ display:flex; justify-content:flex-end; margin:0 0 10px; }
   /* 案件待办：完成即归入办理进展 */
   .jw-todo{ display:flex; align-items:flex-start; gap:8px; padding:8px 10px; border-bottom:1px solid var(--line-2); font-size:13px; background:var(--card); border-radius:8px; margin-bottom:6px; }
@@ -2652,6 +2668,46 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     background:var(--card);
   }
   :root[data-theme="dark"] .jw-todo.od .jw-tk{ background:rgba(217,112,90,.16); }
+
+  /* ---------- 全局体检补丁：深色模式漏覆盖的状态色 / 徽章色 ---------- */
+  /* 彩色徽章：浅色下文字为深色调，深色下需提亮文字才能看清 */
+  :root[data-theme="dark"] .badge.warn{ background:rgba(217,147,80,.18); color:#E8A968; }
+  :root[data-theme="dark"] .badge.danger{ background:rgba(217,112,90,.20); color:#F0937C; }
+  :root[data-theme="dark"] .badge.info{ background:rgba(137,167,184,.18); color:#9FBED0; }
+  :root[data-theme="dark"] .badge.cream{ background:rgba(255,255,255,.10); color:#D9C08F; }
+  :root[data-theme="dark"] .badge.purple{ background:rgba(140,99,168,.24); color:#C9A3E8; }
+  /* 宝宝模块：疫苗状态条 / 状态徽章 / 过敏等级（浅色实底 → 深色半透明底） */
+  :root[data-theme="dark"] .vax-pending{ border-left-color:#F59E0B; background:rgba(245,158,11,.12); }
+  :root[data-theme="dark"] .vax-done{ border-left-color:#A8C84A; background:rgba(168,200,74,.10); }
+  :root[data-theme="dark"] .vax-overdue{ border-left-color:#E5484D; background:rgba(217,52,38,.16); }
+  :root[data-theme="dark"] .vsb-pending{ color:#FBBF24; background:rgba(245,158,11,.14); }
+  :root[data-theme="dark"] .vsb-done{ color:#A3E635; background:rgba(132,204,22,.14); }
+  :root[data-theme="dark"] .vsb-overdue{ color:#FCA5A5; background:rgba(217,52,38,.18); }
+  :root[data-theme="dark"] .as-light{ color:#FBBF24; background:rgba(245,158,11,.14); }
+  :root[data-theme="dark"] .as-moderate{ color:#FCD34D; background:rgba(245,158,11,.22); }
+  :root[data-theme="dark"] .as-severe{ color:#FCA5A5; background:rgba(217,52,38,.18); }
+  :root[data-theme="dark"] .baby-avatar{ background:rgba(255,255,255,.10); }
+  /* 纪检监察时间轴待办圆点：白底 → 卡片底 */
+  :root[data-theme="dark"] .jw-tl-dot.todo{ background:var(--card); }
+  /* —— auto 模式（跟随系统深色）同样处理 —— */
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .badge.warn{ background:rgba(217,147,80,.18); color:#E8A968; }
+    :root:not([data-theme="light"]) .badge.danger{ background:rgba(217,112,90,.20); color:#F0937C; }
+    :root:not([data-theme="light"]) .badge.info{ background:rgba(137,167,184,.18); color:#9FBED0; }
+    :root:not([data-theme="light"]) .badge.cream{ background:rgba(255,255,255,.10); color:#D9C08F; }
+    :root:not([data-theme="light"]) .badge.purple{ background:rgba(140,99,168,.24); color:#C9A3E8; }
+    :root:not([data-theme="light"]) .vax-pending{ border-left-color:#F59E0B; background:rgba(245,158,11,.12); }
+    :root:not([data-theme="light"]) .vax-done{ border-left-color:#A8C84A; background:rgba(168,200,74,.10); }
+    :root:not([data-theme="light"]) .vax-overdue{ border-left-color:#E5484D; background:rgba(217,52,38,.16); }
+    :root:not([data-theme="light"]) .vsb-pending{ color:#FBBF24; background:rgba(245,158,11,.14); }
+    :root:not([data-theme="light"]) .vsb-done{ color:#A3E635; background:rgba(132,204,22,.14); }
+    :root:not([data-theme="light"]) .vsb-overdue{ color:#FCA5A5; background:rgba(217,52,38,.18); }
+    :root:not([data-theme="light"]) .as-light{ color:#FBBF24; background:rgba(245,158,11,.14); }
+    :root:not([data-theme="light"]) .as-moderate{ color:#FCD34D; background:rgba(245,158,11,.22); }
+    :root:not([data-theme="light"]) .as-severe{ color:#FCA5A5; background:rgba(217,52,38,.18); }
+    :root:not([data-theme="light"]) .baby-avatar{ background:rgba(255,255,255,.10); }
+    :root:not([data-theme="light"]) .jw-tl-dot.todo{ background:var(--card); }
+  }
 </style>
 </head>
 <body data-page-node-id="k17xPH9tcBxJoIx0pey0qQ">
@@ -2708,7 +2764,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   /* ---------- 默认数据结构 ---------- */
   function defaults() {
     return {
-      checkin: { habits: [], log: {} },
+      checkin: { habits: [], log: {}, events: [] },
       media: [],
       exam: { exams: [], plans: [], records: [], notes: [] },
       examSubject: ['政治', '英语', '数学', '专业课'],
@@ -6138,6 +6194,125 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     return (CI().habits || []).filter(function (h) { return inWindow(h, date); });
   }
 
+  /* ---------- 事件记录：不定期事件（剪头 / 健身 / 保养等），记下每次发生的日期，点开回看 ---------- */
+  function EV() {
+    var arr = CI().events || (CI().events = []);
+    /* 旧数据迁移：每条记录必须有唯一 id（否则同一天多条记录无法单独删除） */
+    arr.forEach(function (ev) {
+      (ev.recs || []).forEach(function (r) { if (!r.id) r.id = U.uid(); });
+    });
+    return arr;
+  }
+  function findEvent(id) { return EV().filter(function (x) { return x.id === id; })[0]; }
+  function evRecs(ev) {
+    return ((ev && ev.recs) || []).slice().sort(function (a, b) { return (b.d || '').localeCompare(a.d || ''); });
+  }
+  function evStats(ev) {
+    var rs = evRecs(ev);
+    if (!rs.length) return null;
+    var last = rs[0].d, first = rs[rs.length - 1].d, n = rs.length;
+    return {
+      n: n, last: last,
+      gap: U.dayDiff(last, U.today()),
+      avg: n > 1 ? Math.round(U.dayDiff(first, last) / (n - 1)) : 0
+    };
+  }
+  function evMarkRaw(ev, d, note) {
+    ev.recs = ev.recs || [];
+    ev.recs.push({ id: U.uid(), d: d, note: note || '', at: U.nowTime() });
+    Store.save();
+  }
+  /* 今天做了：弹表单可填备注；日期默认今天（改日期即等于补记） */
+  function openEventMark(ev) {
+    UI.form({
+      title: '今天做了 · ' + ev.name, okText: '记一笔',
+      values: { d: U.today(), note: '' },
+      fields: [
+        { k: 'd', label: '日期', type: 'date', req: true, def: U.today() },
+        { k: 'note', label: '备注（可选）', ph: '如：花了 30 元 / 练了背和腿', full: true }
+      ]
+    }).then(function (v) {
+      if (!v || !v.d) return;
+      evMarkRaw(ev, v.d, v.note);
+      App.refresh();
+      U.toast('已记录「' + ev.name + '」· 第 ' + (ev.recs || []).length + ' 次');
+    });
+  }
+  /* 补记一次：列表快捷按钮与「全部日期」弹层共用；onDone 为弹层内刷新回调 */
+  function openEventBackfill(id, onDone) {
+    var ev = findEvent(id); if (!ev) return;
+    UI.form({
+      title: '补记 · ' + ev.name, okText: '保存',
+      values: { d: U.today(), note: '' },
+      fields: [
+        { k: 'd', label: '日期', type: 'date', req: true, def: U.today() },
+        { k: 'note', label: '备注（可选）', ph: '如：花了 30 元', full: true }
+      ]
+    }).then(function (v) {
+      if (!v || !v.d) return;
+      evMarkRaw(ev, v.d, v.note);
+      if (onDone) onDone();
+      App.refresh();
+      U.toast('已补记 ' + U.fmtDate(v.d));
+    });
+  }
+  function openEventDetail(id) {
+    var ev = findEvent(id); if (!ev) return;
+    /* 复用全站通用「历史记录」弹层：时间筛选 + 备注搜索 + 分页 + 汇总 */
+    Hist.open({
+      modId: 'checkin_ev',
+      title: '📅 ' + ev.name + ' · 全部日期',
+      searchPh: '🔍 搜索备注…',
+      defSize: 10,
+      pager: true,
+      items: function () { return evRecs(ev); },
+      date: function (r) { return r.d; },
+      match: function (r, q) { return (r.note || '').toLowerCase().indexOf(q) >= 0; },
+      summary: function () {
+        var st = evStats(ev);
+        var chips = st
+          ? '<span class="badge info">已做 ' + st.n + ' 次</span>' +
+            '<span class="badge grey">最近 ' + U.fmtDate(st.last) + '</span>' +
+            (st.gap >= 0 ? '<span class="badge grey">距今 ' + st.gap + ' 天</span>' : '') +
+            (st.n > 1 ? '<span class="badge grey">平均间隔 ' + st.avg + ' 天</span>' : '')
+          : '<span class="badge grey">还没有记录</span>';
+        return '<div class="row" style="gap:8px;flex-wrap:wrap;align-items:center">' + chips +
+          '<button class="btn ghost sm tap" data-act="evBackfill" data-id="' + ev.id + '" style="margin-left:auto">＋ 补记一次</button></div>';
+      },
+      render: function (r) {
+        var rs = evRecs(ev);
+        var i = rs.indexOf(r);
+        var prev = i >= 0 ? rs[i + 1] : null;
+        var iv = prev ? U.dayDiff(prev.d, r.d) : null;
+        return '<div class="item"><div class="item-main">' +
+          '<div class="item-title">📅 ' + U.fmtDate(r.d, true) + '</div>' +
+          '<div class="item-meta">' +
+          '<span class="badge grey">' + U.relDay(r.d) + '</span>' +
+          (iv != null ? '<span class="badge grey">距上次 ' + iv + ' 天</span>' : '') +
+          (r.note ? '<span class="badge grey">📝 ' + esc(r.note) + '</span>' : '') +
+          '</div></div>' +
+          '<button class="link-btn del tap" data-act="evRecDel" data-rid="' + r.id + '">删除</button>' +
+          '</div>';
+      },
+      empty: '该时间段内没有记录',
+      acts: {
+        evRecDel: function (t, e, draw) {
+          var rid = t.dataset.rid;
+          var r = (ev.recs || []).filter(function (x) { return x.id === rid; })[0];
+          if (!r) { draw(); return; }
+          /* 同一天有多条时提示，避免误以为会全删；只删选中的这一条 */
+          var same = (ev.recs || []).filter(function (x) { return x.d === r.d; }).length;
+          UI.del(U.fmtDate(r.d) + (same > 1 ? ' 的这条记录（当天共 ' + same + ' 条，只删这条）' : ' 的这次记录'), function () {
+            ev.recs = (ev.recs || []).filter(function (x) { return x.id !== rid; });
+            Store.save(); App.refresh(); draw();
+            U.toast('已删除该次记录');
+          });
+        },
+        evBackfill: function (t, e, draw) { openEventBackfill(ev.id, draw); }
+      }
+    });
+  }
+
   /* ---------- 历史记录：单条打卡任务的统计与查看 ---------- */
   function habitSpan(h) {
     if (!h || !h.start) return null;
@@ -6418,13 +6593,20 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   }
 
   var checkin = {
-    id: 'checkin', icon: '✅', name: '打卡',
+    id: 'checkin', icon: '✅', name: '打卡与事件',
 
     render: function () {
+      var view = App.tab('checkin', 'view', 'checkin');
+      var head = UI.head('✅ 打卡与事件', '打卡任务与事件记录，随手记一笔') +
+        UI.tabs([
+          { k: 'checkin', t: '打卡', i: '✅' },
+          { k: 'events', t: '事件记录', i: '📌' }
+        ], view, 'view') + '<div style="height:12px"></div>';
+      if (view === 'events') return head + this.evView();
       var active = activeHabits(U.today());
       var total = active.length;
       var tDone = active.filter(function (h) { return isDone(U.today(), h.id); }).length;
-      return UI.head('✅ 打卡', '坚持每天的小习惯，积少成多') +
+      return head +
         UI.stats([
           ['打卡任务', total],
           ['今日完成', tDone + '/' + total, total > 0 && tDone === total],
@@ -6560,8 +6742,108 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         '<div class="cal chk-cal">' + cells + '</div></div>';
     },
 
+    /* 事件记录视图：统计概览 + 事件列表（按最近做过排前），
+       点行展开可见最近 3 次记录预览与快捷操作；距上次超过平均间隔时徽章变黄提醒 */
+    evView: function () {
+      var evs = EV().slice().sort(function (a, b) {
+        var sa = evStats(a), sb = evStats(b);
+        if (sa && sb) return sa.last < sb.last ? 1 : (sa.last > sb.last ? -1 : 0);
+        if (sa) return -1;
+        if (sb) return 1;
+        return 0;
+      });
+      var totalRecs = 0, monthRecs = 0, lastRec = null;
+      var mPrefix = U.today().slice(0, 7);
+      evs.forEach(function (ev) {
+        (ev.recs || []).forEach(function (r) {
+          totalRecs++;
+          if ((r.d || '').slice(0, 7) === mPrefix) monthRecs++;
+          if (!lastRec || r.d > lastRec) lastRec = r.d;
+        });
+      });
+      var stats = UI.stats([
+        ['事件', evs.length],
+        ['累计记录', totalRecs],
+        ['本月记录', monthRecs],
+        ['最近一次', lastRec ? U.relDay(lastRec) : '—']
+      ]);
+      var body;
+      if (!evs.length) {
+        body = UI.empty('还没有事件，点右下角「＋」新增', '📌');
+      } else {
+        body = '<div class="list">' + ListPager.slice('checkin:ev', evs).map(function (ev) {
+          var st = evStats(ev);
+          var rs = evRecs(ev).slice(0, 3);
+          var overdue = st && st.n > 1 && st.avg > 0 && st.gap > st.avg;
+          var preview = rs.length ? '<div class="ev-preview">' + rs.map(function (r) {
+            return '<span class="ev-chip">📅 ' + U.fmtDate(r.d) + (r.note ? ' · ' + esc(r.note) : '') + '</span>';
+          }).join('') + '</div>' : '';
+          return '<div class="item clickable" data-toggle data-id="' + ev.id + '">' +
+            '<div class="item-main">' +
+            '<div class="item-title">' + esc(ev.name) + '</div>' +
+            '<div class="item-meta">' +
+            (st
+              ? '<span class="badge info">已做 ' + st.n + ' 次</span>' +
+                '<span class="badge grey">上次 ' + U.fmtDate(st.last) + '</span>' +
+                '<span class="badge' + (overdue ? ' warn' : ' grey') + '">距今 ' + st.gap + ' 天</span>' +
+                (st.n > 1 ? '<span class="badge grey">均隔 ' + st.avg + ' 天</span>' : '')
+              : '<span class="badge grey">还没有记录</span>') +
+            '</div>' +
+            '<span class="caret">▸</span>' +
+            '</div>' +
+            '<div class="item-detail">' + preview +
+            '<div class="item-ops">' +
+            '<button class="link-btn tap" data-act="evMark" data-id="' + ev.id + '">✓ 今天做了</button>' +
+            '<button class="link-btn tap" data-act="evBackfill" data-id="' + ev.id + '">＋ 补记</button>' +
+            '<button class="link-btn tap" data-act="evOpen" data-id="' + ev.id + '">📅 全部日期</button>' +
+            '<button class="link-btn tap" data-act="evEdit" data-id="' + ev.id + '">✏️ 编辑</button>' +
+            '<button class="link-btn del tap" data-act="evDel" data-id="' + ev.id + '">🗑 删除</button>' +
+            '</div></div>' +
+            '</div>';
+        }).join('') + '</div>' + ListPager.pager('checkin:ev', evs.length);
+      }
+      return stats + UI.card({
+        title: '📌 事件记录',
+        body: body, cls: 'section-gap'
+      }) +
+        '<button class="fab tap" data-act="newEvent" aria-label="新增事件" title="新增事件">+</button>';
+    },
+
     acts: {
+      view: function (t) { App.setTab('checkin', 'view', t.dataset.k); App.refresh(); },
       hist: function () { openHist(); },
+      /* ---- 事件记录 ---- */
+      newEvent: function () {
+        UI.form({ title: '新增事件', fields: [{ k: 'name', label: '事件名称', req: true, ph: '如：剪头发 / 健身 / 车辆保养', full: true }] }).then(function (v) {
+          if (!v || !v.name || !v.name.trim()) return;
+          var nm = v.name.trim();
+          EV().push({ id: U.uid(), name: nm, recs: [] });
+          Store.save(); App.refresh(); U.toast('已添加「' + nm + '」');
+        });
+      },
+      evMark: function (t) {
+        var ev = findEvent(t.dataset.id); if (!ev) return;
+        var has = (ev.recs || []).some(function (r) { return r.d === U.today(); });
+        if (has) UI.confirm('今天已记过一次', '「' + ev.name + '」今天已有记录，要再记一次吗？', '再记一次').then(function (ok) { if (ok) openEventMark(ev); });
+        else openEventMark(ev);
+      },
+      evOpen: function (t) { openEventDetail(t.dataset.id); },
+      evBackfill: function (t) { openEventBackfill(t.dataset.id); },
+      evEdit: function (t) {
+        var ev = findEvent(t.dataset.id); if (!ev) return;
+        UI.form({ title: '编辑事件', fields: [{ k: 'name', label: '事件名称', req: true, full: true }], values: { name: ev.name } }).then(function (v) {
+          if (!v || !v.name || !v.name.trim()) return;
+          ev.name = v.name.trim(); Store.save(); App.refresh();
+        });
+      },
+      evDel: function (t) {
+        var ev = findEvent(t.dataset.id); if (!ev) return;
+        var n = (ev.recs || []).length;
+        UI.del(ev.name + (n ? '（含 ' + n + ' 次记录）' : ''), function () {
+          CI().events = EV().filter(function (x) { return x.id !== ev.id; });
+          Store.save(); App.refresh(); U.toast('已删除');
+        });
+      },
       tfOpen: function (t) { TF.open(t.dataset.tf, { onChange: function () { App.refresh(); } }); },
       newHabit: function () {
         UI.form({ title: '新增打卡任务', fields: habitFields() }).then(function (v) {
@@ -10789,7 +11071,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       values: isEdit ? { date: trip.date, km: num(trip.km), energyKwh: num(trip.energyKwh) } : { date: U.today(), km: '', energyKwh: '' },
       fields: [
         { k: 'date', label: '日期', type: 'date', req: true },
-        { k: 'km', label: '本次里程（km）', type: 'number', step: 1, min: 0.1, req: true, ph: '如 34.4' },
+        { k: 'km', label: '本次里程（km）', type: 'number', step: 0.1, min: 0.1, req: true, ph: '如 34.4' },
         { k: 'energyKwh', label: '本次耗电（度）', type: 'number', step: 0.1, min: 0.01, req: true, ph: '如 6.8', hint: '车机/仪表显示的本次行程耗电量（kWh）' }
       ]
     }).then(function (v) {
@@ -14680,9 +14962,9 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     var lunarTxt = isLunar ? window.Lunar.label(+x.lmonth, +x.lday, !!x.lisLeap) : '';
     var years = (!isLunar && x.yearly) ? U.parseDate(nd).getFullYear() - U.parseDate(x.date).getFullYear() : 0;
     var expanded = annivExpanded === x.id;
-    var countHtml = '<div style="text-align:right;min-width:72px"><div class="big-num" style="' +
-      (n < 0 ? 'font-size:13px;line-height:1.35;' : 'font-size:22px;') + 'color:' +
-      (n < 0 ? '#B4553F' : (n <= 7 ? '#6E8A28' : '#331915')) + '">' +
+    var countClass = n < 0 ? 'past' : (n <= 7 ? 'soon' : 'future');
+    var countHtml = '<div style="text-align:right;min-width:72px"><div class="big-num ' + countClass + '" style="' +
+      (n < 0 ? 'font-size:13px;line-height:1.35;' : 'font-size:22px;') + '">' +
       (n === 0 ? '今天' : n < 0 ? passedText(nd) : n) + '</div>' +
       (n > 0 ? '<div class="small muted">天</div>' : '') + '</div>';
     // 折叠态
@@ -15789,19 +16071,19 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       (x.todos || []).forEach(function (td) {
         if (td.done || !td.due) return;
         var n = left(td.due);
-        if (n < 0) out.push({ kind: '办案待办逾期', name: nm + '｜' + td.t, go: 'jiwei', warn: true });
-        else if (n <= 1) out.push({ kind: '办案待办到期', name: nm + '｜' + td.t, go: 'jiwei', warn: n === 0 });
+        if (n < 0) out.push({ kind: '办案待办逾期', name: nm + '｜' + td.t, go: 'jiwei', tk: 'main', tv: 'case', warn: true });
+        else if (n <= 1) out.push({ kind: '办案待办到期', name: nm + '｜' + td.t, go: 'jiwei', tk: 'main', tv: 'case', warn: n === 0 });
       });
     });
     (jw.submits || []).forEach(function (x) {
       if (x.status === '已报送' || !x.dueDate) return;
       var n = left(x.dueDate);
-      if (n < 0) out.push({ kind: '报送逾期', name: x.title, go: 'jiwei', warn: true });
-      else if (n <= 1) out.push({ kind: '今日待报', name: x.title, go: 'jiwei', warn: n === 0 });
+      if (n < 0) out.push({ kind: '报送逾期', name: x.title, go: 'jiwei', tk: 'main', tv: 'submit', warn: true });
+      else if (n <= 1) out.push({ kind: '今日待报', name: x.title, go: 'jiwei', tk: 'main', tv: 'submit', warn: n === 0 });
     });
     (jw.inspects || []).forEach(function (x) {
       if ((x.rectifyStatus === '待整改' || x.rectifyStatus === '整改中') && x.rectifyDue && left(x.rectifyDue) < 0)
-        out.push({ kind: '整改逾期', name: x.title, go: 'jiwei', warn: true });
+        out.push({ kind: '整改逾期', name: x.title, go: 'jiwei', tk: 'main', tv: 'inspect', warn: true });
     });
     return out;
   }
@@ -15983,10 +16265,13 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       if (!items.length)
         return UI.card({ title: '✅ 今天要处理', body: '<div class="small muted">太棒了，没有逾期或待办事项 🎉</div>' });
       var html = items.map(function (it) {
+        var jump = it.tv
+          ? ' data-act="goStat" data-go="' + it.go + '" data-tk="' + (it.tk || 'main') + '" data-tv="' + it.tv + '"'
+          : ' data-act="goModule" data-id="' + it.go + '"';
         return '<div class="tf-row' + (it.warn ? ' warn' : '') + '">' +
           '<span class="tf-tag' + (it.warn ? ' warn' : '') + '">' + esc(it.kind) + '</span>' +
           '<span class="tf-name">' + esc(it.name) + '</span>' +
-          '<button class="tf-go btn sm tap" data-act="goModule" data-id="' + it.go + '">去处理</button>' +
+          '<button class="tf-go btn sm tap"' + jump + '>去处理</button>' +
           '</div>';
       }).join('');
       return UI.card({ title: '🔥 今天要处理', body: html });
@@ -16199,10 +16484,10 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           { id: 'ck_total', v: ckTotal + '天', k: '累计打卡', go: 'checkin', ok: ckTotal >= 30 }
         ],
         tasks: [
-          { id: 'tk_due', v: dueCnt, k: '今日待办', go: 'tasks' },
-          { id: 'tk_over', v: overCnt, k: '逾期待办', go: 'tasks', warn: overCnt > 0 },
-          { id: 'tk_weekdone', v: weekDone + '/' + weekTotal, k: '本周完成', go: 'tasks', ok: weekTotal > 0 && weekDone === weekTotal },
-          { id: 'tk_done', v: tkDone, k: '累计完成', go: 'tasks' }
+          { id: 'tk_due', v: dueCnt, k: '今日待办', go: 'tasks', tk: 'st', tv: 'todo' },
+          { id: 'tk_over', v: overCnt, k: '逾期待办', go: 'tasks', tk: 'st', tv: 'todo', warn: overCnt > 0 },
+          { id: 'tk_weekdone', v: weekDone + '/' + weekTotal, k: '本周完成', go: 'tasks', tk: 'st', tv: 'done', ok: weekTotal > 0 && weekDone === weekTotal },
+          { id: 'tk_done', v: tkDone, k: '累计完成', go: 'tasks', tk: 'st', tv: 'done' }
         ],
         worklog: [
           { id: 'wl_today', v: workToday, k: '今日工作', go: 'worklog' },
@@ -16211,9 +16496,9 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         ],
         body: [
           { id: 'bd_water', v: water + 'ml', k: '今日饮水', go: 'body', tk: 'main', tv: 'water', ok: wGoal && water >= wGoal },
-          { id: 'bd_weight', v: weight, k: '当前体重', go: 'body', tk: 'main', tv: 'weight' },
-          { id: 'bd_wdays', v: bdWdays + '天', k: '饮水天数(周)', go: 'body' },
-          { id: 'bd_wcount', v: bdWcount, k: '本月称重', go: 'body', tk: 'main', tv: 'weight' }
+          { id: 'bd_weight', v: weight, k: '当前体重', go: 'body', tk: 'main', tv: 'measure' },
+          { id: 'bd_wdays', v: bdWdays + '天', k: '饮水天数(周)', go: 'body', tk: 'main', tv: 'water' },
+          { id: 'bd_wcount', v: bdWcount, k: '本月称重', go: 'body', tk: 'main', tv: 'measure' }
         ],
         media: [
           { id: 'md_book', v: fmtDur(readMins), k: '今天看书', go: 'media', tk: 'type', tv: 'book' },
@@ -16232,25 +16517,25 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           { id: 'dy_streak', v: dyStreak + '天', k: '连续日记', go: 'diary', ok: dyStreak >= 7 }
         ],
         finance: [
-          { id: 'fn_flow', k: '本月收支', go: 'finance', big: true, center: true, dual: [
+          { id: 'fn_flow', k: '本月收支', go: 'finance', tk: 'main', tv: 'flow', big: true, center: true, dual: [
             ['支出', U.moneyFull(exp), false, U.moneyFull(exp)],
             ['结余', U.moneyFull(balance), balance < 0, U.moneyFull(balance)]
           ] },
-          { id: 'fn_expcnt', v: expCount + '笔', k: '支出笔数', go: 'finance' },
-          { id: 'fn_income', v: incMoney, k: '本月收入', go: 'finance' },
-          { id: 'fn_days', v: fnDays + '天', k: '记账天数', go: 'finance' },
-          { id: 'fn_avg', v: U.moneyFull(fnAvg), k: '日均支出', go: 'finance' },
-          { id: 'fn_total', v: fnTotal + '笔', k: '累计记账', go: 'finance' }
+          { id: 'fn_expcnt', v: expCount + '笔', k: '支出笔数', go: 'finance', tk: 'main', tv: 'stat' },
+          { id: 'fn_income', v: incMoney, k: '本月收入', go: 'finance', tk: 'main', tv: 'stat' },
+          { id: 'fn_days', v: fnDays + '天', k: '记账天数', go: 'finance', tk: 'main', tv: 'flow' },
+          { id: 'fn_avg', v: U.moneyFull(fnAvg), k: '日均支出', go: 'finance', tk: 'main', tv: 'stat' },
+          { id: 'fn_total', v: fnTotal + '笔', k: '累计记账', go: 'finance', tk: 'main', tv: 'stat' }
         ],
         exam: [
-          { id: 'ex_progress', v: examUp, k: '备考进行', go: 'exam' },
-          { id: 'ex_month', v: exMonth, k: '本月备考', go: 'exam' },
-          { id: 'ex_total', v: exTotal, k: '累计备考', go: 'exam' }
+          { id: 'ex_progress', v: examUp, k: '备考进行', go: 'exam', tk: 'main', tv: 'plan' },
+          { id: 'ex_month', v: exMonth, k: '本月备考', go: 'exam', tk: 'main', tv: 'record' },
+          { id: 'ex_total', v: exTotal, k: '累计备考', go: 'exam', tk: 'main', tv: 'record' }
         ],
         baby: [
-          { id: 'bb_age', v: (D().baby && D().baby.name) ? babyAge().shortText : '—', k: '宝宝月龄', go: 'baby' },
-          { id: 'bb_vax', v: nextVaxDays, k: '距下次疫苗', go: 'baby', warn: nextVaxNum <= 7 && nextVaxNum > 0 },
-          { id: 'bb_vtotal', v: bbVtotal, k: '累计疫苗', go: 'baby' }
+          { id: 'bb_age', v: (D().baby && D().baby.name) ? babyAge().shortText : '—', k: '宝宝月龄', go: 'baby', tk: 'main', tv: 'home' },
+          { id: 'bb_vax', v: nextVaxDays, k: '距下次疫苗', go: 'baby', tk: 'main', tv: 'health', warn: nextVaxNum <= 7 && nextVaxNum > 0 },
+          { id: 'bb_vtotal', v: bbVtotal, k: '累计疫苗', go: 'baby', tk: 'main', tv: 'health' }
         ],
         items: [
           { id: 'it_consum', v: consum, k: '近3天耗材', go: 'items', tk: 'main', tv: 'consum', warn: consum > 0 },
@@ -16271,10 +16556,10 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         family: [{ id: 'fm_count', v: famN ? famN + '人' : '—', k: '家人', go: 'family' }],
         cat: [{ id: 'ct_count', v: petN ? petN + '只' : '—', k: '宠物', go: 'cat' }],
         jiwei: [
-          { id: 'jw_open', v: jwOpen, k: '在办案件', go: 'jiwei' },
-          { id: 'jw_over', v: jwOver, k: '待办逾期', go: 'jiwei', warn: jwOver > 0 },
-          { id: 'jw_submit', v: jwPend, k: '待报材料', go: 'jiwei', warn: jwPend > 0 },
-          { id: 'jw_rect', v: jwRect, k: '待整改', go: 'jiwei', warn: jwRect > 0 }
+          { id: 'jw_open', v: jwOpen, k: '在办案件', go: 'jiwei', tk: 'main', tv: 'case' },
+          { id: 'jw_over', v: jwOver, k: '待办逾期', go: 'jiwei', tk: 'main', tv: 'case', warn: jwOver > 0 },
+          { id: 'jw_submit', v: jwPend, k: '待报材料', go: 'jiwei', tk: 'main', tv: 'submit', warn: jwPend > 0 },
+          { id: 'jw_rect', v: jwRect, k: '待整改', go: 'jiwei', tk: 'main', tv: 'inspect', warn: jwRect > 0 }
         ]
       };
       var itemCfg = D().settings.statItem || {};
@@ -16845,10 +17130,10 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     if (x.acceptDate) pairs.push(['受理时间', cnDate(x.acceptDate)]);
     pairs.push(['立案时间', x.fileDate ? cnDate(x.fileDate) : '未立案']);
     if (x.closeDate) pairs.push(['办结日期', cnDate(x.closeDate)]);
-    if (x.suggest) pairs.push(['处理结果', x.suggest]);
     if (x.partyPerson) pairs.push(['被反映人', x.partyPerson]);
     if (x.partyUnit) pairs.push(['被反映单位', x.partyUnit]);
     if (x.note) pairs.push(['问题摘要', x.note]);
+    if (x.suggest) pairs.push(['处理结果', x.suggest]);
     /* 阶段进度条：优先用阶段日志（带日期），兼容旧数据 x.stage */
     var stageBar = renderStageBar(x);
     var meta =
@@ -16866,7 +17151,6 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
             (x.no ? ' <span class="badge grey">' + esc(x.no) + '</span>' : '') +
             ' <span style="font-size:11px;color:#999">▸</span></div>' +
           '<div class="item-meta">' + meta + '</div>' +
-          ((closed && x.suggest) ? '<div class="jw-suggest">处理结果：' + esc(x.suggest) + '</div>' : '') +
         '</div></div>';
     }
 
@@ -17587,11 +17871,30 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         if (!s) return;
         UI.form({
           title: '调整阶段日期 · ' + (s.stage || ''), okText: '保存',
+          danger: true, dangerText: '删除',
           values: { d: s.d || U.today(), note: s.note || '' },
           fields: [
             { k: 'd', label: '阶段日期', type: 'date', req: true, def: U.today() },
             { k: 'note', label: '阶段说明', type: 'textarea', full: true, rows: 3 }
-          ]
+          ],
+          onDanger: function () {
+            UI.confirm('删除阶段节点', '确定删除「' + (s.stage || '') + '」阶段节点？删除后不可恢复。', '删除', true).then(function (yes) {
+              if (!yes) return;
+              var isClose = s.stage === '予以了结';
+              x.stageLog = (x.stageLog || []).filter(function (item) { return item.id !== s.id; });
+              var lastStage = x.stageLog[x.stageLog.length - 1];
+              x.stage = (lastStage && lastStage.stage) || (Store.data.jwStages || ['线索处置'])[0];
+              if (isClose) {
+                if (x.status === '已了结') x.status = '办理中';
+                delete x.closeDate;
+                if (Array.isArray(x.logs)) x.logs = x.logs.filter(function (l) { return l.t !== '办结'; });
+                U.toast('已删除办结节点，案件恢复为办理中');
+              } else {
+                U.toast('已删除阶段节点');
+              }
+              Store.save(); App.refresh();
+            });
+          }
         }).then(function (v) {
           if (!v) return;
           s.d = v.d || U.today();
