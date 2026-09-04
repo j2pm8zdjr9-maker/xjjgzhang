@@ -2825,7 +2825,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       },
       jiwei: { cases: [], inspects: [], submits: [], punish: [] },
       jwSources: ['信访举报', '上级交办', '巡察移交', '监督检查发现', '司法机关移送', '审计移交', '其他'],
-      jwStages: ['线索处置', '初步核实', '立案审查调查', '案件审理', '处分执行', '已了结', '信访反馈'],
+      jwStages: ['线索处置', '初步核实', '立案', '审查调查', '案件审理', '处分执行', '已了结', '信访反馈'],
       jwMeasures: ['谈话', '函询', '查询', '调取', '暂扣封存', '冻结', '留置', '鉴定'],
       jwInspectTypes: ['日常监督', '专项监督', '巡察整改监督', '作风建设督查', '纠治四风督查', '其他'],
       jwSubmitWays: ['线上系统', '邮箱', '纸质报送', '现场报送', '其他'],
@@ -2987,7 +2987,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         { id: uid(), t: '调取 2025 年度会计凭证', due: shiftDay(t, 2), done: false, created: shiftDay(t, -2) }
       ],
       logs: [{ id: uid(), d: shiftDay(t, -18), t: '完成初步了解，形成情况报告。' }] },
-    { id: uid(), no: '示例-002', title: '示例·公务接待经费使用情况专项核查', source: '监督检查发现', stage: '立案审查调查', status: '办理中',
+    { id: uid(), no: '示例-002', title: '示例·公务接待经费使用情况专项核查', source: '监督检查发现', stage: '审查调查', status: '办理中',
       partyPerson: '', partyUnit: '示例单位',
       acceptDate: shiftDay(t, -12), fileDate: shiftDay(t, -5), closeDate: '', suggest: '', note: '',
       todos: [{ id: uid(), t: '向××单位发函了解情况', due: '', done: false, created: shiftDay(t, -3) }],
@@ -3156,6 +3156,35 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
             this.data.jwStages.push('信访反馈');
           }
           this.data.settings._stageXfFeedbackMigrated = true;
+          localStorage.setItem(KEY, JSON.stringify(this.data));
+        }
+      } catch (e) {}
+      // 纪检监察阶段拆分：「立案审查调查」→「立案」+「审查调查」，可分别记录立案时间与审查调查结束时间
+      try {
+        if (!this.data.settings._stageLiAnSplitMigrated) {
+          if (Array.isArray(this.data.jwStages)) {
+            var iLa = this.data.jwStages.indexOf('立案审查调查');
+            if (iLa >= 0) {
+              this.data.jwStages.splice(iLa, 1, '立案', '审查调查');
+            }
+          }
+          ((this.data.jiwei && this.data.jiwei.cases) || []).forEach(function (c) {
+            if (Array.isArray(c.stageLog) && c.stageLog.length) {
+              var out = [];
+              c.stageLog.forEach(function (s) {
+                if (s.stage === '立案审查调查') {
+                  /* 旧合并节点拆为两个：立案沿用原日期，审查调查同日期（可后续点节点修正为结束时间） */
+                  out.push({ id: uid(), d: s.d, stage: '立案', note: '' });
+                  out.push({ id: uid(), d: s.d, stage: '审查调查', note: s.note || '' });
+                } else {
+                  out.push(s);
+                }
+              });
+              c.stageLog = out;
+            }
+            if (c.stage === '立案审查调查') c.stage = '审查调查';
+          });
+          this.data.settings._stageLiAnSplitMigrated = true;
           localStorage.setItem(KEY, JSON.stringify(this.data));
         }
       } catch (e) {}
@@ -3497,11 +3526,12 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       /* 「常用」置顶分组已取消：模块一律按下方固定分组展示；
          ui.recent 仍记录最近访问，仅供首页模块宫格「按最近使用排序」使用 */
       var groups = [
-        { t: '日常', ids: ['checkin', 'schedule', 'tasks', 'worklog'] },
-        { t: '工作', ids: ['jiwei'] },
-        { t: '记录', ids: ['media', 'exam', 'body', 'diary'] },
-        { t: '生活', ids: ['items', 'finance', 'vehicle', 'anniv', 'social'] },
-        { t: '人与愿望', ids: ['wish', 'baby', 'family', 'cat'] },
+        { t: '事务', ids: ['checkin', 'schedule', 'tasks'] },
+        { t: '工作', ids: ['worklog', 'jiwei'] },
+        { t: '记录', ids: ['exam', 'media', 'diary'] },
+        { t: '财物', ids: ['finance', 'vehicle', 'items'] },
+        { t: '家人', ids: ['baby', 'family', 'cat'] },
+        { t: '生活', ids: ['body', 'anniv', 'social', 'wish'] },
         { t: '系统', ids: ['settings'] }
       ];
       groups.forEach(function (g) {
@@ -4009,6 +4039,34 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   var _fs = 1, _vhBound = false, _vhRaf = 0;
   /* textarea 双击展开：会话级状态（跨弹窗共享）。_taTipShown 只提示一次收起方式 */
   var _lastTapTa = { t: 0, ta: null }, _taTipShown = false;
+  /* 双击（快速两击）textarea：临时展开至约 70% 视口高，再次双击收起还原。
+     默认外观完全不变；用 pointerup 计时检测而非 dblclick（部分 iOS 浏览器不触发 dblclick），
+     鼠标双击与手机双击都能命中。首次展开时 toast 提示一次收起方式。
+     UI.form 与 UI.sheet 共用，所有弹窗内的多行文本框自动获得该能力。 */
+  function _bindTaExpand(el) {
+    el.addEventListener('pointerup', function (e) {
+      var t = e.target;
+      if (!t || t.tagName !== 'TEXTAREA') return;
+      var now = Date.now();
+      if (_lastTapTa.ta === t && now - _lastTapTa.t < 350) {
+        _lastTapTa = { t: 0, ta: null };
+        if (t.dataset.taExpand !== '1') {
+          t.dataset.taPrevH = t.style.height || '';
+          t.style.height = Math.max(200, Math.round(window.innerHeight * 0.7)) + 'px';
+          t.dataset.taExpand = '1';
+          if (!_taTipShown) {
+            _taTipShown = true;
+            U.toast('已展开，再次双击可收起');
+          }
+        } else {
+          t.style.height = t.dataset.taPrevH || '';
+          delete t.dataset.taExpand;
+        }
+      } else {
+        _lastTapTa = { t: now, ta: t };
+      }
+    });
+  }
   function _setViewportVars() {
     var vv = window.visualViewport;
     var ih = window.innerHeight || 600;
@@ -4408,31 +4466,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         root.appendChild(el);
         modalA11y.open(el);
 
-        /* 双击（快速两击）textarea：临时展开至约 70% 视口高，再次双击收起还原。
-           默认外观完全不变；用 pointerup 计时检测而非 dblclick（部分 iOS 浏览器不触发 dblclick），
-           鼠标双击与手机双击都能命中。首次展开时 toast 提示一次收起方式。 */
-        el.addEventListener('pointerup', function (e) {
-          var t = e.target;
-          if (!t || t.tagName !== 'TEXTAREA') return;
-          var now = Date.now();
-          if (_lastTapTa.ta === t && now - _lastTapTa.t < 350) {
-            _lastTapTa = { t: 0, ta: null };
-            if (t.dataset.taExpand !== '1') {
-              t.dataset.taPrevH = t.style.height || '';
-              t.style.height = Math.max(200, Math.round(window.innerHeight * 0.7)) + 'px';
-              t.dataset.taExpand = '1';
-              if (!_taTipShown) {
-                _taTipShown = true;
-                U.toast('已展开，再次双击可收起');
-              }
-            } else {
-              t.style.height = t.dataset.taPrevH || '';
-              delete t.dataset.taExpand;
-            }
-          } else {
-            _lastTapTa = { t: now, ta: t };
-          }
-        });
+        /* 双击展开：与 UI.sheet 共用同一套逻辑 */
+        _bindTaExpand(el);
 
         /* input focus auto scroll, avoid soft keyboard */
         el.addEventListener('focus', function(e) {
@@ -4727,6 +4762,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       modalA11y.open(el);
       UI.lock();
       w.U.foldNotes(el);
+      _bindTaExpand(el);
       el.addEventListener('click', function (e) {
         if (e.target === el || e.target.closest('[data-x]')) { el.remove(); UI.unlock(); modalA11y.close(el); }
       });
@@ -9055,7 +9091,6 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         '<button class="sch-nav-btn tap" data-act="schPrev">‹</button>' +
         '<strong class="sch-month-label">' + y + '年' + U.pad(m) + '月</strong>' +
         '<span class="sch-head-right">' +
-          '<button class="sch-share-btn tap" data-act="schSync" title="同步日程">同步</button>' +
           '<button class="sch-today-btn tap" data-act="schToday">今天</button>' +
           '<button class="sch-nav-btn tap" data-act="schNext">›</button>' +
         '</span>' +
@@ -9405,215 +9440,12 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     }
   }
 
-  /* ---------- 同步选择器（双向） ---------- */
-  function openSyncChooser() {
-    var total = (D().schedules || []).length;
-    var body =
-      '<div class="sync-choice">' +
-        '<button class="sync-opt tap" data-dir="toPhone">' +
-          '<span class="sync-ico">📤</span>' +
-          '<span class="sync-txt">' +
-            '<span class="sync-t1">工作台 → 手机</span>' +
-            '<span class="sync-t2">导出为 .ics 文件，导入到手机系统日历</span>' +
-          '</span>' +
-        '</button>' +
-        '<button class="sync-opt tap" data-dir="toWork">' +
-          '<span class="sync-ico">📥</span>' +
-          '<span class="sync-txt">' +
-            '<span class="sync-t1">手机 → 工作台</span>' +
-            '<span class="sync-t2">从手机选择导出的 .ics 文件，导入到工作台</span>' +
-          '</span>' +
-        '</button>' +
-      '</div>' +
-      '<p class="sync-tip">当前工作台共有 ' + total + ' 条日程</p>';
-
-    var el = UI.sheet('同步日程', body);
-    el.addEventListener('click', function (e) {
-      var b = e.target.closest('.sync-opt');
-      if (!b) return;
-      el.remove(); UI.unlock();
-      if (b.dataset.dir === 'toPhone') syncToCalendar();
-      else importFromPhone();
-    });
-  }
-
-  /* ---------- 工作台 → 手机：生成 .ics 文件下载 ---------- */
-  function syncToCalendar() {
-    var arr = D().schedules || [];
-    if (!arr.length) { U.toast('还没有日程可同步'); return; }
-
-    // 1. 尝试 Web Calendar API（仅部分 Android Chrome 支持）
-    try {
-      if ('scheduler' in window && window.scheduler && window.scheduler.add) {
-        // 不阻塞，继续走 .ics 下载作为兜底
-      }
-    } catch (e) {}
-
-    // 2. 生成 .ics 文件供下载
-    var lines = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//Workbench//Schedule//CN',
-      'CALSCALE:GREGORIAN',
-      'METHOD:PUBLISH'
-    ];
-
-    // 按日期排序
-    arr.sort(function (a, b) { return (a.date || '').localeCompare(b.date || '') || (a.time || '').localeCompare(b.time || ''); });
-
-    arr.forEach(function (s) {
-      if (!s.title || !s.date) return;
-      var dtStart, dtEnd;
-      var d = s.date.replace(/-/g, '');
-      if (s.allDay) {
-        dtStart = d;
-        // 全天事件：结束日期为次日
-        var nd = U.parseDate(s.date); nd.setDate(nd.getDate() + 1);
-        dtEnd = U.getFullYear.call ? '' : (nd.getFullYear() + '' + U.pad(nd.getMonth()+1) + U.pad(nd.getDate()));
-        var endD = new Date(U.parseDate(s.date));
-        endD.setDate(endD.getDate() + 1);
-        dtEnd = endD.getFullYear() + '' + U.pad(endD.getMonth()+1) + '' + U.pad(endD.getDate());
-        lines.push('BEGIN:VEVENT');
-        lines.push('DTSTART;VALUE=DATE:' + dtStart);
-        lines.push('DTEND;VALUE=DATE:' + dtEnd);
-        lines.push('SUMMARY:' + escIcs(s.title));
-        lines.push('UID:' + (s.id || U.uid()) + '@workbench');
-        if (s.note) lines.push('DESCRIPTION:' + escIcs(s.note));
-        lines.push('END:VEVENT');
-      } else {
-        var t = (s.time || '09:00').replace(':', '');
-        dtStart = d + 'T' + t + '00';
-        // 默认 1 小时结束
-        var endDate = new Date(U.parseDate(s.date));
-        var th = parseInt((s.time || '09:00').split(':')[0] || '9', 10);
-        var tm = parseInt((s.time || '09:00').split(':')[1] || '0', 10);
-        endDate.setHours(th + 1, tm, 0, 0);
-        dtEnd = endDate.getFullYear() + '' + U.pad(endDate.getMonth()+1) + '' + U.pad(endDate.getDate()) +
-                'T' + U.pad(endDate.getHours()) + '' + U.pad(endDate.getMinutes()) + '00';
-        lines.push('BEGIN:VEVENT');
-        lines.push('DTSTART:' + dtStart);
-        lines.push('DTEND:' + dtEnd);
-        lines.push('SUMMARY:' + escIcs(s.title));
-        lines.push('UID:' + (s.id || U.uid()) + '@workbench');
-        if (s.note) lines.push('DESCRIPTION:' + escIcs(s.note));
-        lines.push('END:VEVENT');
-      }
-    });
-
-    lines.push('END:VCALENDAR');
-    var ics = lines.join('\r\n');
-
-    // 创建 Blob 并触发下载
-    var blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url;
-    a.download = '工作台日程_' + U.today() + '.ics';
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(function () { URL.revokeObjectURL(url); a.remove(); }, 500);
-    U.toast('已生成日程文件，请在手机上打开以导入系统日历');
-  }
-
-  /* ICS 特殊字符转义 */
-  function escIcs(s) {
-    return String(s || '')
-      .replace(/\\/g, '\\\\')
-      .replace(/;/g, '\\;')
-      .replace(/,/g, '\\,')
-      .replace(/\n/g, '\\n')
-      .replace(/\r/g, '');
-  }
-  /* ICS 特殊字符反转义 */
-  function unescIcs(s) {
-    return String(s || '')
-      .replace(/\\n/g, '\n').replace(/\\N/g, '\n')
-      .replace(/\\;/g, ';').replace(/\\,/g, ',')
-      .replace(/\\\\/g, '\\');
-  }
-
-  /* ---------- 手机 → 工作台：解析 .ics 文件并导入 ---------- */
-  function importFromPhone() {
-    var input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.ics,.ical,text/calendar,text/x-vcalendar';
-    input.addEventListener('change', function () {
-      var f = input.files && input.files[0];
-      if (!f) return;
-      var reader = new FileReader();
-      reader.onload = function () {
-        var events = parseICS(String(reader.result || ''));
-        var imported = events.map(icsToSchedule).filter(Boolean);
-        if (!imported.length) { U.toast('未识别到可导入的日程'); return; }
-        var arr = D().schedules || (D().schedules = []);
-        var dup = 0, add = 0;
-        imported.forEach(function (s) {
-          var exists = arr.some(function (x) {
-            return x.title === s.title && x.date === s.date && x.time === s.time && x.allDay === s.allDay;
-          });
-          if (exists) { dup++; return; }
-          arr.push({
-            id: U.uid(), title: s.title, date: s.date, time: s.time,
-            allDay: s.allDay, color: s.color || '#3B82F6', remind: 0,
-            note: s.note || '', created: U.today()
-          });
-          add++;
-        });
-        Store.save(); App.refresh();
-        U.toast('已导入 ' + add + ' 条' + (dup ? '，跳过 ' + dup + ' 条重复' : ''));
-      };
-      reader.onerror = function () { U.toast('文件读取失败'); };
-      reader.readAsText(f);
-    });
-    input.click();
-  }
-
-  /* 解析 ICS 文本为事件数组（处理折行/转义/日期） */
-  function parseICS(text) {
-    var raw = String(text || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-    raw = raw.replace(/\n[ \t]/g, '');       // 还原折行（续行以空格/制表符开头）
-    var lines = raw.split('\n');
-    var events = [], cur = null;
-    for (var i = 0; i < lines.length; i++) {
-      var ln = lines[i];
-      if (ln === 'BEGIN:VEVENT') { cur = {}; continue; }
-      if (ln === 'END:VEVENT') { if (cur) events.push(cur); cur = null; continue; }
-      if (!cur) continue;
-      var idx = ln.indexOf(':');
-      if (idx < 0) continue;
-      var key = ln.substring(0, idx).split(';')[0];
-      var val = ln.substring(idx + 1);
-      if (key === 'SUMMARY') cur.title = unescIcs(val);
-      else if (key === 'DESCRIPTION') cur.note = unescIcs(val);
-      else if (key === 'DTSTART') cur.dtstart = val;
-      else if (key === 'DTEND') cur.dtend = val;
-    }
-    return events;
-  }
-
-  /* ICS 事件 → 工作台日程模型 */
-  function icsToSchedule(ev) {
-    var ds = ev.dtstart || '';
-    if (!ds) return null;
-    var title = ev.title || '未命名日程';
-    if (ds.indexOf('T') >= 0) {
-      var parts = ds.split('T');
-      var date = parts[0], time = parts[1] || '';
-      var dateStr = date.substring(0, 4) + '-' + date.substring(4, 6) + '-' + date.substring(6, 8);
-      var timeStr = time.length >= 4 ? time.substring(0, 2) + ':' + time.substring(2, 4) : '';
-      return { title: title, date: dateStr, time: timeStr, allDay: false, note: ev.note || '' };
-    }
-    var d = ds;
-    var dateStr2 = d.substring(0, 4) + '-' + d.substring(4, 6) + '-' + d.substring(6, 8);
-    return { title: title, date: dateStr2, time: '', allDay: true, note: ev.note || '' };
-  }
-
   /* ========== 模块定义 ========== */
   var schedule = {
     id: 'schedule', icon: '📅', name: '日程提醒',
 
     render: function () {
-      return UI.head('📅 日历', '管理你的日程安排，支持同步到手机系统日历') +
+      return UI.head('📅 日历', '管理你的日程安排') +
         calendarHTML() +
         viewTabsHTML() +
         (schView === 'all' ? allToolbarHTML() : '') +
@@ -9643,7 +9475,6 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       schNew: function () { openForm(); },
       schEdit: function (t) { openForm(t.dataset.id); },
       schDel: function (t) { delSchedule(t.dataset.id); },
-      schSync: function () { openSyncChooser(); },
       schexpand: function (t, e) {
         var id = t.dataset.id;
         if (!id) return;
@@ -12142,7 +11973,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     { v: 'excited', e: '🤩', t: '兴奋' }, { v: 'relaxed', e: '😎', t: '放松' },
     { v: 'tired', e: '😩', t: '累' }, { v: 'sad', e: '😢', t: '难过' },
     { v: 'angry', e: '😠', t: '生气' }, { v: 'anxious', e: '😟', t: '焦虑' },
-    { v: 'moved', e: '🥹', t: '感动' }
+    { v: 'moved', e: '🥰', t: '感动' }
   ];
   function wMap(v) { return WEATHER.filter(function (x) { return x.v === v; })[0] || null; }
   function mMap(v) { return MOOD.filter(function (x) { return x.v === v; })[0] || null; }
@@ -12209,13 +12040,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   function exportOne(id) {
     var x = byId(id); if (!x) return;
     var txt = entryMd(x);
-    if (x.imgs && x.imgs.length) txt += '\n\n（本篇含 ' + x.imgs.length + ' 张图片，图片请使用「导出全部」JSON 备份）';
+    if (x.imgs && x.imgs.length) txt += '\n\n（本篇含 ' + x.imgs.length + ' 张图片，Markdown 不含图片，如需备份图片可使用设置中的「导出全部数据备份」）';
     download('日记_' + (x.date || '') + '_' + (x.title || '无标题').slice(0, 10) + '.md', txt, 'text/markdown;charset=utf-8');
-  }
-  function exportAll() {
-    var data = { app: '个人工作台-私人日记', exportedAt: new Date().toISOString(), entries: entries() };
-    download('私人日记备份_' + U.today() + '.json', JSON.stringify(data, null, 2), 'application/json');
-    U.toast('已导出 ' + entries().length + ' 篇');
   }
 
   /* ---------- 图片压缩 ---------- */
@@ -12256,14 +12082,12 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         protect +
         this.statCard() +
         UI.card({
-          title: '我的日记', sub: '日期倒序 · 置顶优先',
-          right: '<button class="btn ghost sm tap" data-act="expAll">⬇ 导出全部</button>' +
-            (D().diary.password
+          title: '我的日记',
+          right: (D().diary.password
               ? '<button class="btn ghost sm tap" data-act="lock">🔓 已加密</button>'
               : '<button class="btn ghost sm tap" data-act="lock">🔒 加密</button>') +
             '<button class="btn ghost sm tap" data-act="hist">📜 历史日记</button>' +
-            Cats.btn('diaryTags', '日记标签') +
-            '<button class="btn ghost sm tap" data-act="hist">📜 历史日记</button>',
+            Cats.btn('diaryTags', '日记标签'),
           body: this.controls() + '<div id="dbody" style="margin-top:14px">' +
             (st.view === 'calendar' ? this.calBar() : this.listBody()) + '</div>'
         }) +
@@ -12514,7 +12338,6 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         });
       },
       expOne: function (t) { exportOne(t.dataset.id); },
-      expAll: function () { exportAll(); },
       calPrev: function () { navCal(-1); },
       calNext: function () { navCal(1); },
       calToday: function () { cal.y = new Date().getFullYear(); cal.m = new Date().getMonth() + 1; App.refresh(); },
@@ -12571,8 +12394,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       '<div class="field"><label>标题</label><div class="field-r"><textarea class="input di-title" name="title" rows="1" placeholder="今天发生了什么…">' + esc(tmp.title) + '</textarea></div></div>' +
       '<div class="field field-vertical"><label>天气</label><div class="field-r"><div class="chip-row" id="wbox">' + wChips() + '</div></div></div>' +
       '<div class="field field-vertical"><label>心情</label><div class="field-r"><div class="chip-row" id="mbox">' + mChips() + '</div></div></div>' +
-      '<div class="field field-vertical"><label>标签（可多选，也可新建）</label><div class="field-r"><div class="chip-row wrap" id="tbox">' + tChips() + '</div></div></div>' +
-      '<div class="row" style="gap:8px;margin-top:6px"><input class="input" id="newtag" placeholder="新建标签，如：旅行 / 复盘"><button class="btn ghost sm tap" data-act="addtag">＋ 添加</button></div>' +
+      '<div class="field field-vertical"><label>标签（可多选）</label><div class="field-r"><div class="chip-row wrap" id="tbox">' + tChips() + '</div></div></div>' +
       '<div class="field"><label>图片（本地保存，自动压缩）</label><div class="field-r">' +
       '<input type="file" accept="image/*" multiple id="diFile" class="di-file">' +
       '<div id="imgs" style="margin-top:8px">' + iGrid() + '</div></div></div>' +
@@ -12597,14 +12419,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         var v = b.dataset.v, i = tmp.tags.indexOf(v);
         if (i >= 0) tmp.tags.splice(i, 1); else tmp.tags.push(v);
         paintT();
-      } else if (a === 'addtag') {
-        var inp = el.querySelector('#newtag'), nv = inp.value.trim();
-        if (nv) {
-          if ((D().diaryTags || []).indexOf(nv) < 0) { D().diaryTags = (D().diaryTags || []).concat(nv); Store.save(); }
-          if (tmp.tags.indexOf(nv) < 0) tmp.tags.push(nv);
-          inp.value = ''; paintT();
-        }
-      } else       if (a === 'delimg') { tmp.imgs.splice(+b.dataset.i, 1); paintI(); }
+      } else if (a === 'delimg') { tmp.imgs.splice(+b.dataset.i, 1); paintI(); }
       else if (a === 'zoom') { openLightbox(b.dataset.src); }
       else if (a === 'disave') { doSave(); }
     });
@@ -17051,7 +16866,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       /* 老数据平滑迁移：只有 x.stage 而没有 stageLog 的，按标准阶段顺序落地为 stageLog，
          这样每个阶段节点都带 id，才能在时间轴上点开改日期 */
       if (!Array.isArray(c.stageLog) || !c.stageLog.length) {
-        var std0 = (D().jwStages || ['线索处置', '初步核实', '立案审查调查', '案件审理', '处分执行', '已了结']);
+        var std0 = (D().jwStages || ['线索处置', '初步核实', '立案', '审查调查', '案件审理', '处分执行', '已了结']);
         if (c.stage && c.stage !== '未分阶段') {
           var i0 = std0.indexOf(c.stage);
           c.stageLog = (i0 < 0
@@ -17317,7 +17132,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   /* ---------- 案件 ---------- */
   /* 阶段进度条：优先用阶段日志（带日期），兼容旧数据 x.stage */
   function renderStageBar(x) {
-    var std = Store.data.jwStages || ['线索处置', '初步核实', '立案审查调查', '案件审理', '处分执行', '已了结'];
+    var std = Store.data.jwStages || ['线索处置', '初步核实', '立案', '审查调查', '案件审理', '处分执行', '已了结'];
     var log = x.stageLog || [];
     var seq; // [{stage, d}]
     if (log.length) {
@@ -18089,7 +17904,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       /* ---- 记录办理进度（阶段节点 + 日期） ---- */
       cStage: function (t) {
         var x = findCase(t.dataset.id); if (!x) return;
-        var std = Store.data.jwStages || ['线索处置', '初步核实', '立案审查调查', '案件审理', '处分执行', '已了结', '信访反馈'];
+        var std = Store.data.jwStages || ['线索处置', '初步核实', '立案', '审查调查', '案件审理', '处分执行', '已了结', '信访反馈'];
         var stageOpts = std.filter(function (s) { return s !== '已了结' && s !== '信访反馈'; }).concat(['予以了结', '信访反馈']);
         UI.form({
           title: '记录办理进度（阶段）', okText: '记录',
@@ -18120,7 +17935,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           } else {
             addStage(x, v.d, v.stage, v.note);
             x.stage = v.stage;
-            if (v.stage === '立案审查调查') { x.fileDate = v.d || U.today(); }
+            if (v.stage === '立案') { x.fileDate = v.d || U.today(); }
+            if (v.stage === '审查调查' && !x.fileDate) { x.fileDate = v.d || U.today(); }
             U.toast('已记录阶段进度');
           }
           Store.save(); App.refresh();
