@@ -217,7 +217,11 @@ a{ color:var(--olive-deep); text-decoration:none; }
   background:var(--cream-soft);
   border-right:1px solid var(--line);
   display:flex; flex-direction:column;
-  position:sticky; top:0; height:var(--vh-real);
+  /* 桌面端用 fixed + top/bottom 双锚点把高度锁定为「真实视口」：
+     部分浏览器对 html zoom 与 innerHeight/visualViewport 的换算口径不一致，
+     依赖 --vh-real 计算高度时，大窗口 + 字体放大下侧栏会提前结束（末项被截断、下方留白）。
+     top/bottom 锚点由浏览器自行解析，任何缩放/引擎下都恰好铺满窗口，与移动端抽屉同机制。 */
+  position:fixed; top:0; bottom:0; left:0;
   overflow:hidden;
   padding:16px 12px calc(12px + env(safe-area-inset-bottom));
   padding-top:calc(16px + env(safe-area-inset-top));
@@ -280,7 +284,7 @@ a{ color:var(--olive-deep); text-decoration:none; }
   opacity:0; pointer-events:none; transition:opacity .26s var(--ease); z-index:55;
   backdrop-filter:blur(1px);
 }
-.main{ flex:1; min-width:0; display:flex; flex-direction:column; }
+.main{ flex:1; min-width:0; margin-left:var(--sidebar-w); display:flex; flex-direction:column; }
 
 .topbar{
   position:sticky; top:0; z-index:40;
@@ -491,7 +495,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .body-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin:4px 0 14px; }
 @media (min-width:520px){ .body-grid{ grid-template-columns:repeat(4,1fr); } }
 .body-card{
-  display:flex; align-items:center; gap:10px;
+  display:flex; align-items:center; gap:10px; min-width:0;
   padding:12px 12px; border-radius:14px;
   border:1px solid var(--line); background:var(--card);
   cursor:pointer; text-align:left;
@@ -1368,9 +1372,12 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 }
 @keyframes maskIn{ from{opacity:0} to{opacity:1} }
 .modal{
-  width:100%; max-width:min(520px, 92vw);
-  max-height:88vh; /* 旧浏览器兜底 */
-  max-height:min(100%, calc(var(--svh-real) * .88));
+  width:100%;
+  /* 宽度随窗口自适应：电脑大窗口放大（上限 720px），窄窗口不低于 420px，手机由底部抽屉规则接管 */
+  max-width:clamp(420px, 44vw, 720px);
+  /* 高度锚定 fixed 遮罩的百分比（遮罩即真实视口，任何引擎/缩放下都自洽），
+     不再依赖 --svh-real——其换算口径因浏览器而异，曾导致手机端弹窗过高溢出 */
+  max-height:92%;
   overflow:auto; overscroll-behavior:contain;
   -webkit-overflow-scrolling:touch; /* iOS 弹窗内滚动更顺滑 */
   background:var(--card); border-radius:var(--r-l); box-shadow:0 24px 60px rgba(51,25,21,.22);
@@ -1442,6 +1449,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     box-shadow:0 0 40px rgba(51,25,21,.16);
     padding-top:calc(14px + env(safe-area-inset-top));
   }
+  /* 抽屉式侧栏不占文档流，主区不留左边距 */
+  .main{ margin-left:0; }
   body.nav-open .sidebar{ transform:none; }
   body.nav-open .scrim{ opacity:1; pointer-events:auto; }
   body.nav-open{ overflow:hidden; }
@@ -1459,25 +1468,13 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     padding-right:calc(14px + env(safe-area-inset-right));
   }
   .card{ padding:14px 13px; border-radius:15px; }
-  /* 手机端弹窗为底部抽屉；左右内嵌 iOS PWA 横屏/灵动岛侧安全区，
-     防止刘海在横屏时挤压 .modal-head 标题与表单 label。 */
+  /* 弹窗左右内嵌 iOS PWA 横屏/灵动岛侧安全区，
+     防止刘海在横屏时挤压 .modal-head 标题与表单 label（桌面端 env()=0，无影响）。 */
   .modal-mask{
-    padding:0;
     padding-left:env(safe-area-inset-left);
     padding-right:env(safe-area-inset-right);
-    align-items:flex-end;
   }
-  .modal{
-    max-width:none; border-radius:22px 22px 0 0;
-    max-height:92dvh; /* 旧浏览器兜底 */
-    max-height:min(100%, calc(var(--svh-real) * .92));
-    margin:0;
-    animation:sheetIn .28s var(--ease);
-  }
-  @keyframes sheetIn{ from{transform:translateY(100%);} to{transform:none;} }
-  /* 弹窗头/体/底：左右叠加水平安全区，顶部加 env(safe-area-inset-top)（键盘弹起或横屏时仍能看见标题） */
   .modal-head{
-    border-radius:22px 22px 0 0;
     padding-left:calc(18px + env(safe-area-inset-left));
     padding-right:calc(18px + env(safe-area-inset-right));
     padding-top:calc(14px + env(safe-area-inset-top, 0px));
@@ -1489,6 +1486,25 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   .modal-foot{
     padding-left:calc(18px + env(safe-area-inset-left));
     padding-right:calc(18px + env(safe-area-inset-right));
+  }
+  /* 底部抽屉形态：仅「窄屏 + 触屏」（手机/平板）。
+     电脑浏览器即便窗口较窄也保持居中弹窗，方便鼠标键盘输入；
+     手机上仍是贴底抽屉，不改变原有观感与安全区适配。 */
+  @media (pointer: coarse){
+    .modal-mask{
+      padding:0;
+      padding-left:env(safe-area-inset-left);
+      padding-right:env(safe-area-inset-right);
+      align-items:flex-end;
+    }
+    .modal{
+      max-width:none; border-radius:22px 22px 0 0;
+      /* 高度沿用基础规则的 max-height:92%（锚定遮罩=真实视口），键盘弹起也保持稳定 */
+      margin:0;
+      animation:sheetIn .28s var(--ease);
+    }
+    @keyframes sheetIn{ from{transform:translateY(100%);} to{transform:none;} }
+    .modal-head{ border-radius:22px 22px 0 0; }
   }
   .quick-add{ flex-wrap:wrap; }
   .quick-add .input{ flex:1 1 100%; }
@@ -2573,14 +2589,15 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   }
   .jw-edit-btn:hover{ border-color:var(--olive-soft); background:var(--olive-05); color:var(--olive-darker); }
   .jw-edit-btn:active{ background:var(--olive-16); transform:scale(.96); }
-  /* 案件信息：两列网格，手机端更紧凑 */
+  /* 案件信息：单列标签-值同行，带分隔线，桌面/手机都清晰可读 */
   .jw-info-grid{
-    display:grid; grid-template-columns:repeat(2, 1fr); gap:6px 10px;
+    display:grid; grid-template-columns:1fr; gap:0;
     margin-top:8px; padding:8px 10px; background:var(--olive-10); border:1px solid var(--olive-16); border-radius:10px;
   }
-  .jw-info-cell{ display:flex; flex-direction:column; gap:1px; min-width:0; }
-  .jw-info-k{ font-size:11px; color:var(--brown-2); font-weight:500; line-height:1.35; }
-  .jw-info-v{ font-size:12.5px; color:var(--brown); font-weight:500; line-height:1.45; word-break:break-word; overflow-wrap:anywhere; }
+  .jw-info-cell{ display:flex; flex-direction:row; gap:10px; align-items:baseline; min-width:0; padding:6px 0; border-bottom:1px dashed var(--line-2); }
+  .jw-info-cell:last-child{ border-bottom:0; }
+  .jw-info-k{ flex:0 0 92px; font-size:11px; color:var(--brown-2); font-weight:500; line-height:1.35; }
+  .jw-info-v{ flex:1; min-width:0; font-size:12.5px; color:var(--brown); font-weight:500; line-height:1.45; word-break:break-word; overflow-wrap:anywhere; }
   /* 底部操作按钮：三列网格，大点击区 */
   .jw-action-grid{
     display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;
@@ -2615,8 +2632,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     .jw-case-head{ gap:6px; }
     .jw-case-title{ font-size:15.5px; }
     .jw-case-no{ display:none; }   /* 手机端编号收进编辑入口，避免标题区过挤 */
-    .jw-info-grid{ grid-template-columns:1fr; gap:5px; padding:6px; }
-    .jw-info-cell{ flex-direction:row; gap:8px; align-items:baseline; }
+    .jw-info-grid{ padding:6px; }
+    .jw-info-cell{ gap:8px; padding:5px 0; }
     .jw-info-k{ flex:0 0 72px; }
     .jw-info-v{ flex:1; }
     .jw-action-grid{ gap:6px; margin-top:8px; padding-top:8px; }
@@ -3346,7 +3363,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         if (rc.length > 5) rc = rc.slice(0, 5);
         Store.data.ui.recent = rc;
       }
-      this.renderNav(); // 重绘侧栏以更新「常用」分组
+      this.renderNav(); // 重绘侧栏（更新当前模块高亮）
       Store.data.ui.last = id;
       // 离开搜索态：清空侧栏模块过滤
       var ns = document.getElementById('navSearch');
@@ -3477,15 +3494,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       if (self.modules['home']) {
         html += '<button class="nav-item tap' + (self.current === 'home' ? ' on' : '') + '" data-id="home" data-name="首页总览 home"><span class="ni">🏠</span><span class="nt">首页总览</span></button>';
       }
-      // 常用：最近使用过的模块置顶
-      var recent = (Store.data.ui.recent || []).filter(function (id) { return self.modules[id] && id !== 'home' && id !== 'settings'; });
-      if (recent.length) {
-        html += '<div class="nav-group">常用</div>';
-        recent.forEach(function (id) {
-          var m = self.modules[id];
-          html += '<button class="nav-item tap" data-id="' + id + '" data-name="' + esc(m.name) + ' ' + id + '"><span class="ni">' + m.icon + '</span><span class="nt">' + esc(m.name) + '</span></button>';
-        });
-      }
+      /* 「常用」置顶分组已取消：模块一律按下方固定分组展示；
+         ui.recent 仍记录最近访问，仅供首页模块宫格「按最近使用排序」使用 */
       var groups = [
         { t: '日常', ids: ['checkin', 'schedule', 'tasks', 'worklog'] },
         { t: '工作', ids: ['jiwei'] },
@@ -3497,7 +3507,6 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       groups.forEach(function (g) {
         html += '<div class="nav-group">' + g.t + '</div>';
         g.ids.forEach(function (id) {
-          if (recent.indexOf(id) >= 0) return; // 已在「常用」置顶，原分组不再重复
           var m = self.modules[id];
           if (!m) return;
           html += '<button class="nav-item tap" data-id="' + id + '" data-name="' + esc(m.name) + ' ' + id + '"><span class="ni">' + m.icon + '</span><span class="nt">' + esc(m.name) + '</span></button>';
@@ -5817,6 +5826,116 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       Store.save();
     },
 
+    /* 编辑分类：修改分类名称，并同步更新所有引用该分类的记录字段。
+       返回 true 表示修改成功；false 表示新名称为空、与旧名相同、或已存在。 */
+    edit: function (ns, oldName, newName) {
+      newName = (newName || '').trim();
+      if (!newName || newName === oldName) return false;
+      var arr = D()[ns];
+      if (!arr || !Array.isArray(arr)) return false;
+      var idx = arr.indexOf(oldName);
+      if (idx < 0) return false;
+      if (arr.indexOf(newName) >= 0) return false;   // 新名称已存在
+      arr[idx] = newName;
+
+      /* 同步更新当前筛选状态（避免重命名后筛选条仍显示旧名） */
+      var sel = Cats.sel(ns);
+      var sIdx = sel.indexOf(oldName);
+      if (sIdx >= 0) sel[sIdx] = newName;
+
+      /* 同步更新各模块记录字段 */
+      if (Cats._usage[ns]) {
+        try { Cats._usage[ns](oldName, newName); } catch (e) {}
+      }
+      Store.save();
+      return true;
+    },
+
+    /* 各命名空间对应的数据字段更新映射：oldName -> newName。
+       只覆盖 flat string-array 分类；财务的 catExpense/catIncome 是嵌套结构，不在此列。 */
+    _usage: {
+      'taskTags': function (o, n) {
+        (D().tasks || []).forEach(function (x) { if (x.tag === o) x.tag = n; });
+      },
+      'workCats': function (o, n) {
+        (D().worklog || []).forEach(function (x) { if (x.cat === o) x.cat = n; });
+        (D().tasks || []).forEach(function (x) { if (x.wcat === o) x.wcat = n; });
+        (D().jiwei.cases || []).forEach(function (c) {
+          (c.logs || []).forEach(function (l) { if (l.cat === o) l.cat = n; });
+        });
+      },
+      'examSubject': function (o, n) {
+        (D().exam.exams || []).forEach(function (x) { if (x.subject === o) x.subject = n; });
+        (D().exam.plans || []).forEach(function (x) { if (x.subject === o) x.subject = n; });
+        (D().exam.records || []).forEach(function (x) { if (x.subject === o) x.subject = n; });
+      },
+      'examContent': function (o, n) {
+        (D().exam.exams || []).forEach(function (x) { if (x.contentCat === o) x.contentCat = n; });
+        (D().exam.plans || []).forEach(function (x) { if (x.contentCat === o) x.contentCat = n; });
+        (D().exam.records || []).forEach(function (x) { if (x.contentCat === o) x.contentCat = n; });
+      },
+      'itemCats': function (o, n) {
+        (D().items.stock || []).forEach(function (x) { if (x.cat === o) x.cat = n; });
+      },
+      'annivTypes': function (o, n) {
+        (D().anniv || []).forEach(function (x) { if (x.type === o) x.type = n; });
+      },
+      'socialCats': function (o, n) {
+        (D().social || []).forEach(function (x) { if (x.cat === o) x.cat = n; });
+      },
+      'wishCats': function (o, n) {
+        (D().wish || []).forEach(function (x) { if (x.cat === o) x.cat = n; });
+      },
+      'diaryTags': function (o, n) {
+        (D().diary.entries || []).forEach(function (x) {
+          if (Array.isArray(x.tags)) x.tags = x.tags.map(function (t) { return t === o ? n : t; });
+        });
+      },
+      'jwSources': function (o, n) {
+        (D().jiwei.cases || []).forEach(function (x) { if (x.source === o) x.source = n; });
+      },
+      'jwInspectTypes': function (o, n) {
+        (D().jiwei.inspects || []).forEach(function (x) { if (x.type === o) x.type = n; });
+      },
+      'jwSubmitWays': function (o, n) {
+        (D().jiwei.submits || []).forEach(function (x) { if (x.way === o) x.way = n; });
+      },
+      'jwPunDisc': function (o, n) {
+        (D().jiwei.punish || []).forEach(function (x) { if (x.kindD === o) x.kindD = n; });
+      },
+      'jwPunGov': function (o, n) {
+        (D().jiwei.punish || []).forEach(function (x) { if (x.kindG === o) x.kindG = n; });
+      },
+      'jwPunJm': function (o, n) {
+        (D().jiwei.punish || []).forEach(function (x) { if (x.kindJ === o) x.kindJ = n; });
+      },
+      'jwMeasures': function (o, n) {
+        /* 当前无任何记录字段引用 jwMeasures，仅重命名列表本身 */
+      }
+    },
+
+    /* 编辑分类名称弹窗（复用新增分类的 sheet 样式） */
+    editDialog: function (ns, oldName) {
+      return new Promise(function (resolve) {
+        var el = UI.sheet('编辑分类名称',
+          '<div class="field full"><div class="field-r"><input class="input" id="ec" value="' + U.esc(oldName) + '" placeholder="输入新分类名称" maxlength="20"></div></div>',
+          '<button class="btn primary tap" data-ok style="width:100%">保存</button>');
+        var input = el.querySelector('#ec');
+        setTimeout(function () { input.focus(); input.select(); }, 60);
+        el.addEventListener('click', function (e) {
+          if (e.target.closest('[data-x]')) { el.remove(); UI.unlock(); resolve(null); }
+          if (e.target.closest('[data-ok]')) {
+            var name = input.value.trim();
+            if (!name) { input.focus(); return; }
+            if (name === oldName) { el.remove(); UI.unlock(); resolve(null); return; }
+            if (!Cats.edit(ns, oldName, name)) { U.toast('已存在或无法修改'); return; }
+            el.remove(); UI.unlock(); resolve(name);
+          }
+        });
+        el.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); el.querySelector('[data-ok]').click(); } });
+      });
+    },
+
     /* 生成表单里的「分类下拉 + 自定义选项」字段 */
     field: function (ns, label, opts) {
       opts = opts || {};
@@ -5985,6 +6104,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
               '<div class="row" style="gap:6px">' +
               (i > 0 ? '<button class="link-btn tap" data-act="catUp" data-c="' + U.esc(c) + '">↑</button>' : '') +
               (i < cats.length - 1 ? '<button class="link-btn tap" data-act="catDown" data-c="' + U.esc(c) + '">↓</button>' : '') +
+              '<button class="link-btn tap" data-act="catEdit" data-c="' + U.esc(c) + '">编辑</button>' +
               '<button class="link-btn del tap" data-act="catDel" data-c="' + U.esc(c) + '">🗑 删除</button></div></div>';
           }).join('') : UI.empty('还没有分类，先添加一个吧')) + '</div>';
       };
@@ -6007,6 +6127,10 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           else U.toast('已存在或为空');
         } else if (act === 'catDel') {
           Cats.del(ns, b.dataset.c); body.innerHTML = render(); App.refresh();
+        } else if (act === 'catEdit') {
+          Cats.editDialog(ns, b.dataset.c).then(function (name) {
+            if (name) { body.innerHTML = render(); App.refresh(); }
+          });
         } else if (act === 'catUp' || act === 'catDown') {
           var arr = D()[ns]; if (!arr) return;
           var idx = arr.indexOf(b.dataset.c); if (idx < 0) return;
@@ -6995,6 +7119,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       repTag +
       dueTag +
       tCaseBadge(x) +
+      tLogBadge(x) +
       (subs.length ? '<span class="badge grey">子任务 ' + sd + '/' + subs.length + '</span>' : '');
     var caret = '<span class="task-tl-caret">' + (expanded ? '▾' : '▸') + '</span>';
     /* 主行：始终渲染（折叠/展开都可见），时间轴 + 日期分组样式 */
@@ -7041,7 +7166,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     if (!opts || opts.length <= 1) return null;
     return { k: 'caseId', label: '关联案件（可选）', type: 'select', full: true, options: opts, def: '' };
   }
-  /* 工作分类：复用工作留痕的 workCats，仅当关联了案件时出现且必填 */
+  /* 工作分类：复用工作留痕的 workCats；当「分类标签=工作」（或关联了案件）时出现。
+     位置固定在「分类标签」「备注说明」之下。 */
   function tWorkCatField() {
     var cs = [];
     try { cs = (typeof Cats !== 'undefined' && Cats.get) ? (Cats.get('workCats') || []) : []; } catch (e) { cs = []; }
@@ -7049,7 +7175,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       k: 'wcat', label: '工作分类', type: 'select', full: true,
       options: [{ v: '', t: '不分类' }].concat(cs.map(function (c) { return { v: c, t: c }; })),
       def: '',
-      whenFn: function (all) { return !!(all && all.caseId); },
+      whenFn: function (all) { return !!(all && (all.tag === '工作' || all.caseId)); },
       validate: function (val, all) {
         if (!all || !all.caseId) return '';
         /* 没有任何工作分类可选时不强制，避免用户卡在必填项上 */
@@ -7073,10 +7199,11 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       ] },
       { k: 'repeatN', label: '重复天数（N）', type: 'number', min: 1, ph: '如：3', hint: '选择「每 N 天」时填写', when: { key: 'repeat', val: 'custom' } },
       Cats.field('taskTags', '分类标签', { k: 'tag' }),
-      { k: 'desc', label: '备注说明', type: 'textarea', ph: '补充信息、执行思路…' }
+      { k: 'desc', label: '备注说明', type: 'textarea', ph: '补充信息、执行思路…' },
+      tWorkCatField()
     ];
     var cl = tCaseField();
-    if (cl) { f.push(cl); f.push(tWorkCatField()); }
+    if (cl) { f.push(cl); }
     return f;
   }
   /* 案件可关联判断：关联了案件、且该案件仍然存在（未办结 / 未被删除） */
@@ -7103,6 +7230,40 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       });
     } catch (e) {}
   }
+  /* 任务→工作留痕 同步：仅当 tag==='工作'（或关联案件走办理进度登记）时记一笔工作留痕。
+     fromTask 标记来源，确保「一边删除另一边也删除」；按 fromTask 去重（同一任务只对应一条留痕）。 */
+  function tSyncWorklog(x, info) {
+    if (!x || !D().worklog) return;
+    if (x.tag !== '工作' && !x.caseId) return;          // 仅工作类或关联案件才记
+    info = info || {};
+    var date = info.date || x.doneAt || U.today();
+    var cat = (info.cat != null ? info.cat : (x.wcat || ''));
+    var content = info.content || (x.doneNote || x.title || '');
+    var start = (info.start != null ? info.start : (x.startTime || ''));
+    var end = (info.end != null ? info.end : (x.endTime || ''));
+    var caseId = (info.caseId != null ? info.caseId : (x.caseId || ''));
+    var mins = info.mins != null ? info.mins : tSpanMins(start, end);
+    var arr = D().worklog;
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i].fromTask === x.id) {                   // 已存在 → 更新，避免重复
+        arr[i].date = date; arr[i].cat = cat; arr[i].content = content;
+        arr[i].start = start; arr[i].end = end; arr[i].mins = mins; arr[i].caseId = caseId;
+        return;
+      }
+    }
+    arr.push({ id: U.uid(), date: date, cat: cat, content: content, start: start, end: end, mins: mins, caseId: caseId, fromTask: x.id });
+  }
+  /* 删除任务时，清掉由它生成的工作留痕（按 fromTask 反查） */
+  function tRemoveWorklog(id) {
+    if (!D().worklog || !id) return;
+    D().worklog = D().worklog.filter(function (w) { return w.fromTask !== id; });
+  }
+  /* 任务已完成且为工作类、且已在工作留痕中生成记录时，给一个「已留痕」徽标 */
+  function tLogBadge(x) {
+    if (!x || x.tag !== '工作' || x.status !== 'done' || !D().worklog) return '';
+    if (D().worklog.some(function (w) { return w.fromTask === x.id; })) return '<span class="badge olive">📝 已留痕</span>';
+    return '';
+  }
   /* 关联案件徽标：案件已删除则不显示 */
   function tCaseBadge(x) {
     if (!x || !x.caseId || !window.JWLink) return '';
@@ -7111,16 +7272,18 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       return nm ? '<span class="badge purple">🔗 ' + U.esc(nm) + '</span>' : '';
     } catch (e) { return ''; }
   }
-  /* 关联案件的任务「完成登记」弹窗：完成日期 / 起止时间 / 工作分类 / 办理内容。
-     勾选完成、新建时直接建为已完成、编辑改为已完成 —— 三条路径共用此弹窗。
-     登记成功后：① 写入案件办理进度 ② 记一笔工作留痕，再回调 after()。
+  /* 完成登记弹窗（通用）：用于「关联案件」或「纯工作类」任务。
+     字段：完成日期 / 开始时间 / 结束时间 / 工作分类 / 办理内容。
+     登记成功后：①（若关联案件）写入案件办理进度 ②（工作类）记一笔工作留痕，再回调 after()。
      本函数自身不调 App.refresh()，由调用方在 after 里统一落盘 + 刷新。 */
   function tAskDone(x, after) {
     var cs = [];
     try { cs = (typeof Cats !== 'undefined' && Cats.get) ? (Cats.get('workCats') || []) : []; } catch (e) { cs = []; }
+    var caseMode = !!(x && x.caseId && window.JWLink);
     UI.form({
-      title: '完成并登记办理进度',
-      desc: '关联案件：' + window.JWLink.caseName(x.caseId) + '（将同步到该案件的办理进度）',
+      title: caseMode ? '完成并登记办理进度' : '完成登记（记录工作留痕）',
+      desc: caseMode ? ('关联案件：' + window.JWLink.caseName(x.caseId) + '（将同步到该案件的办理进度）')
+                     : '将记入「工作留痕」的起止时间与办理内容',
       okText: '完成',
       values: { doneAt: x.doneAt || U.today(), start: x.startTime || '', end: x.endTime || '', cat: x.wcat || '', content: x.doneNote || x.title || '' },
       fields: [
@@ -7140,17 +7303,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       x.startTime = v.start || '';
       x.endTime = v.end || '';
       x.doneNote = v.content || '';
-      tSyncDone(x, v);                       // ① 案件办理进度时间轴
-      try {                                  // ② 同步记一笔工作留痕
-        if (D().worklog) {
-          D().worklog.push({
-            id: U.uid(), date: x.doneAt, cat: v.cat || '',
-            start: v.start || '', end: v.end || '',
-            mins: tSpanMins(v.start, v.end),
-            content: v.content || '', caseId: x.caseId, fromTask: x.id
-          });
-        }
-      } catch (e) {}
+      if (caseMode) tSyncDone(x, v);          // ① 仅关联案件时写案件办理进度时间轴
+      tSyncWorklog(x);                        // ② 同步记一笔工作留痕（tag=工作或关联案件，按 fromTask 去重）
       if (after) after();
     });
   }
@@ -7235,9 +7389,19 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         return true;
       });
       if (!all.length) return UI.empty('没有符合条件的任务', '📌', '点右上角「+」新建一个任务');
-      // 按截止日期分组，同组按完成状态排序；时间轴 + 日期分组（参考日程提醒「全部」视图）
+      // 先按截止日期升序（逾期在前、临近在后），未设日期置顶；同日完成态排后
+      var sorted = all.slice().sort(function (a, b) {
+        var da = a.due || '', db = b.due || '';
+        if (da === db) return (a.status === 'done' ? 1 : 0) - (b.status === 'done' ? 1 : 0);
+        if (da === '') return -1;
+        if (db === '') return 1;
+        return da < db ? -1 : 1;
+      });
+      // 先分页（参考其他模块：ListPager.slice 取本页数据），再按日期分组渲染
+      var ns = 'tasks:list';
+      var pageArr = window.ListPager.slice(ns, sorted);
       var groups = {};
-      all.forEach(function (x) {
+      pageArr.forEach(function (x) {
         var d = x.due || '';
         (groups[d] = groups[d] || []).push(x);
       });
@@ -7249,9 +7413,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       });
       var html = '<div class="task-timeline">';
       keys.forEach(function (d) {
-        var items = groups[d].slice().sort(function (a, b) {
-          return (a.status === 'done' ? 1 : 0) - (b.status === 'done' ? 1 : 0);
-        });
+        var items = groups[d];
         var overdue = d !== '' && st !== 'done' && U.dayDiff(U.today(), d) < 0;
         var header = d === '' ? '未设置日期' : U.fmtDate(d, true);
         html += '<div class="task-tl-section"><div class="task-tl-date-head' + (overdue ? ' overdue' : '') + '">' +
@@ -7261,7 +7423,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         html += '</div>';
       });
       html += '</div>';
-      return html;
+      // 页码管理：与「办理进度时间轴」等一致，分页条展示总条数/翻页/每页条数
+      return html + window.ListPager.pager(ns, all.length);
     },
 
     mount: function () {},
@@ -7374,11 +7537,12 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
                     if (c) c.todos = (c.todos || []).filter(function (td) { return td.id !== x.caseTodoId; });
                   } catch (e) {}
                 }
-                if (window.JWLink) { try { window.JWLink.cascadeFromTask(x.id); } catch (e) {} }
-                D().tasks = D().tasks.filter(function (a) { return a.id !== x.id; });
-                Store.save(); App.refresh(); if (redraw) redraw();
-              }
-              if (!imp.length) { UI.del(esc(x.title), doDel); return; }
+              if (window.JWLink) { try { window.JWLink.cascadeFromTask(x.id); } catch (e) {} }
+              tRemoveWorklog(x.id);                 // 一并删除由该任务生成的工作留痕
+              D().tasks = D().tasks.filter(function (a) { return a.id !== x.id; });
+              Store.save(); App.refresh(); if (redraw) redraw();
+            }
+            if (!imp.length) { UI.del(esc(x.title), doDel); return; }
               UI.confirm('删除任务「' + esc(x.title || '') + '」？', '将一并删除以下关联记录：' + imp.join('；') + '。删除后不可恢复。', '删除', true).then(function (ok) {
                 if (ok) { doDel(); U.toast('已删除，关联记录同步清除'); }
               });
@@ -7403,7 +7567,9 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
             tAskDone(v, function () { Store.save(); App.refresh(); U.toast('任务已添加'); });
             return;
           }
-          D().tasks.push(v); Store.save(); App.refresh(); U.toast('任务已添加');
+          D().tasks.push(v);
+          if (v.tag === '工作' && v.status === 'done') tSyncWorklog(v);
+          Store.save(); App.refresh(); U.toast('任务已添加');
         });
       },
       edit: function (t) {
@@ -7415,6 +7581,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           Object.keys(v).forEach(function (k) { x[k] = v[k]; });
           // 编辑时若改为「已完成」则补 doneAt；其余状态清空，与勾选切换语义一致
           if (v.status === 'done') { if (!x.doneAt) x.doneAt = U.today(); } else { x.doneAt = ''; }
+          if (wasDone0 && x.status !== 'done') tRemoveWorklog(x.id);   // 取消完成 → 撤掉已生成的留痕
           // 同步更新关联的案件待办
           if (x.caseTodoId && window.JWLink) {
             try {
@@ -7443,8 +7610,9 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
                 }
               }
             } catch (e) {}
-            Store.save(); App.refresh(); U.toast('已完成，并同步到案件办理进度');
-            return;
+            if (x.tag === '工作') tSyncWorklog(x);   // 工作类 + 关联案件待办完成 → 同步工作留痕
+          Store.save(); App.refresh(); U.toast('已完成，并同步到案件办理进度');
+          return;
           }
           /* 关联案件（但没有对应待办）且刚被改为已完成：弹窗登记办理进度 */
           if (!wasDone0 && x.status === 'done' && tLinked(x)) {
@@ -7453,6 +7621,9 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
             tAskDone(x, function () { Store.save(); App.refresh(); });
             return;
           }
+          // 完成后若不再是「工作」类且无关联案件，撤掉遗留的留痕
+          if (x.status === 'done' && x.tag !== '工作' && !x.caseId) tRemoveWorklog(x.id);
+          if (x.tag === '工作' && x.status === 'done') tSyncWorklog(x);   // 工作类待办完成 → 同步到工作留痕
           Store.save();
           if (window.JWLink) { try { window.JWLink.syncEdit('task', x); } catch (e) {} }
           App.refresh();
@@ -7470,6 +7641,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
             } catch (e) {}
           }
           if (window.JWLink) { try { window.JWLink.cascadeFromTask(x.id); } catch (e) {} }
+          tRemoveWorklog(x.id);                 // 一并删除由该任务生成的工作留痕
           D().tasks = D().tasks.filter(function (a) { return a.id !== x.id; });
           Store.save(); App.refresh();
         }
@@ -7493,6 +7665,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
             } catch (e) {}
           }
           if (window.JWLink) { try { window.JWLink.removeBySrc('task', x.id); } catch (e) {} }
+          tRemoveWorklog(x.id);                 // 取消完成 → 撤掉对应工作留痕
           Store.save(); App.refresh();
           return;
         }
@@ -7515,6 +7688,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
             }
           } catch (e) {}
           x.status = 'done'; x.doneAt = U.today();
+          if (x.tag === '工作') tSyncWorklog(x);   // 工作类 + 关联案件待办完成 → 同步工作留痕
           Store.save(); App.refresh(); U.toast('已完成，并同步到案件办理进度');
           return;
         }
@@ -7528,8 +7702,19 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           });
           return;
         }
+        /* 工作类待办（未关联案件）：弹窗登记完成时间，记一笔工作留痕（含起止时间） */
+        if (x.tag === '工作' && !x.caseTodoId && !tLinked(x)) {
+          var repW = repeatDays(x);
+          tAskDone(x, function () {
+            if (repW) { genNext(x); U.toast('已生成下一周期：' + repeatText(x)); }
+            else U.toast('已完成，已记入工作留痕');
+            Store.save(); App.refresh();
+          });
+          return;
+        }
         /* 普通任务：保持原有行为 */
         x.status = 'done'; x.doneAt = U.today();
+        if (x.tag === '工作') tSyncWorklog(x);   // 工作类待办完成 → 同步到工作留痕
         if (repeatDays(x)) { genNext(x); U.toast('已生成下一周期：' + repeatText(x)); }
         Store.save(); App.refresh();
       },
@@ -7632,6 +7817,21 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       }
     } catch (e) { /* 桥接不可用时静默降级，不影响留痕本身保存 */ }
   }
+  /* 工作留痕→任务 反向级联：该留痕由某条任务自动生成（fromTask 存在）时，删除留痕同时删除来源任务，
+     并清掉该任务的案件侧记录。返回被删任务对象，供删除确认文案提示。 */
+  function wCascadeTask(w) {
+    if (!w || !w.fromTask) return null;
+    var tk = null;
+    try { tk = D().tasks.filter(function (a) { return a.id === w.fromTask; })[0]; } catch (e) { tk = null; }
+    if (window.JWLink) { try { window.JWLink.cascadeFromTask(w.fromTask); } catch (e) {} }
+    D().tasks = D().tasks.filter(function (a) { return a.id !== w.fromTask; });
+    return tk;
+  }
+  /* 由任务自动生成的工作留痕：标注来源，提醒删除会一并删除原任务 */
+  function wTaskBadge(x) {
+    if (!x || !x.fromTask) return '';
+    return '<span class="badge olive">📌 来自任务</span>';
+  }
   /* 列表里的关联案件徽标；案件已删除则不显示 */
   function wCaseBadge(x) {
     if (!x || !x.caseId || !window.JWLink) return '';
@@ -7690,7 +7890,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
               var meta =
                 (x.start ? '<span class="badge grey">🕐 ' + esc(x.start) + (x.end ? '–' + esc(x.end) : '') + '</span>' : '') +
                 (num(x.mins) ? '<span class="badge grey">⏱ ' + hm(x.mins) + '</span>' : '') +
-                wCaseBadge(x);
+                wCaseBadge(x) + wTaskBadge(x);
               return '<div class="item clickable" data-toggle data-id="' + x.id + '">' +
                 '<div class="item-main">' +
                 '<div class="item-title">' + (x.cat ? esc(x.cat) : '（未分类）') + '</div>' +
@@ -7772,7 +7972,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           var meta =
             (x.start ? '<span class="badge grey">🕐 ' + esc(x.start) + (x.end ? '–' + esc(x.end) : '') + '</span>' : '') +
             (num(x.mins) ? '<span class="badge grey">⏱ ' + hm(x.mins) + '</span>' : '') +
-            wCaseBadge(x);
+            wCaseBadge(x) + wTaskBadge(x);
           return '<div class="item clickable" data-toggle data-id="' + x.id + '">' +
             '<div class="item-main">' +
             '<div class="item-title">' + (x.cat ? esc(x.cat) : '（未分类）') + '</div>' +
@@ -7804,13 +8004,16 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
             var x = D().worklog.filter(function (a) { return a.id === t.dataset.id; })[0];
             if (!x) return;
             var imp = (window.JWLink && window.JWLink.impactText) ? window.JWLink.impactText('worklog', x) : [];
+            var taskName = (x.fromTask) ? (function () { var tk = D().tasks.filter(function (a) { return a.id === x.fromTask; })[0]; return tk ? tk.title : ''; })() : '';
             function doDel() {
               if (window.JWLink) { try { window.JWLink.cascadeFromWorklog(x.id); } catch (e) {} }
+              if (x.fromTask) { try { wCascadeTask(x); } catch (e) {} }   // 反删来源任务（含其案件侧记录）
               D().worklog = D().worklog.filter(function (a) { return a.id !== x.id; });
               Store.save(); App.refresh(); if (redraw) redraw();
             }
-            if (!imp.length) { UI.del((x.content || '').slice(0, 20), doDel); return; }
-            UI.confirm('删除工作留痕？', '将一并删除以下关联记录：' + imp.join('；') + '。删除后不可恢复。', '删除', true).then(function (ok) {
+            if (!imp.length && !taskName) { UI.del((x.content || '').slice(0, 20), doDel); return; }
+            var msg = imp.concat(taskName ? ['来源任务「' + taskName + '」'] : []).join('；');
+            UI.confirm('删除工作留痕？', '将一并删除以下关联记录：' + msg + '。删除后不可恢复。', '删除', true).then(function (ok) {
               if (ok) { doDel(); U.toast('已删除，关联记录同步清除'); }
             });
           }
@@ -7837,7 +8040,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         var meta =
           (x.start ? '<span class="badge grey">🕐 ' + esc(x.start) + (x.end ? '–' + esc(x.end) : '') + '</span>' : '') +
           (num(x.mins) ? '<span class="badge grey">⏱ ' + hm(x.mins) + '</span>' : '') +
-          wCaseBadge(x);
+          wCaseBadge(x) + wTaskBadge(x);
         return '<div class="tl-item">' +
           '<div class="tl-rail"><span class="tl-time">' + (x.start || '·') + '</span><span class="tl-dot"></span><span class="tl-line"></span></div>' +
           '<div class="tl-body">' +
@@ -7899,13 +8102,16 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         var x = D().worklog.filter(function (a) { return a.id === t.dataset.id; })[0];
         if (!x) return;
         var imp = (window.JWLink && window.JWLink.impactText) ? window.JWLink.impactText('worklog', x) : [];
+        var taskName = (x.fromTask) ? (function () { var tk = D().tasks.filter(function (a) { return a.id === x.fromTask; })[0]; return tk ? tk.title : ''; })() : '';
         function doDel() {
           if (window.JWLink) { try { window.JWLink.cascadeFromWorklog(x.id); } catch (e) {} }
+          if (x.fromTask) { try { wCascadeTask(x); } catch (e) {} }   // 反删来源任务（含其案件侧记录）
           D().worklog = D().worklog.filter(function (a) { return a.id !== x.id; });
           Store.save(); App.refresh();
         }
-        if (!imp.length) { UI.del((x.content || '').slice(0, 12) + '…', doDel); return; }
-        UI.confirm('删除工作留痕？', '将一并删除以下关联记录：' + imp.join('；') + '。删除后不可恢复。', '删除', true).then(function (ok) {
+        if (!imp.length && !taskName) { UI.del((x.content || '').slice(0, 12) + '…', doDel); return; }
+        var msg = imp.concat(taskName ? ['来源任务「' + taskName + '」'] : []).join('；');
+        UI.confirm('删除工作留痕？', '将一并删除以下关联记录：' + msg + '。删除后不可恢复。', '删除', true).then(function (ok) {
           if (ok) { doDel(); U.toast('已删除，关联记录同步清除'); }
         });
       },
@@ -16939,6 +17145,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 
   /* ================= 状态（仅 UI 局部状态，不落盘） ================= */
   var jwQ = { case: '', inspect: '', submit: '', punish: '' };
+  var jwCaseSt = '';   /* 问题线索台账状态筛选：''=全部 / '办理中' / '已了结' */
   var jwExp = {};
   var jwLogDesc = {};   // 办理进度时间轴排序：true（默认）= 最新在上
 
@@ -17114,12 +17321,20 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     bar += '</div></div>';
     return bar;
   }
-  /* 阶段进度：向 x.stageLog 追加一条（按阶段去重） */
-  function addStage(x, d, stage) {
+  /* 阶段进度：向 x.stageLog 追加一条（按阶段去重）。
+     若该阶段已存在：更新其日期与说明（重复记录视为补充/修正），返回已有节点。 */
+  function addStage(x, d, stage, note) {
     if (!Array.isArray(x.stageLog)) x.stageLog = [];
-    if (!x.stageLog.some(function (s) { return s.stage === stage; })) {
-      x.stageLog.push({ id: U.uid(), d: d, stage: stage });
+    for (var i = 0; i < x.stageLog.length; i++) {
+      if (x.stageLog[i].stage === stage) {
+        if (d) x.stageLog[i].d = d;
+        if (note) x.stageLog[i].note = note;
+        return x.stageLog[i];
+      }
     }
+    var item = { id: U.uid(), d: d, stage: stage, note: note || '' };
+    x.stageLog.push(item);
+    return item;
   }
   function renderCase(x) {
     var closed = x.status === '已了结';
@@ -17229,7 +17444,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       '<span class="badge ' + (done ? 'grey' : '') + '">' + esc(x.status || '计划中') + '</span>' +
       (x.rectifyStatus && x.rectifyStatus !== '不涉及'
         ? '<span class="badge ' + (rectifyOpen ? 'warn' : '') + '">整改·' + esc(x.rectifyStatus) + '</span>' : '') +
-      (done ? '' : dueBadge(x.planDate, false));
+      (done ? dueBadge(x.doneDate || x.planDate, true) : dueBadge(x.planDate, false));
     return '<div class="item' + hl + (open ? ' open' : '') + '" data-act="iExp" data-id="' + x.id + '">' +
       '<div class="item-main">' +
         '<div class="item-title">' + esc(x.title) + ' <span style="font-size:11px;color:#999">' + (open ? '▾' : '▸') + '</span></div>' +
@@ -17455,6 +17670,12 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         title: '📁 问题线索台账',
         right: '<div style="display:flex;align-items:center;gap:8px">' + Cats.btn('jwSources', '线索来源', '🗂 来源管理') + TF.btn('jiwei:case', { icon: '🗓' }) + '</div>',
         body: Cats.filterBar('jwSources', { label: '来源' }) +
+          '<div class="row cat-filter-row" style="gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 8px">' +
+            '<span class="small muted">状态</span>' +
+            ['', '办理中', '已了结'].map(function (v) {
+              return '<button class="pill tap' + (jwCaseSt === v ? ' on' : '') + '" data-act="jwStPick" data-v="' + v + '">' + (v || '全部') + '</button>';
+            }).join('') +
+          '</div>' +
           '<input class="input" id="jwQCase" placeholder="🔍 搜索编号 / 名称 / 对象 / 待办" value="' + esc(jwQ.case) + '" style="margin-bottom:14px">' +
           '<div id="jwListCase">' + this.caseList() + '</div>'
       });
@@ -17464,6 +17685,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       var sel = Cats.sel('jwSources');
       var arr = J().cases.filter(function (x) {
         if (sel.length && sel.indexOf(x.source || '') < 0) return false;
+        if (jwCaseSt === '办理中' && x.status === '已了结') return false;
+        if (jwCaseSt === '已了结' && x.status !== '已了结') return false;
         if (!TF.inRange('jiwei:case', x.acceptDate)) return false;
         if (!q) return true;
         var td = (x.todos || []).map(function (o) { return o.t; }).join(' ');
@@ -17479,7 +17702,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       });
       return ListPager.out({
         ns: 'jiwei:case', items: arr, defSize: 5,
-        empty: (q || sel.length) ? '没有匹配的案件记录' : '还没有案件 / 线索记录，点右下角 + 添加',
+        empty: (q || sel.length || jwCaseSt) ? '没有匹配的案件记录' : '还没有案件 / 线索记录，点右下角 + 添加',
         emptyIcon: '📁', render: renderCase
       });
     },
@@ -17596,6 +17819,12 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     /* ================= 交互动作 ================= */
     acts: {
       jwTab: function (t) { App.setTab('jiwei', 'main', t.dataset.k); App.refresh(); },
+      /* 问题线索台账状态筛选：全部 / 办理中 / 已了结（单选，切换后重置分页并统一刷新） */
+      jwStPick: function (t) {
+        jwCaseSt = t.dataset.v || '';
+        ListPager.resetPg('jiwei:case');
+        App.refresh();
+      },
       tfOpen: function (t) {
         TF.open(t.dataset.tf, { onChange: function () { ListPager.resetPg(t.dataset.tf); App.refresh(); } });
       },
@@ -17840,6 +18069,9 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           fields: [
             { k: 'd', label: '日期', type: 'date', req: true, def: U.today() },
             { k: 'stage', label: '所处阶段', type: 'select', options: stageOpts, req: true },
+            { k: 'note', label: '阶段说明', type: 'textarea', full: true, rows: 3,
+              ph: '选填：该阶段的办理情况、发现的问题等',
+              whenFn: function (all) { return !all || all.stage !== '予以了结'; } },
             { k: 'result', label: '处理结果', type: 'textarea', full: true, rows: 3, req: true, when: { key: 'stage', val: '予以了结' } }
           ]
         }).then(function (v) {
@@ -17858,7 +18090,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
             /* 不再生成「办结」日志：阶段条已展示办结时间（兼容旧数据在渲染时过滤） */
             U.toast('已办结并登记处理结果');
           } else {
-            addStage(x, v.d, v.stage);
+            addStage(x, v.d, v.stage, v.note);
             x.stage = v.stage;
             if (v.stage === '立案审查调查') { x.fileDate = v.d || U.today(); }
             U.toast('已记录阶段进度');
@@ -17973,8 +18205,28 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       },
       iDone: function (t) {
         var x = findInspect(t.dataset.id); if (!x) return;
-        x.status = '已完成'; x.doneDate = U.today();
-        Store.save(); App.refresh(); U.toast('已标记完成');
+        /* 弹窗登记：实际开展日期 + 发现问题数 + 备注，免去完成后再进编辑补录 */
+        UI.form({
+          title: '标记完成 · ' + (x.title || '检查任务'),
+          okText: '完成',
+          values: {
+            doneDate: x.doneDate || U.today(),
+            found: (x.found !== '' && x.found != null) ? x.found : '',
+            note: x.note || ''
+          },
+          fields: [
+            { k: 'doneDate', label: '实际开展日期', type: 'date', req: true, def: U.today() },
+            { k: 'found', label: '发现问题数', type: 'number', min: 0, step: 1 },
+            { k: 'note', label: '备注', type: 'textarea', full: true, rows: 3 }
+          ]
+        }).then(function (v) {
+          if (!v) return;                        // 取消 → 不做任何改动
+          x.status = '已完成';
+          x.doneDate = v.doneDate || U.today();
+          x.found = (v.found === '' || v.found == null) ? '' : v.found;
+          x.note = v.note || '';
+          Store.save(); App.refresh(); U.toast('已标记完成');
+        });
       },
 
       /* ---- 材料报送 ---- */
