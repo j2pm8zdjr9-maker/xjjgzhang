@@ -4007,6 +4007,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 
   // 视口变量与字体缩放状态（单例，避免 applyFont 重复绑定监听器）
   var _fs = 1, _vhBound = false, _vhRaf = 0;
+  /* textarea 双击展开：会话级状态（跨弹窗共享）。_taTipShown 只提示一次收起方式 */
+  var _lastTapTa = { t: 0, ta: null }, _taTipShown = false;
   function _setViewportVars() {
     var vv = window.visualViewport;
     var ih = window.innerHeight || 600;
@@ -4405,6 +4407,32 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
             '<button class="btn ghost tap" data-x>取消</button><button class="btn primary tap" data-ok>' + esc(cfg.okText || '保存') + '</button></div></div>';
         root.appendChild(el);
         modalA11y.open(el);
+
+        /* 双击（快速两击）textarea：临时展开至约 70% 视口高，再次双击收起还原。
+           默认外观完全不变；用 pointerup 计时检测而非 dblclick（部分 iOS 浏览器不触发 dblclick），
+           鼠标双击与手机双击都能命中。首次展开时 toast 提示一次收起方式。 */
+        el.addEventListener('pointerup', function (e) {
+          var t = e.target;
+          if (!t || t.tagName !== 'TEXTAREA') return;
+          var now = Date.now();
+          if (_lastTapTa.ta === t && now - _lastTapTa.t < 350) {
+            _lastTapTa = { t: 0, ta: null };
+            if (t.dataset.taExpand !== '1') {
+              t.dataset.taPrevH = t.style.height || '';
+              t.style.height = Math.max(200, Math.round(window.innerHeight * 0.7)) + 'px';
+              t.dataset.taExpand = '1';
+              if (!_taTipShown) {
+                _taTipShown = true;
+                U.toast('已展开，再次双击可收起');
+              }
+            } else {
+              t.style.height = t.dataset.taPrevH || '';
+              delete t.dataset.taExpand;
+            }
+          } else {
+            _lastTapTa = { t: now, ta: t };
+          }
+        });
 
         /* input focus auto scroll, avoid soft keyboard */
         el.addEventListener('focus', function(e) {
@@ -6820,11 +6848,11 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         (habits.length ?
           '<div class="list" style="margin-top:4px">' + ListPager.slice('checkin:list', habits).map(renderHabit).join('') + '</div>' + ListPager.pager('checkin:list', habits.length) :
           (all.length ? UI.empty('「' + U.fmtDate(cur.day, true) + '」没有进行中的打卡任务', '🌿')
-                      : UI.empty('还没有打卡任务，点右上角「+ 新增打卡」开始', '🌿', { desc: '每天完成一个小习惯，长期积累就是质变' }))) +
+                      : UI.empty('还没有打卡任务，点击「+」开始新增打卡', '🌿', { desc: '每天完成一个小习惯，长期积累就是质变' }))) +
         (total && isToday && done === total ? '<div class="accent-note celebrate" style="margin-top:8px">🎉 今日全部打卡完成，继续保持！</div>' : '');
 
       return UI.card({
-        title: '我的打卡任务', sub: isToday ? '点击左侧圆圈完成今日打卡' : '历史记录（只读）',
+        title: '我的打卡任务', sub: isToday ? '' : '历史记录（只读）',
         right:           '<button class="btn ghost sm tap" data-act="hist">📜 历史记录</button>',
         body: body, cls: 'section-gap'
       }) + this.calCard() +
@@ -7388,7 +7416,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         if (tag.length && tag.indexOf(x.tag) < 0) return false;
         return true;
       });
-      if (!all.length) return UI.empty('没有符合条件的任务', '📌', '点右上角「+」新建一个任务');
+      if (!all.length) return UI.empty('没有符合条件的任务', '📌', '点击悬浮「+」新建一个任务');
       // 先按截止日期升序（逾期在前、临近在后），未设日期置顶；同日完成态排后
       var sorted = all.slice().sort(function (a, b) {
         var da = a.due || '', db = b.due || '';
@@ -10425,7 +10453,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       });
       var listHtml = '';
       if (!arr.length) {
-        listHtml = UI.empty('没有符合条件的学习计划', '🗓', '点右上角「+」新建一个计划');
+        listHtml = UI.empty('没有符合条件的学习计划', '🗓', '点击悬浮「+」新建一个计划');
       } else {
         listHtml = '<div class="task-group-list">';
         keys.forEach(function (d) {
@@ -11589,7 +11617,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         }).join('') + '</div>'
         : (fuel().refuels.length
           ? UI.empty('该时间段内没有加油记录，可点击右上角调整时间范围', '⏳')
-          : UI.empty('还没有加油记录，点右上角「加油」开始', '⛽'));
+          : UI.empty('还没有加油记录，点击悬浮「+」记录加油', '⛽'));
       var listCard = UI.card({
         title: '⛽ 加油记录' + (all.length ? '（' + all.length + '）' : ''),
         right: '<button class="btn ghost sm tap" data-act="fuelHist">📜 历史记录</button>',
@@ -14068,7 +14096,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   /* 按日期分组 + 渲染收支流水（参考图：日期头 + 卡片式交易条目）
      先按 ListPager 分页取当前页数据，再按日期分组，避免全年数据一次性渲染 */
   function renderFlowsGrouped(arr) {
-    if (!arr.length) return UI.empty('这个时间段还没有流水记录', '🧾', '点右上角「+ 记一笔」记录你的第一笔收支');
+    if (!arr.length) return UI.empty('这个时间段还没有流水记录', '🧾', '点击悬浮「+」记录你的第一笔收支');
 
     // 取当前页数据（默认 5 条/页，可切 10/20/50/100），再按日期分组
     var pageArr = ListPager.slice('finance:flow', arr);
