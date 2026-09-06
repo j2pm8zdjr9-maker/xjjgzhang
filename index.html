@@ -852,14 +852,14 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .item.hist-row .item-meta{ gap:6px; }
 .item.hist-row .hist-ops,
 .item.hist-row .item-ops{
-  flex:0 0 auto; align-self:flex-end;
-  display:flex; gap:14px; flex-wrap:wrap;
+  flex:1 1 100%; align-self:flex-end;
+  display:flex; gap:2px; row-gap:6px; flex-wrap:wrap;
   padding-top:6px; margin-top:2px;
   border-top:1px dashed var(--line);
-  align-items:center;
+  align-items:center; justify-content:space-between;
 }
 .item.hist-row .hist-ops .link-btn,
-.item.hist-row .item-ops .link-btn{ font-size:13px; padding:2px 2px; }
+.item.hist-row .item-ops .link-btn{ font-size:13.5px; padding:5px 8px; }
 
 /* 通用展开/折叠：标题+标签在一行；点整行展开看备注与操作。
    已去掉所有 caret 小箭头（不影响点击折叠，点击范围仍为整行） */
@@ -922,41 +922,29 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .item-detail .small.muted{ margin-top:0; padding:6px 10px;
   background:var(--bg,#faf8f3); border:1px solid var(--line);
   border-radius:calc(var(--r) - 4px); color:var(--brown-3); }
-/* 操作按钮行：左对齐，紧凑排列；按钮文字不折行，放不下时在按钮之间换行 */
+/* 操作按钮行：按钮均匀撑满整行；按钮文字不折行，放不下时在按钮之间换行 */
 .item-detail > .item-ops{
-  margin-top:0; gap:6px 14px; justify-content:flex-start;
+  margin-top:0; gap:2px; row-gap:8px; justify-content:space-between;
   padding-top:6px;
-  flex-wrap:wrap; row-gap:8px;
+  flex-wrap:wrap;
 }
 .item-detail > .item-ops .link-btn{
-  font-size:13px; padding:4px 6px;
+  font-size:13.5px; padding:5px 8px;
   white-space:nowrap; flex:0 0 auto;
   line-height:1.4;
 }
-/* 展开区内操作按钮（工作留痕等）：内容下方、左对齐 */
-.item-detail-ops{
-  display:flex; gap:8px; justify-content:flex-start;
-  margin-top:8px; padding-top:8px; border-top:1px solid var(--line);
-}
-.item-detail-ops .btn.sm{ font-size:12.5px; padding:5px 14px; }
-/* 列表项展开后底部的「编辑 / 删除」独立操作行：两条按钮并排、全宽、与卡片圆角一致。
+/* 展开区内操作按钮（工作留痕等）：间距交给统一操作栏规则 */
+.item-detail-ops{ margin-top:8px; }
+/* 列表项展开后底部的「编辑 / 删除」独立操作行：按钮均匀撑满、与卡片圆角一致。
    适用于纪念日、人情等带「展开 = 内联操作」语义的卡片，避免 ops 与计数挤在同一行。 */
 .item-ops-row{
-  display:flex; flex-wrap:wrap; gap:6px;
+  flex-wrap:wrap;
   margin-top:8px;
-  padding-top:10px;
-  border-top:1px dashed var(--line-2);
   min-width:0;
 }
-.item-ops-row .btn{
-  flex:1 1 0; min-width:0;
-  min-height:38px; padding:7px 8px;
-  font-size:12.5px;
-  white-space:nowrap;
-  justify-content:center;
-}
-.item-ops-row .btn.danger{
-  flex:1 1 0;
+.item-ops-row .link-btn{
+  font-size:13.5px; padding:5px 8px;
+  white-space:nowrap; flex:0 0 auto;
 }
 .item .caret{
   display:inline-flex; align-items:center; justify-content:center;
@@ -1107,12 +1095,13 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
   padding:10px 12px 12px; border-radius:0 0 10px 10px;
   background:var(--card); border:1px solid var(--line); border-top:none;
 }
-/* 详情区操作栏：编辑/删除按钮在上方，带底部分隔线 */
+/* 详情区操作栏：按钮均匀撑满整行（两端对齐），带底部分隔线 */
 .fold-ops,
 .buy-item-ops, .consum-ops, .task-ops-row, .media-ops-row,
 .social-ops-row, .family-ops-row, .measure-ops-row,
-.charge-ops, .refuel-ops{
-  display:flex; flex-wrap:wrap; gap:6px; align-items:center;
+.charge-ops, .refuel-ops, .item-detail-ops, .wl-acts, .item-ops-row{
+  display:flex; flex-wrap:wrap; gap:2px; row-gap:6px; align-items:center;
+  justify-content:space-between;
   padding-bottom:8px; margin-bottom:6px;
   border-bottom:1px solid var(--line);
 }
@@ -1120,8 +1109,9 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .consum-ops .link-btn, .task-ops-row .link-btn,
 .media-ops-row .link-btn, .social-ops-row .link-btn,
 .family-ops-row .link-btn, .measure-ops-row .link-btn,
-.charge-ops .link-btn, .refuel-ops .link-btn{
-  font-size:13px; padding:3px 10px; border-radius:6px;
+.charge-ops .link-btn, .refuel-ops .link-btn,
+.item-detail-ops .link-btn, .wl-acts .link-btn, .item-ops-row .link-btn{
+  font-size:13.5px; padding:5px 8px; border-radius:6px;
 }
 .fold-ops .link-btn.del, .buy-item-ops .link-btn.del,
 .consum-ops .link-btn.del, .task-ops-row .link-btn.del,
@@ -1137,8 +1127,8 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 }
 /* 通用 note-text：确保所有场景下文字自动换行不溢出 */
 .note-text{ white-space:pre-wrap; word-break:break-word; overflow-wrap:anywhere; max-width:100%; }
-.task-ops-row{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:4px; }
-.task-ops-row .item-ops{ display:inline-flex; gap:4px; margin:0; }
+.task-ops-row{ display:flex; flex-wrap:wrap; gap:2px; row-gap:6px; align-items:center; margin-bottom:4px; justify-content:space-between; }
+.task-ops-row .item-ops{ display:flex; flex:1 1 auto; gap:2px; margin:0; justify-content:space-between; }
 
 /* 任务列表：时间轴 + 日期分组（参考日程提醒「全部」视图） */
 .task-timeline{ display:flex; flex-direction:column; gap:0; }
@@ -1259,15 +1249,27 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 
 /* 列表行右侧：状态胶囊 + 日期，与标题同行显示 */
 .media-row-side{ display:flex; align-items:center; gap:6px; flex-shrink:0; font-size:12px; color:var(--brown-3); white-space:nowrap; }
-/* 紧凑操作栏：手机窄屏一行放下且均匀撑满整行（影剧书 m-ops / 事件记录 ev-ops） */
-.fold-ops.m-ops{ gap:2px; justify-content:space-between; }
-.fold-ops.m-ops .link-btn{ font-size:13px; padding:4px 6px; }
-/* 窄屏（≤370px）回退 12px 保证一行（360/320 等机型） */
-@media (max-width:370px){
-  .fold-ops.m-ops .link-btn{ font-size:12px; padding:3px 5px; }
+/* 展开操作栏字号自适应：默认 13.5px（2-3 个按钮稍大）；≥4 个按钮自动缩小字号与内边距，保证一行不换行 */
+:is(.fold-ops,.buy-item-ops,.consum-ops,.task-ops-row,.media-ops-row,
+.social-ops-row,.family-ops-row,.measure-ops-row,.charge-ops,.refuel-ops,
+.item-detail-ops,.wl-acts,.item-ops-row,.item-detail>.item-ops):has(> :nth-child(4)) .link-btn{
+  font-size:12px; padding:3px 5px;
 }
-.item-detail > .item-ops.ev-ops{ gap:4px 6px; }
-.item-detail > .item-ops.ev-ops .link-btn{ font-size:12px; padding:3px 4px; }
+/* 窄屏（≤370px，360/320 等机型）统一回退，尽量保持一行 */
+@media (max-width:370px){
+  .fold-ops .link-btn, .buy-item-ops .link-btn, .consum-ops .link-btn,
+  .task-ops-row .link-btn, .media-ops-row .link-btn, .social-ops-row .link-btn,
+  .family-ops-row .link-btn, .measure-ops-row .link-btn, .charge-ops .link-btn,
+  .refuel-ops .link-btn, .item-detail-ops .link-btn, .wl-acts .link-btn,
+  .item-ops-row .link-btn, .item-detail > .item-ops .link-btn{
+    font-size:12px; padding:3px 4px;
+  }
+  :is(.fold-ops,.buy-item-ops,.consum-ops,.task-ops-row,.media-ops-row,
+  .social-ops-row,.family-ops-row,.measure-ops-row,.charge-ops,.refuel-ops,
+  .item-detail-ops,.wl-acts,.item-ops-row,.item-detail>.item-ops):has(> :nth-child(4)) .link-btn{
+    font-size:11px; padding:2px 3px;
+  }
+}
 
 /* 影剧书列表行（参考 task-row / stock-ov-row 模式） */
 .media-row{ display:flex; align-items:flex-start; gap:8px; padding:10px 12px; border-radius:10px; background:var(--card); cursor:pointer; transition:background .15s, box-shadow .15s; border:1px solid var(--line); }
@@ -1384,8 +1386,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .wl-meta{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; padding-top:6px; }
 .wl-meta .badge{ max-width:none; white-space:nowrap; }
 .wl-more{ margin-top:6px; font-size:12.5px; color:var(--brown-3); }
-.wl-acts{ display:flex; gap:8px; margin-top:8px; padding-top:6px; border-top:1px solid var(--line); }
-.wl-acts .btn.sm{ font-size:12px; padding:4px 12px; min-height:auto; }
+.wl-acts{ margin-top:8px; }
 .accent-note{ padding:10px 14px; border-radius:12px; background:var(--olive-05); color:var(--olive-deep); font-size:13.5px; font-weight:560; }
 
 /* 图表 */
@@ -4523,7 +4524,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     ops: function (id, editAct, delAct, extra, cls) {
       var h = '<div class="' + (cls || 'item-ops') + '">' + (extra || '');
       if (editAct) h += '<button class="link-btn tap" data-act="' + editAct + '" data-id="' + id + '">✏️ 编辑</button>';
-      if (delAct) h += '<button class="link-btn del tap" data-act="' + delAct + '" data-id="' + id + '">🗑️ 删除</button>';
+      if (delAct) h += '<button class="link-btn del tap" data-act="' + delAct + '" data-id="' + id + '">🗑 删除</button>';
       return h + '</div>';
     },
 
@@ -7392,9 +7393,9 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
             '<div class="item-ops ev-ops">' +
             '<button class="link-btn tap" data-act="evMark" data-id="' + ev.id + '">✓ 今天做了</button>' +
             '<button class="link-btn tap" data-act="evBackfill" data-id="' + ev.id + '">＋ 补记</button>' +
-            '<button class="link-btn tap" data-act="evOpen" data-id="' + ev.id + '">全部日期</button>' +
-            '<button class="link-btn tap" data-act="evEdit" data-id="' + ev.id + '">编辑</button>' +
-            '<button class="link-btn del tap" data-act="evDel" data-id="' + ev.id + '">删除</button>' +
+            '<button class="link-btn tap" data-act="evOpen" data-id="' + ev.id + '">📅 全部日期</button>' +
+            '<button class="link-btn tap" data-act="evEdit" data-id="' + ev.id + '">✏️ 编辑</button>' +
+            '<button class="link-btn del tap" data-act="evDel" data-id="' + ev.id + '">🗑 删除</button>' +
             '</div></div>' +
             '</div>';
         }).join('') + '</div>' + ListPager.pager('checkin:ev', evs.length);
@@ -8372,8 +8373,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
                 '<div class="item-detail">' +
                 '<div class="item-note">' + esc(x.content || '（无备注）') + '</div>' +
                 '<div class="item-detail-ops">' +
-                '<button class="btn sm tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
-                '<button class="btn sm danger tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>' +
+                '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
+                '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>' +
                 '</div>' +
                 '</div></div>';
             }).join('') + '</div>';
@@ -8525,8 +8526,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           '<div class="item-detail">' +
           '<div class="item-note">' + esc(x.content || '（无备注）') + '</div>' +
           '<div class="item-detail-ops">' +
-          '<button class="btn sm tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
-          '<button class="btn sm danger tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>' +
+          '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
+          '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>' +
           '</div>' +
           '</div></div></div></div>';
       }).join('');
@@ -8769,8 +8770,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           '<div class="item-detail">' +
           '<div class="item-note">' + esc(m.desc || '（无描述）') + '</div>' +
           '<div class="item-detail-ops">' +
-          '<button class="btn sm tap" data-act="msEdit" data-id="' + m.id + '">✏️ 编辑</button>' +
-          '<button class="btn sm danger tap" data-act="msDel" data-id="' + m.id + '">🗑 删除</button>' +
+          '<button class="link-btn tap" data-act="msEdit" data-id="' + m.id + '">✏️ 编辑</button>' +
+          '<button class="link-btn del tap" data-act="msDel" data-id="' + m.id + '">🗑 删除</button>' +
           '</div></div></div>';
       }).join('');
       if (!items.length) items = UI.empty('还没有里程碑记录，点击下方按钮添加吧', '🏆');
@@ -9532,8 +9533,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         var body = '';
         if (exp) {
           body += '<div class="wl-acts">' +
-            '<button class="btn sm tap" data-act="schEdit" data-id="' + s.id + '">✏️ 编辑</button>' +
-            '<button class="btn sm tap danger" data-act="schDel" data-id="' + s.id + '">🗑 删除</button>' +
+            '<button class="link-btn tap" data-act="schEdit" data-id="' + s.id + '">✏️ 编辑</button>' +
+            '<button class="link-btn del tap" data-act="schDel" data-id="' + s.id + '">🗑 删除</button>' +
           '</div>';
           if (s.note) body += '<div class="sch-note-body">' + esc(s.note) + '</div>';
         }
@@ -9604,8 +9605,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         var body = '';
         if (exp) {
           body += '<div class="wl-acts">' +
-            '<button class="btn sm tap" data-act="schEdit" data-id="' + s.id + '">✏️ 编辑</button>' +
-            '<button class="btn sm tap danger" data-act="schDel" data-id="' + s.id + '">🗑 删除</button>' +
+            '<button class="link-btn tap" data-act="schEdit" data-id="' + s.id + '">✏️ 编辑</button>' +
+            '<button class="link-btn del tap" data-act="schDel" data-id="' + s.id + '">🗑 删除</button>' +
           '</div>';
           if (s.note) body += '<div class="sch-note-body">' + esc(s.note) + '</div>';
         }
@@ -10018,12 +10019,13 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     if (total > 0) extraMeta.push('<span class="badge">⏱ 累计' + dur(total) + '</span>');
     return row + '<div class="fold-detail">' +
       '<div class="fold-ops m-ops">' +
-        (x.type === 'book' ? '<button class="link-btn tap" data-act="logtime" data-id="' + x.id + '">记阅读</button>' : '') +
-        (x.end ? '' : '<button class="link-btn tap" data-act="finish" data-id="' + x.id + '">看完</button>') +
-        (x.status !== '弃了' ? '<button class="link-btn tap" data-act="drop" data-id="' + x.id + '">弃了</button>' : '') +
+        /* 状态互斥：看完 → 不再显示 记阅读/弃了；弃了 → 不再显示 记阅读/看完（记阅读仅书籍未完结时可用） */
+        (x.type === 'book' && x.status !== '看完' && x.status !== '弃了' ? '<button class="link-btn tap" data-act="logtime" data-id="' + x.id + '">记阅读</button>' : '') +
+        (x.end || x.status === '看完' || x.status === '弃了' ? '' : '<button class="link-btn tap" data-act="finish" data-id="' + x.id + '">看完</button>') +
+        (x.status === '看完' || x.status === '弃了' ? '' : '<button class="link-btn tap" data-act="drop" data-id="' + x.id + '">弃了</button>') +
         '<button class="link-btn tap" data-act="minfo" data-id="' + x.id + '">详情</button>' +
-        '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">编辑</button>' +
-        '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">删除</button>' +
+        '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
+        '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>' +
       '</div>' +
       (extraMeta.length ? '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:' + (x.review ? '6' : '0') + 'px">' + extraMeta.join('') + '</div>' : '') +
       (x.review ? '<div class="note-text">📝 ' + esc(x.review) + '</div>' : '') +
@@ -10190,12 +10192,12 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
               if (x.start && x.end) detailMeta.push('<span class="badge grey">历时 ' + (U.dayDiff(x.start, x.end) + 1) + ' 天</span>');
               if (total > 0) detailMeta.push('<span class="badge">⏱ 累计' + dur(total) + '</span>');
               var detailOps =
-                (x.type === 'book' ? '<button class="link-btn tap" data-act="logtime" data-id="' + x.id + '">记阅读</button>' : '') +
-                (x.end ? '' : '<button class="link-btn tap" data-act="finish" data-id="' + x.id + '">看完</button>') +
-                (x.status !== '弃了' ? '<button class="link-btn tap" data-act="drop" data-id="' + x.id + '">弃了</button>' : '') +
+                (x.type === 'book' && x.status !== '看完' && x.status !== '弃了' ? '<button class="link-btn tap" data-act="logtime" data-id="' + x.id + '">记阅读</button>' : '') +
+                (x.end || x.status === '看完' || x.status === '弃了' ? '' : '<button class="link-btn tap" data-act="finish" data-id="' + x.id + '">看完</button>') +
+                (x.status === '看完' || x.status === '弃了' ? '' : '<button class="link-btn tap" data-act="drop" data-id="' + x.id + '">弃了</button>') +
                 '<button class="link-btn tap" data-act="minfo" data-id="' + x.id + '">详情</button>' +
-                '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">编辑</button>' +
-                '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">删除</button>';
+                '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
+                '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>';
               return '<div class="item clickable" data-toggle data-id="' + x.id + '">' +
                 '<div class="item-main">' +
                 '<div class="item-title">' + MT[x.type].i + ' ' + esc(x.title) + '</div>' +
@@ -15624,8 +15626,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       (x.yearly ? '<span class="badge">每年重复' + (years > 0 ? ' · 第 ' + years + ' 年' : '') + '</span>' : '') +
       (x.note ? '<span>' + esc(x.note) + '</span>' : '') + '</div>' +
       '<div class="item-ops-row">' +
-      '<button class="btn ghost sm tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
-      '<button class="btn danger sm tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>' +
+      '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
+      '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>' +
       '</div></div></div>';
   }
 
