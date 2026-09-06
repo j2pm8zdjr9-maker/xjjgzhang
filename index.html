@@ -80,6 +80,13 @@ html{ -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; 
   --gap: 18px;
 }
 
+/* ============ 主题色系（data-tone 挂在 :root，覆盖橄榄主色变量；深浅色模式可叠加） ============ */
+:root[data-tone="sage"]{ --olive:#2F9E77; --olive-soft:#4FB48E; --olive-deep:#23805F; --olive-darker:#1B664C; --olive-05:rgba(47,158,119,.05); --olive-10:rgba(47,158,119,.10); --olive-16:rgba(47,158,119,.16); --olive-24:rgba(47,158,119,.24); }
+:root[data-tone="plum"]{ --olive:#7E57C2; --olive-soft:#9B7ED8; --olive-deep:#5E3FA0; --olive-darker:#4A3180; --olive-05:rgba(126,87,194,.05); --olive-10:rgba(126,87,194,.10); --olive-16:rgba(126,87,194,.16); --olive-24:rgba(126,87,194,.24); }
+:root[data-tone="terra"]{ --olive:#D2622A; --olive-soft:#E07C46; --olive-deep:#A84A1D; --olive-darker:#863B16; --olive-05:rgba(210,98,42,.05); --olive-10:rgba(210,98,42,.10); --olive-16:rgba(210,98,42,.16); --olive-24:rgba(210,98,42,.24); }
+:root[data-tone="ocean"]{ --olive:#3272C4; --olive-soft:#5290DC; --olive-deep:#255696; --olive-darker:#1C4375; --olive-05:rgba(50,114,196,.05); --olive-10:rgba(50,114,196,.10); --olive-16:rgba(50,114,196,.16); --olive-24:rgba(50,114,196,.24); }
+:root[data-tone="rose"]{ --olive:#D4547A; --olive-soft:#E27395; --olive-deep:#B03A5E; --olive-darker:#8C2D4A; --olive-05:rgba(212,84,122,.05); --olive-10:rgba(212,84,122,.10); --olive-16:rgba(212,84,122,.16); --olive-24:rgba(212,84,122,.24); }
+
 /* ============ 深色模式 ============
    theme=auto（无 data-theme）：跟随系统 prefers-color-scheme
    theme=light（data-theme="light"）：强制浅色
@@ -138,6 +145,20 @@ html{ -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; 
 :root[data-theme="dark"] .font-range::-webkit-slider-runnable-track{ background:rgba(255,255,255,.16); }
 :root[data-theme="dark"] .font-range::-moz-range-track{ background:rgba(255,255,255,.16); }
 :root[data-theme="dark"] .topbar{ background:rgba(33,28,22,.92); }
+
+/* ============ 主题色系 · 深色模式（必须放在深色块之后才能生效；亮化变体保证深底下可读） ============ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"])[data-tone="sage"]{ --olive:#4FC79A; --olive-soft:#6BD8AE; --olive-deep:#3AAE83; --olive-darker:#7FE3BD; --olive-05:rgba(79,199,154,.10); --olive-10:rgba(79,199,154,.16); --olive-16:rgba(79,199,154,.22); --olive-24:rgba(79,199,154,.32); }
+  :root:not([data-theme="light"])[data-tone="plum"]{ --olive:#A98BE8; --olive-soft:#BDA6F0; --olive-deep:#8F6ED6; --olive-darker:#CDB9F4; --olive-05:rgba(169,139,232,.10); --olive-10:rgba(169,139,232,.16); --olive-16:rgba(169,139,232,.22); --olive-24:rgba(169,139,232,.32); }
+  :root:not([data-theme="light"])[data-tone="terra"]{ --olive:#EC8B52; --olive-soft:#F2A271; --olive-deep:#D67537; --olive-darker:#F6BA8F; --olive-05:rgba(236,139,82,.10); --olive-10:rgba(236,139,82,.16); --olive-16:rgba(236,139,82,.22); --olive-24:rgba(236,139,82,.32); }
+  :root:not([data-theme="light"])[data-tone="ocean"]{ --olive:#6FA6E8; --olive-soft:#8FBCF0; --olive-deep:#5490DC; --olive-darker:#A9CDF5; --olive-05:rgba(111,166,232,.10); --olive-10:rgba(111,166,232,.16); --olive-16:rgba(111,166,232,.22); --olive-24:rgba(111,166,232,.32); }
+  :root:not([data-theme="light"])[data-tone="rose"]{ --olive:#EC7FA0; --olive-soft:#F29DB6; --olive-deep:#E06688; --olive-darker:#F7BCCE; --olive-05:rgba(236,127,160,.10); --olive-10:rgba(236,127,160,.16); --olive-16:rgba(236,127,160,.22); --olive-24:rgba(236,127,160,.32); }
+}
+:root[data-theme="dark"][data-tone="sage"]{ --olive:#4FC79A; --olive-soft:#6BD8AE; --olive-deep:#3AAE83; --olive-darker:#7FE3BD; --olive-05:rgba(79,199,154,.10); --olive-10:rgba(79,199,154,.16); --olive-16:rgba(79,199,154,.22); --olive-24:rgba(79,199,154,.32); }
+:root[data-theme="dark"][data-tone="plum"]{ --olive:#A98BE8; --olive-soft:#BDA6F0; --olive-deep:#8F6ED6; --olive-darker:#CDB9F4; --olive-05:rgba(169,139,232,.10); --olive-10:rgba(169,139,232,.16); --olive-16:rgba(169,139,232,.22); --olive-24:rgba(169,139,232,.32); }
+:root[data-theme="dark"][data-tone="terra"]{ --olive:#EC8B52; --olive-soft:#F2A271; --olive-deep:#D67537; --olive-darker:#F6BA8F; --olive-05:rgba(236,139,82,.10); --olive-10:rgba(236,139,82,.16); --olive-16:rgba(236,139,82,.22); --olive-24:rgba(236,139,82,.32); }
+:root[data-theme="dark"][data-tone="ocean"]{ --olive:#6FA6E8; --olive-soft:#8FBCF0; --olive-deep:#5490DC; --olive-darker:#A9CDF5; --olive-05:rgba(111,166,232,.10); --olive-10:rgba(111,166,232,.16); --olive-16:rgba(111,166,232,.22); --olive-24:rgba(111,166,232,.32); }
+:root[data-theme="dark"][data-tone="rose"]{ --olive:#EC7FA0; --olive-soft:#F29DB6; --olive-deep:#E06688; --olive-darker:#F7BCCE; --olive-05:rgba(236,127,160,.10); --olive-10:rgba(236,127,160,.16); --olive-16:rgba(236,127,160,.22); --olive-24:rgba(236,127,160,.32); }
 
 *,*::before,*::after{ box-sizing:border-box; }
 html{ zoom: var(--font-scale, 1); overflow-x:hidden; height: var(--app-dvh); }
@@ -318,6 +339,10 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 }
 .save-flag.show{ opacity:1; }
 .save-flag.warn{ color:#fff; background:var(--danger); }
+.sync-flag{ cursor:pointer; }
+.sync-flag.ok{ color:var(--olive-deep); background:var(--olive-10); opacity:1; }
+.sync-flag.syncing{ color:#2563EB; background:rgba(37,99,235,.1); opacity:1; }
+.sync-flag.offline{ color:#B45309; background:rgba(180,83,9,.12); opacity:1; }
 
 /* 一键置顶悬浮按钮（位置会被 JS 在 standalone 模式时叠加 safe-area-inset-bottom，见 .top-fab 适配代码） */
 .top-fab{
@@ -446,6 +471,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .link-btn{
   background:none; border:0; padding:5px 9px; border-radius:8px;
   color:var(--brown-3); font-size:12.5px;
+  white-space:nowrap;
 }
 .link-btn:hover{ color:var(--brown); background:var(--olive-10); }
 .link-btn:active{ background:var(--olive-16); }
@@ -664,19 +690,19 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .pop-picker-item{ display:block; width:100%; padding:7px 14px; border:none; border-radius:10px; background:transparent; font-size:14.5px; color:var(--brown); cursor:pointer; white-space:nowrap; text-align:center; }
 .pop-picker-item.selected{ background:var(--olive); color:#fff; font-weight:600; }
 .pop-picker-item:hover, .pop-picker-item:focus{ background:var(--olive-10); outline:none; }
-.req-star{ color:var(--danger); font-weight:600; margin-left:1px; }
 
-/* 日期字段可清除：点击 ✕ 清空（进行中 / 未选择） */
-.date-clearable{ position:relative; display:block; }
-.date-clearable .input{ padding-right:38px; }
-.date-clearable .field-clear{
-  position:absolute; right:8px; top:50%; transform:translateY(-50%);
-  width:26px; height:26px; display:flex; align-items:center; justify-content:center;
-  border:none; background:var(--olive-05); color:var(--brown-3);
-  border-radius:50%; font-size:14px; line-height:1; cursor:pointer;
-  transition:background var(--t), color var(--t);
-}
-.date-clearable .field-clear:hover{ background:var(--olive-10); color:var(--olive-deep); }
+/* 记账分类选择弹窗：滚动列表 + 弹窗内新增 */
+.cat-pick-list{ display:flex; flex-direction:column; gap:4px; max-height:46vh; overflow:auto; margin-bottom:12px; }
+.cat-pick-item{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:11px 14px; border:none; border-radius:10px; background:transparent; font-size:15px; color:var(--brown); cursor:pointer; text-align:left; transition:background .12s; }
+.cat-pick-item:hover{ background:var(--olive-05); }
+.cat-pick-item:active{ transform:scale(.985); }
+.cat-pick-item.on{ background:var(--olive-10); color:var(--olive-deep); font-weight:650; }
+.cat-pick-check{ color:var(--olive-deep); font-weight:700; flex-shrink:0; }
+.cat-pick-empty{ padding:20px 0; text-align:center; color:var(--brown-3); font-size:13.5px; }
+.cat-pick-newbtn{ width:100%; }
+.cat-pick-addrow{ display:flex; gap:8px; margin-top:2px; }
+.cat-pick-addrow .input{ flex:1; min-width:0; }
+.req-star{ color:var(--danger); font-weight:600; margin-left:1px; }
 
 /* 即时校验 */
 .field.err > label{ color:var(--danger); }
@@ -861,12 +887,17 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .item-detail .small.muted{ margin-top:0; padding:6px 10px;
   background:var(--bg,#faf8f3); border:1px solid var(--line);
   border-radius:calc(var(--r) - 4px); color:var(--brown-3); }
-/* 操作按钮行：左对齐，紧凑排列 */
+/* 操作按钮行：左对齐，紧凑排列；按钮文字不折行，放不下时在按钮之间换行 */
 .item-detail > .item-ops{
-  margin-top:0; gap:12px; justify-content:flex-start;
+  margin-top:0; gap:6px 14px; justify-content:flex-start;
   padding-top:6px;
+  flex-wrap:wrap; row-gap:8px;
 }
-.item-detail > .item-ops .link-btn{ font-size:13px; padding:2px 4px; }
+.item-detail > .item-ops .link-btn{
+  font-size:13px; padding:4px 6px;
+  white-space:nowrap; flex:0 0 auto;
+  line-height:1.4;
+}
 /* 展开区内操作按钮（工作留痕等）：内容下方、左对齐 */
 .item-detail-ops{
   display:flex; gap:8px; justify-content:flex-start;
@@ -1120,15 +1151,84 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
   border:1px solid var(--line); border-top:none;
 }
 
-/* 影剧书主视图内联搜索框 */
-.media-search-wrap{ position:relative; display:flex; align-items:center; width:220px; max-width:100%; }
+/* 影剧书主视图内联搜索框：独立一行，标题行只留「全部时间」，避免窄屏整块换行 */
+.media-head-right{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+.media-search-row{ margin-bottom:12px; }
+.media-search-wrap{ position:relative; display:flex; align-items:center; width:100%; max-width:100%; }
 .media-search{ width:100%; padding:8px 12px 8px 34px; min-height:38px; border-radius:20px; font-size:14px; background:var(--card); transition:border-color var(--t), box-shadow var(--t); }
 .media-search:hover{ border-color:var(--olive-24); }
 .media-search:focus{ outline:none; border-color:var(--olive-soft); box-shadow:0 0 0 3px var(--olive-10); }
 .media-search-icon{ position:absolute; left:11px; font-size:14px; line-height:1; color:var(--brown-3); pointer-events:none; }
-@media (max-width: 520px){
-  .media-search-wrap{ width:100%; margin-top:8px; }
+
+/* ============ 影剧书 · 五星评分展示 ============ */
+.score.m-star{ gap:0; font-size:13px; letter-spacing:1px; }
+.score.m-star .s-full{ color:#C9A227; font-size:13px; font-weight:400; }
+.score.m-star .s-empty{ color:var(--brown-4); opacity:.45; font-size:13px; font-weight:400; }
+
+/* ============ 影剧书 · 封面墙 / 列表切换 + 封面（借鉴「生活全能工作台·书影音」） ============ */
+/* 筛选区分组布局：每组独占一行，标签定宽对齐 */
+.mf-bar{ display:flex; flex-direction:column; gap:10px; }
+.mf-row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; min-width:0; }
+.mf-lbl{
+  flex:0 0 34px; width:34px; font-size:12px; font-weight:600; color:var(--brown-3);
+  letter-spacing:.08em; user-select:none;
 }
+/* 封面墙网格：自动填充列数，窄屏 2 列、宽屏最多 5 列 */
+.media-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(148px, 1fr)); gap:14px; }
+@media (max-width: 380px){ .media-grid{ grid-template-columns:repeat(2, 1fr); gap:10px; } }
+.mc-card{
+  background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden;
+  cursor:pointer; transition:transform .15s var(--ease), box-shadow .2s, border-color .15s;
+  display:flex; flex-direction:column;
+}
+.mc-card:hover{ transform:translateY(-2px); box-shadow:0 6px 18px rgba(51,25,21,.10); border-color:var(--olive-16); }
+.mc-cover{ position:relative; width:100%; aspect-ratio:3/4; background:var(--olive-05); overflow:hidden; }
+.mc-cover img{ width:100%; height:100%; object-fit:cover; display:block; }
+/* 无封面占位：类型图标 + 标题，保持克制素色 */
+.mc-cover.mc-ph{
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+  padding:14px 10px; text-align:center; background:var(--olive-05);
+}
+.mc-cover.mc-ph span{ font-size:30px; line-height:1; opacity:.85; }
+.mc-cover.mc-ph b{
+  font-size:13px; font-weight:600; color:var(--brown-2); line-height:1.4;
+  display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
+}
+.mc-info{ padding:8px 10px 10px; display:flex; flex-direction:column; gap:3px; min-width:0; }
+.mc-title{ font-size:13px; font-weight:600; color:var(--brown); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.mc-meta{ display:flex; align-items:center; justify-content:space-between; gap:6px; font-size:11px; color:var(--brown-3); }
+.mc-meta > span{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.mc-sub{ font-size:11px; color:var(--brown-3); opacity:.8; }
+/* 列表行小缩略图 */
+.row-thumb{ width:38px; height:50px; object-fit:cover; border-radius:6px; flex-shrink:0; vertical-align:middle; margin-right:6px; background:var(--olive-05); }
+/* 详情弹窗顶部封面横幅 */
+.mi-cover{ margin:-6px -6px 12px; border-radius:10px 10px 0 0; overflow:hidden; max-height:260px; background:var(--olive-05); }
+.mi-cover img{ width:100%; max-height:260px; object-fit:cover; display:block; }
+/* 表单图片字段 */
+.img-pick{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+/* 表单行内封面：占满行宽、整体靠右，预览框与其他控件右缘对齐 */
+.field-r .img-pick{ width:100%; justify-content:flex-end; }
+.img-file{ position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
+.img-pick-preview{
+  width:84px; height:112px; border-radius:10px; overflow:hidden; flex-shrink:0;
+  background:var(--olive-05); border:1px dashed var(--olive-24);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:border-color var(--t), background var(--t), transform .12s var(--ease);
+}
+.img-pick-preview:hover{ border-color:var(--olive); background:var(--olive-10); }
+.img-pick-preview:active{ transform:scale(.96); }
+.img-pick-preview.has{ border-style:solid; }
+.img-pick-preview img{ width:100%; height:100%; object-fit:cover; display:block; }
+.img-pick-ph{ display:flex; flex-direction:column; align-items:center; gap:4px; font-size:22px; opacity:.75; }
+.img-pick-ph i{ font-style:normal; font-size:10px; color:var(--brown-3); }
+
+/* 列表行右侧：状态胶囊 + 日期，与标题同行显示 */
+.media-row-side{ display:flex; align-items:center; gap:6px; flex-shrink:0; font-size:12px; color:var(--brown-3); white-space:nowrap; }
+/* 紧凑操作栏：手机窄屏一行放下（影剧书 m-ops / 事件记录 ev-ops） */
+.fold-ops.m-ops{ gap:4px; }
+.fold-ops.m-ops .link-btn{ font-size:12px; padding:3px 6px; }
+.item-detail > .item-ops.ev-ops{ gap:4px 6px; }
+.item-detail > .item-ops.ev-ops .link-btn{ font-size:12px; padding:3px 4px; }
 
 /* 影剧书列表行（参考 task-row / stock-ov-row 模式） */
 .media-row{ display:flex; align-items:flex-start; gap:8px; padding:10px 12px; border-radius:10px; background:var(--card); cursor:pointer; transition:background .15s, box-shadow .15s; border:1px solid var(--line); }
@@ -1689,6 +1789,28 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   .cal-wd{ font-size:10px; height:34px; line-height:34px; }
   .cal-cell{ height:34px; font-size:12px; border-radius:7px; }
 }
+
+/* ============ 时光档案（设置）：全部生活记录按日期折叠 ============ */
+.ar-chip{ font-size:12px; color:var(--brown-2); background:var(--cream-soft); border:1px solid var(--line); border-radius:999px; padding:3px 10px; }
+.ar-day{ display:flex; align-items:center; gap:8px; padding:10px 2px 6px; font-size:12.5px; font-weight:650; color:var(--brown); }
+.ar-amt{ flex-shrink:0; font-variant-numeric:tabular-nums; font-weight:700; font-size:13.5px; color:var(--brown-2); }
+.ar-amt.in{ color:var(--olive-deep); }
+/* 主题色 chip（设置 + 品牌弹层共用视觉语言） */
+.tone-chip{ display:flex; align-items:center; gap:7px; border:1px solid var(--line); background:var(--card); border-radius:999px; padding:6px 12px; font-size:12.5px; color:var(--brown-2); }
+.tone-chip i{ width:14px; height:14px; border-radius:50%; flex-shrink:0; box-shadow:inset 0 0 0 1px rgba(0,0,0,.08); }
+.tone-chip.on{ border-color:var(--olive-24); color:var(--olive-deep); background:var(--olive-05); font-weight:650; }
+/* 品牌设置弹层（点击侧边栏品牌区打开） */
+.bs-preview{ display:flex; align-items:center; gap:12px; background:var(--cream-soft); border:1px solid var(--line); border-radius:14px; padding:14px; margin-bottom:14px; }
+.bs-mark{ width:46px; height:46px; border-radius:14px; background:var(--olive); color:#fff; font-size:20px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .2s var(--ease); }
+.bs-name{ font-weight:700; font-size:15px; color:var(--brown); }
+.bs-tag{ font-size:12px; color:var(--brown-3); margin-top:2px; }
+.bs-field{ margin-bottom:10px; }
+.bs-field label{ display:block; font-size:12px; color:var(--brown-3); margin-bottom:4px; }
+.bs-field input{ width:100%; box-sizing:border-box; border:1px solid var(--line-2); border-radius:10px; padding:8px 10px; font-size:13.5px; background:var(--card); color:var(--brown); }
+.bs-tones{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.bs-tone{ display:flex; flex-direction:column; align-items:center; gap:6px; border:1px solid var(--line); background:var(--card); border-radius:12px; padding:10px 4px; font-size:11.5px; color:var(--brown-2); }
+.bs-tone i{ width:20px; height:20px; border-radius:50%; box-shadow:inset 0 0 0 1px rgba(0,0,0,.08); }
+.bs-tone.on{ border-color:var(--olive-24); background:var(--olive-05); font-weight:650; }
 
 
 /* ============ 首页总览 ============ */
@@ -2760,6 +2882,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       <h1 data-page-node-id="vz7taWp1SDzC4uSfB6kM5f" id="pageTitle"><!--pnid:2GUaf0Ff27WZ3EbeTd8qvb-->个人工作台</h1>
       <div data-page-node-id="UM6JgF1rEB8QtLRfBxI1OO" class="topbar-right">
         <span data-page-node-id="OldS9NpzRBrImGCfJWbg8E" class="save-flag" id="saveFlag"><!--pnid:X3vs0rg8fi3fv99mFtL9u0-->已保存</span>
+        <span class="save-flag sync-flag" id="syncFlag" title="点击手动同步">同步</span>
         <button aria-label="设置" class="icon-btn tap" id="settingsBtn" title="设置（数据备份 / 导入导出）">
           <svg fill="none" height="22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         </button>
@@ -3206,7 +3329,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       } catch (e) { Store._restoring = false; }
       /* 预置示例数据：仅在全新空白账户首次注入，已有数据绝不覆盖 */
       try {
-        if (!this.data.settings._seeded && isDataEmpty(this.data)) {
+        if (!this.data.settings._seeded && isDataEmpty(this.data) && !(typeof NasSync !== 'undefined' && NasSync.enabled)) {
           seedSampleData(this.data);
           this.data.settings._seeded = true;
           this.data.settings.created = this.data.settings.created || today();
@@ -3229,10 +3352,128 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         toast('保存失败：' + (e && e.name === 'QuotaExceededError' ? '浏览器存储空间不足' : '存储可能被禁用'));
       }
       try { if (!Store._restoring) IDB.put(KEY, this.data); } catch (e) {}
+      try { if (NasSync && NasSync.ready) NasSync.schedulePush(); } catch (e2) {}
     },
     reset: function () { this.data = defaults(); this.save(true); },
     size: function () {
       try { return new Blob([localStorage.getItem(KEY) || '']).size; } catch (e) { return 0; }
+    }
+  };
+
+  /* ========== NAS 同步适配器 ==========
+     仅在页面由飞牛 NAS 通过 http(s) 提供服务时启用（file:// 本地打开自动禁用）。
+     服务端暴露同源的 /api/data（GET 拉取 / POST 推送），以 savedAt 时间戳做“谁新用谁”的冲突裁决。 */
+  var NasSync = {
+    enabled: !!(typeof location !== 'undefined' && location.protocol && location.protocol.indexOf('http') === 0), ready: false, baseSavedAt: 0, timer: null, token: '',
+    tokenKey: 'nasToken',
+    loadToken: function () {
+      try { this.token = localStorage.getItem(this.tokenKey) || ''; } catch (e) { this.token = ''; }
+      try {
+        var m = (location.search || '').match(/[?&]t=([^&]+)/);
+        if (m && m[1]) { this.token = decodeURIComponent(m[1]); try { localStorage.setItem(this.tokenKey, this.token); } catch (e) {} }
+      } catch (e) {}
+      return this.token;
+    },
+    askToken: function () {
+      var t = window.prompt('请输入同步密码（首次需输入，以后自动记住）：', '');
+      if (t === null) return false;
+      t = (t || '').trim();
+      if (!t) return false;
+      this.token = t;
+      try { localStorage.setItem(this.tokenKey, t); } catch (e) {}
+      return true;
+    },
+    authHeaders: function (extra) {
+      var h = extra || {};
+      if (this.token) h['Authorization'] = 'Bearer ' + this.token;
+      return h;
+    },
+    on401: function () {
+      this.token = '';
+      try { localStorage.removeItem(this.tokenKey); } catch (e) {}
+      if (this.askToken()) { this.init(); } else { this.flag('needpw'); }
+    },
+    init: function () {
+      if (!location.protocol || location.protocol.indexOf('http') !== 0) return; // file:// 不启用
+      this.enabled = true;
+      if (!this.loadToken()) {
+        var _skip = false;
+        try { _skip = sessionStorage.getItem('nasTokenSkip') === '1'; } catch (e) {}
+        if (!_skip && !this.askToken()) { try { sessionStorage.setItem('nasTokenSkip', '1'); } catch (e) {} this.flag('offline'); return; }
+      }
+      this.baseSavedAt = (Store.data && Store.data._meta && Store.data._meta.savedAt) || 0;
+      this.flag('sync');
+      var self = this;
+      fetch('api/data', { method: 'GET', cache: 'no-store', headers: this.authHeaders() })
+        .then(function (r) { if (r.status === 401) { self.on401(); throw 0; } if (!r.ok) throw 0; return r.json(); })
+        .then(function (remote) {
+          var localAt = (Store.data._meta && Store.data._meta.savedAt) || 0;
+          if (remote && remote.data && typeof remote.savedAt === 'number' && remote.savedAt > localAt) {
+            Store.data = merge(defaults(), remote.data);
+            if (!Store.data._meta) Store.data._meta = {};
+            Store.data._meta.savedAt = remote.savedAt;
+            self.baseSavedAt = remote.savedAt;
+            try { localStorage.setItem(KEY, JSON.stringify(Store.data)); } catch (e) {}
+            try { if (!Store._restoring) IDB.put(KEY, Store.data); } catch (e) {}
+            if (App && App.refresh) App.refresh();
+            if (U && U.toast) U.toast('已从 NAS 同步最新数据');
+          }
+          self.ready = true;
+          self.flag('ok');
+          if (!(remote && remote.data)) self.push(); // 服务端无数据 → 推本地上去
+        })
+        .catch(function () { self.ready = true; self.flag('offline'); });
+    },
+    schedulePush: function () {
+      if (!this.enabled || !this.ready) return;
+      var self = this;
+      if (this.timer) clearTimeout(this.timer);
+      this.timer = setTimeout(function () { self.push(); }, 800);
+    },
+    push: function () {
+      if (!this.enabled) return;
+      var self = this;
+      var at = Date.now();
+      if (!Store.data._meta) Store.data._meta = {};
+      Store.data._meta.savedAt = at;
+      this.baseSavedAt = at;
+      this.flag('sync');
+      if (!this.token) { if (!this.askToken()) { this.flag('needpw'); return; } }
+      fetch('api/data', { method: 'POST', headers: this.authHeaders({ 'Content-Type': 'application/json' }), body: JSON.stringify({ savedAt: at, data: Store.data }) })
+        .then(function (r) { if (r.status === 401) { self.on401(); throw 0; } if (!r.ok) throw 0; return r.json(); })
+        .then(function () { self.flag('ok'); })
+        .catch(function () { self.flag('offline'); });
+    },
+    syncNow: function () {
+      if (!this.enabled) return;
+      var self = this;
+      this.flag('sync');
+      fetch('api/data', { method: 'GET', cache: 'no-store', headers: this.authHeaders() })
+        .then(function (r) { if (r.status === 401) { self.on401(); throw 0; } if (!r.ok) throw 0; return r.json(); })
+        .then(function (remote) {
+          var localAt = (Store.data._meta && Store.data._meta.savedAt) || 0;
+          if (remote && remote.data && remote.savedAt > localAt) {
+            Store.data = merge(defaults(), remote.data);
+            if (!Store.data._meta) Store.data._meta = {};
+            Store.data._meta.savedAt = remote.savedAt;
+            self.baseSavedAt = remote.savedAt;
+            try { localStorage.setItem(KEY, JSON.stringify(Store.data)); } catch (e) {}
+            try { if (!Store._restoring) IDB.put(KEY, Store.data); } catch (e) {}
+            if (App && App.refresh) App.refresh();
+          }
+          self.push();
+          if (U && U.toast) U.toast('已与 NAS 同步');
+        })
+        .catch(function () { self.flag('offline'); if (U && U.toast) U.toast('同步失败：无法连接 NAS'); });
+    },
+    flag: function (state) {
+      var el = document.getElementById('syncFlag');
+      if (!el) return;
+      if (state === 'sync') { el.textContent = '同步中…'; el.className = 'save-flag sync-flag syncing'; }
+      else if (state === 'ok') { el.textContent = '已同步'; el.className = 'save-flag sync-flag ok'; }
+      else if (state === 'needpw') { el.textContent = '需密码'; el.className = 'save-flag sync-flag offline'; }
+      else if (state === 'offline') { el.textContent = '离线'; el.className = 'save-flag sync-flag offline'; }
+      else { el.textContent = '同步'; el.className = 'save-flag sync-flag'; }
     }
   };
 
@@ -4382,6 +4623,44 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 
         function iso(d) { var y = d.getFullYear(), m = ('0' + (d.getMonth() + 1)).slice(-2), day = ('0' + d.getDate()).slice(-2); return y + '-' + m + '-' + day; }
 
+        /* ---------- 图片字段（封面等）：选图 → 压缩到 maxW 宽 → base64 存入隐藏 input ---------- */
+        function compressImg(file, maxW, cb) {
+          var fr = new FileReader();
+          fr.onerror = function () { U.toast('图片读取失败，请换一张试试'); };
+          fr.onload = function () {
+            var img = new Image();
+            img.onerror = function () { U.toast('图片解析失败，请换一张试试'); };
+            img.onload = function () {
+              var w = img.width || maxW, h = img.height || maxW;
+              if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+              var cv = document.createElement('canvas');
+              cv.width = w; cv.height = h;
+              var ctx = cv.getContext('2d');
+              ctx.fillStyle = '#ffffff';           // 透明 PNG 转白底，避免变黑
+              ctx.fillRect(0, 0, w, h);
+              ctx.drawImage(img, 0, 0, w, h);
+              cb(cv.toDataURL('image/jpeg', 0.82));
+            };
+            img.src = fr.result;
+          };
+          fr.readAsDataURL(file);
+        }
+        function imgPreviewHtml(v) {
+          return v
+            ? '<img src="' + v + '" alt="封面预览">'
+            : '<span class="img-pick-ph">🖼️<i>点击添加</i></span>';
+        }
+        function setImgPreview(root, k, v) {
+          var box = root.querySelector('[data-imgbox="' + k + '"]');
+          if (box) {
+            box.innerHTML = imgPreviewHtml(v);
+            box.classList.toggle('has', !!v);
+            box.setAttribute('aria-label', v ? '更换封面' : '点击添加封面');
+          }
+          var clr = root.querySelector('[data-imgclear="' + k + '"]');
+          if (clr) clr.style.display = v ? '' : 'none';
+        }
+
         var body = '<div class="form-grid">' + fields.map(function (f) {
           var v = vals[f.k] !== undefined && vals[f.k] !== null ? vals[f.k] : (f.def !== undefined ? f.def : '');
           var cls = 'field' + (f.type === 'textarea' || f.full ? ' full' : '');
@@ -4413,6 +4692,14 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           } else if (f.type === 'checkbox') {
             inner = '<label class="opt-row tap" style="min-height:50px"><input type="checkbox" name="' + f.k + '" ' + (v ? 'checked' : '') + ' style="width:20px;height:20px;accent-color:#8AA832">' +
               '<span>' + esc(f.cbText || f.label) + '</span></label>';
+          } else if (f.type === 'image') {
+            /* 封面图：隐藏 input 存 base64，值走 fieldVal 正常收集；点击预览框直接选图 */
+            inner = '<div class="img-pick">' +
+              '<input type="hidden" name="' + f.k + '" value="' + esc(v) + '">' +
+              '<input type="file" accept="image/*" class="img-file" data-imgfile="' + f.k + '" aria-hidden="true" tabindex="-1">' +
+              '<div class="img-pick-preview tap' + (v ? ' has' : '') + '" data-imgbox="' + f.k + '" data-imgpick="' + f.k + '" role="button" tabindex="0" aria-label="' + (v ? '更换封面' : '点击添加封面') + '">' + imgPreviewHtml(v) + '</div>' +
+              '<button type="button" class="link-btn del tap" data-imgclear="' + f.k + '"' + (v ? '' : ' style="display:none"') + '>移除封面</button>' +
+              '</div>';
           } else if (f.type === 'timerow') {
             var svT = (vals && vals.time != null) ? vals.time : '';
             var svE = (vals && vals.end != null) ? vals.end : '';
@@ -4441,10 +4728,6 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
               inner += '<div class="chip-row" style="margin-top:8px">' + f.quick.map(function (q) {
                 return '<button type="button" class="chip tap" data-quick="' + esc(String(f.k)) + '::' + esc(String(q)) + '">' + esc(String(q)) + (f.quickUnit ? esc(String(f.quickUnit)) : '') + '</button>';
               }).join('') + '</div>';
-            }
-            if (f.type === 'date' && f.clearable) {
-              inner = '<span class="date-clearable">' + inner +
-                '<button type="button" class="field-clear tap" data-clr="' + esc(f.k) + '" aria-label="清除日期" title="清除（设为未选择 / 进行中）">✕</button></span>';
             }
           }
           var labelHtml = f.type === 'checkbox' ? '' : '<label>' + esc(f.label) + (f.req ? ' <span class="req-star">*</span>' : '') + '</label>';
@@ -4628,6 +4911,36 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           if (nm) applyDepends(nm);
         });
         if (cfg.onMount) cfg.onMount(el, fields);
+
+        /* 图片字段交互：点按钮 → 触发文件选择；选完压缩回填；可移除 */
+        el.addEventListener('click', function (e) {
+          var pick = e.target.closest('[data-imgpick]');
+          if (pick) {
+            var fi = el.querySelector('[data-imgfile="' + pick.getAttribute('data-imgpick') + '"]');
+            if (fi) fi.click();
+            return;
+          }
+          var clr = e.target.closest('[data-imgclear]');
+          if (clr) {
+            var k = clr.getAttribute('data-imgclear');
+            var hidden = el.querySelector('[name="' + k + '"]');
+            if (hidden) hidden.value = '';
+            setImgPreview(el, k, '');
+          }
+        });
+        el.addEventListener('change', function (e) {
+          var fi = e.target.closest('[data-imgfile]');
+          if (!fi || !fi.files || !fi.files[0]) return;
+          var k = fi.getAttribute('data-imgfile');
+          var file = fi.files[0];
+          fi.value = '';
+          if (!/^image\//.test(file.type)) { U.toast('请选择图片文件'); return; }
+          compressImg(file, 800, function (dataUrl) {
+            var hidden = el.querySelector('[name="' + k + '"]');
+            if (hidden) hidden.value = dataUrl;
+            setImgPreview(el, k, dataUrl);
+          });
+        });
         fields.forEach(function (f) { if (f.type === 'select') updateSelectTrigger(f.k); });
 
         el.addEventListener('input', function (e) {
@@ -4653,19 +4966,36 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
             if (inp) { inp.value = p[1]; inp.dispatchEvent(new Event('input')); if (inp.tagName === 'INPUT') inp.focus(); }
             return;
           }
-          var clr = e.target.closest('[data-clr]');
-          if (clr) {
-            e.preventDefault();
-            var ci = el.querySelector('[name="' + clr.dataset.clr + '"]');
-            if (ci) { ci.value = ''; ci.dispatchEvent(new Event('input')); ci.dispatchEvent(new Event('change')); }
-            return;
-          }
           var trig = e.target.closest('.select-trigger');
           if (trig) {
             e.preventDefault();
             var tname = trig.dataset.select;
             var tsel = el.querySelector('select[name="' + tname + '"]');
             if (!tsel) return;
+            /* 记账分类字段：改用分类选择弹窗（列表太长，且需支持弹窗内新增） */
+            var tdef = null;
+            for (var fi = 0; fi < fields.length; fi++) { if (fields[fi].k === tname) { tdef = fields[fi]; break; } }
+            if (tdef && tdef.catpick && w.__financeCatPick) {
+              var curTypeSel = el.querySelector('select[name="type"]');
+              var curCatSel = el.querySelector('select[name="cat"]');
+              w.__financeCatPick({
+                kind: tdef.catpick,
+                type: curTypeSel ? curTypeSel.value : 'out',
+                cat: curCatSel ? curCatSel.value : '',
+                cur: tsel.value,
+                onPick: function (val) {
+                  /* 新增的分类不在初始 options 里：先补 option 再赋值，否则赋值静默失败 */
+                  var has = false;
+                  for (var oi = 0; oi < tsel.options.length; oi++) { if (tsel.options[oi].value === val) { has = true; break; } }
+                  if (!has) { var nop = document.createElement('option'); nop.value = val; nop.textContent = val; tsel.appendChild(nop); }
+                  tsel.value = val;
+                  updateSelectTrigger(tname);
+                  tsel.dispatchEvent(new Event('change', { bubbles: true }));
+                  tsel.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+              });
+              return;
+            }
             var tfield = trig.closest('[data-field]');
             var tlabel = tfield ? tfield.querySelector(':scope > label') : null;
             var topts = [];
@@ -4807,32 +5137,41 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           }
         } catch (e) {}
         function positionPicker() {
+          /* 关键：html 上有 zoom（全局字体缩放，手机默认 1.15）。
+             getBoundingClientRect 返回的是「视觉像素」，而 style.top/right 会被根 zoom
+             再放大渲染（实际渲染位置 = 样式值 × zoom）。两套坐标必须换算，否则弹层飘远。 */
+          var z = parseFloat(getComputedStyle(document.documentElement).zoom) || 1;
           var ar = anchor.getBoundingClientRect();
           var vw = window.innerWidth;
           var vh = _vh();
-          picker.style.right = Math.max(8, vw - ar.right + 8) + 'px';
-          picker.style.left = 'auto';
-          var ph = picker.offsetHeight;
+          var ph = picker.offsetHeight * z;   /* 布局像素 → 视觉像素 */
           var top = ar.bottom + 6;
-          if (ph > 0) {
-            /* 真实高度已知：先尝试下方；溢出则翻转上方；都不够则夹回视口 */
-            if (top + ph > vh - 8) {
-              var flipTop = ar.top - ph - 6;
-              top = flipTop >= 8 ? flipTop : Math.max(8, vh - ph - 8);
-            }
-          } else {
-            /* 首帧兜底：用 220 估算先定位，rAF 后用真实值重定位 */
-            if (top + 220 > vh - 8) top = Math.max(8, ar.top - 220 - 6);
+          if (top + ph > vh - 8) {
+            /* 下方放不下：优先翻到上方；上下都不够则夹回视口 */
+            var flipTop = ar.top - ph - 6;
+            top = flipTop >= 8 ? flipTop : Math.max(8, vh - ph - 8);
           }
-          picker.style.top = top + 'px';
+          picker.style.top = (top / z) + 'px';
+          picker.style.right = (Math.max(8, vw - ar.right + 8) / z) + 'px';
+          picker.style.left = 'auto';
         }
         positionPicker();
         /* 双 rAF 确保 layout 完成、offsetHeight 已准确（首帧的 0 估算不再生效） */
         requestAnimationFrame(function () { requestAnimationFrame(positionPicker); });
+        /* 兜底：弹窗内滚动 / 视口变化时实时跟随，保证 picker 始终贴着触发按钮，不会飘远 */
+        var posCap = { capture: true, passive: true };
+        document.addEventListener('scroll', positionPicker, posCap);
+        window.addEventListener('resize', positionPicker);
+        setTimeout(positionPicker, 80);
+        setTimeout(positionPicker, 220);
+        overlay.__offPos = function () {
+          document.removeEventListener('scroll', positionPicker, posCap);
+          window.removeEventListener('resize', positionPicker);
+        };
       }
 
       UI.lock();
-      function close() { overlay.remove(); UI.unlock(); }
+      function close() { if (overlay.__offPos) overlay.__offPos(); overlay.remove(); UI.unlock(); }
       overlay.addEventListener('click', function (e) {
         if (e.target === overlay || e.target.closest('[data-close]')) { close(); return; }
         var item = e.target.closest('.pop-picker-item');
@@ -4850,9 +5189,12 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       });
     },
 
+    /* 评分 → 五星展示（★★★☆☆）；兼容旧 10 分制：>5 的值按 5 分制上限截断 */
     scoreTag: function (s) {
-      if (s === '' || s === undefined || s === null) return '';
-      return '<span class="score"><span class="s-n">' + num(s) + '</span><span class="s-max">/10</span></span>';
+      var n = Math.round(num(s));
+      if (!n) return '';
+      if (n > 5) n = 5;
+      return '<span class="score m-star"><span class="s-full">' + '★★★★★'.slice(0, n) + '</span><span class="s-empty">' + '☆☆☆☆☆'.slice(0, 5 - n) + '</span></span>';
     },
 
     /* 滚动锁定/解锁（弹窗套弹窗安全） */
@@ -6980,12 +7322,12 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
             '<span class="caret">▸</span>' +
             '</div>' +
             '<div class="item-detail">' + preview +
-            '<div class="item-ops">' +
+            '<div class="item-ops ev-ops">' +
             '<button class="link-btn tap" data-act="evMark" data-id="' + ev.id + '">✓ 今天做了</button>' +
             '<button class="link-btn tap" data-act="evBackfill" data-id="' + ev.id + '">＋ 补记</button>' +
-            '<button class="link-btn tap" data-act="evOpen" data-id="' + ev.id + '">📅 全部日期</button>' +
-            '<button class="link-btn tap" data-act="evEdit" data-id="' + ev.id + '">✏️ 编辑</button>' +
-            '<button class="link-btn del tap" data-act="evDel" data-id="' + ev.id + '">🗑 删除</button>' +
+            '<button class="link-btn tap" data-act="evOpen" data-id="' + ev.id + '">全部日期</button>' +
+            '<button class="link-btn tap" data-act="evEdit" data-id="' + ev.id + '">编辑</button>' +
+            '<button class="link-btn del tap" data-act="evDel" data-id="' + ev.id + '">删除</button>' +
             '</div></div>' +
             '</div>';
         }).join('') + '</div>' + ListPager.pager('checkin:ev', evs.length);
@@ -9512,17 +9854,65 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 
   // 影剧书列表排序键（与历史记录一致：点同一项在高→低 / 低→高间切换）
   var mediaSortKeys = [
-    { k: 'end', t: '按完结时间', get: function (x) { return x.end || ''; } },
+    { k: 'end', t: '按看完时间', get: function (x) { return x.end || ''; } },
     { k: 'score', t: '按评分', get: function (x) { return num(x.score); } },
     { k: 'start', t: '按开始时间', get: function (x) { return x.start || ''; } }
   ];
   var mediaExpanded = null; // 当前展开的影剧书 id
   var mediaQ = '';          // 主视图搜索关键词
 
+  /* ---------- 状态四态：想看 / 在看 / 看完 / 弃了（全部类型通用） ----------
+     兼容旧数据：想读→想看、在读→在看、已读→看完；无状态的老记录按看完日期兜底 */
+  var MST = ['想看', '在看', '看完', '弃了'];
+  var MST_LEGACY = { '想读': '想看', '在读': '在看', '已读': '看完', '看过': '看完' };
+  var MST_CLS = { '想看': 'grey', '在看': 'info', '看完': '', '弃了': 'purple' };
+  function mediaStatus(x) {
+    var s = x.status;
+    if (s) s = MST_LEGACY[s] || s;
+    if (MST.indexOf(s) >= 0) return s;
+    return x.end ? '看完' : '在看';
+  }
+  function mstatusBadge(x) { var s = mediaStatus(x); return '<span class="badge ' + MST_CLS[s] + '">' + s + '</span>'; }
+  /* 评分统一 1-5 星；空 = 暂不评分 */
+  function normScore(v) {
+    if (v === '' || v === undefined || v === null) return '';
+    var n = Math.round(num(v));
+    return (n >= 1 && n <= 5) ? n : (n > 5 ? 5 : '');
+  }
+  /* 一次性迁移：旧 10 分制 → 5 星；旧状态名 → 新四态（幂等） */
+  (function migrateMedia() {
+    var ch = false;
+    (D().media || []).forEach(function (x) {
+      if (x.score !== '' && x.score !== undefined && x.score !== null && num(x.score) > 5) { x.score = Math.min(5, Math.max(1, Math.round(num(x.score) / 2))); ch = true; }
+      if (x.status && MST_LEGACY[x.status]) { x.status = MST_LEGACY[x.status]; ch = true; }
+    });
+    if (ch) Store.save();
+  })();
+  /* 供首页等其他模块使用（在读筛选、状态徽章） */
+  window.MStatus = mediaStatus;
+  window.MStatusBadge = mstatusBadge;
+
+  /* 视图切换：列表 / 封面墙（记在 settings 里，刷新后仍保留） */
+  function mediaView() { return D().settings.mediaView === 'grid' ? 'grid' : 'list'; }
+
+  /* 封面墙卡片：有封面显示封面，没有显示类型图标 + 标题的素色占位（点击开详情） */
+  function mediaCard(x) {
+    var cover = x.cover
+      ? '<div class="mc-cover"><img src="' + x.cover + '" alt="' + esc(x.title) + '" loading="lazy"></div>'
+      : '<div class="mc-cover mc-ph"><span>' + MT[x.type].i + '</span><b>' + esc(x.title) + '</b></div>';
+    return '<div class="mc-card tap" onclick="__openArchMediaInfo(\'' + x.id + '\')" role="button" tabindex="0">' +
+      cover +
+      '<div class="mc-info">' +
+        '<div class="mc-title" title="' + esc(x.title) + '">' + esc(x.title) + '</div>' +
+        '<div class="mc-meta"><span>' + esc(MT[x.type].t) + (x.tag ? ' · ' + esc(x.tag) : '') + '</span>' + UI.scoreTag(x.score) + '</div>' +
+        '<div class="mc-sub">' + (x.end ? '✓ ' + U.fmtDate(x.end) : '进行中') + '</div>' +
+      '</div></div>';
+  }
+
   function renderMediaItem(x, arch) {
     var total = (x.readLogs || []).reduce(function (s, l) { return s + num(l.mins); }, 0);
     var expanded = mediaExpanded === x.id;
-    var statusBadge = x.end ? '<span class="badge">已完结</span>' : '<span class="badge info">进行中</span>';
+    var statusBadge = mstatusBadge(x);
     var meta = statusBadge +
       (x.tag ? UI.badge(esc(x.tag), UI.catColor(x.tag)) : '') +
       pageBadge(x, arch) +
@@ -9539,23 +9929,31 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     }
 
     var caret = '<span class="fold-caret">' + (expanded ? '▾' : '▸') + '</span>';
-    /* 主行：用 onclick 内联事件绕过 data-act 委托（与年度归档同样方案） */
+    /* 主行：状态胶囊 + 日期放到标题行右侧，充分利用手机横向空间；标签/页码/评分留第二行（无则不渲染） */
+    var metaRight = statusBadge +
+      '<span class="m-date">' + (x.start ? U.fmtDate(x.start) : '—') + ' → ' + (x.end ? U.fmtDate(x.end) : '进行中') + '</span>';
+    var metaLeft = (x.tag ? UI.badge(esc(x.tag), UI.catColor(x.tag)) : '') +
+      pageBadge(x, arch) +
+      (x.score !== '' && x.score !== undefined ? UI.scoreTag(x.score) : '');
+    /* 主行：用 onclick 内联事件绕过 data-act 委托（与年度归档同样方案）；有封面时显示小缩略图 */
     var row = '<div class="wl-hist-row' + (expanded ? ' open' : '') + '" onclick="__toggleMediaItem(\'' + x.id + '\')" role="button" tabindex="0" style="cursor:pointer">' +
       '<div class="wl-hist-row-main">' +
-        '<div class="row between" style="gap:8px;align-items:center"><span class="item-title" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + MT[x.type].i + ' ' + esc(x.title) + '</span>' +
-        '<span style="flex-shrink:0">' + UI.scoreTag(x.score) + '</span></div>' +
-        '<div class="item-meta">' + meta + '</div></div>' +
+        '<div class="row between" style="gap:8px;align-items:center"><span class="item-title" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' +
+        (x.cover ? '<img class="row-thumb" src="' + x.cover + '" alt="" loading="lazy">' : '') +
+        MT[x.type].i + ' ' + esc(x.title) + '</span>' +
+        '<span class="media-row-side">' + metaRight + '</span></div>' +
+        (metaLeft ? '<div class="item-meta">' + metaLeft + '</div>' : '') + '</div>' +
       caret + '</div>';
     /* 展开详情：仅在 expanded 时追加在行下方 */
     if (!expanded) return row;
     var extraMeta = [];
     if (x.start && x.end) extraMeta.push('<span class="badge grey">历时 ' + (U.dayDiff(x.start, x.end) + 1) + ' 天</span>');
     if (total > 0) extraMeta.push('<span class="badge">⏱ 累计' + dur(total) + '</span>');
-    if (x.type === 'book' && x.status) extraMeta.push('<span class="badge ' + (x.status === '在读' ? 'info' : x.status === '已读' ? '' : 'grey') + '">' + esc(x.status) + '</span>');
     return row + '<div class="fold-detail">' +
-      '<div class="fold-ops">' +
+      '<div class="fold-ops m-ops">' +
         (x.type === 'book' ? '<button class="link-btn tap" data-act="logtime" data-id="' + x.id + '">记阅读</button>' : '') +
-        (x.end ? '' : '<button class="link-btn tap" data-act="finish" data-id="' + x.id + '">完结</button>') +
+        (x.end ? '' : '<button class="link-btn tap" data-act="finish" data-id="' + x.id + '">看完</button>') +
+        (x.status !== '弃了' ? '<button class="link-btn tap" data-act="drop" data-id="' + x.id + '">弃了</button>' : '') +
         '<button class="link-btn tap" data-act="minfo" data-id="' + x.id + '">详情</button>' +
         UI.ops(x.id, 'edit', 'del') +
       '</div>' +
@@ -9564,19 +9962,30 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       '</div>';
   }
 
-  function mFields(type) {
+  /* rec 传入时为编辑模式：已看完/弃了或已有看完日期的记录，才显示看完日期/评分/观后感；
+     新增时保持极简——这些信息留到点「看完」或「弃了」时再填 */
+  function mFields(type, rec) {
     var f = [
       { k: 'title', label: '作品名称', req: true, full: true, ph: MT[type].t + '名称' },
+      { k: 'cover', label: '封面', type: 'image', full: true },
+      { k: 'status', label: '状态', type: 'select', options: MST, def: '在看', hint: '「在看」的书会出现在首页「记录读书时长」的快捷选择里' },
       { k: 'start', label: '开始' + MT[type].v + '日期', type: 'date', def: U.today() },
-      { k: 'end', label: '完结日期', type: 'date', clearable: true, hint: '留空表示进行中' },
-      { k: 'score', label: '评分（10 分制）', type: 'number', min: 0, max: 10, step: 0.5, ph: '0 - 10' },
-      { k: 'tag', label: '类型标签', ph: '如：悬疑 / 纪录片 / 心理学' },
-      { k: 'review', label: '观后感 · 短评 · 备注', type: 'textarea', rows: 5, ph: '写点什么，日后回看会很有意思' }
+      { k: 'tag', label: '类型标签', ph: '如：悬疑 / 纪录片 / 心理学' }
     ];
     if (type === 'book') {
-      f.splice(3, 0, { k: 'status', label: '阅读状态', type: 'select', options: ['想读', '在读', '已读'], def: '在读', hint: '「在读」的书会出现在首页「记录读书时长」的快捷选择里' });
       f.splice(4, 0, { k: 'pages', label: '总页数', type: 'number', min: 0, ph: '如：320' });
-      f.splice(5, 0, { k: 'page', label: '当前读到第几页', type: 'number', min: 0, ph: '如：120' });
+      /* 「当前读到第几页」已从表单移除：页码由「记阅读」自动更新（x.page），无需手填 */
+    }
+    if (rec && (rec.end || rec.status === '看完' || rec.status === '弃了')) {
+      f.push(
+        { k: 'end', label: '看完日期', type: 'date', hint: '留空表示进行中' },
+        { k: 'score', label: '我的评分', type: 'select', options: [
+          { v: '', t: '暂不评分' },
+          { v: 1, t: '★' }, { v: 2, t: '★★' }, { v: 3, t: '★★★' },
+          { v: 4, t: '★★★★' }, { v: 5, t: '★★★★★' }
+        ] },
+        { k: 'review', label: '观后感 · 短评 · 备注', type: 'textarea', rows: 5, ph: '写点什么，日后回看会很有意思' }
+      );
     }
     return f;
   }
@@ -9681,16 +10090,17 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       return UI.head('🎬 影剧书记录', '电影 / 电视剧 / 书籍，统一管理观影与阅读轨迹') +
         UI.tabs(Object.keys(MT).map(function (k) { return { k: k, t: MT[k].t, i: MT[k].i }; }), type, 'type') +
         UI.stats([
-          ['今年完结', yArr.length + ' 部', true],
+          ['今年看完', yArr.length + ' 部', true],
           ['累计记录', arr.length + ' 部'],
-          ['进行中', arr.filter(function (x) { return !x.end; }).length + ' 部'],
-          ['平均评分', avg]
+          ['在看', arr.filter(function (x) { return mediaStatus(x) === '在看'; }).length + ' 部'],
+          ['平均评分', avg === '—' ? '—' : avg + ' ★']
         ]) +
         UI.card({
           title: MT[type].i + ' ' + MT[type].t + '记录',
-          right: '<div class="media-search-wrap"><span class="media-search-icon">🔍</span>' +
-            '<input type="text" class="input media-search" placeholder="搜索' + MT[type].t + '名 / 标签 / 短评…" value="' + esc(mediaQ) + '" oninput="window.__mediaSearch(this.value)"></div>',
-          body: this.filters(arr) + '<div id="mediaListWrap" style="margin-top:18px">' + this.list(arr) + '</div>'
+          right: '<div class="media-head-right">' + TF.btn('media_list') + '</div>',
+          body: '<div class="media-search-row"><div class="media-search-wrap"><span class="media-search-icon">🔍</span>' +
+            '<input type="text" class="input media-search" placeholder="搜索' + MT[type].t + '名 / 标签 / 短评…" value="' + esc(mediaQ) + '" oninput="window.__mediaSearch(this.value)"></div></div>' +
+            this.filters(arr) + '<div id="mediaListWrap" style="margin-top:18px">' + this.list(arr) + '</div>'
         }) +
         this.yearly(D().media, type) +
         Cal.card({
@@ -9702,6 +10112,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
             var body = '<div class="list">' + arr2.map(function (x) {
               var total = (x.readLogs || []).reduce(function (s, l) { return s + num(l.mins); }, 0);
               var meta =
+                mstatusBadge(x) +
                 (x.tag ? UI.badge('#' + esc(x.tag), UI.catColor(x.tag)) : '') +
                 '<span class="badge grey">' + MT[x.type].t + '</span>' +
                 pageBadge(x) +
@@ -9710,10 +10121,10 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
               var detailMeta = [];
               if (x.start && x.end) detailMeta.push('<span class="badge grey">历时 ' + (U.dayDiff(x.start, x.end) + 1) + ' 天</span>');
               if (total > 0) detailMeta.push('<span class="badge">⏱ 累计' + dur(total) + '</span>');
-              if (x.type === 'book' && x.status) detailMeta.push('<span class="badge ' + (x.status === '在读' ? 'info' : x.status === '已读' ? '' : 'grey') + '">' + esc(x.status) + '</span>');
               var detailOps =
                 (x.type === 'book' ? '<button class="link-btn tap" data-act="logtime" data-id="' + x.id + '">记阅读</button>' : '') +
-                (x.end ? '' : '<button class="link-btn tap" data-act="finish" data-id="' + x.id + '">完结</button>') +
+                (x.end ? '' : '<button class="link-btn tap" data-act="finish" data-id="' + x.id + '">看完</button>') +
+                (x.status !== '弃了' ? '<button class="link-btn tap" data-act="drop" data-id="' + x.id + '">弃了</button>' : '') +
                 '<button class="link-btn tap" data-act="minfo" data-id="' + x.id + '">详情</button>' +
                 UI.ops(x.id, 'edit', 'del');
               return '<div class="item clickable" data-toggle data-id="' + x.id + '">' +
@@ -9724,7 +10135,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
                 '</div>' +
                 '<div class="item-detail">' +
                 (detailMeta.length ? '<div class="item-meta" style="margin-bottom:8px">' + detailMeta.join('') + '</div>' : '') +
-                '<div class="fold-ops">' + detailOps + '</div>' +
+                '<div class="fold-ops m-ops">' + detailOps + '</div>' +
                 (x.review ? '<div class="item-note">📝 ' + esc(x.review) + '</div>' : '') +
                 '</div></div>';
             }).join('') + '</div>';
@@ -9736,12 +10147,14 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 
     filters: function (arr) {
       var type = App.tab('media', 'type', 'movie');
-      var stPills = type === 'book'
-        ? [{ k: 'all', t: '全部' }, { k: 'wish', t: '想读' }, { k: 'reading', t: '在读' }, { k: 'done', t: '已完结' }]
-        : [{ k: 'all', t: '全部' }, { k: 'doing', t: '进行中' }, { k: 'done', t: '已完结' }];
-      return '<div class="row" style="gap:12px;align-items:flex-start;flex-direction:column">' +
-        '<div class="row" style="gap:8px;flex-wrap:wrap;align-items:center">' + TF.btn('media_list') + UI.pills(stPills, App.tab('media', 'st', 'all'), 'st') + '</div>' +
-        ListPager.sortPills('media:list', mediaSortKeys) +
+      var stPills = [{ k: 'all', t: '全部' }, { k: 'wish', t: '想看' }, { k: 'doing', t: '在看' }, { k: 'done', t: '看完' }, { k: 'drop', t: '弃了' }];
+      /* 分组布局：每组独占一行、标签定宽对齐；「全部时间」在卡片标题行，视图单独一行，再下一行是状态 */
+      return '<div class="mf-bar">' +
+        '<div class="mf-row"><span class="mf-lbl">视图</span>' +
+          UI.pills([{ k: 'list', t: '☰ 列表' }, { k: 'grid', t: '▦ 封面墙' }], mediaView(), 'mview') +
+        '</div>' +
+        '<div class="mf-row"><span class="mf-lbl">状态</span>' + UI.pills(stPills, App.tab('media', 'st', 'all'), 'st') + '</div>' +
+        '<div class="mf-row"><span class="mf-lbl">排序</span>' + ListPager.sortPills('media:list', mediaSortKeys) + '</div>' +
         '</div>';
     },
 
@@ -9750,14 +10163,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       var type = arr.length ? arr[0].type : App.tab('media', 'type', 'movie');
       var q = (mediaQ || '').trim().toLowerCase();
       var list = arr.filter(function (x) {
-        if (type === 'book') {
-          if (st === 'wish' && x.status !== '想读') return false;
-          if (st === 'reading' && x.status !== '在读') return false;
-          if (st === 'done' && !x.end) return false;
-        } else {
-          if (st === 'doing' && x.end) return false;
-          if (st === 'done' && !x.end) return false;
-        }
+        var stMap = { wish: '想看', doing: '在看', done: '看完', drop: '弃了' };
+        if (st !== 'all' && mediaStatus(x) !== stMap[st]) return false;
         if (!TF.inRange('media_list', x.end || x.start)) return false;
         if (q) {
           var hay = (x.title + ' ' + (x.tag || '') + ' ' + (x.review || '') + ' ' + MT[x.type].t).toLowerCase();
@@ -9765,6 +10172,21 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         }
         return true;
       });
+      /* 封面墙：同一份筛选/排序逻辑，网格卡片布局，独立分页（每页默认 12） */
+      if (mediaView() === 'grid') {
+        if (!list.length) return UI.empty('还没有记录，添加第一部吧', '🍿', { desc: '看书、追剧、看电影都能记，自动生成年度回顾' });
+        var gns = 'media:grid';
+        if (!+App.tab(gns, 'sz', 0)) App.setTab(gns, 'sz', 12);
+        var gSort = ListPager.getSort(gns);
+        var gsk = mediaSortKeys.filter(function (s) { return s.k === gSort.key; })[0] || mediaSortKeys[0];
+        var dirN = gSort.dir === 'asc' ? 1 : -1;
+        var sorted = list.slice().sort(function (a, b) {
+          var va = gsk.get(a), vb = gsk.get(b);
+          return va < vb ? -1 * dirN : va > vb ? 1 * dirN : 0;
+        });
+        var pageArr = ListPager.slice(gns, sorted);
+        return '<div class="media-grid">' + pageArr.map(mediaCard).join('') + '</div>' + ListPager.pager(gns, sorted.length);
+      }
       return ListPager.out({
         ns: 'media:list', items: list, sortKeys: mediaSortKeys, defSize: 5,
         empty: '还没有记录，添加第一部吧', emptyIcon: '🍿', emptyDesc: '看书、追剧、看电影都能记，自动生成年度回顾',
@@ -9785,7 +10207,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       var apills = [{ k: 'all', t: '全部' }].concat(Object.keys(MT).map(function (k) { return { k: k, t: MT[k].t }; }));
       /* 用 onclick 内联事件替代 data-act 委托，彻底解决点击无反应 */
       return UI.card({
-        title: '📅 年度归档', sub: '点击「查看」浏览该年完结作品',
+        title: '📅 年度归档', sub: '点击「查看」浏览该年看完的作品',
         body: UI.pills(apills, aType, 'archType') + '<div style="height:10px"></div>' +
           years.map(function (y) {
             var l = map[y], sc = l.filter(function (x) { return x.score !== '' && x.score !== undefined; });
@@ -9793,7 +10215,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
             var top = U.sortBy(sc, 'score', true)[0];
             return '<div class="opt-row tap" onclick="__openArchYear(\'' + y + '\')" role="button" tabindex="0" style="cursor:pointer">' +
               '<span class="oi">📅</span>' +
-              '<span class="grow">' + y + ' 年 · ' + l.length + ' 部 · 均分 ' + av + (top ? ' · 最高《' + esc(top.title) + '》' : '') + '</span>' +
+              '<span class="grow">' + y + ' 年 · ' + l.length + ' 部 · 均分 ' + (av === '—' ? '—' : av + ' ★') + (top ? ' · 最高《' + esc(top.title) + '》' : '') + '</span>' +
               '<span class="badge grey">查看 ›</span></div>';
           }).join('')
       });
@@ -9802,22 +10224,33 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     acts: {
       type: function (t) { App.setTab('media', 'type', t.dataset.k); App.setTab('media', 'st', 'all'); mediaQ = ''; ListPager.resetPg('media:list'); App.refresh(); },
       archType: function (t) { App.setTab('media', 'archType', t.dataset.k); App.refresh(); },
-      st: function (t) { App.setTab('media', 'st', t.dataset.k); ListPager.resetPg('media:list'); App.refresh(); },
+      st: function (t) { App.setTab('media', 'st', t.dataset.k); ListPager.resetPg('media:list'); ListPager.resetPg('media:grid'); App.refresh(); },
+      /* 列表 / 封面墙切换：记住偏好，两种视图各自从头翻页 */
+      mview: function (t) {
+        D().settings.mediaView = t.dataset.k === 'grid' ? 'grid' : 'list';
+        Store.save();
+        ListPager.resetPg('media:list'); ListPager.resetPg('media:grid');
+        App.refresh();
+      },
       tfOpen: function (t) { TF.open(t.dataset.tf, { onChange: function () { ListPager.resetPg('media:list'); App.refresh(); } }); },
       new: function () {
         var type = App.tab('media', 'type', 'movie');
         UI.form({ title: '添加' + MT[type].t, fields: mFields(type), values: { start: U.today() } }).then(function (v) {
           if (!v) return;
           v.id = U.uid(); v.type = type;
+          v.score = normScore(v.score);
+          if (MST.indexOf(v.status) < 0) v.status = '在看';
           D().media.push(v); Store.save(); App.refresh(); U.toast('已添加');
         });
       },
       edit: function (t) {
         var x = D().media.filter(function (a) { return a.id === t.dataset.id; })[0];
         if (!x) return;
-        UI.form({ title: '编辑记录', fields: mFields(x.type), values: x }).then(function (v) {
+        UI.form({ title: '编辑记录', fields: mFields(x.type, x), values: x }).then(function (v) {
           if (!v) return;
           Object.keys(v).forEach(function (k) { x[k] = v[k]; });
+          x.score = normScore(x.score);
+          if (MST.indexOf(x.status) < 0) x.status = x.end ? '看完' : '在看';
           Store.save(); App.refresh();
         });
       },
@@ -9825,17 +10258,47 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         var x = D().media.filter(function (a) { return a.id === t.dataset.id; })[0];
         if (!x) return;
         UI.form({
-          title: '标记完结 ·《' + x.title + '》',
-          desc: '留空完结日期表示仍在进行中',
+          title: '标记看完 ·《' + x.title + '》',
+          desc: '留空看完日期表示仍在进行中',
           fields: [
-            { k: 'end', label: '完结日期', type: 'date', clearable: true, def: U.today() },
-            { k: 'score', label: '评分（10 分制）', type: 'number', min: 0, max: 10, step: 0.5 },
+            { k: 'end', label: '看完日期', type: 'date', def: U.today() },
+            { k: 'score', label: '我的评分', type: 'select', options: [
+              { v: '', t: '暂不评分' },
+              { v: 1, t: '★' }, { v: 2, t: '★★' }, { v: 3, t: '★★★' },
+              { v: 4, t: '★★★★' }, { v: 5, t: '★★★★★' }
+            ] },
             { k: 'review', label: '观后感', type: 'textarea', rows: 5 }
           ], values: { end: U.today(), score: x.score, review: x.review }
         }).then(function (v) {
           if (!v) return;
-          x.end = v.end; x.score = v.score; x.review = v.review;
-          Store.save(); App.refresh(); U.toast('已完结 🎉');
+          x.end = v.end; x.score = normScore(v.score); x.review = v.review;
+          x.status = '看完';
+          Store.save(); App.refresh(); U.toast('已看完 🎉');
+        });
+      },
+      /* 快捷「弃了」：置状态 + 可选补评分/感想；已记的时长保留 */
+      drop: function (t) {
+        var x = D().media.filter(function (a) { return a.id === t.dataset.id; })[0];
+        if (!x) return;
+        UI.form({
+          title: '弃了 ·《' + x.title + '》',
+          desc: '状态将改为「弃了」，已记的时长和进度会保留',
+          okText: '弃了',
+          fields: [
+            { k: 'score', label: '我的评分（可选）', type: 'select', options: [
+              { v: '', t: '暂不评分' },
+              { v: 1, t: '★' }, { v: 2, t: '★★' }, { v: 3, t: '★★★' },
+              { v: 4, t: '★★★★' }, { v: 5, t: '★★★★★' }
+            ] },
+            { k: 'review', label: '弃评 · 备注（可选）', type: 'textarea', rows: 4, ph: '为什么弃了？写一句，日后回看有意思' }
+          ],
+          values: { score: x.score, review: x.review }
+        }).then(function (v) {
+          if (!v) return;
+          x.status = '弃了';
+          x.score = normScore(v.score);
+          x.review = v.review;
+          Store.save(); App.refresh(); U.toast('已标记弃了');
         });
       },
       del: function (t) {
@@ -10082,17 +10545,17 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     var av = sc.length ? (sc.reduce(function (s, x) { return s + num(x.score); }, 0) / sc.length).toFixed(1) : '—';
     var top = U.sortBy(sc, 'score', true)[0];
     var body = UI.stats([
-      ['完结', l.length + ' 部', true],
-      ['平均评分', av],
-      ['年度最佳', top ? num(top.score) : '—'],
+      ['看完', l.length + ' 部', true],
+      ['平均评分', av === '—' ? '—' : av + ' ★'],
+      ['年度最佳', top ? num(top.score) + ' ★' : '—'],
       ['影 / 剧 / 书', byType.movie + ' / ' + byType.tv + ' / ' + byType.book],
       ['读书页数', bookPages ? bookPages + ' 页' : '—']
     ]) + '<div style="height:14px"></div>';
-    if (top) body += '<div class="muted small" style="margin-bottom:10px">⭐ 年度最高分：《' + esc(top.title) + '》 ' + num(top.score) + ' 分</div>';
+    if (top) body += '<div class="muted small" style="margin-bottom:10px">⭐ 年度最高分：《' + esc(top.title) + '》 ' + num(top.score) + ' ★</div>';
     var sorted = l.slice().sort(function (a, b) { return String(b.end).localeCompare(String(a.end)); });
     var pageKey = 'media:arch:' + y;
     var pageRows = ListPager.slice(pageKey, sorted);
-    body += '<div class="small muted" style="margin-bottom:8px">按完结时间倒序 · 共 ' + sorted.length + ' 部</div><div class="list" id="archList">' +
+    body += '<div class="small muted" style="margin-bottom:8px">按看完时间倒序 · 共 ' + sorted.length + ' 部</div><div class="list" id="archList">' +
       pageRows.map(function (x) { return renderMediaItem(x, true); }).join('') + '</div>' +
       ListPager.pager(pageKey, sorted.length);
     return { body: body, year: y, aType: type, pageKey: pageKey, sorted: sorted };
@@ -10106,8 +10569,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     var hasReview = !!x.review;
     /* 统一折叠行：主信息 + ▸ caret */
     var meta =
+      mstatusBadge(x) +
       '<span class="badge">' + MT[x.type].t + '</span>' +
-      (x.end ? '<span class="badge info">已完结</span>' : '<span class="badge grey">进行中</span>') +
       pageBadge(x) +
       (x.tag ? '<span class="badge">' + esc(x.tag) + '</span>' : '');
     var row = '<div class="wl-hist-row open" data-mid="' + x.id + '">' +
@@ -10122,7 +10585,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       (hasReview ? '<div class="note-text">📝 ' + esc(x.review) + '</div>' : '') +
       '</div>';
 
-    var body = row + detail +
+    var body = (x.cover ? '<div class="mi-cover"><img src="' + x.cover + '" alt="封面"></div>' : '') +
+      row + detail +
       '<div class="row between" style="margin:10px 0 8px"><strong>累计' + MT[x.type].v + '时长</strong><span class="badge">' + dur(total) + '</span></div>';
     if (logs.length) {
       var sorted = logs.slice().sort(function (a, b) { return b.d.localeCompare(a.d); });
@@ -10142,7 +10606,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       var a = b.dataset.act;
       if (a === 'addlog') { el.remove(); UI.unlock(); addReadLog(b.dataset.id); }
       else if (a === 'edit') {
-        UI.form({ title: '编辑' + MT[x.type].t + '记录', fields: mFields(x.type), values: x }).then(function (v) {
+        UI.form({ title: '编辑' + MT[x.type].t + '记录', fields: mFields(x.type, x), values: x }).then(function (v) {
           if (!v) return;
           Object.keys(v).forEach(function (k) { x[k] = v[k]; });
           Store.save();
@@ -14663,6 +15127,61 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     if (c.subs.indexOf(sub) < 0) c.subs.push(sub);
   }
 
+  /* 一级/二级分类选择弹窗：滚动列表 + 弹窗内「＋ 新增分类」（替代表单里的「或新增」输入框）。
+     o = { kind:'cat1'|'cat2', type:'out'|'in', cat:一级分类名, cur:当前值, onPick:fn(val) } */
+  window.__financeCatPick = function (o) {
+    var isCat1 = o.kind === 'cat1';
+    if (!isCat1 && !o.cat) { U.toast('请先选择一级分类'); return; }
+    var src = o.type === 'in' ? F().catIncome : F().catExpense;
+    var opts = isCat1 ? catList(src) : catSubs(src, o.cat);
+    var root = document.getElementById('modalRoot');
+    var el = document.createElement('div');
+    el.className = 'modal-mask';
+    function listHtml() {
+      return opts.map(function (name) {
+        var on = String(name) === String(o.cur);
+        return '<button type="button" class="cat-pick-item tap' + (on ? ' on' : '') + '" data-val="' + esc(name) + '">' + esc(name) + (on ? '<span class="cat-pick-check">✓</span>' : '') + '</button>';
+      }).join('') || '<div class="cat-pick-empty">还没有分类，先新增一个吧</div>';
+    }
+    el.innerHTML = '<div class="modal" role="dialog" aria-modal="true" aria-label="选择分类">' +
+      '<div class="modal-head"><h3>' + (isCat1 ? '选择一级分类' : '选择二级分类 · ' + esc(o.cat || '')) + '</h3>' +
+      '<button class="x-btn tap" data-x aria-label="关闭">✕</button></div>' +
+      '<div class="modal-body"><div class="cat-pick-list">' + listHtml() + '</div>' +
+      '<button type="button" class="btn ghost tap cat-pick-newbtn" data-addnew>＋ 新增分类</button>' +
+      '<div class="cat-pick-addrow" style="display:none"><input class="input" id="catPickNew" placeholder="输入新分类名称" maxlength="12"><button type="button" class="btn primary sm tap" data-savenew>确定</button></div>' +
+      '</div></div>';
+    root.appendChild(el);
+    UI.modalA11y.open(el); UI.lock();
+    function close() { el.remove(); UI.unlock(); UI.modalA11y.close(el); }
+    function pick(val) { close(); o.onPick(val); }
+    el.addEventListener('click', function (e) {
+      if (e.target === el || e.target.closest('[data-x]')) return close();
+      var it = e.target.closest('.cat-pick-item');
+      if (it) return pick(it.dataset.val);
+      if (e.target.closest('[data-addnew]')) {
+        el.querySelector('.cat-pick-addrow').style.display = 'flex';
+        el.querySelector('.cat-pick-newbtn').style.display = 'none';
+        el.querySelector('#catPickNew').focus();
+        return;
+      }
+      if (e.target.closest('[data-savenew]')) {
+        var v2 = (el.querySelector('#catPickNew').value || '').trim();
+        if (!v2) { U.toast('请输入分类名称'); return; }
+        var dup = opts.some(function (c) { return c === v2; });
+        if (dup) { U.toast('该分类已存在'); return; }
+        if (isCat1) addCat(o.type, v2); else addSub(o.type, o.cat, v2);
+        Store.save();
+        return pick(v2);
+      }
+    });
+    el.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && el.querySelector('.cat-pick-addrow').style.display !== 'none') {
+        e.preventDefault();
+        var btn = el.querySelector('[data-savenew]'); if (btn) btn.click();
+      }
+    });
+  }
+
   function flowFields(type) {
     return [
       { k: 'type', label: '类型', type: 'select', options: [{ v: 'out', t: '支出' }, { v: 'in', t: '收入' }], def: type || 'out' },
@@ -14670,10 +15189,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       { k: 'acc', label: '账户', type: 'select', req: true, options: F().accounts.map(function (a) { return { v: a.id, t: a.name }; }) },
       { k: 'date', label: '日期', type: 'date', req: true, def: U.today() },
       { k: 'time', label: '时间', type: 'time', req: true, def: U.nowTime() },
-      { k: 'cat', label: '一级分类', type: 'select', ph: '请选择', depends: ['type'], options: function (all) { return catList(all.type === 'in' ? F().catIncome : F().catExpense); } },
-      { k: 'newcat', label: '或新增一级分类', ph: '填了会自动加入分类库' },
-      { k: 'sub', label: '二级分类', type: 'select', ph: '可选', depends: ['cat'], options: function (all) { return catSubs(all.type === 'in' ? F().catIncome : F().catExpense, all.cat); } },
-      { k: 'newsub', label: '或新增二级分类', ph: '填了会归入上方一级分类' },
+      { k: 'cat', label: '一级分类', type: 'select', catpick: 'cat1', ph: '请选择', depends: ['type'], options: function (all) { return catList(all.type === 'in' ? F().catIncome : F().catExpense); } },
+      { k: 'sub', label: '二级分类', type: 'select', catpick: 'cat2', ph: '可选', depends: ['cat'], options: function (all) { return catSubs(all.type === 'in' ? F().catIncome : F().catExpense, all.cat); } },
       { k: 'note', label: '备注', type: 'textarea', rows: 3 }
     ];
   }
@@ -15698,6 +16215,15 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   /* =========================================================
      15. ⚙️ 设置
   ========================================================= */
+  var arPg = 1, arSz = 10;   // 时光档案分页状态：当前页 / 每页行数
+  var TONES = [
+    { k: 'olive', t: '橄榄绿', c: '#8AA832' },
+    { k: 'sage', t: '松石绿', c: '#2F9E77' },
+    { k: 'plum', t: '葡萄紫', c: '#7E57C2' },
+    { k: 'terra', t: '陶土橙', c: '#D2622A' },
+    { k: 'ocean', t: '湛海蓝', c: '#3272C4' },
+    { k: 'rose', t: '玫瑰粉', c: '#D4547A' }
+  ];
   var settings = {
     id: 'settings', icon: '⚙️', name: '设置',
     render: function () {
@@ -15716,57 +16242,147 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       ];
       var kb = (Store.size() / 1024).toFixed(1);
 
-      // 总览统计面板配置：按项目分组（默认折叠），组内每条可独立开关 + 设置占 1/2/4 格
-      function statPanelsCfg() {
-        var meta = App.statMeta || [];
-        var cfg = D().settings.statItem || {};
-        var sizeCfg = D().settings.statSize || {};
-        var font = D().settings.statFont || 1;
-        var top = '<div class="stat-cfg-top">' +
-          '<span class="small muted">整体字号</span>' +
-          '<input type="range" class="font-range" min="80" max="140" step="5" value="' + Math.round(font * 100) + '" id="statFontRange" style="flex:1">' +
-          '<span class="badge" id="statFontLbl">' + Math.round(font * 100) + '%</span>' +
+      /* ---------- 时光档案：全部生活记录按日期折叠（借鉴「生活全能工作台」） ---------- */
+      var AR_SIZES = [10, 20, 50, 100];
+      function arTaskDate(x) { return x.due || x.doneAt || x.created || ''; }
+      function archiveCollect() {
+        var d = D(), out = [];
+        function push(date, cat, ico, title, meta, amt, cls) {
+          if (!date) return;
+          out.push({ d: date, cat: cat, ico: ico, title: title, meta: meta || '', amt: amt || '', cls: cls || '' });
+        }
+        /* 记账 */
+        (d.finance.flows || []).forEach(function (x) {
+          if (x.type === 'transfer' || !x.date) return;
+          var label = x.note || ((x.cat || '') + (x.sub ? ' · ' + x.sub : '')) || (x.type === 'in' ? '一笔收入' : '一笔支出');
+          push(x.date, '记账', '💰', label,
+            [x.cat, x.sub].filter(Boolean).join(' · '),
+            (x.type === 'in' ? '+' : '-') + '¥' + num(x.amount),
+            x.type === 'in' ? 'in' : 'out');
+        });
+        /* 打卡 */
+        var hName = {};
+        (d.checkin.habits || []).forEach(function (h) { hName[h.id] = h.name; });
+        Object.keys(d.checkin.log || {}).forEach(function (day) {
+          var rec = d.checkin.log[day] || {};
+          Object.keys(rec).forEach(function (hid) {
+            var v = rec[hid];
+            push(day, '打卡', '✅', hName[hid] || '打卡任务', (typeof v === 'string' && v) ? '⏰ ' + v : '');
+          });
+        });
+        /* 事件 */
+        (d.checkin.events || []).forEach(function (ev) {
+          (ev.recs || []).forEach(function (r) { push(r.d, '事件', '📌', ev.name, r.note || ''); });
+        });
+        /* 任务 */
+        (d.tasks || []).forEach(function (x) {
+          var st = x.status === 'done' ? '已完成' : (x.status === 'doing' ? '进行中' : (x.status === 'archive' ? '已归档' : '待办'));
+          push(arTaskDate(x), '任务', '📌', x.title, [st, x.tag].filter(Boolean).join(' · '));
+        });
+        /* 工作留痕 */
+        (d.worklog || []).forEach(function (x) {
+          push(x.date, '工作', '📝', (x.content || '').slice(0, 60) || '工作记录',
+            [x.cat, [x.start, x.end].filter(Boolean).join('~')].filter(Boolean).join(' · '));
+        });
+        /* 学习 */
+        (d.exam.records || []).forEach(function (x) {
+          push(x.date, '学习', '📚', x.content || x.contentCat || '学习记录',
+            [x.subject, x.contentCat, x.mins ? num(x.mins) + ' 分钟' : ''].filter(Boolean).join(' · '));
+        });
+        (d.exam.plans || []).forEach(function (x) {
+          push(x.due, '学习', '🗓', x.text || '学习计划', [x.subject, x.done ? '已完成' : '计划'].filter(Boolean).join(' · '));
+        });
+        /* 身体 */
+        (d.body.measures || []).forEach(function (x) {
+          var ms = Object.keys(x).filter(function (k) { return ['id', 'date', 'note'].indexOf(k) < 0 && x[k] !== '' && x[k] != null; });
+          push(x.date, '身体', '🏃', ms.length ? ms.map(function (k) { return k + ' ' + x[k]; }).join(' · ') : '身体数据', x.note || '');
+        });
+        (d.body.sports || []).forEach(function (x) {
+          push(x.date, '身体', '🏃', '运动 · ' + (x.type || ''),
+            [x.mins ? num(x.mins) + ' 分钟' : '', x.kcal ? num(x.kcal) + ' kcal' : '', x.note].filter(Boolean).join(' · '));
+        });
+        var water = d.body.water || {};
+        Object.keys(water).forEach(function (day) { if (num(water[day]) > 0) push(day, '身体', '💧', '喝水 ' + num(water[day]) + ' ml', ''); });
+        (d.body.meals || []).forEach(function (x) {
+          push(x.date, '身体', '🍽', (x.slot || '餐食') + ' · ' + (x.food || ''), x.kcal ? num(x.kcal) + ' kcal' : '');
+        });
+        /* 车辆 */
+        ((d.vehicles.ev || {}).charges || []).forEach(function (x) {
+          push(x.date, '车辆', '⚡', '充电' + (x.place ? ' · ' + x.place : ''),
+            [num(x.fromPct) + '%→' + num(x.toPct) + '%', num(x.meterKwh) > 0 ? '电表 ' + num(x.meterKwh) + ' 度' : '', x.note].filter(Boolean).join(' · '));
+        });
+        ((d.vehicles.fuel || {}).refuels || []).forEach(function (x) {
+          push(x.date, '车辆', '⛽', '加油', [x.liters ? num(x.liters) + ' 升' : '', num(x.cost) > 0 ? '¥' + num(x.cost) : ''].filter(Boolean).join(' · '));
+        });
+        /* 影剧书 */
+        var MT = { movie: ['🎬', '电影'], tv: ['📺', '电视剧'], book: ['📖', '书籍'] };
+        (d.media || []).forEach(function (x) {
+          var t = MT[x.type] || ['🎬', '作品'];
+          push(x.end || x.start, '影剧书', t[0], t[1] + ' · ' + (x.title || ''),
+            [x.tag, num(x.score) > 0 ? '评分 ' + x.score + ' ★' : ''].filter(Boolean).join(' · '));
+        });
+        /* 人情 */
+        (d.social || []).forEach(function (x) {
+          push(x.date, '人情', '🎁', (x.name || '') + (x.reason ? ' · ' + x.reason : ''),
+            [num(x.outAmt) > 0 ? '送出 ¥' + num(x.outAmt) : '', num(x.inAmt) > 0 ? '回赠 ¥' + num(x.inAmt) : '', x.note].filter(Boolean).join(' · '));
+        });
+        /* 猫咪 */
+        [['deworm', '驱虫', '🐛'], ['vaccine', '疫苗', '💉'], ['food', '猫粮', '🐱'], ['litter', '猫砂', '🐱']].forEach(function (c) {
+          ((d.cat || {})[c[0]] || []).forEach(function (x) {
+            push(x.date, '猫咪', c[2], c[1] + ' · ' + (x.name || ''),
+              [x.kind, num(x.price) > 0 ? '¥' + num(x.price) : '', x.note].filter(Boolean).join(' · '));
+          });
+        });
+        out.sort(function (a, b) { return String(b.d).localeCompare(String(a.d)); });
+        return out;
+      }
+      function archiveBody() {
+        var TF = window.TF;
+        if (TF) TF.def('archive', 'all');
+        var all = archiveCollect();
+        var rows = all.filter(function (e) { return !TF || TF.isAll('archive') || TF.inRange('archive', e.d); });
+        /* 折叠成日组：日期表头 + 记录行拍平后分页（对齐日组头，避免一页开头没有日期） */
+        var flat = [], byDay = {};
+        rows.forEach(function (e) { (byDay[e.d] || (byDay[e.d] = [])).push(e); });
+        Object.keys(byDay).sort(function (a, b) { return b.localeCompare(a); }).forEach(function (day) {
+          var list = byDay[day];
+          var wd = '日一二三四五六'[new Date(day.replace(/-/g, '/')).getDay()];
+          flat.push({ t: 'head', d: day, n: list.length, wd: wd });
+          list.forEach(function (e) { flat.push({ t: 'e', e: e }); });
+        });
+        var total = flat.length;
+        var pages = Math.max(1, Math.ceil(total / arSz));
+        if (arPg > pages) arPg = pages;
+        var start = (arPg - 1) * arSz, end = Math.min(total, start + arSz);
+        while (start > 0 && flat[start].t !== 'head') start--;   // 页首对齐到日组头
+        while (end < total && flat[end].t !== 'head') end++;     // 页尾不截断日组
+        var body =
+          '<div class="row" style="gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px">' +
+          '<span class="ar-chip">📁 ' + Object.keys(byDay).length + ' 天</span>' +
+          '<span class="ar-chip">🧾 ' + rows.length + ' 条</span>' +
+          (TF ? '<span style="margin-left:auto">' + TF.btn('archive') + '</span>' : '') +
           '</div>';
-        function spanBtn(id, n, cur) {
-          return '<button type="button" data-act="statSize" data-id="' + id + '" data-span="' + n + '"' +
-            (n === cur ? ' class="on"' : '') + ' aria-label="占' + n + '格">' + n + '</button>';
+        if (!rows.length) {
+          body += UI.empty((!TF || TF.isAll('archive')) ? '还没有任何记录，去各板块记一笔吧' : '该时间段内没有记录', '🏛');
+        } else {
+          body += '<div class="list">' + flat.slice(start, end).map(function (r) {
+            if (r.t === 'head') {
+              return '<div class="ar-day">📅 ' + U.fmtDate(r.d, true) +
+                ' <span class="small muted">周' + r.wd + '</span>' +
+                '<span class="badge grey">' + r.n + ' 条</span></div>';
+            }
+            var e = r.e;
+            return '<div class="item"><div class="item-main">' +
+              '<div class="item-title">' + e.ico + ' ' + esc(e.title) + '</div>' +
+              '<div class="item-meta">' + UI.badge(e.cat, UI.catColor(e.cat)) +
+              (e.meta ? '<span class="badge grey">' + esc(e.meta) + '</span>' : '') + '</div>' +
+              '</div>' +
+              (e.amt ? '<span class="ar-amt ' + e.cls + '">' + esc(e.amt) + '</span>' : '') +
+              '</div>';
+          }).join('') + '</div>' +
+          UI.pager({ pg: arPg, pages: pages, total: total, size: arSz, sizes: AR_SIZES, pageAct: 'arPage', sizeChg: 'arSize' });
         }
-        // 当前是否开启：用户设置优先，未设置看 STAT_META 的 defOn（兜底开启）
-        function isOn(it) {
-          var s = cfg[it.id];
-          if (s === undefined) return it.defOn !== false;
-          return !!s;
-        }
-        var groups = meta.map(function (g) {
-          var allOn = g.items.every(function (it) { return isOn(it); });
-          var onCount = g.items.filter(function (it) { return isOn(it); }).length;
-          var rows = g.items.map(function (it) {
-            var on = isOn(it);
-            var cur = sizeCfg[it.id] || it.defSpan || 1;
-            return '<div class="scr-item' + (on ? '' : ' off') + '">' +
-              '<span class="scr-name">' + esc(it.k) + '</span>' +
-              '<span class="scr-size-seg" role="group" aria-label="' + esc(it.k) + '占格">' +
-                spanBtn(it.id, 1, cur) + spanBtn(it.id, 2, cur) + spanBtn(it.id, 4, cur) +
-              '</span>' +
-              '<label class="ui-switch" onclick="event.stopPropagation()">' +
-              '<input type="checkbox" data-act="statItemToggle" data-id="' + it.id + '" ' + (on ? 'checked' : '') + ' aria-label="显示' + esc(it.k) + '">' +
-              '<span class="track"></span><span class="thumb"></span>' +
-              '</label></div>';
-          }).join('');
-          return '<div class="scr-group">' +
-            '<div class="scr-ghead" data-act="scrToggle">' +
-              '<span class="scr-ico">' + g.icon + '</span>' +
-              '<span class="scr-gname">' + esc(g.name) + '</span>' +
-              '<span class="scr-gcount">' + onCount + '/' + g.items.length + '</span>' +
-              '<label class="ui-switch" onclick="event.stopPropagation()">' +
-              '<input type="checkbox" data-act="statGroupToggle" data-pid="' + g.pid + '" ' + (allOn ? 'checked' : '') + ' aria-label="显示全部' + esc(g.name) + '统计">' +
-              '<span class="track"></span><span class="thumb"></span>' +
-              '</label>' +
-            '</div>' +
-            '<div class="scr-gbody">' + rows + '</div>' +
-            '</div>';
-        }).join('');
-        return top + '<div class="stat-cfg-list">' + groups + '</div>';
+        return body;
       }
 
       return UI.head('⚙️ 设置', '数据备份、基础参数与使用说明') +
@@ -15782,9 +16398,9 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
             '<input type="file" id="fileIn" accept="application/json,.json" style="display:none">'
         }) +
         UI.card({
-          title: '📊 总览统计面板',
-          sub: '按项目分组（点击组名展开/收起）；勾选显示、设置每条所占格子数（1/2/4）；顶部滑块调节整体字号',
-          body: statPanelsCfg()
+          title: '🏛️ 时光档案',
+          sub: '全部生活记录按日期折叠 · 时间轴筛选 · 分页浏览',
+          body: archiveBody()
         }) +
         UI.card({
           title: '🧮 基础参数',
@@ -15828,6 +16444,15 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           body: '<div class="row" style="gap:8px;flex-wrap:wrap">' +
             [['auto', '🌗 跟随系统'], ['light', '☀️ 浅色'], ['dark', '🌙 深色']].map(function (o) {
               return '<button class="chip tap' + ((d.settings.theme || 'auto') === o[0] ? ' on' : '') + '" data-act="themeSet" data-k="' + o[0] + '">' + o[1] + '</button>';
+            }).join('') + '</div>'
+        }) +
+        UI.card({
+          title: '🎨 主题色系',
+          sub: '点按即时切换，与浅色 / 深色模式可叠加；也可在侧边栏品牌设置里调整',
+          body: '<div class="row" style="gap:8px;flex-wrap:wrap">' +
+            TONES.map(function (o) {
+              return '<button class="tone-chip tap' + ((d.settings.tone || 'olive') === o.k ? ' on' : '') + '" data-act="toneSet" data-k="' + o.k + '">' +
+                '<i style="background:' + o.c + '"></i>' + o.t + '</button>';
             }).join('') + '</div>'
         }) +
         UI.card({
@@ -16023,6 +16648,20 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         }).then(function (r) { if (!r) return; D().body.waterGoal = num(r.g); Store.save(); App.refresh(); });
       },
       privacy: function () { window.showPrivacy(true); },
+      /* ---- 时光档案：时间轴筛选 / 翻页 / 每页条数 ---- */
+      tfOpen: function (t) { window.TF.open(t.dataset.tf, { onChange: function () { arPg = 1; App.refresh(); } }); },
+      arPage: function (t) { arPg = Math.max(1, num(t.dataset.k) || 1); App.refresh(); },
+      arSize: function (t) { arSz = Math.max(5, num(t.value, 10) || 10); arPg = 1; App.refresh(); },
+      /* ---- 主题色系 ---- */
+      toneSet: function (t) {
+        var k = t.dataset.k || 'olive';
+        Store.data.settings.tone = k;
+        if (Store.data.settings.brand) Store.data.settings.brand.tone = k;
+        Store.save();
+        if (window.applyTone) window.applyTone(k);
+        U.toast('已切换主题色 · ' + k);
+        App.refresh();
+      },
       topFixed: function () {
         var on = !!(D().settings.topFixed);
         on = !on;
@@ -16202,7 +16841,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       { id: 'md_book', k: '今天看书', defOn: true },
       { id: 'md_year', k: '今年影剧书', defOn: false },
       { id: 'md_month', k: '本月影剧书', defOn: false },
-      { id: 'md_reading', k: '在读书籍', defOn: false } ] },
+      { id: 'md_reading', k: '在看书籍', defOn: false } ] },
     { pid: 'schedule', name: '日程安排', icon: '📅', items: [
       { id: 'sc_3d', k: '近3天日程', defOn: true },
       { id: 'sc_today', k: '今日日程', defOn: true },
@@ -16553,7 +17192,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           { id: 'md_book', v: fmtDur(readMins), k: '今天看书', go: 'media', tk: 'type', tv: 'book' },
           { id: 'md_year', v: mediaY, k: '今年影剧书', go: 'media' },
           { id: 'md_month', v: mdMonth, k: '本月影剧书', go: 'media' },
-          { id: 'md_reading', v: mdReading, k: '在读书籍', go: 'media', tk: 'type', tv: 'book' }
+          { id: 'md_reading', v: mdReading, k: '在看书籍', go: 'media', tk: 'type', tv: 'book' }
         ],
         schedule: [
           { id: 'sc_3d', v: sch3, k: '近3天日程', go: 'schedule' },
@@ -16800,15 +17439,13 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           });
           return;
         }
-        var reading = books.filter(function (x) { return x.status === '在读'; });
+        var reading = books.filter(function (x) { return window.MStatus ? window.MStatus(x) === '在看' : (!x.end); });
         var list = reading.length ? reading : books;
         var note = reading.length ? '' :
-          '<p class="small muted" style="margin-bottom:10px">没有标记为「在读」的书，下面列出全部书籍；建议去影剧书记录把正在看的标记为「在读」，下次这里只显在看的。</p>';
+          '<p class="small muted" style="margin-bottom:10px">没有标记为「在看」的书，下面列出全部书籍；建议去影剧书记录把正在看的标记为「在看」，下次这里只显在看的。</p>';
         var body = note + '<div class="list">' + list.map(function (x) {
           var total = (x.readLogs || []).reduce(function (s, l) { return s + num(l.mins); }, 0);
-          var sb = x.status === '在读' ? '<span class="badge info">在读</span>' :
-            x.status === '已读' ? '<span class="badge">已读</span>' :
-            (x.status ? '<span class="badge grey">' + esc(x.status) + '</span>' : '');
+          var sb = window.MStatusBadge ? window.MStatusBadge(x) : '';
           return '<div class="item tap pick-book" data-id="' + x.id + '"><div class="item-main">' +
             '<div class="item-title">📖 ' + esc(x.title) + '</div>' +
             '<div class="item-meta">' + sb + (total > 0 ? '<span class="badge">⏱ 累计' + fmtDur(total) + '</span>' : '') + '</div></div></div>';
@@ -17824,7 +18461,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           values: { t: td.t || '', due: td.due || '' },
           fields: [
             { k: 't', label: '待办事项', type: 'textarea', full: true, rows: 3, req: true },
-            { k: 'due', label: '完成期限', type: 'date', clearable: true }
+            { k: 'due', label: '完成期限', type: 'date', }
           ]
         }).then(function (v) {
           if (!v || !v.t) return;
@@ -17852,7 +18489,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
             { k: 'cat', label: '工作分类', type: 'select', options: wCatOpts(), def: '' },
             { k: 't', label: '工作内容', type: 'textarea', full: true, rows: 4, req: true },
             { k: 'addTodo', label: '同时创建待办', type: 'checkbox', def: false },
-            { k: 'todoDue', label: '待办期限', type: 'date', clearable: true, when: { key: 'addTodo', val: 'true' } }
+            { k: 'todoDue', label: '待办期限', type: 'date', when: { key: 'addTodo', val: 'true' } }
           ]
         }).then(function (v) {
           if (!v || !v.t) return;
@@ -17994,7 +18631,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           title: '新增办理待办', okText: '添加',
           fields: [
             { k: 't', label: '待办事项', type: 'textarea', full: true, rows: 3, req: true },
-            { k: 'due', label: '完成期限', type: 'date', clearable: true }
+            { k: 'due', label: '完成期限', type: 'date', }
           ]
         }).then(function (v) {
           if (!v || !v.t) return;
@@ -18172,7 +18809,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       { k: 'doneDate', label: '实际开展日期', type: 'date', when: { key: 'status', val: '已完成' } },
       { k: 'found', label: '发现问题数', type: 'number', min: 0, step: 1 },
       { k: 'rectifyStatus', label: '整改状态', type: 'select', options: RECTIFY, def: '不涉及' },
-      { k: 'rectifyDue', label: '整改期限', type: 'date', clearable: true },
+      { k: 'rectifyDue', label: '整改期限', type: 'date', },
       { k: 'note', label: '备注', type: 'textarea', full: true, rows: 3 }
     ];
   }
@@ -18440,6 +19077,85 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   }
   window.applyTopFixed = applyTopFixed;
 
+  /* ---------- 品牌设置弹层：名称 / 头像 / 标语 / 主题色（借鉴「生活全能工作台」） ---------- */
+  var BRAND_TONES = [
+    { k: 'olive', t: '橄榄绿', c: '#8AA832' },
+    { k: 'sage', t: '松石绿', c: '#2F9E77' },
+    { k: 'plum', t: '葡萄紫', c: '#7E57C2' },
+    { k: 'terra', t: '陶土橙', c: '#D2622A' },
+    { k: 'ocean', t: '湛海蓝', c: '#3272C4' },
+    { k: 'rose', t: '玫瑰粉', c: '#D4547A' }
+  ];
+  function bsEsc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  window.openBrandSheet = function () {
+    var prev = document.getElementById('brandSheet'); if (prev) prev.remove();
+    Store.data.settings.brand = Store.data.settings.brand || {};
+    var b = Store.data.settings.brand;
+    var cur = { name: b.name || '', avatar: b.avatar || '', tagline: b.tagline || '', tone: b.tone || Store.data.settings.tone || 'olive' };
+    function toneC(k) { var o = BRAND_TONES.filter(function (x) { return x.k === k; })[0]; return o ? o.c : '#8AA832'; }
+    var el = UI.sheet('把它变成你的工作台',
+      '<div class="bs-preview">' +
+        '<div class="bs-mark" id="bsMark" style="background:' + toneC(cur.tone) + '">' + bsEsc(cur.avatar || '◍') + '</div>' +
+        '<div><div class="bs-name" id="bsName">' + bsEsc(cur.name || '个人工作台') + '</div>' +
+        '<div class="bs-tag" id="bsTag">' + bsEsc(cur.tagline || '生活有迹可循') + '</div></div>' +
+      '</div>' +
+      '<div class="bs-field"><label>名称</label><input id="bsInName" maxlength="12" value="' + bsEsc(cur.name) + '" placeholder="如：日常集"></div>' +
+      '<div class="bs-field"><label>头像（一个 emoji 或汉字）</label><input id="bsInAvatar" maxlength="4" value="' + bsEsc(cur.avatar) + '" placeholder="如：日 / 🌿 / ◍"></div>' +
+      '<div class="bs-field"><label>标语</label><input id="bsInTag" maxlength="24" value="' + bsEsc(cur.tagline) + '" placeholder="一句话形容你的工作台"></div>' +
+      '<div class="bs-field"><label>主题色</label><div class="bs-tones">' +
+      BRAND_TONES.map(function (o) {
+        return '<button type="button" class="bs-tone tap' + (cur.tone === o.k ? ' on' : '') + '" data-tone-key="' + o.k + '">' +
+          '<i style="background:' + o.c + '"></i>' + o.t + '</button>';
+      }).join('') +
+      '</div></div>',
+      '<button class="btn ghost tap" data-x>取消</button>' +
+      '<button class="btn ghost tap" id="brandResetBtn">恢复默认</button>' +
+      '<button class="btn tap" id="brandSaveBtn">保存偏好</button>');
+    el.id = 'brandSheet';
+    function val(id) { var i2 = el.querySelector('#' + id); return i2 ? i2.value.trim() : ''; }
+    function refreshPreview() {
+      var m = el.querySelector('#bsMark');
+      if (m) { m.style.background = toneC(cur.tone); m.textContent = val('bsInAvatar') || '◍'; }
+      var n = el.querySelector('#bsName'); if (n) n.textContent = val('bsInName') || '个人工作台';
+      var g = el.querySelector('#bsTag'); if (g) g.textContent = val('bsInTag') || '生活有迹可循';
+    }
+    ['bsInName', 'bsInAvatar', 'bsInTag'].forEach(function (id) {
+      var inp = el.querySelector('#' + id);
+      if (inp) inp.addEventListener('input', refreshPreview);
+    });
+    el.addEventListener('click', function (e) {
+      var sw = e.target.closest('[data-tone-key]');
+      if (sw) {
+        cur.tone = sw.dataset.toneKey;
+        el.querySelectorAll('.bs-tone').forEach(function (x) { x.classList.toggle('on', x.dataset.toneKey === cur.tone); });
+        refreshPreview();
+        return;
+      }
+      if (e.target.closest('#brandResetBtn')) {
+        Store.data.settings.brand = {};
+        Store.data.settings.tone = 'olive';
+        Store.save();
+        if (window.applyBrand) window.applyBrand();
+        if (window.applyTone) window.applyTone('olive');
+        el.remove(); UI.unlock(); if (UI.modalA11y) UI.modalA11y.close(el); // 标准 close 路径：还原 .app 可交互
+        U.toast('已恢复默认外观');
+        if (window.App) App.refresh();
+        return;
+      }
+      if (e.target.closest('#brandSaveBtn')) {
+        b.name = val('bsInName'); b.avatar = val('bsInAvatar'); b.tagline = val('bsInTag'); b.tone = cur.tone;
+        Store.data.settings.tone = cur.tone;
+        Store.save();
+        if (window.applyBrand) window.applyBrand();
+        if (window.applyTone) window.applyTone(cur.tone);
+        el.remove(); UI.unlock(); if (UI.modalA11y) UI.modalA11y.close(el); // 标准 close 路径：还原 .app 可交互
+        U.toast('已保存 ✨');
+        if (window.App) App.refresh();
+      }
+    });
+    return el;
+  };
+
   function start() {
     Store.load();
 
@@ -18456,6 +19172,24 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       var tc = document.querySelector('meta[name="theme-color"]');
       if (tc) tc.setAttribute('content', (th === 'light') ? '#FDFCF4' : '#16130E');
     })();
+
+    // 主题色系（tone：olive=默认，其余见 BRAND_TONES）与品牌信息（名称/头像/标语）
+    window.applyTone = function (tone) {
+      var de = document.documentElement;
+      if (!tone || tone === 'olive') de.removeAttribute('data-tone');
+      else de.setAttribute('data-tone', tone);
+    };
+    window.applyTone(Store.data.settings.tone);
+    window.applyBrand = function () {
+      var b = (Store.data.settings.brand || {});
+      var mark = document.querySelector('.brand-mark');
+      var name = document.querySelector('.brand-text strong');
+      var bt = document.querySelector('.brand-text');
+      if (mark) mark.textContent = b.avatar || '◍';
+      if (name) name.textContent = b.name || '个人工作台';
+      if (bt) bt.title = b.tagline || '';
+    };
+    window.applyBrand();
 
     // 应用全局字体大小：未手动设置（沿用老默认 1.15）时按设备自动适配（手机放大 / 桌面原比例）
     var _fsPref = Store.data.settings.fontScale;
@@ -18476,11 +19210,11 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 
     App.renderNav();
 
-    // 顶部品牌点击 → 进入首页总览
+    // 顶部品牌点击 → 打开品牌设置（名称 / 头像 / 标语 / 主题色；借鉴「生活全能工作台」）
     var brand = document.querySelector('.brand');
     if (brand) {
       brand.style.cursor = 'pointer';
-      brand.onclick = function () { App.go('home'); };
+      brand.onclick = function () { if (window.openBrandSheet) window.openBrandSheet(); };
     }
 
     var hash = location.hash.replace('#', '');
@@ -18508,6 +19242,13 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 
     // 首次隐私提醒
     if (!Store.data.settings.privacy) setTimeout(function () { window.showPrivacy(false); }, 380);
+
+    // NAS 同步：仅在由飞牛通过 http(s) 提供服务时启用，点击右上角“同步”可手动同步
+    if (NasSync && NasSync.init) {
+      var _sf = document.getElementById('syncFlag');
+      if (_sf) _sf.onclick = function () { NasSync.syncNow(); };
+      NasSync.init();
+    }
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
