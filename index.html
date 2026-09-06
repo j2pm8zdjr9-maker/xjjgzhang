@@ -111,6 +111,15 @@ html{ -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; 
   :root:not([data-theme="light"]) .cal-cell.broken{ background:rgba(217,52,38,.22); border-color:rgba(217,52,38,.5); color:#FF7A6E; }
   :root:not([data-theme="light"]) .chk-cal .cal-cell.broken .cal-count{ color:#fff; background:rgba(217,52,38,.5); }
   :root:not([data-theme="light"]) .badge.grey{ background:rgba(255,255,255,.08); color:var(--brown-2); }
+  :root:not([data-theme="light"]) .big-num.future{ color:var(--brown); }
+  :root:not([data-theme="light"]) .big-num.soon{ color:var(--olive-darker); }
+  :root:not([data-theme="light"]) .big-num.past{ color:#FF9B8A; }
+  :root:not([data-theme="light"]) .small.muted{ color:var(--brown-2); }
+  :root:not([data-theme="light"]) .item{ background:rgba(43,37,29,.85); border-color:rgba(255,255,255,.12); }
+  :root:not([data-theme="light"]) .item.hl,
+  :root:not([data-theme="light"]) .item.open{ background:rgba(168,200,74,.10); border-color:var(--olive-24); }
+  :root:not([data-theme="light"]) .input::placeholder,
+  :root:not([data-theme="light"]) .textarea::placeholder{ color:var(--brown-3); }
   :root:not([data-theme="light"]) .font-range::-webkit-slider-runnable-track{ background:rgba(255,255,255,.16); }
   :root:not([data-theme="light"]) .font-range::-moz-range-track{ background:rgba(255,255,255,.16); }
   :root:not([data-theme="light"]) .topbar{ background:rgba(33,28,22,.92); }
@@ -543,6 +552,17 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .body-card.bd-water  { --bd-c:#3E7FA8; --bd-bg:#E4F0F5; --bd-ic:#2D6286; }
 .body-card.bd-sport  { --bd-c:#C97B30; --bd-bg:#FBEDDC; --bd-ic:#A65F1F; }
 .body-card.bd-meal   { --bd-c:#C66B83; --bd-bg:#F8E1E7; --bd-ic:#A25063; }
+/* 深色：pastel 浅底 → 半透明彩底，文字/图标提亮（否则选中卡上米白文字几乎不可见） */
+:root[data-theme="dark"] .body-card.bd-measure{ --bd-c:#8CC48B; --bd-bg:rgba(91,140,90,.20); --bd-ic:#8CC48B; }
+:root[data-theme="dark"] .body-card.bd-water  { --bd-c:#7FB8DC; --bd-bg:rgba(62,127,168,.20); --bd-ic:#7FB8DC; }
+:root[data-theme="dark"] .body-card.bd-sport  { --bd-c:#E8A968; --bd-bg:rgba(201,123,48,.20); --bd-ic:#E8A968; }
+:root[data-theme="dark"] .body-card.bd-meal   { --bd-c:#E89BB0; --bd-bg:rgba(198,107,131,.20); --bd-ic:#E89BB0; }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .body-card.bd-measure{ --bd-c:#8CC48B; --bd-bg:rgba(91,140,90,.20); --bd-ic:#8CC48B; }
+  :root:not([data-theme="light"]) .body-card.bd-water  { --bd-c:#7FB8DC; --bd-bg:rgba(62,127,168,.20); --bd-ic:#7FB8DC; }
+  :root:not([data-theme="light"]) .body-card.bd-sport  { --bd-c:#E8A968; --bd-bg:rgba(201,123,48,.20); --bd-ic:#E8A968; }
+  :root:not([data-theme="light"]) .body-card.bd-meal   { --bd-c:#E89BB0; --bd-bg:rgba(198,107,131,.20); --bd-ic:#E89BB0; }
+}
 @media (max-width:380px){
   .body-grid{ gap:6px; }
   .body-card{ padding:9px 9px; gap:6px; border-radius:11px; }
@@ -623,6 +643,21 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .badge.info{ background:rgba(110,138,155,.14); color:#4C6675; }
 .badge.cream{ background:var(--cream); color:#7A5A1E; }
 .badge.purple{ background:rgba(140,99,168,.14); color:#7A4FA0; }
+/* 分类色修饰类（筛选药丸/chip 用）：深浅主题各自适配 */
+.cc-purple{ color:#7A4FA0; }
+.cc-info{ color:#4C6675; }
+.cc-cream{ color:#7A5A1E; }
+.cc-olive{ color:#6E8A28; }
+:root[data-theme="dark"] .cc-purple{ color:#C9A3E8; }
+:root[data-theme="dark"] .cc-info{ color:#9FBED0; }
+:root[data-theme="dark"] .cc-cream{ color:#D9C08F; }
+:root[data-theme="dark"] .cc-olive{ color:#B8CC6E; }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .cc-purple{ color:#C9A3E8; }
+  :root:not([data-theme="light"]) .cc-info{ color:#9FBED0; }
+  :root:not([data-theme="light"]) .cc-cream{ color:#D9C08F; }
+  :root:not([data-theme="light"]) .cc-olive{ color:#B8CC6E; }
+}
 
 /* 表单：左标签 + 右内容（无边框账单详情风格，字号统一） */
 .form-grid{ display:flex; flex-direction:column; gap:0; }
@@ -1224,9 +1259,13 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 
 /* 列表行右侧：状态胶囊 + 日期，与标题同行显示 */
 .media-row-side{ display:flex; align-items:center; gap:6px; flex-shrink:0; font-size:12px; color:var(--brown-3); white-space:nowrap; }
-/* 紧凑操作栏：手机窄屏一行放下（影剧书 m-ops / 事件记录 ev-ops） */
-.fold-ops.m-ops{ gap:4px; }
-.fold-ops.m-ops .link-btn{ font-size:12px; padding:3px 6px; }
+/* 紧凑操作栏：手机窄屏一行放下且均匀撑满整行（影剧书 m-ops / 事件记录 ev-ops） */
+.fold-ops.m-ops{ gap:2px; justify-content:space-between; }
+.fold-ops.m-ops .link-btn{ font-size:13px; padding:4px 6px; }
+/* 窄屏（≤370px）回退 12px 保证一行（360/320 等机型） */
+@media (max-width:370px){
+  .fold-ops.m-ops .link-btn{ font-size:12px; padding:3px 5px; }
+}
 .item-detail > .item-ops.ev-ops{ gap:4px 6px; }
 .item-detail > .item-ops.ev-ops .link-btn{ font-size:12px; padding:3px 4px; }
 
@@ -1856,6 +1895,10 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .ov:active{ transform:scale(.95); }
 .ov-v{ font-size:19px; font-weight:700; color:var(--brown); line-height:1.1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
 .ov-k{ font-size:11px; color:#9A8A85; text-align:center; }
+:root[data-theme="dark"] .ov-k{ color:var(--brown-2); }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .ov-k{ color:var(--brown-2); }
+}
 .ov.warn{ border-color:var(--danger-soft, #F2C9C9); }
 .ov.warn .ov-v{ color:var(--danger, #C0392B); }
 .ov.ok .ov-v{ color:var(--olive); }
@@ -2305,6 +2348,28 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 :root[data-theme="dark"] .sch-time{ color:rgba(200,184,168,.6); }
 :root[data-theme="dark"] .sch-note-hint{ color:rgba(200,184,168,.5); }
 :root[data-theme="dark"] .sch-day-title{ border-color:rgba(255,255,255,.08); color:rgba(200,184,168,.6); }
+/* —— auto 模式（跟随系统深色）同套适配 —— */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .sch-calendar{ background:rgba(30,26,22,.95); border-color:rgba(255,255,255,.08); }
+  :root:not([data-theme="light"]) .sch-month-label{ color:#E8E0D8; }
+  :root:not([data-theme="light"]) .sch-nav-btn{ background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.1); color:#C8B8A8; }
+  :root:not([data-theme="light"]) .sch-wd{ color:rgba(200,184,168,.55); }
+  :root:not([data-theme="light"]) .sch-cell{ color:#C8B8A8; }
+  :root:not([data-theme="light"]) .sch-cell .sch-lunar{ color:rgba(200,184,168,.45); }
+  :root:not([data-theme="light"]) .sch-cell.today{ background:rgba(59,130,246,.18); border-color:#3B82F6; color:#93C5FD; }
+  :root:not([data-theme="light"]) .sch-cell.today .sch-lunar{ color:rgba(147,197,253,.7); }
+  :root:not([data-theme="light"]) .sch-cell.sel:not(.today){ background:rgba(139,92,246,.14); border-color:#8B5CF6; color:#C4B5FD; }
+  :root:not([data-theme="light"]) .sch-item{ background:rgba(30,26,22,.95); border-color:rgba(255,255,255,.06); }
+  :root:not([data-theme="light"]) .sch-item-title{ color:#E8E0D8; }
+  :root:not([data-theme="light"]) .sch-time{ color:rgba(200,184,168,.6); }
+  :root:not([data-theme="light"]) .sch-note-hint{ color:rgba(200,184,168,.5); }
+  :root:not([data-theme="light"]) .sch-day-title{ border-color:rgba(255,255,255,.08); color:rgba(200,184,168,.6); }
+}
+/* 视图切换 tab 选中态：深色下 soft/deep 都变亮，改为半透明底+亮字 */
+:root[data-theme="dark"] .sch-vtab.on{ background:var(--olive-24); color:var(--olive-soft); }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .sch-vtab.on{ background:var(--olive-24); color:var(--olive-soft); }
+}
 /* FAB 阴影/样式统一在 .fab 合并定义中（line 1788），浅色与深色主题不再单独覆盖 */
 
 /* ========== 日程：视图切换 + 全部视图工具栏 + 时间轴样式 ========== */
@@ -4486,8 +4551,10 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
       return ['purple', 'info', 'cream', ''][h % 4];
     },
-    catColorVal: function (name) {
-      return ({ purple: '#7A4FA0', info: '#4C6675', cream: '#7A5A1E', '': '#6E8A28' })[UI.catColor(name)];
+    /* 返回颜色修饰类（cc-*），深浅色主题各有适配色值，替代旧的内联硬编码色 */
+    catColorCls: function (name) {
+      var m = UI.catColor(name);
+      return 'cc-' + (m || 'olive');
     },
 
     /* ---------- 通用翻页条（全站唯一样式，手机端自适应、同一水平线） ----------
@@ -9929,10 +9996,10 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     }
 
     var caret = '<span class="fold-caret">' + (expanded ? '▾' : '▸') + '</span>';
-    /* 主行：状态胶囊 + 日期放到标题行右侧，充分利用手机横向空间；标签/页码/评分留第二行（无则不渲染） */
-    var metaRight = statusBadge +
-      '<span class="m-date">' + (x.start ? U.fmtDate(x.start) : '—') + ' → ' + (x.end ? U.fmtDate(x.end) : '进行中') + '</span>';
-    var metaLeft = (x.tag ? UI.badge(esc(x.tag), UI.catColor(x.tag)) : '') +
+    /* 主行：标题行右侧只放日期；状态胶囊与类型标签/页码/评分同处第二行（用户指定布局） */
+    var metaRight = '<span class="m-date">' + (x.start ? U.fmtDate(x.start) : '—') + ' → ' + (x.end ? U.fmtDate(x.end) : '进行中') + '</span>';
+    var metaLeft = statusBadge +
+      (x.tag ? UI.badge(esc(x.tag), UI.catColor(x.tag)) : '') +
       pageBadge(x, arch) +
       (x.score !== '' && x.score !== undefined ? UI.scoreTag(x.score) : '');
     /* 主行：用 onclick 内联事件绕过 data-act 委托（与年度归档同样方案）；有封面时显示小缩略图 */
@@ -9955,7 +10022,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         (x.end ? '' : '<button class="link-btn tap" data-act="finish" data-id="' + x.id + '">看完</button>') +
         (x.status !== '弃了' ? '<button class="link-btn tap" data-act="drop" data-id="' + x.id + '">弃了</button>' : '') +
         '<button class="link-btn tap" data-act="minfo" data-id="' + x.id + '">详情</button>' +
-        UI.ops(x.id, 'edit', 'del') +
+        '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">编辑</button>' +
+        '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">删除</button>' +
       '</div>' +
       (extraMeta.length ? '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:' + (x.review ? '6' : '0') + 'px">' + extraMeta.join('') + '</div>' : '') +
       (x.review ? '<div class="note-text">📝 ' + esc(x.review) + '</div>' : '') +
@@ -10126,7 +10194,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
                 (x.end ? '' : '<button class="link-btn tap" data-act="finish" data-id="' + x.id + '">看完</button>') +
                 (x.status !== '弃了' ? '<button class="link-btn tap" data-act="drop" data-id="' + x.id + '">弃了</button>' : '') +
                 '<button class="link-btn tap" data-act="minfo" data-id="' + x.id + '">详情</button>' +
-                UI.ops(x.id, 'edit', 'del');
+                '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">编辑</button>' +
+                '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">删除</button>';
               return '<div class="item clickable" data-toggle data-id="' + x.id + '">' +
                 '<div class="item-main">' +
                 '<div class="item-title">' + MT[x.type].i + ' ' + esc(x.title) + '</div>' +
@@ -13801,16 +13870,16 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     var html = '<button class="chip tap' + (!stockFilter ? ' on' : '') + '" data-act="kfilter" data-cat="">全部</button>';
     html += pinned.map(function (c) {
       var on = stockFilter === c;
-      var col = on ? '' : ' style="color:' + UI.catColorVal(c) + '"';
-      return '<button class="chip tap' + (on ? ' on' : '') + '" data-act="kfilter" data-cat="' + U.esc(c) + '"' + col + '>' + U.esc(c) + '</button>';
+      var cls = 'chip tap' + (on ? ' on' : ' ' + UI.catColorCls(c));
+      return '<button class="' + cls + '" data-act="kfilter" data-cat="' + U.esc(c) + '">' + U.esc(c) + '</button>';
     }).join('');
     if (rest.length) {
       html += '<button class="chip tap' + (stockMoreOpen ? ' on' : '') + '" data-act="kmoreCats">' + (stockMoreOpen ? '收起 ▴' : '更多 ▾') + '</button>';
       if (stockMoreOpen) {
         html += rest.map(function (c) {
           var on = stockFilter === c;
-          var col = on ? '' : ' style="color:' + UI.catColorVal(c) + '"';
-          return '<button class="chip tap' + (on ? ' on' : '') + '" data-act="kfilter" data-cat="' + U.esc(c) + '"' + col + '>' + U.esc(c) + '</button>';
+          var cls = 'chip tap' + (on ? ' on' : ' ' + UI.catColorCls(c));
+          return '<button class="' + cls + '" data-act="kfilter" data-cat="' + U.esc(c) + '">' + U.esc(c) + '</button>';
         }).join('');
       }
     }
@@ -15537,7 +15606,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     if (!expanded) {
       return '<div class="item' + (n >= 0 && n <= 7 ? ' hl' : '') + '" data-act="aexp" data-id="' + x.id + '">' +
         '<div class="item-main"><div class="row between"><span class="item-title">' + esc(x.name) + (n === 0 ? ' 🎉' : '') + '</span>' +
-        '<span class="row" style="gap:6px;align-items:center;flex-shrink:0">' + countHtml + ' <span style="font-size:11px;color:#999">▸</span></span></div>' +
+        '<span class="row" style="gap:6px;align-items:center;flex-shrink:0">' + countHtml + ' <span style="font-size:11px;color:var(--brown-3)">▸</span></span></div>' +
         '<div class="item-meta"><span class="badge grey">' + esc(x.type || '纪念日') + '</span>' +
         '<span>' + U.fmtDate(nd, true) + '</span>' +
         (isLunar ? '<span class="badge purple">农历</span>' : '') +
@@ -15547,7 +15616,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     return '<div class="item' + (n >= 0 && n <= 7 ? ' hl' : '') + ' open" data-act="aexp" data-id="' + x.id + '">' +
       '<div class="item-main">' +
       '<div class="row between"><span class="item-title">' + esc(x.name) + (n === 0 ? ' 🎉' : '') + '</span>' +
-      '<span class="row" style="gap:6px;align-items:center;flex-shrink:0">' + countHtml + ' <span style="font-size:11px;color:#999">▾</span></span></div>' +
+      '<span class="row" style="gap:6px;align-items:center;flex-shrink:0">' + countHtml + ' <span style="font-size:11px;color:var(--brown-3)">▾</span></span></div>' +
       '<div class="item-meta">' +
       '<span class="badge grey">' + esc(x.type || '纪念日') + '</span>' +
       (isLunar ? '<span class="badge purple">农历 · ' + lunarTxt + '</span>' : '') +
@@ -17845,7 +17914,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         '<div class="item-main">' +
           '<div class="item-title">' + esc(x.title) +
             (x.no ? ' <span class="badge grey">' + esc(x.no) + '</span>' : '') +
-            ' <span style="font-size:11px;color:#999">▸</span></div>' +
+            ' <span style="font-size:11px;color:var(--brown-3)">▸</span></div>' +
           '<div class="item-meta">' + meta + '</div>' +
         '</div></div>';
     }
@@ -17927,7 +17996,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       (done ? dueBadge(x.doneDate || x.planDate, true) : dueBadge(x.planDate, false));
     return '<div class="item' + hl + (open ? ' open' : '') + '" data-act="iExp" data-id="' + x.id + '">' +
       '<div class="item-main">' +
-        '<div class="item-title">' + esc(x.title) + ' <span style="font-size:11px;color:#999">' + (open ? '▾' : '▸') + '</span></div>' +
+        '<div class="item-title">' + esc(x.title) + ' <span style="font-size:11px;color:var(--brown-3)">' + (open ? '▾' : '▸') + '</span></div>' +
         '<div class="item-meta">' + meta + '</div>' +
         (open ? kvRows(pairs) : '') +
         (open ? opsRow(
@@ -17957,7 +18026,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       dueBadge(x.dueDate, sent);
     return '<div class="item' + hl + (open ? ' open' : '') + '" data-act="sExp" data-id="' + x.id + '">' +
       '<div class="item-main">' +
-        '<div class="item-title">' + esc(x.title) + ' <span style="font-size:11px;color:#999">' + (open ? '▾' : '▸') + '</span></div>' +
+        '<div class="item-title">' + esc(x.title) + ' <span style="font-size:11px;color:var(--brown-3)">' + (open ? '▾' : '▸') + '</span></div>' +
         '<div class="item-meta">' + meta + '</div>' +
         (open ? kvRows(pairs) : '') +
         (open ? opsRow(
@@ -18006,7 +18075,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       '<div class="item-main">' +
         '<div class="item-title">' + esc(ttl) +
           (x.docNo && x.docNo !== ttl ? ' <span class="badge grey">' + esc(x.docNo) + '</span>' : '') +
-          ' <span style="font-size:11px;color:#999">' + (open ? '▾' : '▸') + '</span></div>' +
+          ' <span style="font-size:11px;color:var(--brown-3)">' + (open ? '▾' : '▸') + '</span></div>' +
         '<div class="item-meta">' + meta + '</div>' +
         (open ? kvRows(pairs) : '') +
         (open ? opsRow(
