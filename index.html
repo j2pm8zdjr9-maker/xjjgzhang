@@ -6,7 +6,7 @@
 <meta data-page-node-id="ydWNYnGShWITa6xK7vZou8" content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
 <title data-page-node-id="cB8cBxFJhtOwDVNzfuApt9" data-pnid-children="aYM2aGhqKpTQ6r2Y0SWuf7">个人工作台</title>
 <meta data-page-node-id="c5qsGs2epFddYFbXXUf2bR" content="个人工作台 · 打卡待办 / 记录 / 记账 / 身体管理，数据本地存储" name="description">
-<meta content="#F8F7F1" name="theme-color">
+<meta content="#F4F6F4" name="theme-color">
 <meta data-page-node-id="qceGVB9ivxzoMZyaq7YDhx" content="yes" name="apple-mobile-web-app-capable">
 <meta data-page-node-id="Cp4uN8i3T6AQLE3H5t9L6t" content="yes" name="mobile-web-app-capable">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -39,23 +39,30 @@ html{ -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; 
   --dvh-real: var(--app-dvh-px, var(--app-dvh));
   --svh-real: var(--app-svh-px, var(--app-vh));
   --vw-real:  var(--app-vw-px,  var(--app-vw));
-  /* ===== 主色（主题变量，随 data-tone 整套风格切换） ===== */
-  --olive:#5C7A12; --olive-soft:#85A13A; --olive-deep:#48610C; --olive-darker:#33460A;
-  --olive-05:rgba(92,122,18,.05); --olive-10:rgba(92,122,18,.10); --olive-16:rgba(92,122,18,.16); --olive-24:rgba(92,122,18,.26); --olive-open:rgba(92,122,18,.18);
+  /* ===== 主色（主题变量，随 data-tone 整套风格切换；默认「青墨」） ===== */
+  --olive:#2F6F62; --olive-soft:#4A8F80; --olive-deep:#245850; --olive-darker:#1A3F3A;
+  --olive-05:rgba(47,111,98,.05); --olive-10:rgba(47,111,98,.10); --olive-16:rgba(47,111,98,.16); --olive-24:rgba(47,111,98,.26); --olive-open:rgba(47,111,98,.18);
+  --on:#FFFFFF; /* 主色实心底上的文字/图标色 */
   /* 展开态背景：比 hover(--olive-05) 明显、跟随主题色 */
 
   /* 中性色面（随主题风格切换） */
-  --cream:#F1F0E8; --cream-soft:#FAF9F4;
-  --bg:#F8F7F1; --card:#FFFFFF;
-  --brown:#1E2E18; --brown-2:#5B6654; --brown-3:#99A08E; --brown-4:#C4C9BC;
-  --line:rgba(40,58,28,.10); --line-2:rgba(40,58,28,.18);
-  --warn:#C87E2E; --danger:#C05745; --info:#4F85B0;
+  --cream:#E8EEE9; --cream-soft:#F7FAF8;
+  --bg:#F4F6F4; --card:#FFFFFF;
+  --brown:#1A2A24; --brown-2:#4A5C54; --brown-3:#88968F; --brown-4:#C2CBC6;
+  --line:rgba(26,42,36,.10); --line-2:rgba(26,42,36,.18);
+  --warn:#C4842A; --danger:#C24B4B; --info:#3D7A9A;
+  --badge-grey-bg:#D5DCD8; --badge-grey-fg:#2A3833;
+  --badge-warn-bg:#F3D7A8; --badge-warn-fg:#6A4308;
+  --badge-danger-bg:#F0C4BC; --badge-danger-fg:#6E2018;
+  --badge-info-bg:rgba(61,122,154,.22); --badge-info-fg:#1A4A62;
+  --badge-cream-bg:#E8D4A0; --badge-cream-fg:#5C450E;
+  --badge-purple-bg:rgba(91,74,168,.22); --badge-purple-fg:#3A2A72;
 
   --r-s: 10px;
   --r:   14px;
   --r-l: 20px;
-  --shadow:    0 1px 2px rgba(51,25,21,.04), 0 6px 18px rgba(51,25,21,.045);
-  --shadow-up: 0 -6px 24px rgba(51,25,21,.10);
+  --shadow:    0 1px 2px rgba(26,42,36,.04), 0 6px 18px rgba(26,42,36,.05);
+  --shadow-up: 0 -6px 24px rgba(26,42,36,.10);
   --ease: cubic-bezier(.22,.61,.36,1);
   --t: .22s var(--ease);
 
@@ -64,19 +71,23 @@ html{ -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; 
   --gap: 18px;
 }
 
-/* ============ 主题色系（data-tone 挂在 :root，覆盖橄榄主色变量；深浅色模式可叠加） ============ */
+/* ============ 主题色系（data-tone 挂在 :root；浅色整套风格包） ============ */
 
-:root[data-tone="olive"]{ --bg:#F8F7F1; --card:#FFFFFF; --cream:#F1F0E8; --cream-soft:#FAF9F4; --brown:#1E2E18; --brown-2:#5B6654; --brown-3:#99A08E; --brown-4:#C4C9BC; --line:rgba(40,58,28,.10); --line-2:rgba(40,58,28,.18); --olive:#5C7A12; --olive-soft:#85A13A; --olive-deep:#48610C; --olive-darker:#33460A; --olive-05:rgba(92,122,18,.05); --olive-10:rgba(92,122,18,.10); --olive-16:rgba(92,122,18,.16); --olive-24:rgba(92,122,18,.26); --olive-open:rgba(92,122,18,.18); --warn:#C87E2E; --danger:#C05745; --info:#4F85B0; }
+:root[data-tone="olive"]{ --bg:#F4F6F4; --card:#FFFFFF; --cream:#E8EEE9; --cream-soft:#F7FAF8; --brown:#1A2A24; --brown-2:#4A5C54; --brown-3:#88968F; --brown-4:#C2CBC6; --line:rgba(26,42,36,.10); --line-2:rgba(26,42,36,.18); --olive:#2F6F62; --olive-soft:#4A8F80; --olive-deep:#245850; --olive-darker:#1A3F3A; --olive-05:rgba(47,111,98,.05); --olive-10:rgba(47,111,98,.10); --olive-16:rgba(47,111,98,.16); --olive-24:rgba(47,111,98,.26); --olive-open:rgba(47,111,98,.18); --on:#FFFFFF; --warn:#C4842A; --danger:#C24B4B; --info:#3D7A9A; --badge-grey-bg:#D5DCD8; --badge-grey-fg:#2A3833; --badge-warn-bg:#F3D7A8; --badge-warn-fg:#6A4308; --badge-danger-bg:#F0C4BC; --badge-danger-fg:#6E2018; --badge-info-bg:rgba(61,122,154,.22); --badge-info-fg:#1A4A62; --badge-cream-bg:#E8D4A0; --badge-cream-fg:#5C450E; --badge-purple-bg:rgba(91,74,168,.22); --badge-purple-fg:#3A2A72; }
 
-:root[data-tone="sage"]{ --bg:#F4F9F5; --card:#FFFFFF; --cream:#E9F2EC; --cream-soft:#F7FBF8; --brown:#12352B; --brown-2:#4E6F63; --brown-3:#8AA39A; --brown-4:#B7CAC3; --line:rgba(18,90,70,.10); --line-2:rgba(18,90,70,.17); --olive:#16855F; --olive-soft:#3FA683; --olive-deep:#0F6B4B; --olive-darker:#0A4C35; --olive-05:rgba(22,133,95,.05); --olive-10:rgba(22,133,95,.10); --olive-16:rgba(22,133,95,.16); --olive-24:rgba(22,133,95,.26); --olive-open:rgba(22,133,95,.18); --warn:#C88A3A; --danger:#C05A52; --info:#2E7D96; }
+:root[data-tone="sage"]{ --bg:#F3F7F2; --card:#FFFFFF; --cream:#E4EFE4; --cream-soft:#F6FBF6; --brown:#1B2E22; --brown-2:#4A6352; --brown-3:#86A08E; --brown-4:#B9C9BC; --line:rgba(40,90,55,.10); --line-2:rgba(40,90,55,.17); --olive:#3D7A52; --olive-soft:#5B9A6E; --olive-deep:#2E5E3E; --olive-darker:#21452D; --olive-05:rgba(61,122,82,.05); --olive-10:rgba(61,122,82,.10); --olive-16:rgba(61,122,82,.16); --olive-24:rgba(61,122,82,.26); --olive-open:rgba(61,122,82,.18); --on:#FFFFFF; --warn:#C4842A; --danger:#C24B4B; --info:#3A7E96; --badge-grey-bg:#D4DDD5; --badge-grey-fg:#2A3A2E; --badge-warn-bg:#F3D7A8; --badge-warn-fg:#6A4308; --badge-danger-bg:#F0C4BC; --badge-danger-fg:#6E2018; --badge-info-bg:rgba(58,126,150,.22); --badge-info-fg:#1A4A5C; --badge-cream-bg:#E8D4A0; --badge-cream-fg:#5C450E; --badge-purple-bg:rgba(91,74,168,.22); --badge-purple-fg:#3A2A72; }
 
-:root[data-tone="plum"]{ --bg:#FAF7FC; --card:#FFFFFF; --cream:#F1EAF7; --cream-soft:#FCFAFE; --brown:#2C1B3F; --brown-2:#6C5A80; --brown-3:#A295B0; --brown-4:#CCC3D6; --line:rgba(90,50,130,.10); --line-2:rgba(90,50,130,.17); --olive:#6F36A8; --olive-soft:#9364C6; --olive-deep:#572A86; --olive-darker:#3D1C60; --olive-05:rgba(111,54,168,.05); --olive-10:rgba(111,54,168,.10); --olive-16:rgba(111,54,168,.16); --olive-24:rgba(111,54,168,.26); --olive-open:rgba(111,54,168,.18); --warn:#C58A38; --danger:#C4535C; --info:#5E6FB0; }
+:root[data-tone="plum"]{ --bg:#F6F4F9; --card:#FFFFFF; --cream:#ECE8F3; --cream-soft:#FAF8FC; --brown:#241C36; --brown-2:#5A506E; --brown-3:#948AA6; --brown-4:#C6C0D2; --line:rgba(70,50,120,.10); --line-2:rgba(70,50,120,.17); --olive:#5B4AA8; --olive-soft:#7A6BC4; --olive-deep:#46388A; --olive-darker:#322766; --olive-05:rgba(91,74,168,.05); --olive-10:rgba(91,74,168,.10); --olive-16:rgba(91,74,168,.16); --olive-24:rgba(91,74,168,.26); --olive-open:rgba(91,74,168,.18); --on:#FFFFFF; --warn:#C4842A; --danger:#C24B4B; --info:#4A6FA8; --badge-grey-bg:#D8D4E0; --badge-grey-fg:#2E2840; --badge-warn-bg:#F3D7A8; --badge-warn-fg:#6A4308; --badge-danger-bg:#F0C4BC; --badge-danger-fg:#6E2018; --badge-info-bg:rgba(74,111,168,.22); --badge-info-fg:#1E3A62; --badge-cream-bg:#E8D4A0; --badge-cream-fg:#5C450E; --badge-purple-bg:rgba(91,74,168,.26); --badge-purple-fg:#322766; }
 
-:root[data-tone="terra"]{ --bg:#FCF7F3; --card:#FFFFFF; --cream:#F6ECE4; --cream-soft:#FEFAF6; --brown:#3A2417; --brown-2:#7A6150; --brown-3:#A99A90; --brown-4:#CFC4BC; --line:rgba(140,70,30,.10); --line-2:rgba(140,70,30,.17); --olive:#B4471F; --olive-soft:#CF6A40; --olive-deep:#913617; --olive-darker:#69270F; --olive-05:rgba(180,71,31,.05); --olive-10:rgba(180,71,31,.10); --olive-16:rgba(180,71,31,.16); --olive-24:rgba(180,71,31,.26); --olive-open:rgba(180,71,31,.18); --warn:#C9832C; --danger:#C14F33; --info:#3E6F7E; }
+:root[data-tone="terra"]{ --bg:#F8F4F1; --card:#FFFFFF; --cream:#F1E8E1; --cream-soft:#FBF7F4; --brown:#2E2018; --brown-2:#6A5448; --brown-3:#A09084; --brown-4:#C8BDB4; --line:rgba(140,70,40,.10); --line-2:rgba(140,70,40,.17); --olive:#C45C32; --olive-soft:#D67A52; --olive-deep:#A04624; --olive-darker:#783318; --olive-05:rgba(196,92,50,.05); --olive-10:rgba(196,92,50,.10); --olive-16:rgba(196,92,50,.16); --olive-24:rgba(196,92,50,.26); --olive-open:rgba(196,92,50,.18); --on:#FFFFFF; --warn:#C4842A; --danger:#C24B4B; --info:#3E6F7E; --badge-grey-bg:#DDD4CC; --badge-grey-fg:#3A2A22; --badge-warn-bg:#F3D7A8; --badge-warn-fg:#6A4308; --badge-danger-bg:#F0C4BC; --badge-danger-fg:#6E2018; --badge-info-bg:rgba(62,111,126,.22); --badge-info-fg:#1A404A; --badge-cream-bg:#E8D4A0; --badge-cream-fg:#5C450E; --badge-purple-bg:rgba(91,74,168,.22); --badge-purple-fg:#3A2A72; }
 
-:root[data-tone="ocean"]{ --bg:#F4F7FC; --card:#FFFFFF; --cream:#E8EFF8; --cream-soft:#F8FAFE; --brown:#152E45; --brown-2:#4E687F; --brown-3:#8AA1B3; --brown-4:#B7C7D4; --line:rgba(30,90,160,.10); --line-2:rgba(30,90,160,.17); --olive:#1D62B8; --olive-soft:#4685CC; --olive-deep:#154B8F; --olive-darker:#0E3566; --olive-05:rgba(29,98,184,.05); --olive-10:rgba(29,98,184,.10); --olive-16:rgba(29,98,184,.16); --olive-24:rgba(29,98,184,.26); --olive-open:rgba(29,98,184,.18); --warn:#C08534; --danger:#C4514B; --info:#3A7A94; }
+:root[data-tone="ocean"]{ --bg:#F3F6FA; --card:#FFFFFF; --cream:#E4ECF4; --cream-soft:#F7FAFD; --brown:#1A2838; --brown-2:#4A5E72; --brown-3:#8496A8; --brown-4:#B8C6D2; --line:rgba(30,80,140,.10); --line-2:rgba(30,80,140,.17); --olive:#2B6CA8; --olive-soft:#4A8BC4; --olive-deep:#1E5286; --olive-darker:#153C64; --olive-05:rgba(43,108,168,.05); --olive-10:rgba(43,108,168,.10); --olive-16:rgba(43,108,168,.16); --olive-24:rgba(43,108,168,.26); --olive-open:rgba(43,108,168,.18); --on:#FFFFFF; --warn:#C4842A; --danger:#C24B4B; --info:#3A7A94; --badge-grey-bg:#D4DCE4; --badge-grey-fg:#243040; --badge-warn-bg:#F3D7A8; --badge-warn-fg:#6A4308; --badge-danger-bg:#F0C4BC; --badge-danger-fg:#6E2018; --badge-info-bg:rgba(58,122,148,.22); --badge-info-fg:#1A4A5C; --badge-cream-bg:#E8D4A0; --badge-cream-fg:#5C450E; --badge-purple-bg:rgba(91,74,168,.22); --badge-purple-fg:#3A2A72; }
 
-:root[data-tone="rose"]{ --bg:#FDF6F8; --card:#FFFFFF; --cream:#F8E9EE; --cream-soft:#FEFAFB; --brown:#3A1826; --brown-2:#795460; --brown-3:#AA96A0; --brown-4:#CFC3C8; --line:rgba(150,40,80,.10); --line-2:rgba(150,40,80,.17); --olive:#B6366B; --olive-soft:#CE5E8C; --olive-deep:#922A55; --olive-darker:#6A1E3E; --olive-05:rgba(182,54,107,.05); --olive-10:rgba(182,54,107,.10); --olive-16:rgba(182,54,107,.16); --olive-24:rgba(182,54,107,.26); --olive-open:rgba(182,54,107,.18); --warn:#C0853A; --danger:#C04B54; --info:#9A5FA8; }
+:root[data-tone="rose"]{ --bg:#F9F4F5; --card:#FFFFFF; --cream:#F2E6E8; --cream-soft:#FCF8F9; --brown:#2E1C22; --brown-2:#6A5058; --brown-3:#A89096; --brown-4:#D0C4C8; --line:rgba(150,50,70,.10); --line-2:rgba(150,50,70,.17); --olive:#C45A6A; --olive-soft:#D67A88; --olive-deep:#A04454; --olive-darker:#783240; --olive-05:rgba(196,90,106,.05); --olive-10:rgba(196,90,106,.10); --olive-16:rgba(196,90,106,.16); --olive-24:rgba(196,90,106,.26); --olive-open:rgba(196,90,106,.18); --on:#FFFFFF; --warn:#C4842A; --danger:#C24B4B; --info:#7A5FA0; --badge-grey-bg:#DDD4D6; --badge-grey-fg:#382830; --badge-warn-bg:#F3D7A8; --badge-warn-fg:#6A4308; --badge-danger-bg:#F0C4BC; --badge-danger-fg:#6E2018; --badge-info-bg:rgba(122,95,160,.22); --badge-info-fg:#3A2860; --badge-cream-bg:#E8D4A0; --badge-cream-fg:#5C450E; --badge-purple-bg:rgba(122,95,160,.26); --badge-purple-fg:#3A2860; }
+
+:root[data-tone="mist"]{ --bg:#F4F5F7; --card:#FFFFFF; --cream:#E8EAEE; --cream-soft:#F8F9FB; --brown:#22262E; --brown-2:#545A66; --brown-3:#8E94A0; --brown-4:#C4C8D0; --line:rgba(50,60,80,.10); --line-2:rgba(50,60,80,.17); --olive:#5A6578; --olive-soft:#748092; --olive-deep:#454E5E; --olive-darker:#323846; --olive-05:rgba(90,101,120,.05); --olive-10:rgba(90,101,120,.10); --olive-16:rgba(90,101,120,.16); --olive-24:rgba(90,101,120,.26); --olive-open:rgba(90,101,120,.18); --on:#FFFFFF; --warn:#C4842A; --danger:#C24B4B; --info:#4A7A96; --badge-grey-bg:#D6D8DC; --badge-grey-fg:#2A2E36; --badge-warn-bg:#F3D7A8; --badge-warn-fg:#6A4308; --badge-danger-bg:#F0C4BC; --badge-danger-fg:#6E2018; --badge-info-bg:rgba(74,122,150,.22); --badge-info-fg:#1A4458; --badge-cream-bg:#E8D4A0; --badge-cream-fg:#5C450E; --badge-purple-bg:rgba(91,74,168,.22); --badge-purple-fg:#3A2A72; }
+
+:root[data-tone="amber"]{ --bg:#F8F5EE; --card:#FFFFFF; --cream:#F0E8D8; --cream-soft:#FBF8F2; --brown:#2A2418; --brown-2:#625848; --brown-3:#9A907C; --brown-4:#C8C0B0; --line:rgba(140,100,30,.10); --line-2:rgba(140,100,30,.17); --olive:#C48A22; --olive-soft:#D6A444; --olive-deep:#A07018; --olive-darker:#785410; --olive-05:rgba(196,138,34,.05); --olive-10:rgba(196,138,34,.10); --olive-16:rgba(196,138,34,.16); --olive-24:rgba(196,138,34,.26); --olive-open:rgba(196,138,34,.18); --on:#1A160C; --warn:#C4842A; --danger:#C24B4B; --info:#3E6F7E; --badge-grey-bg:#DDD6C8; --badge-grey-fg:#3A3224; --badge-warn-bg:#F3D7A8; --badge-warn-fg:#6A4308; --badge-danger-bg:#F0C4BC; --badge-danger-fg:#6E2018; --badge-info-bg:rgba(62,111,126,.22); --badge-info-fg:#1A404A; --badge-cream-bg:#E8D4A0; --badge-cream-fg:#5C450E; --badge-purple-bg:rgba(91,74,168,.22); --badge-purple-fg:#3A2A72; }
 
 /* ============ 深色模式 ============
    theme=auto（无 data-theme）：跟随系统 prefers-color-scheme
@@ -85,14 +96,21 @@ html{ -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; 
    浅色变量即上方 :root 默认值；以下为深色覆盖。 */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg:#17171A; --card:#1F2024; --cream:#232429; --cream-soft:#1A1B1E;
-    --brown:#EDEAE2; --brown-2:#C3C0B5; --brown-3:#969489; --brown-4:#6A6962;
+    --bg:#121816; --card:#1A221F; --cream:#1E2824; --cream-soft:#151C1A;
+    --brown:#E6EEEA; --brown-2:#B4C4BC; --brown-3:#84948C; --brown-4:#5A6860;
     --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16);
-    --olive:#A8C458; --olive-soft:#BCD274; --olive-deep:#8FB23A; --olive-darker:#C6DB84;
-    --olive-05:rgba(168,196,88,.08); --olive-10:rgba(168,196,88,.14);
-    --olive-16:rgba(168,196,88,.22); --olive-24:rgba(168,196,88,.32);
-    --olive-open:rgba(168,196,88,.30);
-    --warn:#D99A58; --danger:#D97860; --info:#6FA0BE;
+    --olive:#6FBFB0; --olive-soft:#8ED0C4; --olive-deep:#54A898; --olive-darker:#A8DED4;
+    --olive-05:rgba(111,191,176,.08); --olive-10:rgba(111,191,176,.14);
+    --olive-16:rgba(111,191,176,.22); --olive-24:rgba(111,191,176,.32);
+    --olive-open:rgba(111,191,176,.30);
+    --on:#12201C;
+    --warn:#E0A85C; --danger:#E07A6A; --info:#7AB0C8;
+    --badge-grey-bg:rgba(255,255,255,.12); --badge-grey-fg:#E6EEEA;
+    --badge-warn-bg:rgba(224,168,92,.24); --badge-warn-fg:#F0C888;
+    --badge-danger-bg:rgba(224,122,106,.26); --badge-danger-fg:#F0A090;
+    --badge-info-bg:rgba(122,176,200,.24); --badge-info-fg:#9CC8DC;
+    --badge-cream-bg:rgba(232,212,160,.18); --badge-cream-fg:#E8D4A0;
+    --badge-purple-bg:rgba(176,160,232,.24); --badge-purple-fg:#C8B8F0;
     --shadow:0 1px 2px rgba(0,0,0,.45), 0 6px 18px rgba(0,0,0,.55);
     --shadow-up:0 -6px 24px rgba(0,0,0,.55);
   }
@@ -102,7 +120,7 @@ html{ -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; 
   :root:not([data-theme="light"]) .cal-cell.miss{ background:rgba(217,112,90,.16); border-color:rgba(217,112,90,.4); color:#E89B7E; }
   :root:not([data-theme="light"]) .cal-cell.broken{ background:rgba(217,52,38,.22); border-color:rgba(217,52,38,.5); color:#FF7A6E; }
   :root:not([data-theme="light"]) .chk-cal .cal-cell.broken .cal-count{ color:#fff; background:rgba(217,52,38,.5); }
-  :root:not([data-theme="light"]) .badge.grey{ background:rgba(255,255,255,.08); color:var(--brown-2); }
+  :root:not([data-theme="light"]) .badge.grey{ background:var(--badge-grey-bg); color:var(--badge-grey-fg); }
   :root:not([data-theme="light"]) .big-num.future{ color:var(--brown); }
   :root:not([data-theme="light"]) .big-num.soon{ color:var(--olive-darker); }
   :root:not([data-theme="light"]) .big-num.past{ color:#FF9B8A; }
@@ -117,14 +135,21 @@ html{ -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; 
   :root:not([data-theme="light"]) .topbar{ background:var(--bg); }
 }
 :root[data-theme="dark"] {
-  --bg:#17171A; --card:#1F2024; --cream:#232429; --cream-soft:#1A1B1E;
-  --brown:#EDEAE2; --brown-2:#C3C0B5; --brown-3:#969489; --brown-4:#6A6962;
+  --bg:#121816; --card:#1A221F; --cream:#1E2824; --cream-soft:#151C1A;
+  --brown:#E6EEEA; --brown-2:#B4C4BC; --brown-3:#84948C; --brown-4:#5A6860;
   --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16);
-  --olive:#A8C458; --olive-soft:#BCD274; --olive-deep:#8FB23A; --olive-darker:#C6DB84;
-  --olive-05:rgba(168,196,88,.08); --olive-10:rgba(168,196,88,.14);
-  --olive-16:rgba(168,196,88,.22); --olive-24:rgba(168,196,88,.32);
-  --olive-open:rgba(168,196,88,.30);
-  --warn:#D99A58; --danger:#D97860; --info:#6FA0BE;
+  --olive:#6FBFB0; --olive-soft:#8ED0C4; --olive-deep:#54A898; --olive-darker:#A8DED4;
+  --olive-05:rgba(111,191,176,.08); --olive-10:rgba(111,191,176,.14);
+  --olive-16:rgba(111,191,176,.22); --olive-24:rgba(111,191,176,.32);
+  --olive-open:rgba(111,191,176,.30);
+  --on:#12201C;
+  --warn:#E0A85C; --danger:#E07A6A; --info:#7AB0C8;
+  --badge-grey-bg:rgba(255,255,255,.12); --badge-grey-fg:#E6EEEA;
+  --badge-warn-bg:rgba(224,168,92,.24); --badge-warn-fg:#F0C888;
+  --badge-danger-bg:rgba(224,122,106,.26); --badge-danger-fg:#F0A090;
+  --badge-info-bg:rgba(122,176,200,.24); --badge-info-fg:#9CC8DC;
+  --badge-cream-bg:rgba(232,212,160,.18); --badge-cream-fg:#E8D4A0;
+  --badge-purple-bg:rgba(176,160,232,.24); --badge-purple-fg:#C8B8F0;
   --shadow:0 1px 2px rgba(0,0,0,.45), 0 6px 18px rgba(0,0,0,.55);
   --shadow-up:0 -6px 24px rgba(0,0,0,.55);
 }
@@ -134,13 +159,13 @@ html{ -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; 
 :root[data-theme="dark"] .cal-cell.miss{ background:rgba(217,112,90,.16); border-color:rgba(217,112,90,.4); color:#E89B7E; }
 :root[data-theme="dark"] .cal-cell.broken{ background:rgba(217,52,38,.22); border-color:rgba(217,52,38,.5); color:#FF7A6E; }
 :root[data-theme="dark"] .chk-cal .cal-cell.broken .cal-count{ color:#fff; background:rgba(217,52,38,.5); }
-:root[data-theme="dark"] .badge.grey{ background:rgba(255,255,255,.14); color:var(--brown); border-color:rgba(255,255,255,.14); }
-:root[data-theme="dark"] .badge.warn{ background:rgba(220,150,40,.28); color:#F2C16A; }
-:root[data-theme="dark"] .badge.danger{ background:rgba(200,80,60,.30); color:#FF9A8A; }
-:root[data-theme="dark"] .badge.info{ background:rgba(80,150,200,.28); color:#7FB8E0; }
-:root[data-theme="dark"] .badge.cream{ background:rgba(245,232,195,.18); color:#E8D38A; }
-:root[data-theme="dark"] .badge.purple{ background:rgba(160,120,190,.30); color:#C5A6E0; }
-:root[data-theme="dark"] .badge.fresh{ background:rgba(168,200,74,.22); color:#C3DD6E; border-color:rgba(168,200,74,.4); }
+:root[data-theme="dark"] .badge.grey{ background:var(--badge-grey-bg); color:var(--badge-grey-fg); border-color:rgba(255,255,255,.14); }
+:root[data-theme="dark"] .badge.warn{ background:var(--badge-warn-bg); color:var(--badge-warn-fg); }
+:root[data-theme="dark"] .badge.danger{ background:var(--badge-danger-bg); color:var(--badge-danger-fg); }
+:root[data-theme="dark"] .badge.info{ background:var(--badge-info-bg); color:var(--badge-info-fg); }
+:root[data-theme="dark"] .badge.cream{ background:var(--badge-cream-bg); color:var(--badge-cream-fg); }
+:root[data-theme="dark"] .badge.purple{ background:var(--badge-purple-bg); color:var(--badge-purple-fg); }
+:root[data-theme="dark"] .badge.fresh{ background:var(--olive); color:var(--on); border-color:var(--olive-deep); }
 :root[data-theme="dark"] .big-num.future{ color:var(--brown); }
 :root[data-theme="dark"] .big-num.soon{ color:var(--olive-darker); }
 :root[data-theme="dark"] .big-num.past{ color:#FF9B8A; }
@@ -156,17 +181,21 @@ html{ -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; 
 
 /* ============ 主题色系 · 深色模式（必须放在深色块之后才能生效；亮化变体保证深底下可读） ============ */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"])[data-tone="sage"]{ --bg:#0F1916; --card:#16241F; --cream:#192820; --cream-soft:#121D19; --brown:#DFEFE7; --brown-2:#ABC0B4; --brown-3:#7E968B; --brown-4:#58695F; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#55D2A3; --olive-soft:#74DEB6; --olive-deep:#3CB587; --olive-darker:#8FE6C6; --olive-05:rgba(85,210,163,.08); --olive-10:rgba(85,210,163,.14); --olive-16:rgba(85,210,163,.22); --olive-24:rgba(85,210,163,.32); --olive-open:rgba(85,210,163,.30); --warn:#DCA25C; --danger:#DA7A62; --info:#4FB0C0; }
-  :root:not([data-theme="light"])[data-tone="plum"]{ --bg:#16131C; --card:#201A2A; --cream:#241D30; --cream-soft:#19151F; --brown:#EDE7F6; --brown-2:#C0B5D1; --brown-3:#9588A5; --brown-4:#66596F; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#BC8FF0; --olive-soft:#CDA9F5; --olive-deep:#9F6FDC; --olive-darker:#D9C3F7; --olive-05:rgba(188,143,240,.08); --olive-10:rgba(188,143,240,.14); --olive-16:rgba(188,143,240,.22); --olive-24:rgba(188,143,240,.32); --olive-open:rgba(188,143,240,.30); --warn:#D89D5E; --danger:#D66A70; --info:#8B87D6; }
-  :root:not([data-theme="light"])[data-tone="terra"]{ --bg:#181310; --card:#221B16; --cream:#261E17; --cream-soft:#1B1511; --brown:#F2E4D8; --brown-2:#CBB6A4; --brown-3:#A08B79; --brown-4:#6D5A4B; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#EE9A64; --olive-soft:#F4AF82; --olive-deep:#D97C47; --olive-darker:#F8C8A2; --olive-05:rgba(238,154,100,.08); --olive-10:rgba(238,154,100,.14); --olive-16:rgba(238,154,100,.22); --olive-24:rgba(238,154,100,.32); --olive-open:rgba(238,154,100,.30); --warn:#DDA263; --danger:#DE7351; --info:#6F97A0; }
-  :root:not([data-theme="light"])[data-tone="ocean"]{ --bg:#10161E; --card:#18202C; --cream:#1B2432; --cream-soft:#121922; --brown:#E2ECF7; --brown-2:#B3C4D6; --brown-3:#8796A8; --brown-4:#5C6875; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#6FB2F5; --olive-soft:#8EC4F8; --olive-deep:#5497DE; --olive-darker:#A6D2FA; --olive-05:rgba(111,178,245,.08); --olive-10:rgba(111,178,245,.14); --olive-16:rgba(111,178,245,.22); --olive-24:rgba(111,178,245,.32); --olive-open:rgba(111,178,245,.30); --warn:#DDA360; --danger:#DC6E5E; --info:#5FA0C4; }
-  :root:not([data-theme="light"])[data-tone="rose"]{ --bg:#181118; --card:#241A20; --cream:#281D23; --cream-soft:#1A141A; --brown:#F5E6EB; --brown-2:#CDB4BE; --brown-3:#A08790; --brown-4:#6F5962; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#F289B0; --olive-soft:#F6A3C2; --olive-deep:#DE6B98; --olive-darker:#F8C0D6; --olive-05:rgba(242,137,176,.08); --olive-10:rgba(242,137,176,.14); --olive-16:rgba(242,137,176,.22); --olive-24:rgba(242,137,176,.32); --olive-open:rgba(242,137,176,.30); --warn:#D8A063; --danger:#D86A6E; --info:#B28AC2; }
+  :root:not([data-theme="light"])[data-tone="sage"]{ --bg:#121A14; --card:#1A241C; --cream:#1E2A20; --cream-soft:#151C16; --brown:#E4EEE6; --brown-2:#B0C4B4; --brown-3:#849688; --brown-4:#58685C; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#7EC492; --olive-soft:#98D4A8; --olive-deep:#62B078; --olive-darker:#B4E0C0; --olive-05:rgba(126,196,146,.08); --olive-10:rgba(126,196,146,.14); --olive-16:rgba(126,196,146,.22); --olive-24:rgba(126,196,146,.32); --olive-open:rgba(126,196,146,.30); --on:#122016; --warn:#E0A85C; --danger:#E07A6A; --info:#7AB0C8; --badge-grey-bg:rgba(255,255,255,.12); --badge-grey-fg:#E4EEE6; --badge-warn-bg:rgba(224,168,92,.24); --badge-warn-fg:#F0C888; --badge-danger-bg:rgba(224,122,106,.26); --badge-danger-fg:#F0A090; --badge-info-bg:rgba(122,176,200,.24); --badge-info-fg:#9CC8DC; --badge-cream-bg:rgba(232,212,160,.18); --badge-cream-fg:#E8D4A0; --badge-purple-bg:rgba(176,160,232,.24); --badge-purple-fg:#C8B8F0; }
+  :root:not([data-theme="light"])[data-tone="plum"]{ --bg:#16141E; --card:#1E1A28; --cream:#221E2E; --cream-soft:#18151F; --brown:#ECE8F4; --brown-2:#C0B8D4; --brown-3:#9088A8; --brown-4:#605870; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#A898E0; --olive-soft:#BCB0EC; --olive-deep:#8C7AD0; --olive-darker:#D0C8F4; --olive-05:rgba(168,152,224,.08); --olive-10:rgba(168,152,224,.14); --olive-16:rgba(168,152,224,.22); --olive-24:rgba(168,152,224,.32); --olive-open:rgba(168,152,224,.30); --on:#1A1628; --warn:#E0A85C; --danger:#E07A6A; --info:#8A9AD0; --badge-grey-bg:rgba(255,255,255,.12); --badge-grey-fg:#ECE8F4; --badge-warn-bg:rgba(224,168,92,.24); --badge-warn-fg:#F0C888; --badge-danger-bg:rgba(224,122,106,.26); --badge-danger-fg:#F0A090; --badge-info-bg:rgba(138,154,208,.24); --badge-info-fg:#B0BCE0; --badge-cream-bg:rgba(232,212,160,.18); --badge-cream-fg:#E8D4A0; --badge-purple-bg:rgba(168,152,224,.28); --badge-purple-fg:#D0C8F4; }
+  :root:not([data-theme="light"])[data-tone="terra"]{ --bg:#1A1410; --card:#241C18; --cream:#282018; --cream-soft:#1C1612; --brown:#F0E6DC; --brown-2:#C8B4A4; --brown-3:#9A8878; --brown-4:#6A5848; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#E89A6C; --olive-soft:#F0B088; --olive-deep:#D47E50; --olive-darker:#F4C8A8; --olive-05:rgba(232,154,108,.08); --olive-10:rgba(232,154,108,.14); --olive-16:rgba(232,154,108,.22); --olive-24:rgba(232,154,108,.32); --olive-open:rgba(232,154,108,.30); --on:#221610; --warn:#E0A85C; --danger:#E07A6A; --info:#7AA0A8; --badge-grey-bg:rgba(255,255,255,.12); --badge-grey-fg:#F0E6DC; --badge-warn-bg:rgba(224,168,92,.24); --badge-warn-fg:#F0C888; --badge-danger-bg:rgba(224,122,106,.26); --badge-danger-fg:#F0A090; --badge-info-bg:rgba(122,160,168,.24); --badge-info-fg:#A8C8D0; --badge-cream-bg:rgba(232,212,160,.18); --badge-cream-fg:#E8D4A0; --badge-purple-bg:rgba(176,160,232,.24); --badge-purple-fg:#C8B8F0; }
+  :root:not([data-theme="light"])[data-tone="ocean"]{ --bg:#10161E; --card:#18202A; --cream:#1C2430; --cream-soft:#141A22; --brown:#E4ECF4; --brown-2:#B0C0D0; --brown-3:#8494A4; --brown-4:#586878; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#78B4E0; --olive-soft:#94C8EC; --olive-deep:#5A9CD0; --olive-darker:#B4D8F4; --olive-05:rgba(120,180,224,.08); --olive-10:rgba(120,180,224,.14); --olive-16:rgba(120,180,224,.22); --olive-24:rgba(120,180,224,.32); --olive-open:rgba(120,180,224,.30); --on:#101820; --warn:#E0A85C; --danger:#E07A6A; --info:#7AB0C8; --badge-grey-bg:rgba(255,255,255,.12); --badge-grey-fg:#E4ECF4; --badge-warn-bg:rgba(224,168,92,.24); --badge-warn-fg:#F0C888; --badge-danger-bg:rgba(224,122,106,.26); --badge-danger-fg:#F0A090; --badge-info-bg:rgba(122,176,200,.24); --badge-info-fg:#9CC8DC; --badge-cream-bg:rgba(232,212,160,.18); --badge-cream-fg:#E8D4A0; --badge-purple-bg:rgba(176,160,232,.24); --badge-purple-fg:#C8B8F0; }
+  :root:not([data-theme="light"])[data-tone="rose"]{ --bg:#1A1416; --card:#241C20; --cream:#282022; --cream-soft:#1C1618; --brown:#F0E4E8; --brown-2:#C8B0B6; --brown-3:#9A848A; --brown-4:#6A565C; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#E898A4; --olive-soft:#F0B0BA; --olive-deep:#D47A88; --olive-darker:#F4C8D0; --olive-05:rgba(232,152,164,.08); --olive-10:rgba(232,152,164,.14); --olive-16:rgba(232,152,164,.22); --olive-24:rgba(232,152,164,.32); --olive-open:rgba(232,152,164,.30); --on:#221416; --warn:#E0A85C; --danger:#E07A6A; --info:#B098D0; --badge-grey-bg:rgba(255,255,255,.12); --badge-grey-fg:#F0E4E8; --badge-warn-bg:rgba(224,168,92,.24); --badge-warn-fg:#F0C888; --badge-danger-bg:rgba(224,122,106,.26); --badge-danger-fg:#F0A090; --badge-info-bg:rgba(176,152,208,.24); --badge-info-fg:#C8B8E0; --badge-cream-bg:rgba(232,212,160,.18); --badge-cream-fg:#E8D4A0; --badge-purple-bg:rgba(176,152,208,.28); --badge-purple-fg:#D0C0E8; }
+  :root:not([data-theme="light"])[data-tone="mist"]{ --bg:#14161A; --card:#1C1E24; --cream:#202228; --cream-soft:#16181C; --brown:#E8EAEF; --brown-2:#B8BCC4; --brown-3:#8A8E96; --brown-4:#5C6068; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#A0A8B8; --olive-soft:#B8C0CC; --olive-deep:#888FA0; --olive-darker:#D0D6E0; --olive-05:rgba(160,168,184,.08); --olive-10:rgba(160,168,184,.14); --olive-16:rgba(160,168,184,.22); --olive-24:rgba(160,168,184,.32); --olive-open:rgba(160,168,184,.30); --on:#16181C; --warn:#E0A85C; --danger:#E07A6A; --info:#7AB0C8; --badge-grey-bg:rgba(255,255,255,.12); --badge-grey-fg:#E8EAEF; --badge-warn-bg:rgba(224,168,92,.24); --badge-warn-fg:#F0C888; --badge-danger-bg:rgba(224,122,106,.26); --badge-danger-fg:#F0A090; --badge-info-bg:rgba(122,176,200,.24); --badge-info-fg:#9CC8DC; --badge-cream-bg:rgba(232,212,160,.18); --badge-cream-fg:#E8D4A0; --badge-purple-bg:rgba(176,160,232,.24); --badge-purple-fg:#C8B8F0; }
+  :root:not([data-theme="light"])[data-tone="amber"]{ --bg:#18140C; --card:#221C14; --cream:#262016; --cream-soft:#1A160E; --brown:#F0E8D8; --brown-2:#C8BCA4; --brown-3:#9A8E78; --brown-4:#6A6050; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#E8C070; --olive-soft:#F0D090; --olive-deep:#D4A850; --olive-darker:#F4E0B0; --olive-05:rgba(232,192,112,.08); --olive-10:rgba(232,192,112,.14); --olive-16:rgba(232,192,112,.22); --olive-24:rgba(232,192,112,.32); --olive-open:rgba(232,192,112,.30); --on:#1A160C; --warn:#E0A85C; --danger:#E07A6A; --info:#7AA0A8; --badge-grey-bg:rgba(255,255,255,.12); --badge-grey-fg:#F0E8D8; --badge-warn-bg:rgba(224,168,92,.24); --badge-warn-fg:#F0C888; --badge-danger-bg:rgba(224,122,106,.26); --badge-danger-fg:#F0A090; --badge-info-bg:rgba(122,160,168,.24); --badge-info-fg:#A8C8D0; --badge-cream-bg:rgba(232,212,160,.22); --badge-cream-fg:#F0E0B0; --badge-purple-bg:rgba(176,160,232,.24); --badge-purple-fg:#C8B8F0; }
 }
-:root[data-theme="dark"][data-tone="sage"]{ --bg:#0F1916; --card:#16241F; --cream:#192820; --cream-soft:#121D19; --brown:#DFEFE7; --brown-2:#ABC0B4; --brown-3:#7E968B; --brown-4:#58695F; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#55D2A3; --olive-soft:#74DEB6; --olive-deep:#3CB587; --olive-darker:#8FE6C6; --olive-05:rgba(85,210,163,.08); --olive-10:rgba(85,210,163,.14); --olive-16:rgba(85,210,163,.22); --olive-24:rgba(85,210,163,.32); --olive-open:rgba(85,210,163,.30); --warn:#DCA25C; --danger:#DA7A62; --info:#4FB0C0; }
-:root[data-theme="dark"][data-tone="plum"]{ --bg:#16131C; --card:#201A2A; --cream:#241D30; --cream-soft:#19151F; --brown:#EDE7F6; --brown-2:#C0B5D1; --brown-3:#9588A5; --brown-4:#66596F; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#BC8FF0; --olive-soft:#CDA9F5; --olive-deep:#9F6FDC; --olive-darker:#D9C3F7; --olive-05:rgba(188,143,240,.08); --olive-10:rgba(188,143,240,.14); --olive-16:rgba(188,143,240,.22); --olive-24:rgba(188,143,240,.32); --olive-open:rgba(188,143,240,.30); --warn:#D89D5E; --danger:#D66A70; --info:#8B87D6; }
-:root[data-theme="dark"][data-tone="terra"]{ --bg:#181310; --card:#221B16; --cream:#261E17; --cream-soft:#1B1511; --brown:#F2E4D8; --brown-2:#CBB6A4; --brown-3:#A08B79; --brown-4:#6D5A4B; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#EE9A64; --olive-soft:#F4AF82; --olive-deep:#D97C47; --olive-darker:#F8C8A2; --olive-05:rgba(238,154,100,.08); --olive-10:rgba(238,154,100,.14); --olive-16:rgba(238,154,100,.22); --olive-24:rgba(238,154,100,.32); --olive-open:rgba(238,154,100,.30); --warn:#DDA263; --danger:#DE7351; --info:#6F97A0; }
-:root[data-theme="dark"][data-tone="ocean"]{ --bg:#10161E; --card:#18202C; --cream:#1B2432; --cream-soft:#121922; --brown:#E2ECF7; --brown-2:#B3C4D6; --brown-3:#8796A8; --brown-4:#5C6875; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#6FB2F5; --olive-soft:#8EC4F8; --olive-deep:#5497DE; --olive-darker:#A6D2FA; --olive-05:rgba(111,178,245,.08); --olive-10:rgba(111,178,245,.14); --olive-16:rgba(111,178,245,.22); --olive-24:rgba(111,178,245,.32); --olive-open:rgba(111,178,245,.30); --warn:#DDA360; --danger:#DC6E5E; --info:#5FA0C4; }
-:root[data-theme="dark"][data-tone="rose"]{ --bg:#181118; --card:#241A20; --cream:#281D23; --cream-soft:#1A141A; --brown:#F5E6EB; --brown-2:#CDB4BE; --brown-3:#A08790; --brown-4:#6F5962; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#F289B0; --olive-soft:#F6A3C2; --olive-deep:#DE6B98; --olive-darker:#F8C0D6; --olive-05:rgba(242,137,176,.08); --olive-10:rgba(242,137,176,.14); --olive-16:rgba(242,137,176,.22); --olive-24:rgba(242,137,176,.32); --olive-open:rgba(242,137,176,.30); --warn:#D8A063; --danger:#D86A6E; --info:#B28AC2; }
+:root[data-theme="dark"][data-tone="sage"]{ --bg:#121A14; --card:#1A241C; --cream:#1E2A20; --cream-soft:#151C16; --brown:#E4EEE6; --brown-2:#B0C4B4; --brown-3:#849688; --brown-4:#58685C; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#7EC492; --olive-soft:#98D4A8; --olive-deep:#62B078; --olive-darker:#B4E0C0; --olive-05:rgba(126,196,146,.08); --olive-10:rgba(126,196,146,.14); --olive-16:rgba(126,196,146,.22); --olive-24:rgba(126,196,146,.32); --olive-open:rgba(126,196,146,.30); --on:#122016; --warn:#E0A85C; --danger:#E07A6A; --info:#7AB0C8; --badge-grey-bg:rgba(255,255,255,.12); --badge-grey-fg:#E4EEE6; --badge-warn-bg:rgba(224,168,92,.24); --badge-warn-fg:#F0C888; --badge-danger-bg:rgba(224,122,106,.26); --badge-danger-fg:#F0A090; --badge-info-bg:rgba(122,176,200,.24); --badge-info-fg:#9CC8DC; --badge-cream-bg:rgba(232,212,160,.18); --badge-cream-fg:#E8D4A0; --badge-purple-bg:rgba(176,160,232,.24); --badge-purple-fg:#C8B8F0; }
+:root[data-theme="dark"][data-tone="plum"]{ --bg:#16141E; --card:#1E1A28; --cream:#221E2E; --cream-soft:#18151F; --brown:#ECE8F4; --brown-2:#C0B8D4; --brown-3:#9088A8; --brown-4:#605870; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#A898E0; --olive-soft:#BCB0EC; --olive-deep:#8C7AD0; --olive-darker:#D0C8F4; --olive-05:rgba(168,152,224,.08); --olive-10:rgba(168,152,224,.14); --olive-16:rgba(168,152,224,.22); --olive-24:rgba(168,152,224,.32); --olive-open:rgba(168,152,224,.30); --on:#1A1628; --warn:#E0A85C; --danger:#E07A6A; --info:#8A9AD0; --badge-grey-bg:rgba(255,255,255,.12); --badge-grey-fg:#ECE8F4; --badge-warn-bg:rgba(224,168,92,.24); --badge-warn-fg:#F0C888; --badge-danger-bg:rgba(224,122,106,.26); --badge-danger-fg:#F0A090; --badge-info-bg:rgba(138,154,208,.24); --badge-info-fg:#B0BCE0; --badge-cream-bg:rgba(232,212,160,.18); --badge-cream-fg:#E8D4A0; --badge-purple-bg:rgba(168,152,224,.28); --badge-purple-fg:#D0C8F4; }
+:root[data-theme="dark"][data-tone="terra"]{ --bg:#1A1410; --card:#241C18; --cream:#282018; --cream-soft:#1C1612; --brown:#F0E6DC; --brown-2:#C8B4A4; --brown-3:#9A8878; --brown-4:#6A5848; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#E89A6C; --olive-soft:#F0B088; --olive-deep:#D47E50; --olive-darker:#F4C8A8; --olive-05:rgba(232,154,108,.08); --olive-10:rgba(232,154,108,.14); --olive-16:rgba(232,154,108,.22); --olive-24:rgba(232,154,108,.32); --olive-open:rgba(232,154,108,.30); --on:#221610; --warn:#E0A85C; --danger:#E07A6A; --info:#7AA0A8; --badge-grey-bg:rgba(255,255,255,.12); --badge-grey-fg:#F0E6DC; --badge-warn-bg:rgba(224,168,92,.24); --badge-warn-fg:#F0C888; --badge-danger-bg:rgba(224,122,106,.26); --badge-danger-fg:#F0A090; --badge-info-bg:rgba(122,160,168,.24); --badge-info-fg:#A8C8D0; --badge-cream-bg:rgba(232,212,160,.18); --badge-cream-fg:#E8D4A0; --badge-purple-bg:rgba(176,160,232,.24); --badge-purple-fg:#C8B8F0; }
+:root[data-theme="dark"][data-tone="ocean"]{ --bg:#10161E; --card:#18202A; --cream:#1C2430; --cream-soft:#141A22; --brown:#E4ECF4; --brown-2:#B0C0D0; --brown-3:#8494A4; --brown-4:#586878; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#78B4E0; --olive-soft:#94C8EC; --olive-deep:#5A9CD0; --olive-darker:#B4D8F4; --olive-05:rgba(120,180,224,.08); --olive-10:rgba(120,180,224,.14); --olive-16:rgba(120,180,224,.22); --olive-24:rgba(120,180,224,.32); --olive-open:rgba(120,180,224,.30); --on:#101820; --warn:#E0A85C; --danger:#E07A6A; --info:#7AB0C8; --badge-grey-bg:rgba(255,255,255,.12); --badge-grey-fg:#E4ECF4; --badge-warn-bg:rgba(224,168,92,.24); --badge-warn-fg:#F0C888; --badge-danger-bg:rgba(224,122,106,.26); --badge-danger-fg:#F0A090; --badge-info-bg:rgba(122,176,200,.24); --badge-info-fg:#9CC8DC; --badge-cream-bg:rgba(232,212,160,.18); --badge-cream-fg:#E8D4A0; --badge-purple-bg:rgba(176,160,232,.24); --badge-purple-fg:#C8B8F0; }
+:root[data-theme="dark"][data-tone="rose"]{ --bg:#1A1416; --card:#241C20; --cream:#282022; --cream-soft:#1C1618; --brown:#F0E4E8; --brown-2:#C8B0B6; --brown-3:#9A848A; --brown-4:#6A565C; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#E898A4; --olive-soft:#F0B0BA; --olive-deep:#D47A88; --olive-darker:#F4C8D0; --olive-05:rgba(232,152,164,.08); --olive-10:rgba(232,152,164,.14); --olive-16:rgba(232,152,164,.22); --olive-24:rgba(232,152,164,.32); --olive-open:rgba(232,152,164,.30); --on:#221416; --warn:#E0A85C; --danger:#E07A6A; --info:#B098D0; --badge-grey-bg:rgba(255,255,255,.12); --badge-grey-fg:#F0E4E8; --badge-warn-bg:rgba(224,168,92,.24); --badge-warn-fg:#F0C888; --badge-danger-bg:rgba(224,122,106,.26); --badge-danger-fg:#F0A090; --badge-info-bg:rgba(176,152,208,.24); --badge-info-fg:#C8B8E0; --badge-cream-bg:rgba(232,212,160,.18); --badge-cream-fg:#E8D4A0; --badge-purple-bg:rgba(176,152,208,.28); --badge-purple-fg:#D0C0E8; }
+:root[data-theme="dark"][data-tone="mist"]{ --bg:#14161A; --card:#1C1E24; --cream:#202228; --cream-soft:#16181C; --brown:#E8EAEF; --brown-2:#B8BCC4; --brown-3:#8A8E96; --brown-4:#5C6068; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#A0A8B8; --olive-soft:#B8C0CC; --olive-deep:#888FA0; --olive-darker:#D0D6E0; --olive-05:rgba(160,168,184,.08); --olive-10:rgba(160,168,184,.14); --olive-16:rgba(160,168,184,.22); --olive-24:rgba(160,168,184,.32); --olive-open:rgba(160,168,184,.30); --on:#16181C; --warn:#E0A85C; --danger:#E07A6A; --info:#7AB0C8; --badge-grey-bg:rgba(255,255,255,.12); --badge-grey-fg:#E8EAEF; --badge-warn-bg:rgba(224,168,92,.24); --badge-warn-fg:#F0C888; --badge-danger-bg:rgba(224,122,106,.26); --badge-danger-fg:#F0A090; --badge-info-bg:rgba(122,176,200,.24); --badge-info-fg:#9CC8DC; --badge-cream-bg:rgba(232,212,160,.18); --badge-cream-fg:#E8D4A0; --badge-purple-bg:rgba(176,160,232,.24); --badge-purple-fg:#C8B8F0; }
+:root[data-theme="dark"][data-tone="amber"]{ --bg:#18140C; --card:#221C14; --cream:#262016; --cream-soft:#1A160E; --brown:#F0E8D8; --brown-2:#C8BCA4; --brown-3:#9A8E78; --brown-4:#6A6050; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#E8C070; --olive-soft:#F0D090; --olive-deep:#D4A850; --olive-darker:#F4E0B0; --olive-05:rgba(232,192,112,.08); --olive-10:rgba(232,192,112,.14); --olive-16:rgba(232,192,112,.22); --olive-24:rgba(232,192,112,.32); --olive-open:rgba(232,192,112,.30); --on:#1A160C; --warn:#E0A85C; --danger:#E07A6A; --info:#7AA0A8; --badge-grey-bg:rgba(255,255,255,.12); --badge-grey-fg:#F0E8D8; --badge-warn-bg:rgba(224,168,92,.24); --badge-warn-fg:#F0C888; --badge-danger-bg:rgba(224,122,106,.26); --badge-danger-fg:#F0A090; --badge-info-bg:rgba(122,160,168,.24); --badge-info-fg:#A8C8D0; --badge-cream-bg:rgba(232,212,160,.22); --badge-cream-fg:#F0E0B0; --badge-purple-bg:rgba(176,160,232,.24); --badge-purple-fg:#C8B8F0; }
 
 *,*::before,*::after{ box-sizing:border-box; }
 html{ zoom: var(--font-scale, 1); overflow-x:hidden; height: var(--app-dvh); }
@@ -233,7 +262,7 @@ a{ color:var(--olive-deep); text-decoration:none; }
 @media (hover:none){
   .tap:hover{ background-color:initial; }
   .pill:hover{ background:var(--card); border-color:var(--line-2); color:var(--brown-2); }
-  .pill.on:hover{ background:var(--olive-16); border-color:var(--olive-soft); color:var(--olive-darker); }
+  .pill.on:hover{ background:var(--olive); border-color:var(--olive); color:var(--on); }
   .link-btn:hover{ color:var(--brown-3); background:none; }
   .link-btn.del:hover{ color:var(--danger); background:none; }
 }
@@ -259,7 +288,7 @@ a{ color:var(--olive-deep); text-decoration:none; }
 .brand{ display:flex; align-items:center; gap:11px; padding:4px 10px 14px; }
 .brand-mark{
   width:34px; height:34px; flex:0 0 34px; border-radius:11px;
-  background:var(--olive); color:var(--cream);
+  background:var(--olive); color:var(--on);
   display:grid; place-items:center; font-size:18px;
   box-shadow:0 4px 12px var(--olive-24);
 }
@@ -281,8 +310,8 @@ a{ color:var(--olive-deep); text-decoration:none; }
 .nav-item .nt{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .nav-item:hover{ background:var(--olive-10); color:var(--brown); }
 .nav-item:active{ background:var(--olive-16); }
-.nav-item.on{ background:var(--olive); color:#fff; font-weight:600; box-shadow:0 3px 10px var(--olive-24); }
-.nav-item.on:hover{ background:var(--olive-deep); color:#fff; }
+.nav-item.on{ background:var(--olive); color:var(--on); font-weight:600; box-shadow:0 3px 10px var(--olive-24); }
+.nav-item.on:hover{ background:var(--olive-deep); color:var(--on); }
 .nav-item.on .ni{ filter:none; }
 .nav-foot{ font-size:11.5px; color:var(--brown-4); padding:12px 12px 0; border-top:1px solid var(--line); }
 
@@ -461,9 +490,9 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .muted{ color:var(--brown-3); }
 .small{ font-size:12.5px; }
 .big-num{ font-size:26px; font-weight:700; letter-spacing:.5px; line-height:1.2; }
-.big-num.future{ color:#331915; }
-.big-num.soon{ color:#6E8A28; }
-.big-num.past{ color:#B4553F; font-size:13px; line-height:1.35; }
+.big-num.future{ color:var(--brown); }
+.big-num.soon{ color:var(--olive-deep); }
+.big-num.past{ color:var(--danger); font-size:13px; line-height:1.35; }
 .hr{ height:1px; background:var(--line); margin:4px 0; border:0; }
 
 /* 按钮 */
@@ -475,8 +504,8 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 }
 .btn:hover{ background:var(--olive-10); border-color:var(--olive-24); color:var(--brown); }
 .btn:active{ background:var(--olive-16); }
-.btn.primary{ background:var(--olive); border-color:var(--olive); color:#fff; box-shadow:0 3px 10px var(--olive-24); }
-.btn.primary:hover{ background:var(--olive-deep); border-color:var(--olive-deep); color:#fff; }
+.btn.primary{ background:var(--olive); border-color:var(--olive); color:var(--on); box-shadow:0 3px 10px var(--olive-24); }
+.btn.primary:hover{ background:var(--olive-deep); border-color:var(--olive-deep); color:var(--on); }
 .btn.ghost{ background:transparent; border-color:var(--line); color:var(--brown-2); }
 .btn.ghost:hover{ color:var(--brown); background:var(--olive-10); }
 .btn.danger{ color:var(--danger); border-color:rgba(180,85,63,.28); }
@@ -509,8 +538,8 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 }
 .tab:hover{ background:var(--olive-10); color:var(--brown); }
 .tab:active{ background:var(--olive-16); }
-.tab.on{ background:var(--olive); color:#fff; box-shadow:0 2px 8px var(--olive-24); }
-.tab.on:hover{ background:var(--olive-deep); color:#fff; }
+.tab.on{ background:var(--olive); color:var(--on); box-shadow:0 2px 8px var(--olive-24); }
+.tab.on:hover{ background:var(--olive-deep); color:var(--on); }
 
 /* 模块四宫格快捷入口（财务记账等）
    全场景 4 列：窄屏同样一行 4 个，自动收缩图标/字号而不切换为 2 列，
@@ -600,7 +629,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .exam-count-num.warn{ background:rgba(234,179,8,.16); color:var(--warn); box-shadow:0 4px 14px rgba(234,179,8,.22); }
 .exam-count-num.urgent{ background:rgba(220,38,38,.12); color:var(--danger); box-shadow:0 4px 16px rgba(220,38,38,.30); border:1px solid rgba(220,38,38,.35); }
 .exam-count-num.ended{ background:var(--line); color:#9A8A85; box-shadow:none; }
-.exam-count-num.today{ background:var(--olive-soft); color:#fff; box-shadow:0 4px 16px rgba(138,168,50,.40); }
+.exam-count-num.today{ background:var(--olive); color:var(--on); box-shadow:0 4px 16px var(--olive-24); }
 .pill{
   padding:5px 11px; min-height:30px; display:inline-flex; align-items:center; gap:6px;
   border-radius:18px; border:1px solid var(--line-2); background:var(--card);
@@ -608,8 +637,8 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 }
 .pill:hover{ background:var(--olive-10); border-color:var(--olive-24); color:var(--brown); }
 .pill:active{ background:var(--olive-16); }
-.pill.on{ background:var(--olive-16); border-color:var(--olive-soft); color:var(--olive-darker); font-weight:600; }
-.pill.on:hover{ background:var(--olive-24); color:var(--olive-darker); }
+.pill.on{ background:var(--olive); border-color:var(--olive); color:var(--on); font-weight:600; box-shadow:0 2px 8px var(--olive-24); }
+.pill.on:hover{ background:var(--olive-deep); border-color:var(--olive-deep); color:var(--on); }
 
 /* 分类管理：一级分类胶囊（点开管理二级分类） */
 .cat-cap{
@@ -624,7 +653,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .cat-cap.open{ background:var(--olive-10); border-color:var(--olive-24); border-radius:14px 14px 4px 4px; }
 .cat-cap-ic{ font-size:16px; line-height:1; }
 .cat-cap-name{ flex:1; font-weight:600; }
-.cat-cap-count{ font-size:11px; color:#fff; background:var(--olive); border-radius:10px; padding:1px 7px; min-width:18px; text-align:center; }
+.cat-cap-count{ font-size:11px; color:var(--on); background:var(--olive); border-radius:10px; padding:1px 7px; min-width:18px; text-align:center; }
 .cat-cap-caret{ font-size:11px; color:var(--brown-3); }
 .cat-detail{
   padding:10px 12px 12px; margin:-4px 0 6px;
@@ -646,29 +675,19 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
   display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:20px;
   font-size:12px; background:var(--olive-10); color:var(--olive-darker); white-space:nowrap;
 }
-.badge.grey{ background:#DCD0C4; color:#3F332A; }
-.badge.warn{ background:#F5D6A3; color:#6B3D08; }
-.badge.danger{ background:#E8B5A8; color:#6E2010; }
-.badge.info{ background:rgba(50,130,180,.30); color:#114A75; }
-.badge.cream{ background:#EBD9A4; color:#6B4A0E; }
-.badge.purple{ background:rgba(140,99,168,.32); color:#4A2A6A; }
-/* 「🆕 最新」专用：橄榄绿高亮，与一般灰色已用完明显区分 */
-.badge.fresh{ background:var(--olive-soft); color:#3F5410; font-weight:600; border:1px solid var(--olive); }
+.badge.grey{ background:var(--badge-grey-bg); color:var(--badge-grey-fg); }
+.badge.warn{ background:var(--badge-warn-bg); color:var(--badge-warn-fg); }
+.badge.danger{ background:var(--badge-danger-bg); color:var(--badge-danger-fg); }
+.badge.info{ background:var(--badge-info-bg); color:var(--badge-info-fg); }
+.badge.cream{ background:var(--badge-cream-bg); color:var(--badge-cream-fg); }
+.badge.purple{ background:var(--badge-purple-bg); color:var(--badge-purple-fg); }
+/* 「🆕 最新」专用：主色高亮，与一般灰色已用完明显区分 */
+.badge.fresh{ background:var(--olive); color:var(--on); font-weight:600; border:1px solid var(--olive-deep); }
 /* 分类色修饰类（筛选药丸/chip 用）：深浅主题各自适配 */
-.cc-purple{ color:#7A4FA0; }
-.cc-info{ color:#4C6675; }
-.cc-cream{ color:#7A5A1E; }
-.cc-olive{ color:#6E8A28; }
-:root[data-theme="dark"] .cc-purple{ color:#C9A3E8; }
-:root[data-theme="dark"] .cc-info{ color:#9FBED0; }
-:root[data-theme="dark"] .cc-cream{ color:#D9C08F; }
-:root[data-theme="dark"] .cc-olive{ color:#B8CC6E; }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]) .cc-purple{ color:#C9A3E8; }
-  :root:not([data-theme="light"]) .cc-info{ color:#9FBED0; }
-  :root:not([data-theme="light"]) .cc-cream{ color:#D9C08F; }
-  :root:not([data-theme="light"]) .cc-olive{ color:#B8CC6E; }
-}
+.cc-purple{ color:var(--badge-purple-fg); }
+.cc-info{ color:var(--badge-info-fg); }
+.cc-cream{ color:var(--badge-cream-fg); }
+.cc-olive{ color:var(--olive-deep); }
 
 /* 表单：左标签 + 右内容（无边框账单详情风格，字号统一） */
 .form-grid{ display:flex; flex-direction:column; gap:0; }
@@ -734,7 +753,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .pop-picker-head h4{ font-size:13px; font-weight:650; color:var(--brown-2); margin:0; }
 .pop-picker-body{ display:flex; flex-direction:column; gap:1px; padding:2px 5px 7px; }
 .pop-picker-item{ display:block; width:100%; padding:7px 14px; border:none; border-radius:10px; background:transparent; font-size:14.5px; color:var(--brown); cursor:pointer; white-space:nowrap; text-align:center; }
-.pop-picker-item.selected{ background:var(--olive); color:#fff; font-weight:600; }
+.pop-picker-item.selected{ background:var(--olive); color:var(--on); font-weight:600; }
 .pop-picker-item:hover, .pop-picker-item:focus{ background:var(--olive-10); outline:none; }
 
 /* 记账分类选择弹窗：滚动列表 + 弹窗内新增 */
@@ -783,7 +802,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
   width:24px; height:24px; flex:0 0 24px; border-radius:8px;
   border:1.8px solid var(--line-2); background:var(--card);
 }
-.check svg{ width:15px; height:15px; opacity:0; transform:scale(.5); transition:all .2s var(--ease); color:#fff; }
+.check svg{ width:15px; height:15px; opacity:0; transform:scale(.5); transition:all .2s var(--ease); color:var(--on); }
 .check:hover{ border-color:var(--olive-soft); background:var(--olive-10); }
 .check:active{ transform:scale(.9); }
 .check.on{ background:var(--olive); border-color:var(--olive); }
@@ -1537,7 +1556,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .tf-cal-title{ font-size:14px; font-weight:600; color:var(--brown); }
 .tf-cal-head .chip{ min-width:36px; min-height:34px; font-size:18px; padding:0; line-height:1; }
 .cal-cell.in-range{ background:var(--olive-10); border-color:var(--olive-10); color:var(--olive-deep); border-radius:0; }
-.cal-cell.range-start, .cal-cell.range-end{ background:var(--olive); border-color:var(--olive); color:#fff; font-weight:700; }
+.cal-cell.range-start, .cal-cell.range-end{ background:var(--olive); border-color:var(--olive); color:var(--on); font-weight:700; }
 .cal-cell.range-start{ border-radius:10px 0 0 10px; }
 .cal-cell.range-end{ border-radius:0 10px 10px 0; }
 .cal-cell.range-start.today, .cal-cell.range-end.today{ box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.85); }
@@ -1760,7 +1779,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   background:var(--card); font-size:13.5px; color:var(--brown-2);
 }
 .chip .chip-e{ font-size:16px; line-height:1; }
-.chip.on{ background:var(--olive); border-color:var(--olive); color:#fff; box-shadow:var(--shadow); }
+.chip.on{ background:var(--olive); border-color:var(--olive); color:var(--on); box-shadow:var(--shadow); }
 .chip.on.danger{ background:var(--danger); border-color:var(--danger); }
 .chip.tap:hover{ border-color:var(--olive-soft); }
 .tag-chip{
@@ -1846,7 +1865,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .chk-cal .cal-cell{ flex-direction:column; gap:2px; padding:2px; }
 .chk-cal .cal-num{ font-size:15px; line-height:1; }
 .chk-cal .cal-count{ font-size:10px; font-weight:700; line-height:1.2; color:var(--olive-deep); background:var(--olive-10); border-radius:8px; padding:1px 5px; }
-.chk-cal .cal-cell.has .cal-count{ color:#fff; background:var(--olive); }
+.chk-cal .cal-cell.has .cal-count{ color:var(--on); background:var(--olive); }
 .chk-cal .cal-cell.on{ border-color:var(--olive-deep); box-shadow:inset 0 0 0 2px var(--olive-deep); }
 /* 打卡详情日历：已打卡(has) / 未打卡(miss) / 不在周期(out) / 提前结束剩余中断(broken) */
 .cal-cell.miss{ background:#FBEDEC; border-color:#F0C9C2; color:#C0552F; }
@@ -1888,13 +1907,13 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .tone-chip.on{ border-color:var(--olive-24); color:var(--olive-deep); background:var(--olive-05); font-weight:650; }
 /* 品牌设置弹层（点击侧边栏品牌区打开） */
 .bs-preview{ display:flex; align-items:center; gap:12px; background:var(--cream-soft); border:1px solid var(--line); border-radius:14px; padding:14px; margin-bottom:14px; }
-.bs-mark{ width:46px; height:46px; border-radius:14px; background:var(--olive); color:#fff; font-size:20px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .2s var(--ease); }
+.bs-mark{ width:46px; height:46px; border-radius:14px; background:var(--olive); color:var(--on); font-size:20px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .2s var(--ease); }
 .bs-name{ font-weight:700; font-size:15px; color:var(--brown); }
 .bs-tag{ font-size:12px; color:var(--brown-3); margin-top:2px; }
 .bs-field{ margin-bottom:10px; }
 .bs-field label{ display:block; font-size:12px; color:var(--brown-3); margin-bottom:4px; }
 .bs-field input{ width:100%; box-sizing:border-box; border:1px solid var(--line-2); border-radius:10px; padding:8px 10px; font-size:13.5px; background:var(--card); color:var(--brown); }
-.bs-tones{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.bs-tones{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
 .bs-tone{ display:flex; flex-direction:column; align-items:center; gap:6px; border:1px solid var(--line); background:var(--card); border-radius:12px; padding:10px 4px; font-size:11.5px; color:var(--brown-2); }
 .bs-tone i{ width:20px; height:20px; border-radius:50%; box-shadow:inset 0 0 0 1px rgba(0,0,0,.08); }
 .bs-tone.on{ border-color:var(--olive-24); background:var(--olive-05); font-weight:650; }
@@ -1971,8 +1990,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 /* 分组统计面板 */
 .ov-sec{ margin-bottom:16px; }
 .ov-sec:last-child{ margin-bottom:0; }
-.ov-sec-h{ display:flex; align-items:center; gap:7px; font-size:13px; font-weight:600; color:var(--brown-2); margin:0 2px 8px; letter-spacing:.3px; }
-.ov-sec-h::before{ content:''; width:3px; height:13px; border-radius:2px; background:var(--olive); display:inline-block; flex-shrink:0; }
+.ov-sec-h{ display:flex; align-items:center; gap:7px; font-size:14px; font-weight:650; color:var(--brown); margin:0 2px 8px; letter-spacing:.3px; }
+.ov-sec-h::before{ content:''; width:3px; height:15px; border-radius:2px; background:linear-gradient(180deg,var(--olive-soft),var(--olive)); display:inline-block; flex-shrink:0; box-shadow:0 1px 2px var(--olive-24); }
 
 /* 首页总览：统计面板（单块、按设置逐条过滤，无拖动/分组 widget） */
 
@@ -1993,7 +2012,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .scr-size-seg{ display:inline-flex; gap:3px; flex:0 0 auto; }
 .scr-size-seg button{ padding:3px 7px; min-width:28px; border:1px solid var(--line); background:var(--card); border-radius:6px; font-size:11px; color:var(--brown-2); cursor:pointer; transition:all .12s; }
 .scr-size-seg button:hover{ background:var(--cream-soft, #F6F2E9); }
-.scr-size-seg button.on{ background:var(--olive, #5C7A12); color:#fff; border-color:var(--olive, #5C7A12); }
+.scr-size-seg button.on{ background:var(--olive); color:var(--on); border-color:var(--olive); }
 /* 设置：统计面板整体字号滑块 */
 .stat-cfg-top{ display:flex; align-items:center; gap:10px; margin-bottom:14px; padding:10px 12px; background:var(--cream-soft, #F6F2E9); border-radius:10px; }
 .stat-cfg-top .small{ flex:0 0 auto; }
@@ -2008,9 +2027,9 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .hs-strip{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-top:8px; }
 .hs-lg{ font-size:12px; color:#9A8A85; display:inline-flex; align-items:center; gap:4px; margin-right:4px; }
 .hs-dot{ width:10px; height:10px; border-radius:3px; background:#E4DCD4; display:inline-block; }
-.hs-dot.on{ background:var(--olive, #5C7A12); }
+.hs-dot.on{ background:var(--olive); }
 .hs-cell{ width:22px; height:22px; border-radius:5px; background:#F1ECE4; color:#9A8A85; font-size:11px; display:flex; align-items:center; justify-content:center; }
-.hs-cell.on{ background:var(--olive, #5C7A12); color:#fff; }
+.hs-cell.on{ background:var(--olive); color:var(--on); }
 
 /* ============ 通用历史记录弹窗（Hist） ============ */
 .hist-search{ margin-bottom:2px; }
@@ -2534,7 +2553,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .edu-check{ width:22px; height:22px; border:2px solid var(--olive-soft);
   border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center;
   font-size:12px; margin-top:1px; cursor:pointer; transition:all .15s; }
-.edu-check.on{ background:var(--olive); border-color:var(--olive); color:#fff; }
+.edu-check.on{ background:var(--olive); border-color:var(--olive); color:var(--on); }
 .edu-body{ flex:1; min-width:0; }
 .edu-title{ font-size:14.5px; font-weight:600; color:var(--brown); margin-bottom:2px; }
 .edu-meta{ font-size:12px; color:var(--brown-3); }
@@ -2555,7 +2574,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .growth-tab{ padding:6px 16px; border:1px solid var(--line); border-radius:999px;
   font-size:13px; font-weight:550; cursor:pointer; background:var(--card);
   transition:all .15s; }
-.growth-tab.on{ background:var(--olive); color:#fff; border-color:var(--olive); }
+.growth-tab.on{ background:var(--olive); color:var(--on); border-color:var(--olive); }
 
 /* 过敏标签 */
 .allergy-sev{ font-size:11px; font-weight:600; padding:1px 6px; border-radius:4px; }
@@ -2847,10 +2866,10 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     cursor:pointer; transition:background .12s, border-color .15s, color .12s;
     white-space:nowrap;
   }
-  .jw-action-btn:hover{ border-color:var(--olive); background:var(--olive-10); color:var(--olive-darker); }
-  .jw-action-btn:active{ background:var(--olive-16); }
-  .jw-action-btn.primary{ border-color:var(--olive); background:var(--olive-10); color:var(--olive-deep); }
-  .jw-action-btn.primary:hover{ background:var(--olive-16); }
+  .jw-action-btn:hover{ border-color:var(--olive); background:#E4EDF9; color:var(--olive-darker); }
+  .jw-action-btn:active{ background:#D9E5F7; }
+  .jw-action-btn.primary{ border-color:var(--olive); background:#EEF3FC; color:var(--olive-deep); }
+  .jw-action-btn.primary:hover{ background:#E4EDF9; }
   .jw-action-btn svg{ flex:0 0 auto; }
   .jw-action-btn span{ min-width:0; overflow:hidden; text-overflow:ellipsis; }
 
@@ -2923,11 +2942,11 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 
   /* ---------- 全局体检补丁：深色模式漏覆盖的状态色 / 徽章色 ---------- */
   /* 彩色徽章：浅色下文字为深色调，深色下需提亮文字才能看清 */
-  :root[data-theme="dark"] .badge.warn{ background:rgba(217,147,80,.18); color:#E8A968; }
-  :root[data-theme="dark"] .badge.danger{ background:rgba(217,112,90,.20); color:#F0937C; }
-  :root[data-theme="dark"] .badge.info{ background:rgba(137,167,184,.18); color:#9FBED0; }
-  :root[data-theme="dark"] .badge.cream{ background:rgba(255,255,255,.10); color:#D9C08F; }
-  :root[data-theme="dark"] .badge.purple{ background:rgba(140,99,168,.24); color:#C9A3E8; }
+  :root[data-theme="dark"] .badge.warn{ background:var(--badge-warn-bg); color:var(--badge-warn-fg); }
+  :root[data-theme="dark"] .badge.danger{ background:var(--badge-danger-bg); color:var(--badge-danger-fg); }
+  :root[data-theme="dark"] .badge.info{ background:var(--badge-info-bg); color:var(--badge-info-fg); }
+  :root[data-theme="dark"] .badge.cream{ background:var(--badge-cream-bg); color:var(--badge-cream-fg); }
+  :root[data-theme="dark"] .badge.purple{ background:var(--badge-purple-bg); color:var(--badge-purple-fg); }
   /* 宝宝模块：疫苗状态条 / 状态徽章 / 过敏等级（浅色实底 → 深色半透明底） */
   :root[data-theme="dark"] .vax-pending{ border-left-color:#F59E0B; background:rgba(245,158,11,.12); }
   :root[data-theme="dark"] .vax-done{ border-left-color:var(--olive); background:var(--olive-10); }
@@ -2943,11 +2962,11 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   :root[data-theme="dark"] .jw-tl-dot.todo{ background:var(--card); }
   /* —— auto 模式（跟随系统深色）同样处理 —— */
   @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]) .badge.warn{ background:rgba(217,147,80,.18); color:#E8A968; }
-    :root:not([data-theme="light"]) .badge.danger{ background:rgba(217,112,90,.20); color:#F0937C; }
-    :root:not([data-theme="light"]) .badge.info{ background:rgba(137,167,184,.18); color:#9FBED0; }
-    :root:not([data-theme="light"]) .badge.cream{ background:rgba(255,255,255,.10); color:#D9C08F; }
-    :root:not([data-theme="light"]) .badge.purple{ background:rgba(140,99,168,.24); color:#C9A3E8; }
+    :root:not([data-theme="light"]) .badge.warn{ background:var(--badge-warn-bg); color:var(--badge-warn-fg); }
+    :root:not([data-theme="light"]) .badge.danger{ background:var(--badge-danger-bg); color:var(--badge-danger-fg); }
+    :root:not([data-theme="light"]) .badge.info{ background:var(--badge-info-bg); color:var(--badge-info-fg); }
+    :root:not([data-theme="light"]) .badge.cream{ background:var(--badge-cream-bg); color:var(--badge-cream-fg); }
+    :root:not([data-theme="light"]) .badge.purple{ background:var(--badge-purple-bg); color:var(--badge-purple-fg); }
     :root:not([data-theme="light"]) .vax-pending{ border-left-color:#F59E0B; background:rgba(245,158,11,.12); }
     :root:not([data-theme="light"]) .vax-done{ border-left-color:var(--olive); background:var(--olive-10); }
     :root:not([data-theme="light"]) .vax-overdue{ border-left-color:#E5484D; background:rgba(217,52,38,.16); }
@@ -2961,6 +2980,998 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     :root:not([data-theme="light"]) .jw-tl-dot.todo{ background:var(--card); }
   }
 </style>
+<!-- ============ 治愈系 · 单一样式覆盖 v2 ============
+     主题：燕麦灰蓝底(#6E8494) + 长春花蓝强调(#7FA0E4) + 圆点纹理
+     增强：① 首页问候语头 ② 卡片标题小竖条 ③ 品牌标换叶子
+     仅追加样式与脚本，不改动任何原有结构；
+     删除 <style id="healing-reskin"> 与 <script id="healing-reskin-js"> 即可还原。 -->
+<style id="healing-reskin">
+:root{
+  /* 燕麦灰蓝中性面 + 长春花蓝（periwinkle）主色，单一治愈风格 */
+  --bg:#6E8494 !important;
+  --card:#FFFFFF !important;
+  --cream:#DDE4E9 !important;
+  --cream-soft:#EEF2F5 !important;
+  --brown:#1F2A35 !important;
+  --brown-2:#4A5868 !important;
+  --brown-3:#7E8C9A !important;
+  --brown-4:#B4BCC4 !important;
+  --line:rgba(31,42,53,.10) !important;
+  --line-2:rgba(31,42,53,.18) !important;
+  --olive:#7FA0E4 !important;
+  --olive-soft:#A6BEEA !important;
+  --olive-deep:#5E84CC !important;
+  --olive-darker:#466BB0 !important;
+  --olive-05:rgba(127,160,228,.05) !important;
+  --olive-10:rgba(127,160,228,.10) !important;
+  --olive-16:rgba(127,160,228,.16) !important;
+  --olive-24:rgba(127,160,228,.26) !important;
+  --olive-open:rgba(127,160,228,.18) !important;
+  --on:#FFFFFF !important;
+  --warn:#D4A24A !important;
+  --danger:#D8786A !important;
+  --info:#7FA0E4 !important;
+  --r-s:14px !important;
+  --r:20px !important;
+  --r-l:28px !important;
+  --shadow:0 1px 2px rgba(31,42,53,.06), 0 10px 30px rgba(127,160,228,.12) !important;
+  --shadow-up:0 -10px 34px rgba(31,42,53,.08) !important;
+}
+
+/* 圆角软化 */
+.card{ border-radius:var(--r-l); }
+.qcard{ border-radius:16px; }
+/* 选中态 qcard：用不透明实底，避免半透明(var(--olive-05))透出波点背景导致发灰蒙糊 */
+.qcard.on{ background:#EAF0FB !important; box-shadow:0 3px 10px var(--olive-24) !important; }
+.qcard.on .qt{ color:var(--olive-deep) !important; }
+.qcard:hover, .qcard:active{ background:#EEF3FC !important; }
+/* 统计小卡片：accent 高亮态(半透明淡蓝透出底图发糊→标签看不清)。改不透明实底 + 整体加深标签字色 */
+.stat{ background:#EEF2F5 !important; }
+.stat .k{ color:var(--brown-2) !important; font-weight:600; }
+.stat.accent{ background:#E9EFFB !important; border-color:var(--olive-24) !important; }
+.stat.accent .v{ color:var(--olive-darker) !important; }
+.tf-row{ border-radius:14px; }
+.tabs{ border-radius:999px; padding:4px; }
+.tab{ border-radius:999px; }
+.pill{ border-radius:999px; }
+.nav-item{ border-radius:12px; }
+.icon-btn{ border-radius:12px; }
+
+/* ==================== 纪检监察·案件详情卡配色层级优化 ====================
+   问题：展开态卡片半透明淡蓝(--olive-open)透出波点背景；「办理中」badge 用半透明
+   --olive-10 近乎隐形；信息表格 label 11px/92px 太弱太挤；阶段流程条半透明蓝 +
+   节点字过小，整块配色发花、层级不清。
+   优化思路：展开态用不透明柔和浅蓝实底，badge 默认态改实色，信息表格改
+   「值主色+label次强调色」的清晰分组，阶段条节点明确状态。 */
+/* 整卡展开态：不透明柔蓝实底，去波点干扰 */
+.item.open{ background:#EFF4FC !important; border-color:#D6E2F5 !important; }
+/* hover 态去透明化：原 .item:hover 用 var(--olive-05)(rgba(127,160,228,.05) 半透明)，
+   叠磨砂蓝灰底(#6E8494)+波点透出 → 整条卡片 hover 时发灰发糊(如日程'全部'视图"办公室值班"卡)。
+   改成与 .item.open 同款不透明浅蓝实底 + 深色描边，保留 hover 反馈但不透底糊。 */
+.item:hover{ background:#EEF3FC !important; border-color:#CBD9F0 !important; }
+.item:active{ background:#E4EDF9 !important; }
+/* 高亮行(.item.hl，搜索/选中命中)同理：原 var(--olive-05) 半透明透底发糊，改不透明实底。 */
+.item.hl{ background:#E4EDF9 !important; border-color:var(--olive-soft) !important; }
+/* 「办理中」等默认 badge：不透明浅蓝实底 + 深蓝字（可读清晰，与背景分离） */
+.badge{ background:#E3ECF9 !important; color:#3A6BBF !important; }
+.badge.warn{ background:#FBF0DC !important; color:#9A6B1E !important; }
+.badge.danger{ background:#FBE4E0 !important; color:#A23E32 !important; }
+.badge.grey{ background:#E4E9EE !important; color:#586878 !important; }
+.badge.info{ background:#E2ECF8 !important; color:#2B6CA8 !important; }
+.badge.cream{ background:#F3EAD3 !important; color:#7A5C18 !important; }
+.badge.purple{ background:#ECE7F7 !important; color:#4A3A8A !important; }
+/* 案件标题：层级主次分明 */
+.jw-case-head{ margin-bottom:4px; }
+.jw-case-title{ font-size:15.5px !important; font-weight:650 !important; line-height:1.35 !important; color:var(--brown) !important; }
+.jw-case-meta{ margin-top:5px !important; gap:6px !important; }
+/* 信息表格：label 用次强调色 + 加大，值用主色，浅实线分隔更清晰 */
+.jw-info-grid{ background:#F3F7FD !important; border:1px solid #DCE6F4 !important; border-radius:12px !important; padding:4px 12px !important; margin-top:10px !important; }
+.jw-info-cell{ padding:8px 0 !important; border-bottom:1px solid #E7EEF7 !important; }
+.jw-info-k{ flex:0 0 88px !important; font-size:12.5px !important; color:var(--brown-2) !important; font-weight:550 !important; }
+.jw-info-v{ font-size:13px !important; color:var(--brown) !important; font-weight:500 !important; line-height:1.5 !important; }
+/* 阶段流程条：与问题信息/待办/已办统一为同款柔蓝底 #F3F7FD */
+.jw-stage-bar{ background:#F3F7FD !important; border:1px solid #DCE6F4 !important; border-radius:12px !important; padding:12px !important; margin:10px 0 2px !important; }
+/* 办理进度两块（待办/已办）各自独立成框：与阶段条同款柔蓝圆角框，把两块清楚区分开 */
+.jw-section-box{ background:#F3F7FD !important; border:1px solid #DCE6F4 !important; border-radius:12px !important; padding:10px 12px 12px !important; margin:10px 0 2px !important; }
+.jw-section-box + .jw-section-box{ margin-top:12px !important; }
+.jw-section-box .jw-tl-group{ margin-top:0 !important; padding-left:0 !important; }
+.jw-stage-dot{ background:#fff !important; border:2px solid #CBD8EA !important; color:var(--brown-3) !important; }
+.jw-stage-dot.done, .jw-stage-dot.active{ background:linear-gradient(135deg,var(--olive-soft),var(--olive)) !important; border-color:transparent !important; color:#fff !important; box-shadow:0 3px 8px var(--olive-24); }
+.jw-stage-name{ font-size:11px !important; color:var(--brown-2) !important; font-weight:550 !important; }
+.jw-stage-date{ font-size:10px !important; color:var(--brown-3) !important; }
+.jw-stage-sep{ background:#CBD8EA !important; }
+.jw-stage-sep.done{ background:var(--olive) !important; }
+
+/* 办理进度时间轴：待办/已办卡片底色统一（都坐落在柔蓝整卡 #EFF4FC 上）。
+   原已办卡片 .jw-tl-card 是纯白 #fff，与待办 .jw-tl-main(淡蓝) 和整卡底不协调，
+   统一成同款柔蓝实底 + 淡色描边，层次一致。 */
+.jw-tl-main, .jw-tl-todo .jw-tl-main{ background:#F3F7FD !important; border-color:#DCE6F4 !important; }
+.jw-tl-card{ background:#F3F7FD !important; border:1px solid #DCE6F4 !important; border-radius:8px !important; }
+.jw-tl-card:hover{ border-color:var(--olive) !important; background:#E9F0FA !important; }
+.jw-sort-btn{ background:#fff !important; border-color:#DCE3EC !important; color:var(--brown-2) !important; }
+.jw-sort-btn:hover{ border-color:var(--olive) !important; color:var(--olive-darker) !important; background:#E9EFFA !important; }
+.jw-tl-date-hd{ margin-top:4px; }
+.jw-tl-date-text{ font-size:14px !important; font-weight:650 !important; }
+.jw-tl-group{ font-size:12.5px !important; font-weight:650 !important; color:var(--brown-2) !important; }
+
+/* ==================== 日程时间轴"全天"标签强化 ====================
+   原 .tl-time 用 var(--brown-3) 浅灰 11px 小字，时间数字（如 09:30）合理但"全天"
+   是日程属性标签而非数字，浅灰看不清。改为浅蓝实底胶囊 + 深字，跟随 pill/badge 设计
+   语言，与时间数字的视觉权重明确区分。 */
+.tl-time-all{
+  background:linear-gradient(135deg,var(--olive-soft),var(--olive)) !important;
+  color:#fff !important;
+  font-size:10.5px !important;
+  font-weight:600 !important;
+  padding:3px 7px !important;
+  border-radius:999px !important;
+  line-height:1 !important;
+  letter-spacing:.3px !important;
+  box-shadow:0 2px 6px var(--olive-24) !important;
+  margin-bottom:3px !important;
+}
+
+
+/* 顶部栏：燕麦蓝灰磨砂 + 白字 */
+.topbar{
+  background:rgba(110,132,148,.65) !important;
+  backdrop-filter:saturate(1.4) blur(16px);
+  border-bottom:1px solid rgba(255,255,255,.14);
+  color:#FFFFFF;
+}
+.topbar h1{ color:#FFFFFF; }
+.topbar .icon-btn{ background:rgba(255,255,255,.16); border-color:rgba(255,255,255,.22); color:#fff; }
+.topbar .icon-btn:hover{ background:rgba(255,255,255,.26); border-color:rgba(255,255,255,.34); }
+.topbar .save-flag{ color:#fff; background:rgba(255,255,255,.18); }
+.topbar .save-flag.show{ opacity:1; }
+
+/* 顶部标题(h1.title-home) hover 撞色修复：
+   原 .title-home:hover{ color:var(--olive-deep) } 让白色标题 hover 时变长春花蓝 #5E84CC，
+   叠在磨砂蓝灰 topbar(rgba(110,132,148,.65)) 上蓝字+蓝灰底撞色看不清。
+   改为白字 + 轻微发光/下划线的清晰反馈，不再撞色。 */
+.topbar h1.title-home:hover{ color:#FFFFFF !important; text-shadow:0 0 10px rgba(255,255,255,.55) !important; }
+.topbar h1.title-home:active{ opacity:.8; }
+
+/* 侧栏：淡蓝灰 */
+.sidebar{
+  background:rgba(238,242,245,.92) !important;
+  backdrop-filter:saturate(1.2) blur(12px);
+  border-right:1px solid var(--line);
+}
+
+/* 品牌标：长春花蓝渐变。有自定义头像 → 显示头像文字；无头像 → 显示白色叶子图标 */
+.brand-mark{
+  background:linear-gradient(135deg,var(--olive-soft),var(--olive)) !important;
+  border-radius:13px;
+  box-shadow:0 6px 16px var(--olive-24);
+  position:relative;
+  display:grid; place-items:center;
+  font-size:18px !important;
+  color:#FFFFFF !important;
+  line-height:1;
+}
+/* 无自定义头像：隐藏文字（原 ◍），仅显示叶子图标 */
+.brand-mark:not(.has-avatar){ font-size:0 !important; }
+.brand-mark:not(.has-avatar)::before{
+  content:"";
+  display:block;
+  width:20px; height:20px;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='white' d='M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z'/></svg>") center/contain no-repeat;
+}
+/* 有自定义头像：隐藏叶子，正常显示 emoji/汉字 */
+.brand-mark.has-avatar::before{ display:none; }
+
+/* 卡片标题：左侧长春花蓝小竖条 */
+.card-head h3{ position:relative; padding-left:12px; }
+.card-head h3::before{
+  content:"";
+  position:absolute; left:2px; top:50%;
+  transform:translateY(-50%);
+  width:3px; height:16px;
+  background:linear-gradient(180deg,var(--olive-soft),var(--olive));
+  border-radius:2px;
+}
+
+/* 主色控件：长春花蓝渐变胶囊 */
+.btn{ border-radius:14px; }
+.btn.primary{
+  background:linear-gradient(135deg,var(--olive-soft),var(--olive)) !important;
+  border-color:transparent !important;
+  box-shadow:0 6px 16px var(--olive-24);
+  border-radius:999px;
+  color:#fff !important;
+}
+.btn.primary:hover{ background:linear-gradient(135deg,var(--olive),var(--olive-deep)) !important; border-color:transparent !important; }
+.nav-item.on{ background:linear-gradient(135deg,var(--olive-soft),var(--olive)) !important; color:#fff !important; box-shadow:0 6px 16px var(--olive-24); }
+.nav-item.on:hover{ background:linear-gradient(135deg,var(--olive),var(--olive-deep)) !important; }
+.tab.on{ background:linear-gradient(135deg,var(--olive-soft),var(--olive)) !important; color:#fff !important; box-shadow:0 5px 14px var(--olive-24); }
+.pill.on{ background:linear-gradient(135deg,var(--olive-soft),var(--olive)) !important; color:#fff !important; box-shadow:0 5px 14px var(--olive-24); }
+
+/* ==================== 分类/筛选区配色层次优化 ====================
+   问题：筛选 pill（全部/政治/英语…）+ 「科目管理/内容管理/xx管理」等
+   .btn.ghost.sm（Cats.btn 全站共用）是纯透明 + 灰边框，在蓝灰波点背景上
+   显得最弱最灰、没层次，跟上方 tab 渐变胶囊对比显得苍白。
+   优化思路：pill 未选中改浅蓝柔底+蓝字（与选中态呼应成梯度），
+   ghost 管理按钮改成跟随主题的浅蓝实底胶囊，整块筛选区层次分明。 */
+/* 未选中 pill：浅蓝柔底 + 蓝字，与选中渐变形成"从浅到深"的层级 */
+.pill{ background:#EAF0FC !important; border-color:#D3DDF0 !important; color:var(--brown-2) !important; font-weight:500 !important; }
+.pill:hover{ background:#DFE9FA !important; border-color:#C3D1EE !important; color:var(--brown) !important; }
+/* ghost（次级/管理）按钮：中性浅底 + 灰描边 + 次要灰字，避免与 .pill.on/.btn.primary 的
+   强调色冲突（否则"来源管理/分类管理"等会像"选中态"一样抢眼）。
+   与筛选 pill(.pill) 区分：pill 负责筛选状态，ghost 负责弱化的管理/取消操作。 */
+.btn.ghost{ background:#F3F6FA !important; border-color:#DCE3EC !important; color:var(--brown-2) !important; font-weight:550 !important; box-shadow:none !important; }
+.btn.ghost:hover{ background:#E9EEF5 !important; border-color:#CBD6E4 !important; color:var(--brown) !important; }
+.btn.ghost:active{ background:#E0E7F0 !important; }
+.btn.ghost.sm{ border-radius:999px !important; }
+
+/* ==================== 时间筛选按钮(tf-btn) 与次级管理按钮统一 ====================
+   问题：jiwei 台账标题右侧「来源管理」(btn.ghost.sm) 与「全部时间」(tf-btn) 并排，
+   但 tf-btn 基色是 var(--cream-soft) 蓝系浅底，跟 btn.ghost 的中性浅灰不一致，
+   观感分裂。统一 tf-btn（含 empty 态）与 btn.ghost 同款中性浅灰，普通态颜色一致。 */
+.tf-btn{ background:#F3F6FA !important; border:1px solid #DCE3EC !important; color:var(--brown-2) !important; font-weight:550 !important; box-shadow:none !important; }
+.tf-btn:hover{ background:#E9EEF5 !important; border-color:#CBD6E4 !important; color:var(--brown) !important; }
+.tf-btn:active{ transform:scale(.96); }
+.tf-btn-empty{ border-color:#DCE3EC !important; color:var(--brown-2) !important; background:#F3F6FA !important; }
+
+/* ==================== 操作按钮行统一「同一行」显示 ====================
+   问题：详情区展开后的操作按钮行（编辑/删除/子任务/标为进行中…）原用 flex-wrap:wrap，
+   窄屏(<420px)下放不下就换行，用户要求保持同一行。
+   方案：统一把各模块 ops 行容器改成 nowrap + 子按钮 flex:1 均分、文本省略，
+   保证一排挤下所有操作按钮，且全站操作行样式一致。 */
+.fold-ops, .buy-item-ops, .consum-ops, .task-ops-row, .media-ops-row,
+.social-ops-row, .family-ops-row, .measure-ops-row,
+.charge-ops, .refuel-ops, .item-detail-ops, .wl-acts, .item-ops-row,
+.item-detail>.item-ops, .encourage-ops{
+  flex-wrap:nowrap !important;
+  row-gap:0 !important;
+  gap:6px !important;
+}
+.fold-ops .link-btn, .buy-item-ops .link-btn,
+.consum-ops .link-btn, .task-ops-row .link-btn,
+.media-ops-row .link-btn, .social-ops-row .link-btn,
+.family-ops-row .link-btn, .measure-ops-row .link-btn,
+.charge-ops .link-btn, .refuel-ops .link-btn,
+.item-detail-ops .link-btn, .wl-acts .link-btn, .item-ops-row .link-btn,
+.item-detail>.item-ops .link-btn, .encourage-ops .link-btn{
+  flex:1 1 0 !important; min-width:0 !important;
+  padding:5px 6px !important; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  text-align:center; justify-content:center;
+  display:inline-flex; align-items:center; gap:3px;
+}
+.fold-ops .link-btn.del, .buy-item-ops .link-btn.del,
+.consum-ops .link-btn.del, .task-ops-row .link-btn.del,
+.media-ops-row .link-btn.del, .social-ops-row .link-btn.del,
+.family-ops-row .link-btn.del, .measure-ops-row .link-btn.del,
+.charge-ops .link-btn.del, .refuel-ops .link-btn.del,
+.item-detail>.item-ops .link-btn.del, .encourage-ops .link-btn.del{
+  margin-left:0 !important;
+}
+
+/* ==================== 日程提醒：视图切换选中态 / 时间轴左列 优化 ====================
+   问题①：.sch-vtab.on 用 var(--olive-soft)(#A6BEEA 浅蓝) + var(--olive-deep)(#5E84CC 中蓝)，
+   浅蓝底配中蓝字对比不足，且与未选中态区分弱，选中"全部"时看不清（撞色）。
+   改成与 pill.on/tab.on 一致的"长春花蓝渐变 + 白字"，选中态醒目。 */
+.sch-vtab.on{ background:linear-gradient(135deg,var(--olive-soft),var(--olive)) !important; color:#fff !important; font-weight:600 !important; box-shadow:0 4px 10px var(--olive-24) !important; }
+.sch-vtab:active{ background:var(--olive-10); }
+/* 未选中态：与选中态拉开层次 */
+.sch-vtab{ color:var(--brown-2) !important; }
+/* 日期分组标题更清晰（原 .tl-day 用 brown-3 最浅灰，偏淡） */
+.tl-day{ color:var(--brown) !important; font-weight:650 !important; font-size:13px !important; letter-spacing:.4px !important; }
+/* 时间轴连接线/圆点：跟右侧卡片色呼应，圆点用主蓝实底更醒目 */
+.tl-dot{ background:linear-gradient(135deg,var(--olive-soft),var(--olive)) !important; box-shadow:0 1px 3px var(--olive-24); }
+.tl-line{ background:#CBD8EA !important; }
+/* 全天胶囊(.tl-time-all)：加投影增强层次（复用主操作 language） */
+.tl-time-all{ box-shadow:0 2px 6px var(--olive-24) !important; }
+/* 时间轴左列普通时间数字(.tl-time，如 09:30 / 15:00)：原用 var(--brown-3) 最浅灰 11px，
+   叠磨砂灰蓝底(#6E8494)几乎隐形（上一轮只强化了"全天"胶囊，漏了普通时间数字）。
+   改中深灰蓝 + 加字重，与"全天"胶囊的白字明确分工。 */
+.tl-time:not(.tl-time-all){ color:var(--brown-2) !important; font-weight:600 !important; font-size:11.5px !important; }
+
+/* ==================== 日期分组头"N 条日程"汇总文本 清晰化 ====================
+   问题：日程「全部」视图 & 财务流水的日期头右侧汇总（如"1 条日程"）用 .flow-date-sum，
+   原 color:var(--brown-3)（healing 下 #7E8C9A 浅灰）12.5px 字重 400，叠磨砂灰蓝底完全看不清。
+   而左侧日期 .flow-date-text 用 var(--brown)(深色) 清晰——主深/副浅的分层是对的，但副色太浅。
+   改 .flow-date-sum 用 --brown-2 中深灰蓝 + 加字重，保留"日期深/条数浅"的分层却都可读。 */
+.flow-date-sum{ color:var(--brown-2) !important; font-weight:600 !important; letter-spacing:.2px !important; }
+
+/* ==================== 空状态提示"暂无事项，点击 + 添加" 清晰化 ====================
+   问题：日程「当天/全部」空列表提示 .sch-empty(原 color:var(--brown-3))，healing 下 #7E8C9A 浅灰，
+   叠磨砂灰蓝底完全看不清（用户第二次反馈此类"浅灰叠灰蓝底"隐形）。
+   改同 .flow-date-sum：用 --brown-2 中深灰蓝 + 加字重，与整块灰蓝底形成对比。 */
+.sch-empty{ color:var(--brown-2) !important; }
+.sch-empty .sch-empty-text{ font-weight:600 !important; letter-spacing:.2px !important; }
+
+/* 表单内快捷日期芯片：与日期输入**同一行**水平排列（.due-inline 横向 flex）。
+   日期自适应占满剩余宽度，芯片固定紧凑，避免日期被截断、芯片也不挤到下一行。 */
+.field-r .chip-row{ width:auto; }
+.due-inline{ display:flex; align-items:center; gap:10px; width:100%; }
+.due-inline input[type="date"]{ flex:1 1 auto; min-width:0; white-space:nowrap; text-align:right; }
+.due-inline .due-chips{ flex:0 0 auto; display:flex; gap:6px; justify-content:flex-end; }
+.due-inline .chip{ font-size:12.5px !important; padding:6px 10px !important; border-radius:999px !important; flex:0 0 auto; }
+
+/* 品牌设置弹窗预览卡：跟随当前主题背景色 + 头像块跟随强调色渐变，与真实品牌 Header 一致。
+   原样式 .bs-preview 用固定 --cream-soft(#EEF2F5)，.bs-mark 用硬编码 toneC()(原生青墨/赤陶)，
+   都不随 healing 主题变化。改成透出主题背景的微磨砂浅底 + 强调色渐变。 */
+.bs-preview{
+  background:linear-gradient(165deg, color-mix(in srgb, var(--bg) 16%, #FFFFFF), color-mix(in srgb, var(--bg) 8%, #FFFFFF)) !important;
+  border:1px solid color-mix(in srgb, var(--bg) 22%, transparent) !important;
+}
+.bs-mark{
+  background:linear-gradient(135deg,var(--olive-soft),var(--olive)) !important;
+  color:#fff !important;
+  box-shadow:0 6px 16px var(--olive-24);
+}
+.bs-mark{ border-radius:13px; }
+.bs-name{ color:var(--brown) !important; }
+.bs-tag{ color:var(--brown-3) !important; }
+
+/* 详情区操作胶囊按钮：默认浅色（参考模板的浅胶囊），hover 用强调色跟随主题。
+   原样式 background:var(--bg) 会把胶囊涂成 #6E8494 深蓝灰，太沉重，统一改浅。 */
+.fold-ops .link-btn, .buy-item-ops .link-btn,
+.consum-ops .link-btn, .task-ops-row .link-btn,
+.media-ops-row .link-btn, .social-ops-row .link-btn,
+.family-ops-row .link-btn, .measure-ops-row .link-btn,
+.charge-ops .link-btn, .refuel-ops .link-btn,
+.item-detail-ops .link-btn, .wl-acts .link-btn, .item-ops-row .link-btn,
+.item-detail>.item-ops .link-btn,
+.ev-ops .link-btn, .encourage-ops .link-btn{
+  background:rgba(255,255,255,.82) !important;
+  border-color:var(--line-2) !important;
+  color:var(--brown-2) !important;
+}
+.fold-ops .link-btn:hover, .buy-item-ops .link-btn:hover,
+.consum-ops .link-btn:hover, .task-ops-row .link-btn:hover,
+.media-ops-row .link-btn:hover, .social-ops-row .link-btn:hover,
+.family-ops-row .link-btn:hover, .measure-ops-row .link-btn:hover,
+.charge-ops .link-btn:hover, .refuel-ops .link-btn:hover,
+.item-detail-ops .link-btn:hover, .wl-acts .link-btn:hover, .item-ops-row .link-btn:hover,
+.item-detail>.item-ops .link-btn:hover,
+.encourage-ops .link-btn:hover{
+  background:var(--olive-10) !important;
+  border-color:var(--olive-24) !important;
+  color:var(--olive-deep) !important;
+}
+/* 删除胶囊：保持红字浅红底（不被上面的浅色覆盖刷成灰色） */
+.fold-ops .link-btn.del, .buy-item-ops .link-btn.del,
+.consum-ops .link-btn.del, .task-ops-row .link-btn.del,
+.media-ops-row .link-btn.del, .social-ops-row .link-btn.del,
+.family-ops-row .link-btn.del, .measure-ops-row .link-btn.del,
+.charge-ops .link-btn.del, .refuel-ops .link-btn.del,
+.item-detail>.item-ops .link-btn.del,
+.encourage-ops .link-btn.del{
+  background:rgba(216,120,106,.10) !important;
+  border-color:rgba(216,120,106,.28) !important;
+  color:#B2574A !important;
+  margin-left:auto;
+}
+.fold-ops .link-btn.del:hover, .buy-item-ops .link-btn.del:hover,
+.consum-ops .link-btn.del:hover, .task-ops-row .link-btn.del:hover,
+.media-ops-row .link-btn.del:hover, .social-ops-row .link-btn.del:hover,
+.family-ops-row .link-btn.del:hover, .measure-ops-row .link-btn.del:hover,
+.charge-ops .link-btn.del:hover, .refuel-ops .link-btn.del:hover,
+.item-detail>.item-ops .link-btn.del:hover,
+.encourage-ops .link-btn.del:hover{
+  background:rgba(216,120,106,.16) !important;
+  border-color:rgba(216,120,106,.40) !important;
+  color:#A8433A !important;
+}
+
+/* 进度条 */
+.bar{ background:rgba(31,42,53,.10) !important; }
+.bar > i{ background:linear-gradient(90deg,var(--olive-soft),var(--olive)); }
+.bar > i.full{ background:linear-gradient(90deg,var(--olive),var(--olive-deep)); }
+
+/* 圆点纹理蓝灰背景 */
+body{
+  background:
+    radial-gradient(circle, rgba(255,255,255,.26) 1.2px, transparent 1.6px) 0 0/14px 14px,
+    linear-gradient(165deg,#7B92A5 0%, #6E8494 55%, #5F7686 100%) !important;
+  background-attachment:fixed;
+}
+.main{ position:relative; z-index:1; }
+
+/* 问候语（首页顶部，由脚本注入）：浅色卡片 + 深字，清晰浮于蓝灰背景之上 */
+.heal-greet{
+  display:flex; align-items:center; gap:14px;
+  padding:18px 20px;
+  margin:0 0 12px 0;
+  /* 不透明暖白卡 + 暖灰边 + 暖色阴影，独立于背景，绝不"消失" */
+  background:#FFFCF7 !important;
+  border:1px solid rgba(110,132,148,.18) !important;
+  border-radius:18px;
+  color:#3A4A5A !important;
+  box-shadow:0 6px 18px rgba(31,42,53,.10);
+  /* 兜底：原模板的 .view > * 会给所有子元素套 fadeInUp 动画（首帧 opacity:0）。
+     强制锁定 opacity:1，防止 view 刷新触发动画重放时整张卡片短暂消失。
+     入场动画交给自身的 transition/transform 完成，避开全局动画路径。 */
+  opacity:1 !important;
+  animation:none !important;
+  transition:transform .35s cubic-bezier(.22,1,.36,1), box-shadow .25s ease !important;
+  will-change:transform;
+}
+.heal-greet-av{
+  width:48px; height:48px; flex:0 0 48px;
+  display:grid; place-items:center;
+  background:linear-gradient(135deg,#9CB1D9,#7FA0E4) !important;
+  border-radius:14px;
+  font-size:26px;
+  color:#FFFFFF;
+  box-shadow:0 4px 10px rgba(127,160,228,.35);
+}
+.heal-greet-tx{ flex:1; min-width:0; line-height:1.4; color:#3A4A5A !important; }
+.heal-greet-l1{ font-size:17px; font-weight:600; letter-spacing:.3px; color:#2F3D4A !important; }
+.heal-greet-l1 b{ font-weight:700; color:#5A6B82 !important; }
+.heal-greet-emoji{ margin-left:6px; color:#7FA0E4 !important; }
+.heal-greet-l2{ font-size:12.5px; color:#6E8494 !important; margin-top:3px; }
+
+/* ============ 工作台设置面板（由脚本注入） ============ */
+.heal-mask{ position:fixed; inset:0; background:rgba(15,25,40,.45); backdrop-filter:blur(4px); z-index:200; display:none; align-items:flex-end; justify-content:center; }
+.heal-mask.show{ display:flex; animation:heal-fade .22s var(--ease); }
+@keyframes heal-fade{ from{opacity:0} to{opacity:1} }
+@media (min-width:720px){ .heal-mask{ align-items:center; } }
+.heal-sheet{ width:100%; max-width:480px; background:#FFFFFF; border-radius:24px 24px 16px 16px; padding:20px 20px calc(20px + env(safe-area-inset-bottom)); max-height:88vh; overflow-y:auto; box-shadow:0 -10px 40px rgba(15,25,40,.25); animation:heal-slide .3s var(--ease); }
+@media (min-width:720px){ .heal-sheet{ border-radius:24px; } }
+@keyframes heal-slide{ from{transform:translateY(20px);opacity:0} to{transform:none;opacity:1} }
+.heal-sheet-handle{ width:40px; height:4px; border-radius:2px; background:var(--line-2); margin:0 auto 14px; }
+.heal-sheet h2{ font-size:18px; font-weight:700; margin:0 0 4px; color:var(--brown); }
+.heal-sheet .heal-sub{ font-size:13px; color:var(--brown-3); margin-bottom:16px; }
+.heal-field{ margin-bottom:14px; }
+.heal-field label{ display:block; font-size:12.5px; font-weight:600; color:var(--brown-2); margin-bottom:6px; letter-spacing:.3px; }
+.heal-input{ width:100%; padding:10px 12px; border:1px solid var(--line-2); border-radius:12px; background:var(--cream-soft); color:var(--brown); font-size:14px; outline:none; transition:border-color .15s, box-shadow .15s; box-sizing:border-box; }
+.heal-input:focus{ border-color:var(--olive-soft); box-shadow:0 0 0 3px var(--olive-10); }
+.heal-avatar-row{ display:flex; align-items:center; gap:12px; }
+.heal-avatar-preview{ width:48px; height:48px; flex:0 0 48px; display:grid; place-items:center; background:linear-gradient(135deg,var(--olive-soft),var(--olive)); border-radius:14px; font-size:24px; box-shadow:0 4px 12px var(--olive-24); }
+.heal-toggle{ display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-top:1px solid var(--line); font-size:14px; color:var(--brown); cursor:pointer; }
+.heal-toggle:first-of-type{ border-top:0; }
+.heal-switch{ width:42px; height:24px; background:var(--line-2); border-radius:999px; position:relative; transition:background .2s; flex:0 0 auto; }
+.heal-switch::after{ content:""; position:absolute; top:2px; left:2px; width:20px; height:20px; background:#fff; border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,.2); transition:transform .2s; }
+.heal-switch.on{ background:var(--olive); }
+.heal-switch.on::after{ transform:translateX(18px); }
+.heal-row-btn{ display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border:1px solid var(--line); border-radius:14px; background:var(--cream-soft); color:var(--brown); font-size:14px; font-weight:550; cursor:pointer; width:100%; margin-top:6px; box-sizing:border-box; }
+.heal-row-btn:hover{ background:var(--olive-10); border-color:var(--olive-24); }
+.heal-row-btn .heal-arrow{ color:var(--brown-3); font-size:18px; }
+.heal-swatch-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px; }
+.heal-swatch{ position:relative; height:64px; border-radius:14px; cursor:pointer; display:flex; align-items:flex-end; justify-content:center; padding-bottom:6px; color:rgba(255,255,255,.95); font-size:12px; font-weight:600; text-shadow:0 1px 2px rgba(0,0,0,.2); border:2px solid transparent; transition:transform .15s; }
+.heal-swatch:hover{ transform:translateY(-1px); }
+.heal-swatch.on{ border-color:#1F2A35; }
+.heal-swatch.on::after{ content:"✓"; position:absolute; top:6px; right:6px; width:18px; height:18px; background:#fff; color:#1F2A35; border-radius:50%; display:grid; place-items:center; font-size:11px; font-weight:700; }
+.heal-color-row{ display:flex; align-items:center; gap:8px; padding:10px 12px; border:1px dashed var(--line-2); border-radius:12px; margin-bottom:14px; }
+.heal-color-chip{ width:32px; height:32px; border-radius:8px; border:1px solid var(--line-2); flex:0 0 auto; }
+.heal-color-row input{ flex:1; min-width:0; border:0; background:transparent; font-size:13px; color:var(--brown); outline:none; font-variant-numeric:tabular-nums; padding:0; }
+.heal-color-row button{ padding:6px 12px; border:0; border-radius:8px; background:var(--olive); color:#fff; font-size:12.5px; font-weight:600; cursor:pointer; flex:0 0 auto; }
+.heal-texture{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; }
+.heal-texture-opt{ position:relative; height:52px; border-radius:12px; border:2px solid var(--line); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:12.5px; font-weight:600; color:#fff; text-shadow:0 1px 2px rgba(0,0,0,.2); }
+.heal-texture-opt.heal-texture-dots{ background-image:radial-gradient(circle, rgba(255,255,255,.5) 1px, transparent 1.5px); background-size:8px 8px; }
+.heal-texture-opt.on{ border-color:#1F2A35; }
+.heal-accent-row{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+.heal-accent-dot{ width:32px; height:32px; border-radius:50%; cursor:pointer; border:2px solid transparent; transition:transform .12s; box-sizing:border-box; }
+.heal-accent-dot:hover{ transform:scale(1.1); }
+.heal-accent-dot.on{ border-color:#1F2A35; box-shadow:inset 0 0 0 2px #fff; }
+.heal-done{ width:100%; padding:12px; border:0; border-radius:14px; background:linear-gradient(135deg,var(--olive-soft),var(--olive)); color:#fff; font-size:14.5px; font-weight:600; cursor:pointer; box-shadow:0 6px 18px var(--olive-24); margin-top:8px; }
+.heal-section-label{ font-size:12.5px; font-weight:600; color:var(--brown-2); margin:4px 0 8px; display:block; letter-spacing:.3px; }
+
+/* 未完成提醒闪烁 */
+@keyframes heal-flash-warn{ 0%,100%{ box-shadow:0 0 0 0 rgba(216,120,106,0);} 50%{ box-shadow:0 0 0 5px rgba(216,120,106,.28);} }
+body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infinite; }
+
+/* 内容区页面标题在蓝灰背景上清晰可读（首页尤为关键） */
+.page-head h1{ color:#FFFFFF; }
+.page-head p{ color:rgba(255,255,255,.92); text-shadow:0 1px 2px rgba(15,25,40,.25); font-weight:500; }
+
+/* 锁定深色模式硬编码色值 */
+.hs-cell{ background:rgba(31,42,53,.06) !important; color:var(--brown-3) !important; }
+.hs-dot{ background:rgba(31,42,53,.12) !important; }
+.cal-cell.miss{ background:rgba(216,120,106,.16) !important; border-color:rgba(216,120,106,.40) !important; color:#A8533F !important; }
+.cal-cell.broken{ background:rgba(216,80,60,.18) !important; border-color:rgba(216,80,60,.44) !important; color:#B0433A !important; }
+.big-num.past{ color:var(--danger) !important; }
+.chk-cal .cal-cell.broken .cal-count{ color:#fff !important; background:rgba(216,80,60,.48) !important; }
+
+/* =========================================================
+   弹窗动画优化（覆盖原 .22s / .26s 的硬直过渡）
+   1) 打开更柔顺：曲线 cubic-bezier(.22,1,.36,1) 是经典 ease-out，
+      视感从「点哪儿弹哪儿」变成「轻轻从下方浮起 + 回弹」
+   2) 关闭有过渡：原代码 el.remove() 瞬移，新加 .closing class 触发淡出再摘 DOM
+   3) 遮罩背景在蓝灰主题下从 .36 黑色降到 .28，更轻
+   ========================================================= */
+@keyframes maskIn{ from{opacity:0; backdrop-filter:blur(0px);} to{opacity:1; backdrop-filter:blur(2px);} }
+@keyframes maskOut{ from{opacity:1; backdrop-filter:blur(2px);} to{opacity:0; backdrop-filter:blur(0px);} }
+@keyframes modalIn{
+  0%   {opacity:0; transform:translateY(24px) scale(.96);}
+  60%  {opacity:1; transform:translateY(-2px) scale(1.005);}
+  100% {opacity:1; transform:translateY(0)   scale(1);}
+}
+@keyframes modalOut{
+  0%   {opacity:1; transform:translateY(0)    scale(1);}
+  100% {opacity:0; transform:translateY(12px) scale(.985);}
+}
+.modal-mask{
+  background:rgba(31,42,53,.28) !important;
+  animation:maskIn .32s cubic-bezier(.22,1,.36,1) both !important;
+}
+.modal{
+  animation:modalIn .42s cubic-bezier(.22,1,.36,1) both !important;
+  will-change:transform, opacity;
+}
+.modal-mask.closing{
+  animation:maskOut .22s cubic-bezier(.55,0,.36,1) both !important;
+  pointer-events:none;
+}
+.modal-mask.closing .modal{
+  animation:modalOut .24s cubic-bezier(.55,0,.36,1) both !important;
+  pointer-events:none;
+}
+/* 尊重用户的「减少动效」偏好 */
+@media (prefers-reduced-motion: reduce){
+  .modal-mask, .modal{ animation-duration:.001s !important; }
+  .modal-mask.closing, .modal-mask.closing .modal{ animation-duration:.001s !important; }
+}
+</style>
+<script id="healing-reskin-js">
+(function(){
+  function escHtml(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function getUser(){
+    var n='', av='\uD83C\uDF3F';
+    try { if (typeof D==='function'){ var d=D(); n=(d.nickname||d.name||'').trim(); if (d.avatar) av=d.avatar; } } catch(e){}
+    return { name: n, avatar: av };
+  }
+  function build(){
+    var u = getUser();
+    var h = new Date().getHours();
+    var g = h<5?'夜深了':h<11?'上午好':h<14?'中午好':h<18?'下午好':h<22?'晚上好':'夜深了';
+    /* 时段表情：仅当用户用的是默认叶子头像(未自定义)时，按早中晚替换成对应表情。
+       已自定义头像则保留用户自己的，不覆盖。 */
+    var av = u.avatar;
+    var isDefault = (av === '\uD83C\uDF3F');
+    if (isDefault) {
+      av = h<5?'\uD83C\uDF19':h<11?'\uD83C\uDF05':h<14?'\u2600\uFE0F':h<18?'\uD83C\uDF24':h<22?'\uD83C\uDF19':'\uD83C\uDF19';
+    }
+    var d = new Date();
+    var days = ['周日','周一','周二','周三','周四','周五','周六'];
+    var ds = (d.getMonth()+1)+'月'+d.getDate()+'日 · '+days[d.getDay()];
+    var nPart = u.name ? '，<b>'+escHtml(u.name)+'</b>' : '';
+    return '<div class="heal-greet" id="healGreet">'
+      + '<div class="heal-greet-av">'+escHtml(av)+'</div>'
+      + '<div class="heal-greet-tx">'
+        + '<div class="heal-greet-l1">'+g+nPart+'<span class="heal-greet-emoji">\uD83C\uDF3F</span></div>'
+        + '<div class="heal-greet-l2">'+ds+'</div>'
+      + '</div></div>';
+  }
+  function inject(){
+    var v = document.getElementById('view'); if (!v) return;
+    /* 关键修复：原逻辑是 "有 healGreet 就 remove + 重新插入"，
+       但原模板的 App.refresh() 会频繁触发 #view 的 childList 变化，
+       导致 inject() 被反复调用 → healGreet 被反复 remove+insert，
+       每次新插入的 .heal-greet 都在 fadeInUp 动画的第一帧（opacity:0）就被打断，
+       永远停在 opacity:0，整张卡片消失。 修复后只在「已不存在」时插入，绝不 remove 自己。 */
+    if (document.getElementById('healGreet')) return;
+    if (typeof App === 'undefined' || !App || App.current !== 'home') return;
+    try { v.insertAdjacentHTML('afterbegin', build()); } catch(e){}
+  }
+  function init(){
+    var v = document.getElementById('view'); if (!v) return;
+    setTimeout(inject, 0);
+    new MutationObserver(function(ms){
+      for (var i=0;i<ms.length;i++) if (ms[i].type==='childList'){ setTimeout(inject, 0); break; }
+    }).observe(v, { childList:true });
+    /* 删除 60 秒 setInterval：会反复触发 remove+reinsert 导致动画死锁。
+       跨午夜的问候语切换由 App 切模块 → view 重新渲染 → MutationObserver 触发 inject 完成。 */
+  }
+  function wait(){
+    if (typeof App!=='undefined' && App && App.modules && App.modules.home && document.getElementById('view')) init();
+    else setTimeout(wait, 60);
+  }
+  if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', wait);
+  else wait();
+})();
+</script>
+<script id="healing-sheet-close">
+/* 弹窗关闭动画桥接：原 UI.sheet 关闭时是 el.remove() 瞬移，加 .closing class 让 maskOut/modalOut 跑完再摘 DOM。
+   策略：
+   1) 拦截 Node.prototype.remove（兼容 element.remove()）
+   2) 拦截 Node.prototype.removeChild（兼容 parent.removeChild(el)）
+   3) 用 MutationObserver 兜底（万一有别的代码绕过这两个方法，例如 Element.replaceChildren）
+   关闭时若 mask 已经在播打开动画（不到 80ms），跳过过渡直接删，避免动画叠加闪烁 */
+(function(){
+  if (window.__healSheetClosePatched) return;
+  window.__healSheetClosePatched = true;
+  var CLOSING_CLASS = 'closing';
+  var SHORT = 240;            // modalOut 动画时长
+  var MIN_OPEN_AGE = 80;      // 刚打开的 mask 不走过渡（避免闪烁）
+
+  function shouldAnimate(el){
+    if (!el || el.nodeType !== 1) return false;
+    if (!el.classList || !el.classList.contains('modal-mask')) return false;
+    var age = Date.now() - (el.__healOpenTs || 0);
+    if (age < MIN_OPEN_AGE) return false;        // 打开后极短时间内被关：走瞬移
+    if (el.classList.contains(CLOSING_CLASS)) return false; // 已在播关闭动画
+    return true;
+  }
+
+  function playClose(el){
+    el.classList.add(CLOSING_CLASS);
+    var done = false;
+    function finish(){
+      if (done) return; done = true;
+      try { el.remove(); } catch(e) { try { el.parentNode && el.parentNode.removeChild(el); } catch(_) {} }
+      /* 关闭动画播完、mask 真正摘除后，再调一次 UI.unlock，
+         让「原调用方同步调过 UI.unlock 但因 mask 还在而未解锁」的情况得以解锁 body 滚动 */
+      try { if (window.UI && typeof window.UI.unlock === 'function') window.UI.unlock(); } catch(_) {}
+    }
+    el.addEventListener('animationend', function(ev){
+      if (ev && ev.animationName === 'modalOut') finish();
+    }, { once: true });
+    /* 兜底：动画事件因故没触发，强制定时摘 */
+    setTimeout(finish, SHORT + 80);
+  }
+
+  /* 记录打开时间，给 .sheet() 创建的 .modal-mask 打上时间戳 */
+  function tagOpen(){
+    var all = document.querySelectorAll('.modal-mask:not([data-heal-tagged])');
+    for (var i=0;i<all.length;i++){
+      all[i].__healOpenTs = Date.now();
+      all[i].setAttribute('data-heal-tagged', '1');
+    }
+  }
+  /* 启动时 + DOM 变化时打标签 */
+  tagOpen();
+  new MutationObserver(function(ms){
+    for (var i=0;i<ms.length;i++){
+      if (ms[i].type !== 'childList') continue;
+      ms[i].addedNodes && Array.prototype.forEach.call(ms[i].addedNodes, function(n){
+        if (n && n.nodeType === 1){
+          if (n.classList && n.classList.contains('modal-mask')){
+            n.__healOpenTs = Date.now();
+            n.setAttribute('data-heal-tagged','1');
+          } else if (n.querySelectorAll) {
+            var inner = n.querySelectorAll('.modal-mask');
+            for (var j=0;j<inner.length;j++){
+              inner[j].__healOpenTs = Date.now();
+              inner[j].setAttribute('data-heal-tagged','1');
+            }
+          }
+        }
+      });
+    }
+  }).observe(document.documentElement, { childList:true, subtree:true });
+
+  /* 1) 拦截 element.remove() */
+  var origRemove = Element.prototype.remove;
+  Element.prototype.remove = function(){
+    if (shouldAnimate(this)) { playClose(this); return; }
+    return origRemove.apply(this, arguments);
+  };
+
+  /* 2) 拦截 parent.removeChild(el) */
+  var origRemoveChild = Node.prototype.removeChild;
+  Node.prototype.removeChild = function(child){
+    if (shouldAnimate(child)) { playClose(child); return child; }
+    return origRemoveChild.apply(this, arguments);
+  };
+
+  /* 3) 兜底：若别处直接设 innerHTML/parentNode.innerHTML='' 把整个 modalRoot 清空，靠 MutationObserver 监听「modal-mask 消失」补一次淡出
+     —— 不在这里硬拦（会破坏正常刷新），而是在 mask 被从 DOM 摘掉的那一刻补一次回放（仅当它没 .closing 标签） */
+  new MutationObserver(function(ms){
+    for (var i=0;i<ms.length;i++){
+      if (ms[i].type !== 'childList') continue;
+      ms[i].removedNodes && Array.prototype.forEach.call(ms[i].removedNodes, function(n){
+        if (n && n.nodeType === 1 && n.classList && n.classList.contains('modal-mask') && !n.classList.contains(CLOSING_CLASS)){
+          /* mask 是被直接 innerHTML 摘掉的，动画已来不及播——这是兜底，不能让弹窗「卡在屏幕上」 */
+          /* 不补动画，避免在已经被替换的内容上再贴一份 */
+        }
+      });
+    }
+  }).observe(document.documentElement, { childList:true, subtree:true });
+})();
+</script>
+<script id="healing-settings">
+(function(){
+  var KEY = 'healing.workbench.v1';
+  var DEFAULTS = {
+    name: '工作台', avatar: '🌿', slogan: '',
+    remindToday: true, soundEnabled: true, vibrationEnabled: true,
+    theme: { preset: 'oat-blue', bgColor: '#6E8494', bgMode: 'dots', accentColor: '#7FA0E4' }
+  };
+  var PRESETS = [
+    { id:'oat-blue',    name:'燕麦灰蓝', bg:'#6E8494', accent:'#7FA0E4' },
+    { id:'sage',        name:'鼠尾草绿', bg:'#8FA88B', accent:'#B4C9A0' },
+    { id:'terracotta',  name:'陶土杏',   bg:'#B89476', accent:'#D4A574' },
+    { id:'lavender',    name:'薰衣草紫', bg:'#8B82A6', accent:'#A89BC4' },
+    { id:'rose',        name:'干枯玫瑰', bg:'#A88088', accent:'#C49AA4' },
+    { id:'oat-milk',    name:'燕麦奶咖', bg:'#A89888', accent:'#C4B49A' }
+  ];
+  var ACCENT_DOTS = ['#7FA0E4','#8FA88B','#B89476','#A89BC4','#C49AA4','#D4B16A','#82B6A1','#D89070'];
+
+  function load(){ try { var d = JSON.parse(localStorage.getItem(KEY)||'{}'); d.theme = Object.assign({}, DEFAULTS.theme, d.theme||{}); return Object.assign({}, DEFAULTS, d); } catch(e){ return JSON.parse(JSON.stringify(DEFAULTS)); } }
+  function save(d){ try { localStorage.setItem(KEY, JSON.stringify(d)); } catch(e){} }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+  // 颜色工具
+  function hexToRgb(h){ h=h.replace('#',''); if(h.length===3) h=h.split('').map(function(c){return c+c;}).join(''); return {r:parseInt(h.substr(0,2),16),g:parseInt(h.substr(2,2),16),b:parseInt(h.substr(4,2),16)}; }
+  function rgbToHex(r,g,b){ return '#'+[r,g,b].map(function(x){var s=Math.max(0,Math.min(255,Math.round(x))).toString(16); return s.length===1?'0'+s:s;}).join('').toUpperCase(); }
+  function rgbToHsl(r,g,b){ r/=255;g/=255;b/=255; var mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2; if(mx===mn){return{h:0,s:0,l:l};} var d=mx-mn,s=l>0.5?d/(2-mx-mn):d/(mx+mn),h; if(mx===r)h=(g-b)/d+(g<b?6:0); else if(mx===g)h=(b-r)/d+2; else h=(r-g)/d+4; return {h:h/6,s:s,l:l}; }
+  function hslToRgb(h,s,l){ var r,g,b; if(s===0){r=g=b=l;} else { var q=l<0.5?l*(1+s):l+s-l*s, p=2*l-q, hue2rgb=function(p,q,t){if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p+(q-p)*6*t;if(t<1/2)return q;if(t<2/3)return p+(q-p)*(2/3-t)*6;return p;}; r=hue2rgb(p,q,h+1/3);g=hue2rgb(p,q,h);b=hue2rgb(p,q,h-1/3);} return {r:r*255,g:g*255,b:b*255}; }
+  function shade(hex, dl){ var c=hexToRgb(hex), hsl=rgbToHsl(c.r,c.g,c.b); hsl.l=Math.max(0,Math.min(1,hsl.l+dl)); var rgb=hslToRgb(hsl.h,hsl.s,hsl.l); return rgbToHex(rgb.r,rgb.g,rgb.b); }
+  function alpha(hex,a){ var c=hexToRgb(hex); return 'rgba('+c.r+','+c.g+','+c.b+','+a+')'; }
+
+  // 应用主题
+  var _themeFirstApply = true;
+  function applyTheme(t){
+    var root=document.documentElement, body=document.body;
+    var bg=t.bgColor, ac=t.accentColor;
+    var s=function(k,v){ root.style.setProperty(k,v,'important'); };
+
+    /* 交叉淡入：先快照「旧背景」，应用新主题后用一张旧背景遮罩淡出，
+       掩盖 background-image（渐变）无法 CSS 过渡导致的突变闪烁。 */
+    var oldImage=null, oldSize='', oldPos='', oldRepeat='', oldColor='';
+    if (!_themeFirstApply) {
+      try {
+        var cs = getComputedStyle(body);
+        oldImage = cs.backgroundImage;
+        oldSize = cs.backgroundSize;
+        oldPos = cs.backgroundPosition;
+        oldRepeat = cs.backgroundRepeat;
+        oldColor = cs.backgroundColor;
+      } catch(e) { oldImage = null; }
+    }
+
+    s('--bg', bg);
+    s('--olive', ac);
+    s('--olive-soft', shade(ac,0.12));
+    s('--olive-deep', shade(ac,-0.08));
+    s('--olive-darker', shade(ac,-0.16));
+    s('--olive-05', alpha(ac,.05));
+    s('--olive-10', alpha(ac,.10));
+    s('--olive-16', alpha(ac,.16));
+    s('--olive-24', alpha(ac,.26));
+    s('--olive-open', alpha(ac,.18));
+    s('--info', ac);
+    var bgImage = (t.bgMode==='dots')
+      ? "radial-gradient(circle, rgba(255,255,255,.26) 1.2px, transparent 1.6px), linear-gradient(165deg, "+shade(bg,0.08)+" 0%, "+bg+" 55%, "+shade(bg,-0.08)+" 100%)"
+      : "linear-gradient(165deg, "+shade(bg,0.08)+" 0%, "+bg+" 55%, "+shade(bg,-0.08)+" 100%)";
+    var bgSize = (t.bgMode==='dots') ? "14px 14px, 100% 100%" : "100% 100%";
+    body.style.setProperty('background-image', bgImage, 'important');
+    body.style.setProperty('background-size', bgSize, 'important');
+    body.style.setProperty('background-position', '0 0, 0 0', 'important');
+    body.style.setProperty('background-repeat', (t.bgMode==='dots' ? 'repeat, no-repeat' : 'no-repeat'), 'important');
+    body.style.setProperty('background-color', bg, 'important');
+    body.style.setProperty('background-attachment', 'fixed', 'important');
+
+    /* 交叉淡入遮罩：旧背景快照，铺满视口但位于内容之下（z-index:-1），淡出露出新主题 */
+    if (oldImage && oldImage !== 'none') {
+      var ov = document.getElementById('healFadeOv');
+      if (ov) ov.remove();
+      ov = document.createElement('div');
+      ov.id = 'healFadeOv';
+      ov.style.cssText =
+        'position:fixed;inset:0;z-index:-1;pointer-events:none;' +
+        'background-image:' + oldImage + ';' +
+        'background-size:' + oldSize + ';' +
+        'background-position:' + oldPos + ';' +
+        'background-repeat:' + oldRepeat + ';' +
+        'background-color:' + oldColor + ';' +
+        'background-attachment:fixed;' +
+        'opacity:1;transition:opacity .45s ease;';
+      body.appendChild(ov);
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){ ov.style.opacity = '0'; });
+      });
+      setTimeout(function(){ if (ov.parentNode) ov.remove(); }, 520);
+    }
+    _themeFirstApply = false;
+  }
+  function applyFlash(on){ document.body.classList.toggle('heal-flash-on', !!on); }
+  function updateBrand(d){
+    try {
+      var strong=document.querySelector('.brand-text strong');
+      if (strong) strong.textContent = d.name || DEFAULTS.name;
+    } catch(e){}
+  }
+
+  // 提示音
+  function beep(){
+    try {
+      var C=window.AudioContext||window.webkitAudioContext; if(!C) return;
+      var ctx=new C(), o=ctx.createOscillator(), g=ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.type='sine';
+      o.frequency.setValueAtTime(880, ctx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(1320, ctx.currentTime+0.08);
+      g.gain.setValueAtTime(0.08, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.18);
+      o.start(); o.stop(ctx.currentTime+0.2);
+      setTimeout(function(){ try{ctx.close();}catch(e){} }, 350);
+    } catch(e){}
+  }
+  function vibrate(ms){ try{ navigator.vibrate && navigator.vibrate(ms||40); }catch(e){} }
+
+  // 监听完成类点击
+  function setupCompletionHooks(d){
+    document.addEventListener('click', function(e){
+      var t=e.target; if(!t || !t.closest) return;
+      var hit = t.closest('.tf-row') || t.closest('input[type=checkbox]') || t.closest('[data-act]');
+      if (!hit) return;
+      var act = hit.dataset && hit.dataset.act;
+      var looksComplete = act && /\b(check|done|complete|finish|over|打卡|完成)\b/i.test(act);
+      if (looksComplete) {
+        if (d.soundEnabled) beep();
+        if (d.vibrationEnabled) vibrate(40);
+      }
+    }, true);
+  }
+
+  // 构建设置面板
+  function buildSettings(d){
+    return '<div class="heal-mask" id="healSettingsMask">'+
+      '<div class="heal-sheet" id="healSettingsSheet">'+
+        '<div class="heal-sheet-handle"></div>'+
+        '<h2>⚙️ 工作台设置</h2>'+
+        '<div class="heal-sub">个性化名称、提醒、反馈与外观</div>'+
+        '<div class="heal-field"><label>工作台名称</label>'+
+          '<input class="heal-input" id="healName" value="'+esc(d.name)+'" placeholder="工作台"></div>'+
+        '<div class="heal-field"><label>头像</label>'+
+          '<div class="heal-avatar-row">'+
+            '<div class="heal-avatar-preview" id="healAvPrev">'+esc(d.avatar)+'</div>'+
+            '<input class="heal-input" id="healAvatar" value="'+esc(d.avatar)+'" placeholder="🌿" style="flex:1"></div></div>'+
+        '<div class="heal-field"><label>标语</label>'+
+          '<input class="heal-input" id="healSlogan" value="'+esc(d.slogan)+'" placeholder="今天也要好好生活呀"></div>'+
+        '<div class="heal-field"><label>提醒与反馈</label>'+
+          '<div class="heal-toggle" data-k="remindToday"><span>今天要处理提醒（未完成会闪烁）</span><div class="heal-switch '+(d.remindToday?'on':'')+'"></div></div>'+
+          '<div class="heal-toggle" data-k="soundEnabled"><span>点击完成音效</span><div class="heal-switch '+(d.soundEnabled?'on':'')+'"></div></div>'+
+          '<div class="heal-toggle" data-k="vibrationEnabled"><span>震动反馈</span><div class="heal-switch '+(d.vibrationEnabled?'on':'')+'"></div></div>'+
+        '</div>'+
+        '<button class="heal-row-btn" id="healOpenTheme"><span>🎨 主题外观</span><span class="heal-arrow">›</span></button>'+
+        '<button class="heal-done" id="healSaveSettings" style="margin-top:16px">完成</button>'+
+      '</div></div>';
+  }
+  function buildTheme(d){
+    var sw = PRESETS.map(function(p){ return '<div class="heal-swatch '+(d.theme.preset===p.id?'on':'')+'" data-preset="'+p.id+'" style="background:'+p.bg+'">'+p.name+'</div>'; }).join('');
+    var dots = ACCENT_DOTS.map(function(c){ return '<div class="heal-accent-dot '+(c.toUpperCase()===(d.theme.accentColor||'').toUpperCase()?'on':'')+'" data-accent="'+c+'" style="background:'+c+'"></div>'; }).join('');
+    return '<div class="heal-mask" id="healThemeMask">'+
+      '<div class="heal-sheet" id="healThemeSheet">'+
+        '<div class="heal-sheet-handle"></div>'+
+        '<h2>主题外观</h2><div class="heal-sub">换个心情，工作台也换个色 🎨</div>'+
+        '<span class="heal-section-label">背景主题</span>'+
+        '<div class="heal-swatch-grid">'+sw+'</div>'+
+        '<div class="heal-color-row">'+
+          '<div class="heal-color-chip" id="healBgChip" style="background:'+d.theme.bgColor+'"></div>'+
+          '<input id="healBgInput" value="'+esc(d.theme.bgColor)+'" placeholder="#6E8494">'+
+          '<button id="healBgUse">用它</button></div>'+
+        '<span class="heal-section-label">背景纹理</span>'+
+        '<div class="heal-texture">'+
+          '<div class="heal-texture-opt heal-texture-dots '+(d.theme.bgMode==='dots'?'on':'')+'" data-tx="dots" style="background-color:'+d.theme.bgColor+'">圆点版</div>'+
+          '<div class="heal-texture-opt '+(d.theme.bgMode==='solid'?'on':'')+'" data-tx="solid" style="background:'+d.theme.bgColor+'">纯色版</div>'+
+        '</div>'+
+        '<span class="heal-section-label">强调 / 胶囊按钮色</span>'+
+        '<div class="heal-accent-row">'+dots+'</div>'+
+        '<div class="heal-color-row">'+
+          '<div class="heal-color-chip" id="healAccChip" style="background:'+d.theme.accentColor+'"></div>'+
+          '<input id="healAccInput" value="'+esc(d.theme.accentColor)+'" placeholder="#7FA0E4">'+
+          '<button id="healAccUse">用它</button></div>'+
+        '<button class="heal-done" id="healThemeDone">完成</button>'+
+      '</div></div>';
+  }
+
+  function openSettings(){
+    var d=load();
+    var ex=document.getElementById('healSettingsMask'); if(ex) ex.remove();
+    var wrap=document.createElement('div'); wrap.innerHTML=buildSettings(d);
+    var mask=wrap.firstChild; mask.classList.add('show');
+    document.body.appendChild(mask);
+    bindSettings();
+  }
+  function openTheme(){
+    var d=load();
+    var ex=document.getElementById('healThemeMask'); if(ex) ex.remove();
+    var wrap=document.createElement('div'); wrap.innerHTML=buildTheme(d);
+    var mask=wrap.firstChild; mask.classList.add('show');
+    document.body.appendChild(mask);
+    bindTheme();
+  }
+  function closeMask(id){ var m=document.getElementById(id); if(m) m.remove(); }
+
+  function bindSettings(){
+    var mask=document.getElementById('healSettingsMask');
+    mask.addEventListener('click', function(e){ if(e.target===mask) closeMask('healSettingsMask'); });
+    var avIn=document.getElementById('healAvatar');
+    var avPr=document.getElementById('healAvPrev');
+    avIn.addEventListener('input', function(){ avPr.textContent=avIn.value||'🌿'; });
+    mask.querySelectorAll('.heal-toggle').forEach(function(t){
+      t.addEventListener('click', function(){ t.querySelector('.heal-switch').classList.toggle('on'); });
+    });
+    document.getElementById('healOpenTheme').addEventListener('click', function(){
+      saveCurrent();
+      openTheme();
+    });
+    document.getElementById('healSaveSettings').addEventListener('click', function(){
+      saveCurrent();
+      closeMask('healSettingsMask');
+    });
+  }
+  function saveCurrent(){
+    var d=load();
+    d.name = (document.getElementById('healName').value||'').trim() || DEFAULTS.name;
+    d.avatar = (document.getElementById('healAvatar').value||'').trim() || DEFAULTS.avatar;
+    d.slogan = (document.getElementById('healSlogan').value||'').trim();
+    d.remindToday = !!document.querySelector('#healSettingsMask [data-k="remindToday"] .heal-switch.on');
+    d.soundEnabled = !!document.querySelector('#healSettingsMask [data-k="soundEnabled"] .heal-switch.on');
+    d.vibrationEnabled = !!document.querySelector('#healSettingsMask [data-k="vibrationEnabled"] .heal-switch.on');
+    save(d); applyTheme(d.theme); applyFlash(d.remindToday); updateBrand(d);
+  }
+  function bindTheme(){
+    var mask=document.getElementById('healThemeMask');
+    mask.addEventListener('click', function(e){ if(e.target===mask) closeMask('healThemeMask'); });
+    mask.querySelectorAll('.heal-swatch').forEach(function(sw){
+      sw.addEventListener('click', function(){
+        var p=PRESETS.filter(function(x){return x.id===sw.dataset.preset;})[0]; if(!p) return;
+        var d=load(); d.theme.preset=p.id; d.theme.bgColor=p.bg; d.theme.accentColor=p.accent;
+        save(d); applyTheme(d.theme);
+        /* 原地更新选中态，不关闭重开面板（避免面板闪烁） */
+        mask.querySelectorAll('.heal-swatch').forEach(function(x){ x.classList.toggle('on', x===sw); });
+        mask.querySelectorAll('.heal-accent-dot').forEach(function(x){ x.classList.toggle('on', x.dataset.accent.toUpperCase()===p.accent.toUpperCase()); });
+        var accChip=document.getElementById('healAccChip'), accInput=document.getElementById('healAccInput');
+        if(accChip) accChip.style.background=p.accent;
+        if(accInput) accInput.value=p.accent;
+        var bgChip=document.getElementById('healBgChip'), bgInput=document.getElementById('healBgInput');
+        if(bgChip) bgChip.style.background=p.bg;
+        if(bgInput) bgInput.value=p.bg;
+        /* 同步纹理块底色 */
+        mask.querySelectorAll('.heal-texture-opt').forEach(function(x){
+          if (x.classList.contains('heal-texture-dots')) { x.style.backgroundColor=p.bg; }
+          else { x.style.background=p.bg; }
+        });
+      });
+    });
+    mask.querySelectorAll('.heal-texture-opt').forEach(function(o){
+      o.addEventListener('click', function(){
+        var d=load(); d.theme.bgMode=o.dataset.tx; save(d); applyTheme(d.theme);
+        o.parentNode.querySelectorAll('.heal-texture-opt').forEach(function(x){x.classList.remove('on');});
+        o.classList.add('on');
+      });
+    });
+    mask.querySelectorAll('.heal-accent-dot').forEach(function(dot){
+      dot.addEventListener('click', function(){
+        var d=load(); d.theme.accentColor=dot.dataset.accent; d.theme.preset=null;
+        save(d); applyTheme(d.theme);
+        document.getElementById('healAccChip').style.background=dot.dataset.accent;
+        document.getElementById('healAccInput').value=dot.dataset.accent;
+        mask.querySelectorAll('.heal-accent-dot').forEach(function(x){x.classList.remove('on');});
+        dot.classList.add('on');
+      });
+    });
+    var bgIn=document.getElementById('healBgInput'), bgCh=document.getElementById('healBgChip');
+    bgIn.addEventListener('input', function(){ bgCh.style.background=bgIn.value; });
+    document.getElementById('healBgUse').addEventListener('click', function(){
+      var d=load(); d.theme.bgColor=(bgIn.value||'').trim()||DEFAULTS.theme.bgColor; d.theme.preset=null;
+      save(d); applyTheme(d.theme);
+    });
+    var acIn=document.getElementById('healAccInput'), acCh=document.getElementById('healAccChip');
+    acIn.addEventListener('input', function(){ acCh.style.background=acIn.value; });
+    document.getElementById('healAccUse').addEventListener('click', function(){
+      var d=load(); d.theme.accentColor=(acIn.value||'').trim()||DEFAULTS.theme.accentColor; d.theme.preset=null;
+      save(d); applyTheme(d.theme);
+    });
+    document.getElementById('healThemeDone').addEventListener('click', function(){ closeMask('healThemeMask'); });
+  }
+
+  function init(){
+    var d=load();
+    applyTheme(d.theme);
+    applyFlash(d.remindToday);
+    updateBrand(d);
+    setupCompletionHooks(d);
+    // 暴露 openTheme 给原生面板的"主题外观"按钮用
+    window.openTheme = openTheme;
+    function bind(){
+      // 不再拦截品牌区点击 —— 让原生的「把它变成你的工作台」面板正常弹出。
+      // 原生面板里的"主题色"已被替换为"主题外观"按钮（点开后调 window.openTheme）
+      // 用户依然可以从原生面板的"主题外观"按钮进入完整的主题设置。
+    }
+    bind();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
 </head>
 <body data-page-node-id="k17xPH9tcBxJoIx0pey0qQ">
 
@@ -3153,7 +4164,17 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         });
       }).catch(function () { return undefined; });
     }
-    return { put: put, get: get };
+    function del(k) {
+      return open().then(function (db) {
+        return new Promise(function (resolve, reject) {
+          var tx = db.transaction(STORE, 'readwrite');
+          tx.objectStore(STORE).delete(k);
+          tx.oncomplete = function () { resolve(); };
+          tx.onerror = function () { reject(tx.error); };
+        });
+      }).catch(function () {});
+    }
+    return { put: put, get: get, del: del };
   })();
 
   /* ---------- Store ---------- */
@@ -3467,7 +4488,26 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       try { if (!Store._restoring) IDB.put(KEY, this.data); } catch (e) {}
       try { if (NasSync && NasSync.ready) NasSync.schedulePush(); } catch (e2) {}
     },
-    reset: function () { this.data = defaults(); this.save(true); },
+    reset: function () {
+      /* 完全清空：主数据回默认 + 清掉所有相关存储位置（IndexedDB 镜像 / healing 主题设置 /
+         AI 聊天 / NAS token / FAB 位置）。否则「清空全部数据」后 Store.load() 检测到
+         localStorage 空时会自动从 IndexedDB fallback 恢复旧数据，造成清不干净的错觉。 */
+      this.data = defaults();
+      this.save(true);
+      try { if (typeof IDB !== 'undefined' && IDB.del) IDB.del(KEY); } catch (e) {}
+      /* 清掉所有相关 localStorage keys */
+      var clearKeys = ['healing.workbench.v1', 'workbench.ai.chat', 'nasToken', 'wb:fab:pos'];
+      clearKeys.forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} });
+      /* 兜底：扫描并清理所有 wb: 前缀的 UI 偏好 key */
+      try {
+        for (var i = localStorage.length - 1; i >= 0; i--) {
+          var kn = localStorage.key(i);
+          if (kn && (kn.indexOf('wb:') === 0 || kn.indexOf('fab.') === 0)) {
+            try { localStorage.removeItem(kn); } catch (e) {}
+          }
+        }
+      } catch (e) {}
+    },
     size: function () {
       try { return new Blob([localStorage.getItem(KEY) || '']).size; } catch (e) { return 0; }
     }
@@ -4522,8 +5562,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         var v = cs.getPropertyValue(key).trim();
         if (/^#[0-9a-f]{3,8}$/i.test(v)) return v;
         if (/^rgba?\(/.test(v)) return v;
-        return /^#[0-9a-f]{3,8}$/i.test(o) ? o : (soft ? '#85A13A' : '#5C7A12');
-      } catch (e) { return soft ? '#85A13A' : '#5C7A12'; }
+        return /^#[0-9a-f]{3,8}$/i.test(o) ? o : (soft ? '#4A8F80' : '#2F6F62');
+      } catch (e) { return soft ? '#4A8F80' : '#2F6F62'; }
     },
 
     /* ---------- 基础块 ---------- */
@@ -4844,6 +5884,15 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
               '</div>' +
               '<label class="timerow-allday-cb"><input type="checkbox" name="allDay"' + (ad ? ' checked' : '') + '><span>全天</span></label>' +
               '</div>';
+          } else if (f.type === 'startendrow') {
+            /* 起止时间段（无"全天"）：开始=结束视为时刻，提交读 v.start / v.end */
+            var ss = (vals && vals.start != null) ? vals.start : '';
+            var se = (vals && vals.end != null) ? vals.end : '';
+            inner = '<div class="timerow">' +
+              '<input class="input" type="time" name="start" value="' + esc(ss) + '" placeholder="开始" inputmode="numeric">' +
+              '<span class="timerow-sep">至</span>' +
+              '<input class="input" type="time" name="end" value="' + esc(se) + '" placeholder="结束" inputmode="numeric">' +
+              '</div>';
           } else {
             var isMoney = f.money || f.type === 'money';
             var extra = '';
@@ -4945,6 +5994,12 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
               o.time = ti ? ti.value.trim() : '';
               o.end = en ? en.value.trim() : '';
               o.allDay = adCb ? adCb.checked : false;
+              return;
+            }
+            if (f.type === 'startendrow') {
+              var si = el.querySelector('[name="start"]'), se = el.querySelector('[name="end"]');
+              o.start = si ? si.value.trim() : '';
+              o.end = se ? se.value.trim() : '';
               return;
             }
             if (isVisible(f)) o[f.k] = fieldVal(f);
@@ -5158,6 +6213,12 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
                 out.time = ti ? ti.value.trim() : '';
                 out.end = en ? en.value.trim() : '';
                 out.allDay = adCb2 ? adCb2.checked : false;
+                return;
+              }
+              if (f.type === 'startendrow') {
+                var si2 = el.querySelector('[name="start"]'), se2 = el.querySelector('[name="end"]');
+                out.start = si2 ? si2.value.trim() : '';
+                out.end = se2 ? se2.value.trim() : '';
                 return;
               }
               if (!isVisible(f)) { out[f.k] = f.type === 'checkbox' ? false : ''; return; }
@@ -7688,7 +8749,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       subHtml +
       (x.doneNote
         ? '<div class="item-note">办理内容：' + esc(x.doneNote) +
-          ((x.startTime || x.endTime) ? '（' + esc(x.startTime || '?') + (x.endTime ? '–' + esc(x.endTime) : '') + '）' : '') +
+          ((x.startTime || x.endTime) ? '（' + esc(x.startTime || '?') + (x.endTime && x.endTime !== x.startTime ? '–' + esc(x.endTime) : '') + '）' : '') +
           (x.wcat ? ' · ' + esc(x.wcat) : '') + '</div>'
         : '') +
       (x.desc ? '<div class="item-note">' + esc(x.desc) + '</div>' : '') + '</div></div></div>';
@@ -7826,8 +8887,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       values: { doneAt: x.doneAt || U.today(), start: x.startTime || '', end: x.endTime || '', cat: x.wcat || '', content: x.doneNote || x.title || '' },
       fields: [
         { k: 'doneAt', label: '完成日期', type: 'date', req: true, def: U.today() },
-        { k: 'start', label: '开始时间', type: 'time' },
-        { k: 'end', label: '结束时间', type: 'time' },
+        { k: 'start', label: '起止时间', type: 'startendrow' },
         { k: 'cat', label: '工作分类', type: 'select', full: true, req: cs.length > 0,
           options: [{ v: '', t: '不分类' }].concat(cs.map(function (c) { return { v: c, t: c }; })),
           def: x.wcat || '' },
@@ -8426,7 +9486,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
             if (!arr.length) return { title: U.fmtDate(date, true) + ' · 工作留痕', body: UI.empty('这一天没有工作记录', '📝') };
             var body = '<div class="list">' + arr.map(function (x) {
               var meta =
-                (x.start ? '<span class="badge grey">🕐 ' + esc(x.start) + (x.end ? '–' + esc(x.end) : '') + '</span>' : '') +
+                (x.start ? '<span class="badge grey">🕐 ' + esc(x.start) + (x.end && x.end !== x.start ? '–' + esc(x.end) : '') + '</span>' : '') +
                 (num(x.mins) ? '<span class="badge grey">⏱ ' + hm(x.mins) + '</span>' : '') +
                 wCaseBadge(x) + wTaskBadge(x);
               return '<div class="item clickable" data-toggle data-id="' + x.id + '">' +
@@ -8508,7 +9568,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         },
         render: function (x) {
           var meta =
-            (x.start ? '<span class="badge grey">🕐 ' + esc(x.start) + (x.end ? '–' + esc(x.end) : '') + '</span>' : '') +
+            (x.start ? '<span class="badge grey">🕐 ' + esc(x.start) + (x.end && x.end !== x.start ? '–' + esc(x.end) : '') + '</span>' : '') +
             (num(x.mins) ? '<span class="badge grey">⏱ ' + hm(x.mins) + '</span>' : '') +
             wCaseBadge(x) + wTaskBadge(x);
           return '<div class="item clickable" data-toggle data-id="' + x.id + '">' +
@@ -8576,7 +9636,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       var html = '<div class="timeline"><div class="tl-day">当天工作内容 · ' + hm(dayMin) + '</div>';
       html += pageRows.map(function (x) {
         var meta =
-          (x.start ? '<span class="badge grey">🕐 ' + esc(x.start) + (x.end ? '–' + esc(x.end) : '') + '</span>' : '') +
+          (x.start ? '<span class="badge grey">🕐 ' + esc(x.start) + (x.end && x.end !== x.start ? '–' + esc(x.end) : '') + '</span>' : '') +
           (num(x.mins) ? '<span class="badge grey">⏱ ' + hm(x.mins) + '</span>' : '') +
           wCaseBadge(x) + wTaskBadge(x);
         return '<div class="tl-item">' +
@@ -9587,12 +10647,6 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       pageRows.map(function (s) {
         var exp = schExp[s.id];
         var colorDot = '<span class="sch-color-dot" style="background:' + (s.color || '#3B82F6') + '"></span>';
-        var timeText = s.allDay ? '全天' : ((s.time || '') + (s.end ? '–' + s.end : ''));
-        var rptBadge = rptText(s) ? '<span class="sch-rpt-badge">' + esc(rptText(s)) + '</span>' : '';
-        // 胶囊行：标题 + 时间胶囊 + 重复徽章
-        var meta =
-          (timeText ? '<span class="badge grey">🕐 ' + esc(timeText) + '</span>' : '') +
-          rptBadge;
         // 展开区：操作按钮（始终在展开时显示）+ 备注（如有，放在按钮下面）
         var body = '';
         if (exp) {
@@ -9603,11 +10657,10 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           if (s.note) body += '<div class="sch-note-body">' + esc(s.note) + '</div>';
         }
         return '<div class="tl-item sch-tap' + (exp ? ' ex' : '') + '" data-act="schexpand" data-id="' + s.id + '">' +
-          '<div class="tl-rail"><span class="tl-time">' + (s.time || (s.allDay ? '全天' : '·')) + '</span><span class="tl-dot"></span><span class="tl-line"></span></div>' +
+          '<div class="tl-rail"><span class="tl-time' + (s.allDay && !s.time ? ' tl-time-all' : '') + '">' + (s.time || (s.allDay ? '全天' : '·')) + '</span><span class="tl-dot"></span><span class="tl-line"></span></div>' +
           '<div class="tl-body"><div class="item"><div class="item-main">' +
           '<div class="wl-meta">' +
             '<span class="sch-item-title-row">' + colorDot + '<strong class="sch-item-title">' + esc(s.title) + '</strong></span>' +
-            meta +
           '</div>' +
           body +
           '</div></div></div></div>';
@@ -9661,11 +10714,6 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       items.forEach(function (s) {
         var exp = schExp[s.id];
         var colorDot = '<span class="sch-color-dot" style="background:' + (s.color || '#3B82F6') + '"></span>';
-        var timeText = s.allDay ? '全天' : ((s.time || '') + (s.end ? '–' + s.end : ''));
-        var rptBadge = rptText(s) ? '<span class="sch-rpt-badge">' + esc(rptText(s)) + '</span>' : '';
-        var meta =
-          (timeText ? '<span class="badge grey">🕐 ' + esc(timeText) + '</span>' : '') +
-          rptBadge;
         var body = '';
         if (exp) {
           body += '<div class="wl-acts">' +
@@ -9675,11 +10723,10 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           if (s.note) body += '<div class="sch-note-body">' + esc(s.note) + '</div>';
         }
         html += '<div class="tl-item sch-tap' + (exp ? ' ex' : '') + '" data-act="schexpand" data-id="' + s.id + '">' +
-          '<div class="tl-rail"><span class="tl-time">' + (s.time || (s.allDay ? '全天' : '·')) + '</span><span class="tl-dot"></span><span class="tl-line"></span></div>' +
+          '<div class="tl-rail"><span class="tl-time' + (s.allDay && !s.time ? ' tl-time-all' : '') + '">' + (s.time || (s.allDay ? '全天' : '·')) + '</span><span class="tl-dot"></span><span class="tl-line"></span></div>' +
           '<div class="tl-body"><div class="item"><div class="item-main">' +
           '<div class="wl-meta">' +
             '<span class="sch-item-title-row">' + colorDot + '<strong class="sch-item-title">' + esc(s.title) + '</strong></span>' +
-            meta +
           '</div>' +
           body +
           '</div></div></div></div>';
@@ -16750,12 +17797,14 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   ========================================================= */
   var arPg = 1, arSz = 10;   // 时光档案分页状态：当前页 / 每页行数
   var TONES = [
-    { k: 'olive', t: '橄榄绿', c: '#5C7A12' },
-    { k: 'sage', t: '松石绿', c: '#16855F' },
-    { k: 'plum', t: '葡萄紫', c: '#6F36A8' },
-    { k: 'terra', t: '陶土橙', c: '#B4471F' },
-    { k: 'ocean', t: '湛海蓝', c: '#1D62B8' },
-    { k: 'rose', t: '玫瑰粉', c: '#B6366B' }
+    { k: 'olive', t: '青墨', c: '#2F6F62' },
+    { k: 'sage', t: '松霜', c: '#3D7A52' },
+    { k: 'plum', t: '暮藤', c: '#5B4AA8' },
+    { k: 'terra', t: '赤陶', c: '#C45C32' },
+    { k: 'ocean', t: '晴空', c: '#2B6CA8' },
+    { k: 'rose', t: '绛桃', c: '#C45A6A' },
+    { k: 'mist', t: '雾岚', c: '#5A6578' },
+    { k: 'amber', t: '琥珀', c: '#C48A22' }
   ];
   var settings = {
     id: 'settings', icon: '⚙️', name: '设置',
@@ -17152,7 +18201,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         if (k === 'dark') de.setAttribute('data-theme', 'dark');
         else if (k === 'light') de.setAttribute('data-theme', 'light');
         else de.removeAttribute('data-theme');
-        if (window.setThemeColor) window.setThemeColor(); else { var tc0 = document.querySelector('meta[name="theme-color"]'); if (tc0) tc0.setAttribute('content', (k === 'light') ? '#F8F7F1' : '#17171A'); }
+        if (window.setThemeColor) window.setThemeColor(); else { var tc0 = document.querySelector('meta[name="theme-color"]'); if (tc0) tc0.setAttribute('content', (k === 'light') ? '#F4F6F4' : '#121816'); }
         U.toast(k === 'dark' ? '已切换深色 🌙' : k === 'light' ? '已切换浅色 ☀️' : '已跟随系统 🌗');
         App.refresh();
       },
@@ -17831,10 +18880,15 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         });
       });
       var statFont = D().settings.statFont || 1;
-      return '<div class="ov-sec" style="--ov-font:' + statFont + '">' +
-        '<div class="ov-sec-h">📈 统计面板</div>' +
-        '<div class="ov-grid">' + allCards.map(ovCard).join('') + '</div>' +
-        '</div>';
+      /* 与上下区域（快捷记录/全部模块）统一：包进 UI.card，标题用 card-head h3（带竖条），
+         让 .ov-grid 统计卡坐落在白色卡片容器内，而不是裸放在波点背景上。
+         不加 ov-sec 类，间距沿用 .card 默认（与其它卡片完全一致）。 */
+      return UI.card({
+        title: '📈 统计面板',
+        body: '<div style="--ov-font:' + statFont + '">' +
+          '<div class="ov-grid">' + allCards.map(ovCard).join('') + '</div>' +
+          '</div>'
+      });
     },
 
     acts: {
@@ -18245,31 +19299,46 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       h += '<div class="small muted">暂无记录，点「+ 新增工作内容」添加</div>';
       return h + '</div>';
     }
-    /* 待办节点（未完成）：按期限升序，始终显示不分页 */
+    /* 待办节点（未完成）：按期限升序分组 → 卡片式显示（与已办时间轴一致），外覆独立边框区块 */
     if (pendTodos.length) {
-      h += '<div class="jw-tl"><div class="jw-tl-group">待办（' + pendTodos.length + '）</div>';
-      var sorted = pendTodos.slice().sort(function (a, b) {
-        var ad = a.due || '9999-12-31', bd = b.due || '9999-12-31';
-        return ad < bd ? -1 : (ad > bd ? 1 : 0);
+      var tOv2 = todoOver(x);
+      h += '<div class="jw-section-box jw-pend-box"><div class="jw-tl"><div class="jw-tl-group">' +
+        '<span class="badge ' + (tOv2 ? 'danger' : 'warn') + '">待办（' + pendTodos.length + '）' + (tOv2 ? ' · 逾期 ' + tOv2 : '') + '</span>' +
+        '</div>';
+      /* 按期限日期分组（未设期限单独一组放最后） */
+      var tGroups = {};
+      pendTodos.forEach(function (td) {
+        var k = td.due || '未设期限';
+        if (!tGroups[k]) tGroups[k] = [];
+        tGroups[k].push(td);
       });
-      h += sorted.map(function (td) {
-        return '<div class="jw-tl-item jw-tl-todo' + (over(td.due) ? ' od' : '') + '">' +
-          '<div class="jw-tl-rail"><span class="jw-tl-dot todo"></span><span class="jw-tl-line"></span></div>' +
-          '<div class="jw-tl-body">' +
-            '<div class="jw-tl-main">' +
-              '<div class="jw-tl-head"><span class="jw-tl-date">' +
-                (td.due ? esc(td.due) + ' · ' + esc(dueText(td.due, false)) : '未设期限') +
-              '</span></div>' +
-              '<div class="jw-tl-text">' + esc(td.t) + '</div>' +
-            '</div>' +
-            '<div class="jw-tl-ops">' +
-              '<button class="link-btn tap" data-act="cTodoDone" data-id="' + x.id + '" data-tid="' + td.id + '">✓ 完成</button>' +
-              '<button class="link-btn tap" data-act="cTodoEdit" data-id="' + x.id + '" data-tid="' + td.id + '">✏️ 改期限</button>' +
-              '<button class="link-btn del tap" data-act="cTodoDel" data-id="' + x.id + '" data-tid="' + td.id + '">删除</button>' +
-            '</div>' +
-          '</div></div>';
-      }).join('');
-      h += '</div>';
+      var tKeys = Object.keys(tGroups).sort(function (a, b) {
+        if (a === '未设期限') return 1;
+        if (b === '未设期限') return -1;
+        return a < b ? -1 : (a > b ? 1 : 0);
+      });
+      tKeys.forEach(function (due) {
+        var arr = tGroups[due];
+        h += '<div class="jw-tl-date-hd">' +
+          '<span class="jw-tl-date-text">' + (due === '未设期限' ? '未设期限' : esc(U.fmtDate(due, true))) + '</span>' +
+          '<span class="jw-tl-date-count">' + arr.length + ' 条</span>' +
+          '</div>';
+        arr.forEach(function (td) {
+          var tdOd = over(td.due) ? ' od' : '';
+          h += '<div class="jw-tl-item jw-tl-todo' + tdOd + '">' +
+            '<div class="jw-tl-rail"><span class="jw-tl-dot todo"></span><span class="jw-tl-line"></span></div>' +
+            '<div class="jw-tl-body">' +
+              '<div class="jw-tl-card tap" data-act="cTodoMenu" data-id="' + x.id + '" data-tid="' + td.id + '">' +
+                '<div class="jw-tl-head">' +
+                  (td.due ? dueBadge(td.due, false) : '') +
+                  (td.cat ? '<span class="badge ' + UI.catColor(td.cat) + '">' + esc(td.cat) + '</span>' : '') +
+                '</div>' +
+                '<div class="jw-tl-text">' + esc(td.t) + '</div>' +
+              '</div>' +
+            '</div></div>';
+        });
+      });
+      h += '</div></div>';
     }
     /* 已办节点：按日期 + 开始时间排序 → 取最近 5 → 按日期分组卡片式显示；>5 在底部「查看全部 N 条」 */
     if (allLogs.length) {
@@ -18284,7 +19353,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       var dates = Object.keys(groups).sort();
       if (desc) dates.reverse();
 
-      h += '<div class="jw-tl"><div class="jw-tl-group" style="display:flex;justify-content:space-between;align-items:center;gap:8px;">' +
+      h += '<div class="jw-section-box jw-done-box"><div class="jw-tl"><div class="jw-tl-group" style="display:flex;justify-content:space-between;align-items:center;gap:8px;">' +
         '<span>已办（' + allLogs.length + '）</span>' +
         '</div>';
       dates.forEach(function (d) {
@@ -18297,7 +19366,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       if (allLogs.length > JW_LOG_PREVIEW) {
         h += '<div class="rec-more"><button class="link-btn tap" data-act="cLogAll" data-id="' + x.id + '">查看全部 ' + allLogs.length + ' 条 ▾</button></div>';
       }
-      h += '</div>';
+      h += '</div></div>';
     }
     return h + '</div>';
   }
@@ -18309,7 +19378,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       '<div class="jw-tl-body">' +
         '<div class="jw-tl-card tap" data-act="cLogEdit" data-id="' + x.id + '" data-lid="' + l.id + '">' +
           '<div class="jw-tl-head">' +
-            ((l.start || l.end) ? '<span class="badge grey">🕐 ' + esc(l.start || '?') + (l.end ? '–' + esc(l.end) : '') + '</span>' : '') +
+            ((l.start || l.end) ? '<span class="badge grey">🕐 ' + esc(l.start || '?') + (l.end && l.end !== l.start ? '–' + esc(l.end) : '') + '</span>' : '') +
             (l.cat ? '<span class="badge ' + UI.catColor(l.cat) + '">' + esc(l.cat) + '</span>' : '') +
             (l.src === 'worklog' ? '<span class="badge info jw-tl-src">工作留痕</span>' : '') +
             (l.src === 'task' ? '<span class="badge cream jw-tl-src">任务待办</span>' : '') +
@@ -18422,7 +19491,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     var actionGrid = '';
     if (!closed) {
       actionGrid = '<div class="jw-action-grid two">' +
-        '<button class="jw-action-btn primary tap" data-act="cAdd" data-id="' + x.id + '">' +
+        '<button class="jw-action-btn tap" data-act="cAdd" data-id="' + x.id + '">' +
           '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' +
           '<span>工作内容</span></button>' +
         '<button class="jw-action-btn tap" data-act="cStage" data-id="' + x.id + '">' +
@@ -18974,8 +20043,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           values: { d: l.d || U.today(), start: l.start || '', end: l.end || '', cat: l.cat || '', t: l.t || '' },
           fields: [
             { k: 'd', label: '办理日期', type: 'date', req: true, def: U.today() },
-            { k: 'start', label: '开始时间', type: 'time' },
-            { k: 'end', label: '结束时间', type: 'time' },
+            { k: 'start', label: '起止时间', type: 'startendrow' },
             { k: 'cat', label: '工作分类', type: 'select', options: wCatOpts() },
             { k: 't', label: '办理内容', type: 'textarea', full: true, rows: 3, req: true }
           ],
@@ -19031,25 +20099,119 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
         var title = (x.title || '案件') + ' · 全部已办（' + allLogs2.length + ' 条）';
         UI.sheet(title, inner);
       },
-      /* 待办节点：改内容与期限；若关联了任务则同步更新任务 */
-      cTodoEdit: function (t) {
+      /* 待办条目：点击整条 → 直接进入编辑表单（与办理进度操作逻辑一致）。
+         可修改内容/期限、勾选完成即归入办理进度、删除（一并移除关联任务）。 */
+      cTodoMenu: function (t) {
         var x = findCase(t.dataset.id); if (!x) return;
         var td = findIn(x.todos || [], t.dataset.tid); if (!td) return;
         UI.form({
           title: '调整待办', okText: '保存',
-          values: { t: td.t || '', due: td.due || '' },
+          danger: true, dangerText: '删除该待办',
+          desc: '编辑内容后可保存；直接勾选「标记已完成」即归入下方的办理进度。',
+          values: { cat: td.cat || '', t: td.t || '', due: td.due || '', done: !!td.done, doneDate: U.today(), start: '', end: '' },
           fields: [
-            { k: 't', label: '待办事项', type: 'textarea', full: true, rows: 3, req: true },
-            { k: 'due', label: '完成期限', type: 'date', }
-          ]
+            { k: 'cat', label: '工作分类', type: 'select', options: wCatOpts(), def: '' },
+            { k: 't', label: '待办事项', type: 'textarea', rows: 2, req: true, ph: '如：核实信访反映、整理谈话笔录…' },
+            { k: 'due', label: '完成期限', type: 'date',
+              whenFn: function (all) { return !all.done; } },
+            { k: 'done', label: '标记为已完成', type: 'checkbox', cbText: '完成后归入「已办」办理进度', def: false },
+            { k: 'doneDate', label: '完成日期', type: 'date', req: true, def: U.today(),
+              whenFn: function (all) { return !!all.done; } },
+            { k: 'doneTime', label: '完成时间', type: 'startendrow',
+              whenFn: function (all) { return !!all.done; } }
+          ],
+          onMount: function (root) {
+            /* 自定义"今天/明天/一周后"快捷芯片 → 算出真实日期写入 due
+               （UI.form 自带 quick 会把中文写入 date input 而失效，所以自己实现）
+               需求：日期输入 + 三个芯片要在**同一行**水平排列（不是换行到下方）。 */
+            var dueField = root.querySelector('[data-field="due"]');
+            if (dueField) {
+              var fr = dueField.querySelector('.field-r') || dueField;
+              // 移除 quick 自动生成的 chip-row（若有）
+              var oldRow = dueField.querySelector('.chip-row');
+              var dateInp = dueField.querySelector('input[name="due"]');
+              // 建一个同行横向容器：日期 + 芯片
+              var inline = document.createElement('div');
+              inline.className = 'due-inline';
+              // 把日期输入挪进横向容器
+              if (dateInp && dateInp.parentNode === fr) { inline.appendChild(dateInp); }
+              // 建芯片
+              var row = document.createElement('div');
+              row.className = 'chip-row due-chips';
+              [
+                { label: '今天', offset: 0 },
+                { label: '明天', offset: 1 },
+                { label: '一周后', offset: 7 }
+              ].forEach(function (q) {
+                var b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'chip tap';
+                b.textContent = q.label;
+                b.dataset.dueOffset = String(q.offset);
+                row.appendChild(b);
+              });
+              inline.appendChild(row);
+              fr.appendChild(inline);
+              // 捕获阶段拦截点击，阻止 UI.form 内置 [data-quick] handler
+              row.addEventListener('click', function (e) {
+                var c = e.target.closest('[data-due-offset]');
+                if (!c) return;
+                e.stopImmediatePropagation();
+                var off = parseInt(c.dataset.dueOffset, 10) || 0;
+                var d = new Date(); d.setDate(d.getDate() + off);
+                var iso = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+                var inp = dueField.querySelector('input[name="due"]');
+                if (inp) { inp.value = iso; inp.dispatchEvent(new Event('input', { bubbles: true })); inp.dispatchEvent(new Event('change', { bubbles: true })); }
+                row.querySelectorAll('.chip').forEach(function (x){ x.classList.remove('on'); });
+                c.classList.add('on');
+              }, true);
+            }
+            // doneDate 默认值：当用户勾选完成那一瞬把 doneDate 设为今天
+            // done 的 onChange 已在 UI.form 内 bind，应用自身 whenFn 重显即可
+          },
+          onDanger: function () {
+            var td3 = findIn(x.todos || [], t.dataset.tid);
+            var imp = (td3 && td3.taskId) ? ['关联任务待办'] : [];
+            UI.confirm('删除该待办',
+              '确定删除这条待办？' + (imp.length ? '将一并删除' + imp.join('、') + '。' : '') + '删除后不可恢复。',
+              '删除', true).then(function (yes) {
+              if (!yes) return;
+              x.todos = (x.todos || []).filter(function (o) { return o.id !== t.dataset.tid; });
+              if (td3 && td3.taskId) {
+                D().tasks = (D().tasks || []).filter(function (a) { return a.id !== td3.taskId; });
+              }
+              Store.save(); App.refresh(); U.toast('待办已删除');
+            });
+          }
         }).then(function (v) {
           if (!v || !v.t) return;
-          td.t = v.t; td.due = v.due || '';
-          if (td.taskId) {
-            var task = (D().tasks || []).filter(function (a) { return a.id === td.taskId; })[0];
-            if (task) { task.title = v.t; task.due = v.due || ''; }
+          if (v.done) {
+            /* 标记完成：内容写入办理进度，移除待办（日期/时间/分类都写入 logs） */
+            var dt = (typeof v.doneDate === 'string' && v.doneDate) ? v.doneDate : U.today();
+            if (td.taskId) {
+              var task = (D().tasks || []).filter(function (a) { return a.id === td.taskId; })[0];
+              if (task && task.status !== 'done') { task.status = 'done'; task.doneAt = dt; task.wcat = v.cat || task.wcat || ''; }
+            }
+            x.todos = (x.todos || []).filter(function (o) { return o.id !== t.dataset.tid; });
+            if (!Array.isArray(x.logs)) x.logs = [];
+            x.logs.push({
+              id: U.uid(), d: dt,
+              start: v.start || '',
+              end: v.end || '',
+              cat: v.cat || '',
+              t: v.t + (v.due ? '（原定 ' + v.due + '）' : ''),
+              src: td.taskId ? 'task' : '', srcId: td.taskId || ''
+            });
+            Store.save(); App.refresh(); U.toast('已完成' + (v.start ? '（' + v.start + (v.end ? '–' + v.end : '') + '）' : '') + '，归入办理进度');
+          } else {
+            td.cat = v.cat || '';
+            td.t = v.t; td.due = v.due || '';
+            if (td.taskId) {
+              var task = (D().tasks || []).filter(function (a) { return a.id === td.taskId; })[0];
+              if (task) { task.title = v.t; task.due = v.due || ''; task.wcat = v.cat || task.wcat || ''; }
+            }
+            Store.save(); App.refresh(); U.toast('待办已更新');
           }
-          Store.save(); App.refresh(); U.toast('待办已更新');
         });
       },
 
@@ -19063,8 +20225,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
           values: { d: U.today(), addTodo: false, todoDue: '' },
           fields: [
             { k: 'd', label: '日期', type: 'date', req: true, def: U.today() },
-            { k: 'start', label: '开始时间', type: 'time' },
-            { k: 'end', label: '结束时间', type: 'time' },
+            { k: 'start', label: '起止时间', type: 'startendrow' },
             { k: 'cat', label: '工作分类', type: 'select', options: wCatOpts(), def: '' },
             { k: 't', label: '工作内容', type: 'textarea', full: true, rows: 4, req: true },
             { k: 'addTodo', label: '同时创建待办', type: 'checkbox', def: false },
@@ -19660,12 +20821,14 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 
   /* ---------- 品牌设置弹层：名称 / 头像 / 标语 / 主题色（借鉴「生活全能工作台」） ---------- */
   var BRAND_TONES = [
-    { k: 'olive', t: '橄榄绿', c: '#5C7A12' },
-    { k: 'sage', t: '松石绿', c: '#16855F' },
-    { k: 'plum', t: '葡萄紫', c: '#6F36A8' },
-    { k: 'terra', t: '陶土橙', c: '#B4471F' },
-    { k: 'ocean', t: '湛海蓝', c: '#1D62B8' },
-    { k: 'rose', t: '玫瑰粉', c: '#B6366B' }
+    { k: 'olive', t: '青墨', c: '#2F6F62' },
+    { k: 'sage', t: '松霜', c: '#3D7A52' },
+    { k: 'plum', t: '暮藤', c: '#5B4AA8' },
+    { k: 'terra', t: '赤陶', c: '#C45C32' },
+    { k: 'ocean', t: '晴空', c: '#2B6CA8' },
+    { k: 'rose', t: '绛桃', c: '#C45A6A' },
+    { k: 'mist', t: '雾岚', c: '#5A6578' },
+    { k: 'amber', t: '琥珀', c: '#C48A22' }
   ];
   function bsEsc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   window.openBrandSheet = function () {
@@ -19673,7 +20836,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     Store.data.settings.brand = Store.data.settings.brand || {};
     var b = Store.data.settings.brand;
     var cur = { name: b.name || '', avatar: b.avatar || '', tagline: b.tagline || '', tone: b.tone || Store.data.settings.tone || 'olive' };
-    function toneC(k) { var o = BRAND_TONES.filter(function (x) { return x.k === k; })[0]; return o ? o.c : '#5C7A12'; }
+    function toneC(k) { var o = BRAND_TONES.filter(function (x) { return x.k === k; })[0]; return o ? o.c : '#2F6F62'; }
     var el = UI.sheet('把它变成你的工作台',
       '<div class="bs-preview">' +
         '<div class="bs-mark" id="bsMark" style="background:' + toneC(cur.tone) + '">' + bsEsc(cur.avatar || '◍') + '</div>' +
@@ -19683,12 +20846,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       '<div class="bs-field"><label>名称</label><input id="bsInName" maxlength="12" value="' + bsEsc(cur.name) + '" placeholder="如：日常集"></div>' +
       '<div class="bs-field"><label>头像（一个 emoji 或汉字）</label><input id="bsInAvatar" maxlength="4" value="' + bsEsc(cur.avatar) + '" placeholder="如：日 / 🌿 / ◍"></div>' +
       '<div class="bs-field"><label>标语</label><input id="bsInTag" maxlength="24" value="' + bsEsc(cur.tagline) + '" placeholder="一句话形容你的工作台"></div>' +
-      '<div class="bs-field"><label>主题色</label><div class="bs-tones">' +
-      BRAND_TONES.map(function (o) {
-        return '<button type="button" class="bs-tone tap' + (cur.tone === o.k ? ' on' : '') + '" data-tone-key="' + o.k + '">' +
-          '<i style="background:' + o.c + '"></i>' + o.t + '</button>';
-      }).join('') +
-      '</div></div>',
+      '<div class="bs-field"><label>主题外观</label><button type="button" class="bs-open-theme tap" data-act="openTheme" style="width:100%;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--cream-soft);color:var(--brown);font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:space-between;cursor:pointer"><span>🎨 背景主题 · 纹理 · 强调色</span><span style="color:var(--brown-3)">›</span></button></div>',
       '<button class="btn ghost tap" data-x>取消</button>' +
       '<button class="btn ghost tap" id="brandResetBtn">恢复默认</button>' +
       '<button class="btn tap" id="brandSaveBtn">保存偏好</button>');
@@ -19705,6 +20863,17 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       if (inp) inp.addEventListener('input', refreshPreview);
     });
     el.addEventListener('click', function (e) {
+      var op = e.target.closest('[data-act="openTheme"]');
+      if (op) {
+        e.stopPropagation();
+        // 关掉原生 sheet（它的遮罩 z-index 比我的主题面板高）
+        el.remove();
+        if (UI && UI.unlock) UI.unlock();
+        if (window.App) App.refresh && App.refresh();
+        // 短暂延迟后开主题面板，确保原生遮罩移除
+        setTimeout(function () { if (typeof window.openTheme === 'function') window.openTheme(); }, 50);
+        return;
+      }
       var sw = e.target.closest('[data-tone-key]');
       if (sw) {
         cur.tone = sw.dataset.toneKey;
@@ -19751,7 +20920,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       else if (th === 'light') de.setAttribute('data-theme', 'light');
       else de.removeAttribute('data-theme');
       var tc = document.querySelector('meta[name="theme-color"]');
-      if (tc) tc.setAttribute('content', (th === 'light') ? '#F8F7F1' : '#17171A');
+      if (tc) tc.setAttribute('content', (th === 'light') ? '#F4F6F4' : '#121816');
     })();
 
     // 主题色系（tone：olive=默认，其余见 BRAND_TONES）与品牌信息（名称/头像/标语）
@@ -19777,7 +20946,11 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
       var mark = document.querySelector('.brand-mark');
       var name = document.querySelector('.brand-text strong');
       var bt = document.querySelector('.brand-text');
-      if (mark) mark.textContent = b.avatar || '◍';
+      if (mark) {
+        mark.textContent = b.avatar || '◍';
+        /* 有自定义头像 → 显示 emoji/汉字；无头像 → 显示叶子图标 */
+        mark.classList.toggle('has-avatar', !!b.avatar);
+      }
       if (name) name.textContent = b.name || '个人工作台';
       if (bt) bt.title = b.tagline || '';
     };
