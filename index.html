@@ -2914,6 +2914,9 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   }
   @media (max-width: 600px){
     :root{ --gap: 12px; }
+    /* 紧凑显示：手机端每个显示框之间的垂直间距偏大，将 view / section-gap 同步收紧 */
+    .view{ gap:7px !important; }
+    .section-gap{ gap:6px !important; }
   }
 
   /* 深色模式：把硬编码的浅色表面（#fff / #FFF5F3）改回深色卡片，避免暗色背景下出现刺眼的白块 */
@@ -3301,9 +3304,89 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   color:#fff !important;
   box-shadow:0 6px 16px var(--olive-24);
 }
+
+/* ==================== 展开备注框颜色统一（与日程/事件记录一致） ====================
+   问题：工作留痕等模块的展开备注 .item-detail .item-note 原用 background:var(--bg)，
+   healing 主题把 --bg 设为 #6E8494(磨砂灰蓝)，导致备注框变深灰蓝、与其他模块
+   (日程 .sch-note-body 用 var(--olive-05) 浅底)风格不一致。
+   改：备注框统一用 var(--olive-05) 浅底、--brown-2 文字，与其他模块一致。 */
+.item-detail .item-note{
+  background:var(--olive-05) !important;
+  border:1px solid var(--line) !important;
+  color:var(--brown-2) !important;
+}
+.item-detail .small.muted{
+  background:var(--olive-05) !important;
+  border:1px solid var(--line) !important;
+  color:var(--brown-3) !important;
+}
+
+/* ==================== 日程日历日期加深（颜色太淡） ====================
+   问题：日程提醒顶部月历 .sch-cell 的日期数字 .sch-num 用 font-weight:500 + 继承 --brown，
+   农历 .sch-lunar 用 --brown-3 浅灰，叠磨砂灰蓝底整体偏淡、几乎看不清。
+   改：日期数字加大字重+加深；农历小字也加深一档；本月普通格子用 var(--brown) 主色。 */
+.sch-cell{ color:var(--brown) !important; }
+.sch-cell .sch-num{ font-weight:700 !important; color:var(--brown) !important; }
+.sch-cell .sch-lunar{ color:var(--brown-2) !important; font-weight:500 !important; }
+/* 今天/选中：加深强调色，保证对比度 */
+.sch-cell.today{ background:#DBEAFE !important; border-color:#2563EB !important; color:#1E3A8A !important; }
+.sch-cell.today .sch-num{ color:#1E3A8A !important; }
+.sch-cell.today .sch-lunar{ color:#3B82F6 !important; }
+.sch-cell.sel:not(.today){ background:#EDE9FE !important; border-color:#7C3AED !important; color:#4C1D95 !important; }
+.sch-cell.sel:not(.today) .sch-num{ color:#4C1D95 !important; }
+.sch-cell.sel:not(.today) .sch-lunar{ color:#8B5CF6 !important; }
+.sch-wd .sch-wd-text,
+.sch-wd{ color:var(--brown-2) !important; font-weight:700 !important; }
 .bs-mark{ border-radius:13px; }
 .bs-name{ color:var(--brown) !important; }
 .bs-tag{ color:var(--brown-3) !important; }
+
+/* ==================== 备考计划：科目/内容筛选标签加深 ====================
+   说明：科目/内容筛选 pill 不在此处加深，统一走全站 `.pill` 规则（浅蓝 #EAF0FC +
+   .pill.on 渐变蓝白字），与任务待办等所有项目一致。此处仅加深「科目/内容」标签。 */
+/* 「科目/内容」筛选标签：原 .small.muted = --brown-3 淡灰(#7E8C9A)，叠在蓝灰底上几乎看不见。
+   加深为中深灰蓝 + 加粗，明显可读。*/ 
+.exam-filter .cat-filter-row .small.muted,
+.cat-filter-row .small.muted{
+  color:var(--brown-2) !important;
+  font-weight:600 !important;
+  font-size:13px !important;
+}
+.badge.exam-cat-badge{
+  background:#DCE7F9 !important;
+  color:#27435F !important;
+  font-weight:600 !important;
+}
+.badge.grey.exam-cat-badge{
+  background:#E2E9F1 !important;
+  color:#3B4A5A !important;
+  font-weight:600 !important;
+}
+
+/* ==================== 编辑/删除操作行「铺满一行均分」 ====================
+   问题：备考计划等模块的展开操作行 .fold-ops 内层是 .item-ops，但该 .item-ops 不在
+   .item 内，基础 `.item .item-ops` 的 display:flex 不生效 → 它是 block，内部「编辑/删除」
+   按钮按内容宽度自然排布(71/61px 靠左)；而打卡与事件用 .item-detail>.item-ops 是直接子级
+   命中 flex:1 均分 → 铺满整行。用户要求统一为「铺满一行、均分、不换行」。
+   改：让 .fold-ops 内层 .item-ops 变成 flex 且拉伸到全宽，其内部 .link-btn 均分铺满。 */
+.fold-ops > .item-ops{
+  display:flex !important; flex:1 1 auto !important; width:100% !important;
+  min-width:0 !important; align-items:stretch !important; gap:6px !important;
+}
+.fold-ops > .item-ops .link-btn{
+  flex:1 1 0 !important; min-width:0 !important; justify-content:center !important;
+  margin-left:0 !important;
+}
+.fold-ops > .item-ops .link-btn.del{
+  margin-left:0 !important;
+}
+/* 兜底：.fold-ops 直接含按钮（无 .item-ops 包裹，如影剧书 detailOps）且按钮 ≤3 时也铺满均分 */
+.fold-ops:has(> .link-btn) {
+  display:flex !important; justify-content:stretch !important; gap:6px !important;
+}
+.fold-ops:has(> .link-btn:nth-child(1)):not(:has(> .link-btn:nth-child(4))) > .link-btn{
+  flex:1 1 0 !important; min-width:0 !important; justify-content:center !important; margin-left:0 !important;
+}
 
 /* 详情区操作胶囊按钮：默认浅色（参考模板的浅胶囊），hover 用强调色跟随主题。
    原样式 background:var(--bg) 会把胶囊涂成 #6E8494 深蓝灰，太沉重，统一改浅。 */
@@ -3537,6 +3620,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       + '</div></div>';
   }
   function inject(){
+    return; // 首页顶部问候卡（夜深了/日期·周几）已按用户要求移除，不再注入
     var v = document.getElementById('view'); if (!v) return;
     /* 关键修复：原逻辑是 "有 healGreet 就 remove + 重新插入"，
        但原模板的 App.refresh() 会频繁触发 #view 的 childList 变化，
@@ -4006,7 +4090,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       <h1 data-page-node-id="vz7taWp1SDzC4uSfB6kM5f" id="pageTitle"><!--pnid:2GUaf0Ff27WZ3EbeTd8qvb-->个人工作台</h1>
       <div data-page-node-id="UM6JgF1rEB8QtLRfBxI1OO" class="topbar-right">
         <span data-page-node-id="OldS9NpzRBrImGCfJWbg8E" class="save-flag" id="saveFlag"><!--pnid:X3vs0rg8fi3fv99mFtL9u0-->已保存</span>
-        <span class="save-flag sync-flag" id="syncFlag" title="点击手动同步">同步</span>
+        <!-- NAS 同步入口已移除（不需要同步到 NAS） -->
         <button aria-label="设置" class="icon-btn tap" id="settingsBtn" title="设置（数据备份 / 导入导出）">
           <svg fill="none" height="22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         </button>
@@ -8516,9 +8600,9 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
             '</div>' +
             '<div class="item-detail">' + preview +
             '<div class="item-ops ev-ops">' +
-            '<button class="link-btn tap" data-act="evMark" data-id="' + ev.id + '">✓ 今天做了</button>' +
+            '<button class="link-btn tap" data-act="evMark" data-id="' + ev.id + '">✓ 记录</button>' +
             '<button class="link-btn tap" data-act="evBackfill" data-id="' + ev.id + '">＋ 补记</button>' +
-            '<button class="link-btn tap" data-act="evOpen" data-id="' + ev.id + '">📅 全部日期</button>' +
+            '<button class="link-btn tap" data-act="evOpen" data-id="' + ev.id + '">📅 全部</button>' +
             '<button class="link-btn tap" data-act="evEdit" data-id="' + ev.id + '">✏️ 编辑</button>' +
             '<button class="link-btn del tap" data-act="evDel" data-id="' + ev.id + '">🗑 删除</button>' +
             '</div></div>' +
@@ -10646,24 +10730,24 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     return '<div class="timeline"><div class="tl-day">' + esc(dateLabel) + ' · ' + items.length + ' 个事项</div>' +
       pageRows.map(function (s) {
         var exp = schExp[s.id];
-        var colorDot = '<span class="sch-color-dot" style="background:' + (s.color || '#3B82F6') + '"></span>';
-        // 展开区：操作按钮（始终在展开时显示）+ 备注（如有，放在按钮下面）
-        var body = '';
+        var colorDot = '<span class="sch-item-title-row"><span class="sch-color-dot" style="background:' + (s.color || '#3B82F6') + '"></span>' +
+        '<strong class="sch-item-title">' + esc(s.title) + '</strong></span>';
+        // 时间/全天徽章
+        var timeBadge = (s.time) ? '<span class="badge grey">' + esc(s.time) + '</span>' :
+                        (s.allDay ? '<span class="badge info">全天</span>' : '');
+        // 展开区：操作按钮 + 备注
+        var detail = '';
         if (exp) {
-          body += '<div class="wl-acts">' +
+          detail = '<div class="item-detail"><div class="wl-acts">' +
             '<button class="link-btn tap" data-act="schEdit" data-id="' + s.id + '">✏️ 编辑</button>' +
             '<button class="link-btn del tap" data-act="schDel" data-id="' + s.id + '">🗑 删除</button>' +
-          '</div>';
-          if (s.note) body += '<div class="sch-note-body">' + esc(s.note) + '</div>';
+          '</div>' + (s.note ? '<div class="sch-note-body">' + esc(s.note) + '</div>' : '') + '</div>';
         }
-        return '<div class="tl-item sch-tap' + (exp ? ' ex' : '') + '" data-act="schexpand" data-id="' + s.id + '">' +
-          '<div class="tl-rail"><span class="tl-time' + (s.allDay && !s.time ? ' tl-time-all' : '') + '">' + (s.time || (s.allDay ? '全天' : '·')) + '</span><span class="tl-dot"></span><span class="tl-line"></span></div>' +
-          '<div class="tl-body"><div class="item"><div class="item-main">' +
-          '<div class="wl-meta">' +
-            '<span class="sch-item-title-row">' + colorDot + '<strong class="sch-item-title">' + esc(s.title) + '</strong></span>' +
-          '</div>' +
-          body +
-          '</div></div></div></div>';
+        return '<div class="item clickable' + (exp ? ' open' : '') + '" data-act="schexpand" data-id="' + s.id + '">' +
+          '<div class="item-main">' +
+            '<div class="item-title">' + colorDot + '</div>' +
+            '<div class="item-meta">' + timeBadge + '</div>' +
+          '</div>' + detail + '</div>';
       }).join('') + '</div>' + ListPager.pager('schedule:day', items.length);
   }
 
@@ -10713,23 +10797,22 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       /* 当日每条日程 */
       items.forEach(function (s) {
         var exp = schExp[s.id];
-        var colorDot = '<span class="sch-color-dot" style="background:' + (s.color || '#3B82F6') + '"></span>';
-        var body = '';
+        var colorDot = '<span class="sch-item-title-row"><span class="sch-color-dot" style="background:' + (s.color || '#3B82F6') + '"></span>' +
+        '<strong class="sch-item-title">' + esc(s.title) + '</strong></span>';
+        var timeBadge = (s.time) ? '<span class="badge grey">' + esc(s.time) + '</span>' :
+                        (s.allDay ? '<span class="badge info">全天</span>' : '');
+        var detail = '';
         if (exp) {
-          body += '<div class="wl-acts">' +
+          detail = '<div class="item-detail"><div class="wl-acts">' +
             '<button class="link-btn tap" data-act="schEdit" data-id="' + s.id + '">✏️ 编辑</button>' +
             '<button class="link-btn del tap" data-act="schDel" data-id="' + s.id + '">🗑 删除</button>' +
-          '</div>';
-          if (s.note) body += '<div class="sch-note-body">' + esc(s.note) + '</div>';
+          '</div>' + (s.note ? '<div class="sch-note-body">' + esc(s.note) + '</div>' : '') + '</div>';
         }
-        html += '<div class="tl-item sch-tap' + (exp ? ' ex' : '') + '" data-act="schexpand" data-id="' + s.id + '">' +
-          '<div class="tl-rail"><span class="tl-time' + (s.allDay && !s.time ? ' tl-time-all' : '') + '">' + (s.time || (s.allDay ? '全天' : '·')) + '</span><span class="tl-dot"></span><span class="tl-line"></span></div>' +
-          '<div class="tl-body"><div class="item"><div class="item-main">' +
-          '<div class="wl-meta">' +
-            '<span class="sch-item-title-row">' + colorDot + '<strong class="sch-item-title">' + esc(s.title) + '</strong></span>' +
-          '</div>' +
-          body +
-          '</div></div></div></div>';
+        html += '<div class="item clickable' + (exp ? ' open' : '') + '" data-act="schexpand" data-id="' + s.id + '">' +
+          '<div class="item-main">' +
+            '<div class="item-title">' + colorDot + '</div>' +
+            '<div class="item-meta">' + timeBadge + '</div>' +
+          '</div>' + detail + '</div>';
       });
     });
     html += '</div>' + ListPager.pager('schedule:all', arr.length);
@@ -11625,8 +11708,8 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
 
   /* 备考：科目 / 内容分类 —— 两个独立字段，任填其一即可 */
   function examCatBadges(x) {
-    return (x.subject ? '<span class="badge">' + esc(x.subject) + '</span>' : '') +
-      (x.contentCat ? '<span class="badge grey">' + esc(x.contentCat) + '</span>' : '');
+    return (x.subject ? '<span class="badge exam-cat-badge">' + esc(x.subject) + '</span>' : '') +
+      (x.contentCat ? '<span class="badge grey exam-cat-badge">' + esc(x.contentCat) + '</span>' : '');
   }
   function examCatText(x) {
     return [x.subject, x.contentCat].filter(function (s) { return s; }).join(' · ');
@@ -11888,11 +11971,14 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       return UI.head('📚 备考计划', '设定考试日期，自由安排计划、记录，按遗忘曲线复习') +
         this.countdown() +
         UI.tabs([{ k: 'plan', t: '学习计划', i: '🗓' }, { k: 'record', t: '学习记录', i: '⏱' }, { k: 'review', t: '复习提醒', i: '🔔' }], t, 'tab') +
+        '<div class="card exam-filter-card">' +
         examCatFilter() +
-        '<div class="row" style="gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 10px">' +
+        '<div class="row" style="gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 0">' +
         Cats.btn('examSubject', '科目分类', '🗂 科目管理') + Cats.btn('examContent', '内容分类', '🗂 内容管理') +
         '</div>' +
-        (t === 'plan' ? this.plans() : t === 'record' ? this.records() : this.review()) +
+        this._statFor(t) +
+        '</div>' +
+        this._cardFor(t) +
         Cal.card({
           modId: 'exam', title: '📅 备考日历', sub: '数字 = 当天学习次数，点日期查看当天',
           cell: function (date) { return D().exam.records.filter(function (x) { return x.date === date; }).length; },
@@ -11910,6 +11996,15 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           }
         }) +
         '<button class="fab tap" data-act="' + this._fabAct() + '" aria-label="' + this._fabLabel() + '" title="' + this._fabLabel() + '">+</button>';
+    },
+
+    /* 当前 tab 的统计卡 HTML（放白底卡片内） */
+    _statFor: function (t) {
+      return (t === 'plan' ? this.plans() : t === 'record' ? this.records() : this.review()).stat;
+    },
+    /* 当前 tab 的内容卡 HTML（白底卡片之外） */
+    _cardFor: function (t) {
+      return (t === 'plan' ? this.plans() : t === 'record' ? this.records() : this.review()).card;
     },
 
     /* 根据当前 tab 返回对应的 FAB 按钮 */
@@ -11952,7 +12047,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           (x.note ? '<div class="note-text">📝 ' + esc(x.note) + '</div>' : '') + '</div>';
       }).join('') + '</div>' : UI.empty('还没有设置目标考试，先加一个来看倒计时', '⏳');
 
-      return UI.card({ title: '⏳ 考试倒计时', right: '<button class="btn ghost sm tap" data-act="hist">📜 历史记录</button>', body: body });
+      return UI.card({ title: '⏳ 考试倒计时', right: '<button class="btn sm tap" data-act="enew" style="margin-right:6px">＋ 新增</button><button class="btn ghost sm tap" data-act="hist">📜 历史记录</button>', body: body });
     },
 
     plans: function () {
@@ -11996,10 +12091,11 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         });
         listHtml += '</div>';
       }
-      return UI.stats([
-        ['总计划', all.length, true], ['进行中', doing], ['已逾期', overdue, overdue > 0], ['已完成', doneAll]
-      ]) +
-        UI.card({
+      return {
+        stat: UI.stats([
+          ['总计划', all.length, true], ['进行中', doing], ['已逾期', overdue, overdue > 0], ['已完成', doneAll]
+        ]),
+        card: UI.card({
           title: '🗓 学习计划',
           right: '<button class="btn ghost sm tap" data-act="planHist">📜 历史记录</button>',
           body: UI.tabs([
@@ -12009,7 +12105,8 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
             '<div style="height:12px"></div>' +
             (arr.length ? UI.bar(doneAll / Math.max(1, all.length) * 100) + '<div style="height:16px"></div>' : '') +
             listHtml
-        });
+        })
+      };
     },
 
     records: function () {
@@ -12024,20 +12121,22 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       var totAll = all.reduce(function (s, x) { return s + num(x.mins); }, 0);
       var w0 = U.shiftDay(U.today(), -6);
       var wk = all.filter(function (x) { return x.date >= w0; }).reduce(function (s, x) { return s + num(x.mins); }, 0);
-      return UI.stats([
-        ['当天学习', (tot / 60).toFixed(1) + ' 小时', true],
-        ['近 7 天', (wk / 60).toFixed(1) + ' 小时'],
-        ['累计学习', (totAll / 60).toFixed(1) + ' 小时'],
-        ['记录条数', all.length]
-      ]) +
-        UI.card({
+      return {
+        stat: UI.stats([
+          ['当天学习', (tot / 60).toFixed(1) + ' 小时', true],
+          ['近 7 天', (wk / 60).toFixed(1) + ' 小时'],
+          ['累计学习', (totAll / 60).toFixed(1) + ' 小时'],
+          ['记录条数', all.length]
+        ]),
+        card: UI.card({
           title: '⏱ 学习记录', sub: isToday ? '今天' : U.fmtDate(day, true),
           right: '<button class="btn ghost sm tap" data-act="recordHist">📜 历史记录</button>',
           body: eDayNav() +
             (arr.length
               ? ListPager.out({ ns: 'exam:record', items: arr, defSize: 5, empty: '记录每次学习，日积月累看得见', emptyIcon: '⏱', render: renderExamRecordItem })
               : UI.empty(isToday ? '今天还没有学习记录，点「记录一次」开始' : '「' + U.fmtDate(day, true) + '」没有学习记录', '⏱'))
-        });
+        })
+      };
     },
 
     /* 复习提醒：与学习记录联动，按艾宾浩斯曲线给出待复习清单 */
@@ -12080,15 +12179,17 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         listHtml += '</div>';
       }
 
-      return UI.stats([
-        ['待复习', pending.length, true], ['今天', dueToday], ['已逾期', overdue, overdue > 0], ['已巩固', consolidated]
-      ]) +
-        UI.card({
+      return {
+        stat: UI.stats([
+          ['待复习', pending.length, true], ['今天', dueToday], ['已逾期', overdue, overdue > 0], ['已巩固', consolidated]
+        ]),
+        card: UI.card({
           title: '🔔 复习提醒',
           sub: '艾宾浩斯 · 第 ' + EB_INTERVALS.join(' / ') + ' 天',
           right: '<button class="btn ghost sm tap" data-act="rHist">📜 历史记录</button>',
           body: listHtml
-        });
+        })
+      };
     },
 
     acts: {
@@ -18491,7 +18592,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     id: 'home', icon: '🏠', name: '首页总览',
 
     render: function () {
-      return UI.head('🏠 首页总览', '每天从这里开始，一步直达高频操作') +
+      return UI.head('🏠 首页总览', '') +
         this.todayFocus() +
         this.quickRecord() +
         this.overview() +
@@ -21008,12 +21109,12 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     // 首次隐私提醒
     if (!Store.data.settings.privacy) setTimeout(function () { window.showPrivacy(false); }, 380);
 
-    // NAS 同步：仅在由飞牛通过 http(s) 提供服务时启用，点击右上角“同步”可手动同步
-    if (NasSync && NasSync.init) {
-      var _sf = document.getElementById('syncFlag');
-      if (_sf) _sf.onclick = function () { NasSync.syncNow(); };
-      NasSync.init();
-    }
+    // NAS 同步：已禁用（不需要同步到 NAS，因此不调用 NasSync.init，也不会写入右上角同步状态）
+    // if (NasSync && NasSync.init) {
+    //   var _sf = document.getElementById('syncFlag');
+    //   if (_sf) _sf.onclick = function () { NasSync.syncNow(); };
+    //   NasSync.init();
+    // }
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
