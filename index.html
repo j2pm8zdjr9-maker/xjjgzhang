@@ -18640,7 +18640,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       (D().tasks || []).filter(function (x) {
         if (x.caseTodoId) return false;
         return x.status !== 'done' && x.due && U.dayDiff(t, x.due) === 0;
-      }).slice(0, 3).forEach(function (x) {
+      }).forEach(function (x) {
         items.push({ kind: '今天', name: x.title, go: 'tasks' });
       });
       activeHabits().forEach(function (h) {
