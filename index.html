@@ -582,7 +582,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 }
 .body-card .body-card-info{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
 .body-card .body-card-t{ font-size:11.5px; color:var(--brown-3); font-weight:600; letter-spacing:.2px; line-height:1.2; }
-.body-card .body-card-v{ font-size:16px; color:var(--brown); font-weight:700; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.body-card .body-card-v{ font-size:16px; color:var(--brown); font-weight:700; line-height:1.2; white-space:normal; overflow:visible; }
 .body-card .body-card-s{ font-size:10.5px; color:var(--brown-3); line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .body-card.on{ border-color:var(--bd-c); background:var(--bd-bg); box-shadow:0 2px 8px rgba(60,40,20,.06); }
 /* 4 子项目主色：体重=绿、饮水=蓝、运动=橙、饮食=粉 */
@@ -1123,10 +1123,22 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .fold-detail,
 .task-detail, .media-detail, .social-detail, .family-detail,
 .measure-detail, .buy-item-detail, .consum-detail,
-.charge-detail, .refuel-detail{
+.charge-detail, .refuel-detail,
+.wish-detail, .stock-ov-detail, .cat-rec-detail{
   padding:10px 12px 12px; border-radius:0 0 10px 10px;
   background:var(--card); border:1px solid var(--line); border-top:none;
+  display:none;
 }
+/* 详情始终渲染、靠 .open 用 CSS 显隐（纯 DOM 切换，避免 App.refresh() 整页重绘闪烁） */
+.task-row.open + .task-detail{ display:block; animation:detailIn .18s ease; }
+.charge-row.open + .charge-detail, .refuel-row.open + .refuel-detail{ display:block; animation:detailIn .18s ease; background:var(--olive-open); border-color:var(--olive-24); }
+.wl-hist-row.open .fold-detail, .wl-hist-row.open + .fold-detail{ display:block; animation:detailIn .18s ease; }
+.social-row.open + .social-detail, .wish-row.open + .wish-detail, .family-row.open + .family-detail{ display:block; animation:detailIn .18s ease; }
+.buy-item-row.open + .buy-item-detail, .consum-row.open + .consum-detail{ display:block; animation:detailIn .18s ease; }
+.cat-rec-row.open + .cat-rec-detail{ display:block; animation:detailIn .18s ease; }
+.stock-ov-row.open + .stock-ov-detail{ display:block; animation:detailIn .18s ease; }
+.measure-row.open + .measure-detail{ display:block; animation:detailIn .18s ease; }
+.anniv-row.open .fold-detail{ display:block; animation:detailIn .18s ease; }
 /* 详情区操作栏：胶囊按钮组（左对齐成组，删除靠右独立），带底部分隔线 */
 .fold-ops,
 .buy-item-ops, .consum-ops, .task-ops-row, .media-ops-row,
@@ -1165,7 +1177,8 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .charge-ops .link-btn.del, .refuel-ops .link-btn.del,
 .item-detail>.item-ops .link-btn.del{
   color:var(--danger);
-  background:rgba(180,85,63,.07); border-color:rgba(180,85,63,.22);
+  background:var(--bg);
+  border-color:rgba(180,85,63,.30);
   margin-left:auto;   /* 删除与其他操作分离，靠右 */
 }
 .fold-ops .link-btn.del:hover, .buy-item-ops .link-btn.del:hover,
@@ -1230,7 +1243,9 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .task-tl-detail{
   padding:8px 12px 10px; border-radius:0 0 10px 10px; background:var(--card);
   border:1px solid var(--line); border-top:none;
+  display:none;
 }
+.task-tl-item.open .task-tl-detail{ display:block; animation:detailIn .18s ease; }
 
 /* 影剧书主视图内联搜索框：独立一行，标题行只留「全部时间」，避免窄屏整块换行 */
 .media-head-right{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
@@ -1408,6 +1423,8 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .charge-row.open, .refuel-row.open{ background:var(--olive-open); box-shadow:inset 0 0 0 1px var(--olive-24); border-radius:10px 10px 0 0; border-bottom-color:transparent; }
 /* 待抄表充电记录（未填电表）→ 置顶并黄色高亮提醒 */
 .charge-row.pending{ background:rgba(201,128,58,.08); border-color:rgba(201,128,58,.35); }
+/* 展开态统一操作色：待抄表行展开后也回到主题展开底色（避免同屏橙蓝混杂），橙色提醒由「待抄表」徽章承担 */
+.charge-row.pending.open, .charge-row.pending.open + .charge-detail{ background:var(--olive-open); border-color:var(--olive-24); }
 .charge-main, .refuel-main{ flex:1; min-width:0; display:flex; flex-direction:column; gap:4px; }
 .charge-meta, .refuel-meta{ display:flex; flex-wrap:wrap; gap:5px; align-items:center; font-size:12px; line-height:1.45; color:var(--brown-3); }
 .charge-caret, .refuel-caret{ /* 统一由 .fold-caret 覆盖 */ }
@@ -1423,9 +1440,6 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .empty .e-t{ font-size:14.5px; font-weight:600; color:var(--brown-2); line-height:1.5; }
 .empty .e-d{ font-size:13px; color:var(--brown-3); max-width:280px; line-height:1.6; }
 .empty .e-cta{ margin-top:10px; }
-/* 弹窗内的空状态更紧凑：减少垂直占高 */
-.modal .empty{ padding:22px 18px; gap:4px; }
-.modal .empty .e-ico{ width:46px; height:46px; font-size:22px; margin-bottom:2px; }
 .empty .e-cta .btn{ min-width:150px; }
 
 /* 表格（窄屏自动转卡片） */
@@ -1601,11 +1615,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .modal-head h3{ font-size:16px; font-weight:650; }
 /* 弹窗表单内左右各预留 8px 兜底安全气口，避免与 iOS PWA 横屏、刘海/灵动岛侧边安全区挤压；
    小屏（手机）会在下方 @media(max-width:900px) 内继续叠加 env(safe-area-inset-*) */
-.modal-body{ padding:6px 18px 4px; display:flex; flex-direction:column; gap:12px; }
-/* 历史记录弹窗：筛选区/列表区更紧凑（占位 div 已移除，统一走 gap） */
-.modal-body.hist-body{ gap:8px; }
-.modal-body.hist-body .pg-bar{ margin-top:0; margin-bottom:0; }
-.modal-body.hist-body .hist-search{ margin-bottom:0; }
+.modal-body{ padding:6px 18px 4px; display:flex; flex-direction:column; gap:14px; }
 .modal-foot{
   padding:13px 18px calc(14px + env(safe-area-inset-bottom));
   display:flex; gap:10px; position:sticky; bottom:0; background:var(--card);
@@ -1842,9 +1852,24 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .di-dbody{ white-space:pre-wrap; line-height:1.85; color:var(--brown); font-size:15.5px; }
 .di-detail .di-tags{ margin-top:12px; }
 
-/* 事件记录：展开区最近记录预览 */
-.ev-preview{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
-.ev-chip{ font-size:12px; line-height:1.5; color:var(--brown-2); background:var(--olive-05); border:1px solid var(--line); border-radius:8px; padding:3px 9px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+/* 事件记录：展开区最近记录预览 —— 固定两行；胶囊宽度按内容自适应，排满两行为止
+   （高度：胶囊 29px × 2 行 + 行间距 6px = 64px，超出部分隐藏） */
+.ev-preview{
+  display:flex; flex-wrap:wrap; align-content:flex-start; gap:6px; margin-bottom:8px;
+  max-height:64px; overflow:hidden;
+}
+.ev-chip{
+  display:inline-flex; align-items:center; box-sizing:border-box; height:29px;
+  font-size:12px; line-height:1.4; color:var(--brown-2); background:var(--olive-05);
+  border:1px solid var(--line); border-radius:8px; padding:0 8px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  max-width:calc(50% - 3px);   /* 单个胶囊最多占半行，保证每行至少排 2 个、两行排得满 */
+}
+/* 事件记录卡片：标题独占一行，统计胶囊另起一行
+   （.item.clickable .item-main 默认为 row，会把标题和统计胶囊挤在同一行） */
+.item.clickable.ev-item .item-main{ flex-direction:column; align-items:stretch; gap:6px; flex:1 1 100%; }
+.item.clickable.ev-item .item-title,
+.item.clickable.ev-item .item-meta{ flex:0 0 auto; }
 
 /* 日历 — 紧凑等高设计：星期头与日期行统一行高，消除首行间距过大 */
 .cal{
@@ -2510,7 +2535,9 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .baby-qcard{ display:flex; flex-direction:column; align-items:center; gap:5px;
   padding:12px 6px; border:1px solid var(--line); border-radius:12px;
   background:var(--card); cursor:pointer; transition:background .15s; text-align:center; }
-.baby-qcard:active,.baby-qcard:hover{ background:var(--olive-05); }
+.baby-qcard:active,.baby-qcard:hover{ background:#EEF3FC; }
+.baby-qcard.on{ background:#EAF0FB !important; border-color:var(--olive) !important; box-shadow:0 3px 10px var(--olive-24) !important; }
+.baby-qcard.on .baby-qlabel{ color:var(--olive-deep) !important; font-weight:700 !important; }
 .baby-qicon{ font-size:22px; }
 .baby-qlabel{ font-size:12px; color:var(--brown-2); font-weight:550; }
 .baby-qsub{ font-size:11px; color:var(--brown-3); }
@@ -2994,7 +3021,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
      主题：燕麦灰蓝底(#6E8494) + 长春花蓝强调(#7FA0E4) + 圆点纹理
      增强：① 首页问候语头 ② 卡片标题小竖条 ③ 品牌标换叶子
      仅追加样式与脚本，不改动任何原有结构；
-     删除 id 为 "healing-reskin" 的 style 块与 "healing-reskin-js" 等三个 script 块即可还原。 -->
+     删除 <style id="healing-reskin"> 与 <script id="healing-reskin-js"> 即可还原。 -->
 <style id="healing-reskin">
 :root{
   /* 燕麦灰蓝中性面 + 长春花蓝（periwinkle）主色，单一治愈风格 */
@@ -3395,6 +3422,61 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   flex:1 1 0 !important; min-width:0 !important; justify-content:center !important; margin-left:0 !important;
 }
 
+/* ==================== 全站操作行统一：按钮自动等分、强制同一行 ====================
+   适用所有展开/详情区操作行（UI.ops 生成的 .item-ops 内嵌 + 外层可能平级追加按钮）。
+   ① 用 display:contents 把 .item-ops「拆壳」，让所有按钮变成容器的直接 flex 项；
+   ② 每个按钮 flex:1 1 0 → 真 N 等分：2 个各占一半、3 个各占三分之一、按钮增减自动重算；
+   ③ nowrap + 紧凑内边距 + ellipsis，保证再多按钮也不换行、不撑破。
+   按钮 ≥6 个时（极少）退回自然宽度，避免每个被压得过窄。 */
+:is(.fold-ops,.buy-item-ops,.consum-ops,.task-ops-row,.media-ops-row,
+    .social-ops-row,.family-ops-row,.measure-ops-row,.charge-ops,.refuel-ops,
+    .item-detail-ops,.wl-acts,.item-ops-row,.item-detail>.item-ops,
+    .ev-ops,.encourage-ops){
+  display:flex !important; flex-wrap:nowrap !important;
+  gap:5px !important; align-items:stretch !important;
+}
+:is(.fold-ops,.buy-item-ops,.consum-ops,.task-ops-row,.media-ops-row,
+    .social-ops-row,.family-ops-row,.measure-ops-row,.charge-ops,.refuel-ops,
+    .item-detail-ops,.wl-acts,.item-ops-row,.ev-ops,.encourage-ops) .item-ops{
+  display:contents !important;
+}
+:is(.fold-ops,.buy-item-ops,.consum-ops,.task-ops-row,.media-ops-row,
+    .social-ops-row,.family-ops-row,.measure-ops-row,.charge-ops,.refuel-ops,
+    .item-detail-ops,.wl-acts,.item-ops-row,.item-detail>.item-ops,
+    .ev-ops,.encourage-ops) .link-btn{
+  flex:1 1 0 !important; min-width:0 !important;
+  justify-content:center !important; margin-left:0 !important;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  padding-left:6px !important; padding-right:6px !important;
+}
+/* 按钮 ≥4 个：自动缩小字号/内边距，保证 4 个按钮等分后文字仍能完整显示不截断 */
+:is(.fold-ops,.buy-item-ops,.consum-ops,.task-ops-row,.media-ops-row,
+    .social-ops-row,.family-ops-row,.measure-ops-row,.charge-ops,.refuel-ops,
+    .item-detail-ops,.wl-acts,.item-ops-row,.item-detail>.item-ops,
+    .ev-ops,.encourage-ops):has(> .link-btn:nth-child(4)){
+  gap:4px !important;
+}
+:is(.fold-ops,.buy-item-ops,.consum-ops,.task-ops-row,.media-ops-row,
+    .social-ops-row,.family-ops-row,.measure-ops-row,.charge-ops,.refuel-ops,
+    .item-detail-ops,.wl-acts,.item-ops-row,.item-detail>.item-ops,
+    .ev-ops,.encourage-ops):has(> .link-btn:nth-child(4)) .link-btn{
+  font-size:11.5px !important; padding-left:2px !important; padding-right:2px !important;
+  letter-spacing:-.2px !important;
+}
+/* 按钮 ≥6 个：退回自然宽度（避免每个被压得只剩几十像素） */
+:is(.fold-ops,.buy-item-ops,.consum-ops,.task-ops-row,.media-ops-row,
+    .social-ops-row,.family-ops-row,.measure-ops-row,.charge-ops,.refuel-ops,
+    .item-detail-ops,.wl-acts,.item-ops-row,.item-detail>.item-ops,
+    .ev-ops,.encourage-ops):has(> .link-btn:nth-child(6)){
+  flex-wrap:wrap !important;
+}
+:is(.fold-ops,.buy-item-ops,.consum-ops,.task-ops-row,.media-ops-row,
+    .social-ops-row,.family-ops-row,.measure-ops-row,.charge-ops,.refuel-ops,
+    .item-detail-ops,.wl-acts,.item-ops-row,.item-detail>.item-ops,
+    .ev-ops,.encourage-ops):has(> .link-btn:nth-child(6)) .link-btn{
+  flex:0 1 auto !important;
+}
+
 /* 详情区操作胶囊按钮：默认浅色（参考模板的浅胶囊），hover 用强调色跟随主题。
    原样式 background:var(--bg) 会把胶囊涂成 #6E8494 深蓝灰，太沉重，统一改浅。 */
 .fold-ops .link-btn, .buy-item-ops .link-btn,
@@ -3421,7 +3503,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   border-color:var(--olive-24) !important;
   color:var(--olive-deep) !important;
 }
-/* 删除胶囊：保持红字浅红底（不被上面的浅色覆盖刷成灰色） */
+/* 删除胶囊：与其他操作按钮一致为白底（与展开区主题底呼应），仅保留红字红边区分删除语义 */
 .fold-ops .link-btn.del, .buy-item-ops .link-btn.del,
 .consum-ops .link-btn.del, .task-ops-row .link-btn.del,
 .media-ops-row .link-btn.del, .social-ops-row .link-btn.del,
@@ -3429,8 +3511,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .charge-ops .link-btn.del, .refuel-ops .link-btn.del,
 .item-detail>.item-ops .link-btn.del,
 .encourage-ops .link-btn.del{
-  background:rgba(216,120,106,.10) !important;
-  border-color:rgba(216,120,106,.28) !important;
+  background:rgba(255,255,255,.82) !important;
+  border-color:rgba(216,120,106,.38) !important;
   color:#B2574A !important;
   margin-left:auto;
 }
@@ -3441,8 +3523,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .charge-ops .link-btn.del:hover, .refuel-ops .link-btn.del:hover,
 .item-detail>.item-ops .link-btn.del:hover,
 .encourage-ops .link-btn.del:hover{
-  background:rgba(216,120,106,.16) !important;
-  border-color:rgba(216,120,106,.40) !important;
+  background:rgba(216,120,106,.14) !important;
+  border-color:rgba(216,120,106,.42) !important;
   color:#A8433A !important;
 }
 
@@ -4971,11 +5053,14 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       }
 
       view.onclick = function (e) {
-        // 通用展开/折叠：点击 .item.clickable[data-toggle] 切换 open（排除内部按钮与操作区）
-        var tog = e.target.closest('.item.clickable');
-        if (tog && tog.hasAttribute('data-toggle') && !e.target.closest('[data-act]') && !e.target.closest('.item-ops')) {
+        // 通用展开/折叠：点击任意带 data-toggle 的行（.item.clickable / .task-tl-item / .charge-row / .refuel-row 等）切换 open（排除内部按钮与操作区）
+        var tog = e.target.closest('[data-toggle]');
+        if (tog && !e.target.closest('[data-act]') && !e.target.closest('.item-ops')) {
           e.preventDefault();
           tog.classList.toggle('open');
+          // 同步 taskExp 状态（供渲染时读取初始展开态）
+          var tid = tog.dataset.id;
+          if (tid && typeof taskExp !== 'undefined') taskExp[tid] = tog.classList.contains('open');
           return;
         }
         var t = e.target.closest('[data-act]');
@@ -6371,7 +6456,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       el.className = 'modal-mask';
       el.innerHTML = '<div class="modal" role="dialog" aria-modal="true" aria-label="' + esc(title || '详情') + '"><div class="modal-head"><h3>' + esc(title) + '</h3><button class="x-btn tap" data-x aria-label="关闭">✕</button></div>' +
         '<div class="modal-body">' + bodyHtml + '</div>' +
-        (footHtml ? '<div class="modal-foot">' + footHtml + '</div>' : '<div style="height:14px"></div>') + '</div>';
+        (footHtml ? '<div class="modal-foot">' + footHtml + '</div>' : '<div style="height:22px"></div>') + '</div>';
       root.appendChild(el);
       modalA11y.open(el);
       UI.lock();
@@ -7108,7 +7193,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         var arrow = on ? (dir === 'desc' ? ' ↓' : ' ↑') : '';
         return '<button class="pill tap' + (on ? ' on' : '') + '" data-act="histSort" data-k="' + sk.k + '">' + sk.t + arrow + '</button>';
       }).join('') + '</div>';
-      return '<div class="hist-sort">' + pills + '</div>';
+      return '<div style="height:10px"></div><div class="hist-sort">' + pills + '</div>';
     }
 
     function compute() {
@@ -7127,18 +7212,18 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var el = UI.sheet(
       cfg.title || '历史记录',
       '<div id="histTf-' + modId + '">' + TF.btn(modId) + '</div>' +
-      (cfg.search === false ? '' : '<input class="input hist-search" id="histQ-' + modId + '" placeholder="' + esc(cfg.searchPh || '🔍 搜索…') + '" value="' + esc(getQ(modId)) + '">') +
-      (cfg.extraBar ? '<div id="histExtra-' + modId + '">' + renderExtra() + '</div>' : '') +
-      (cfg.extraBar2 ? '<div id="histExtra2-' + modId + '">' + renderExtra2() + '</div>' : '') +
-      (cfg.extraBar3 ? '<div id="histExtra3-' + modId + '">' + renderExtra3() + '</div>' : '') +
+      (cfg.search === false ? '' : '<div style="height:12px"></div><input class="input hist-search" id="histQ-' + modId + '" placeholder="' + esc(cfg.searchPh || '🔍 搜索…') + '" value="' + esc(getQ(modId)) + '">') +
+      (cfg.extraBar ? '<div style="height:10px"></div><div id="histExtra-' + modId + '">' + renderExtra() + '</div>' : '') +
+      (cfg.extraBar2 ? '<div style="height:10px"></div><div id="histExtra2-' + modId + '">' + renderExtra2() + '</div>' : '') +
+      (cfg.extraBar3 ? '<div style="height:10px"></div><div id="histExtra3-' + modId + '">' + renderExtra3() + '</div>' : '') +
       '<div id="histSort-' + modId + '">' + renderSort() + '</div>' +
-      (cfg.summary ? '<div id="histSum-' + modId + '"></div>' : '') +
+      (cfg.summary ? '<div id="histSum-' + modId + '" style="margin-top:12px"></div>' : '') +
+      '<div style="height:14px"></div>' +
       '<div id="histList-' + modId + '"></div>' +
       (cfg.pager ? '<div id="histPager-' + modId + '"></div>' : ''),
       '<button class="btn ghost tap" data-x>关闭</button>'
     );
     el.id = 'histSheet-' + modId;
-    el.querySelector('.modal-body').classList.add('hist-body');   /* 紧凑间距（见 .modal-body.hist-body） */
 
     var listEl = el.querySelector('#histList-' + modId);
     var tfEl = el.querySelector('#histTf-' + modId);
@@ -7197,7 +7282,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
 
     el.addEventListener('click', function (e) {
       // 通用展开/折叠：点击带备注的卡片原地展开备注（与主视图 .item.clickable[data-toggle] 行为一致）
-      var tog = e.target.closest('.item.clickable');
+      var tog = e.target.closest('.item.clickable') || e.target.closest('.task-tl-item');
       if (tog && tog.hasAttribute('data-toggle') && !e.target.closest('[data-act]') && !e.target.closest('.item-ops')) {
         e.preventDefault(); tog.classList.toggle('open'); return;
       }
@@ -7752,7 +7837,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         }).join('');
         return '<div class="row" style="gap:8px;flex-wrap:wrap">' + pills + '</div>';
       }
-      var foot = '<button class="btn primary tap" data-done style="width:100%">完成</button><button class="btn ghost tap" data-x>关闭</button>';
+      var foot = '<div style="height:12px"></div><button class="btn primary tap" data-done style="width:100%">完成</button><div style="height:6px"></div><button class="btn ghost tap" data-x>关闭</button>';
       var el = UI.sheet('选择分类（可多选）', render(), foot);
       el.addEventListener('click', function (e) {
         var b = e.target.closest('[data-act="catPick"]');
@@ -7788,7 +7873,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           '<div class="form-grid">' +
           '<div class="field full"><div class="field-r"><input class="input" id="newCat" placeholder="输入新分类名称" maxlength="20"></div></div>' +
           '<div class="field full"><div class="field-r"><button class="btn primary tap" data-act="catAdd" style="width:100%">+ 添加分类</button></div></div>' +
-          '</div>' +
+          '</div><div style="height:8px"></div>' +
           (cats.length ? '<div class="list">' + cats.map(function (c, i) {
             return '<div class="item" style="padding:10px 12px"><div class="item-main"><div class="item-title">' + U.esc(c) + '</div></div>' +
               '<div class="row" style="gap:6px">' +
@@ -7799,7 +7884,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           }).join('') : UI.empty('还没有分类，先添加一个吧')) + '</div>';
       };
       var el = UI.sheet(title || '分类管理', render(), '<button class="btn ghost tap" data-x>关闭</button>');
-      var body = el.querySelector('.modal-body'); if (body) body.classList.add('hist-body');
+      var body = el.querySelector('.modal-body');
       function setPin(delta) {
         var cur = Cats.pin(ns);
         Cats.setPin(ns, cur + delta);
@@ -8213,12 +8298,13 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     TF.def('checkin_hist', 'all');  // 默认显示全部时间，避免持久化残留"未来"等导致空结果
     var el = UI.sheet('打卡历史记录',
       '<div id="histTf-checkin_hist">' + TF.btn('checkin_hist') + '</div>' +
+      '<div style="height:12px"></div>' +
       '<input class="input hist-search" id="histQ-checkin_hist" placeholder="🔍 搜索打卡任务名称…" value="' + esc(chQ) + '">' +
+      '<div style="height:14px"></div>' +
       '<div id="histBody-checkin_hist"></div>' +
       '<div id="histPager-checkin_hist"></div>',
       '<button class="btn ghost tap" data-x>关闭</button>');
     el.id = 'histSheet';
-    var mb = el.querySelector('.modal-body'); if (mb) mb.classList.add('hist-body');
     var bodyEl = el.querySelector('#histBody-checkin_hist');
     var pagerEl = el.querySelector('#histPager-checkin_hist');
 
@@ -8586,12 +8672,13 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       } else {
         body = '<div class="list">' + ListPager.slice('checkin:ev', evs).map(function (ev) {
           var st = evStats(ev);
-          var rs = evRecs(ev).slice(0, 3);
+          var rs = evRecs(ev).slice(0, 8);   /* 多取：由容器两行高度自动决定实际显示几条 */
           var overdue = st && st.n > 1 && st.avg > 0 && st.gap > st.avg;
+          /* 日期胶囊：宽度按内容自适应，容器固定两行（多取 8 条让两行自然排满，超出隐藏） */
           var preview = rs.length ? '<div class="ev-preview">' + rs.map(function (r) {
             return '<span class="ev-chip">📅 ' + U.fmtDate(r.d) + (r.note ? ' · ' + esc(r.note) : '') + '</span>';
           }).join('') + '</div>' : '';
-          return '<div class="item clickable" data-toggle data-id="' + ev.id + '">' +
+          return '<div class="item clickable ev-item" data-toggle data-id="' + ev.id + '">' +
             '<div class="item-main">' +
             '<div class="item-title">' + esc(ev.name) + '</div>' +
             '<div class="item-meta">' +
@@ -8811,8 +8898,9 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       tLogBadge(x) +
       (subs.length ? '<span class="badge grey">子任务 ' + sd + '/' + subs.length + '</span>' : '');
     var caret = '<span class="task-tl-caret">' + (expanded ? '▾' : '▸') + '</span>';
-    /* 主行：始终渲染（折叠/展开都可见），时间轴 + 日期分组样式 */
-    var row = '<div class="task-tl-item' + (isDone ? ' done' : '') + (expanded ? ' open' : '') + '" data-act="texpand" data-id="' + x.id + '">' +
+    /* 主行：始终渲染（折叠/展开都可见），时间轴 + 日期分组样式
+       用 data-toggle 让通用点击处理器做纯 DOM 切换 .open（不触发 App.refresh() 避免闪烁） */
+    var row = '<div class="task-tl-item' + (isDone ? ' done' : '') + (expanded ? ' open' : '') + '" data-toggle data-id="' + x.id + '">' +
       '<div class="task-tl-rail"><span class="task-tl-dot"></span><span class="task-tl-line"></span></div>' +
       '<div class="task-tl-body">' +
       '<div class="task-tl-row">' +
@@ -8822,8 +8910,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           '<span class="task-tl-meta">' + meta + '</span>' +
         '</div>' + caret +
       '</div>';
-    /* 展开详情：仅在 expanded 时追加在行下方 */
-    if (!expanded) return row + '</div></div>';
+    /* 展开详情：始终渲染（CSS 控制显隐），点击行时通用 data-toggle 处理器切换 .open 类 */
     var subHtml = subs.length ? '<div class="subs">' + subs.map(function (s) {
       return '<div class="sub' + (s.done ? ' done' : '') + '">' + UI.check(s.done, 'sub', x.id + '|' + s.id, true) +
         '<span class="grow">' + esc(s.t) + '</span>' +
@@ -8833,8 +8920,8 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       '<div class="task-ops-row">' +
       '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
       '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>' +
-      '<button class="link-btn tap" data-act="subadd" data-id="' + x.id + '">+ 子任务</button>' +
-      (x.status !== 'doing' && !isDone ? '<button class="link-btn tap" data-act="doing" data-id="' + x.id + '">标为进行中</button>' : '') +
+      '<button class="link-btn tap" data-act="subadd" data-id="' + x.id + '" title="添加子任务">子任务</button>' +
+      (x.status !== 'doing' && !isDone ? '<button class="link-btn tap" data-act="doing" data-id="' + x.id + '" title="标为进行中">进行中</button>' : '') +
       '</div>' +
       subHtml +
       (x.doneNote
@@ -9120,11 +9207,10 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     acts: {
       st: function (t) { App.setTab('tasks', 'st', t.dataset.k); ListPager.resetPg('tasks:list'); App.refresh(); },
       texpand: function (t) {
-        var id = t.dataset.id, was = !!taskExp[id];
-        if (!was) App.rememberScroll('exp:' + id);
-        taskExp[id] = !was;
-        App.refresh();
-        if (was) App.returnToScroll('exp:' + id);
+        /* 主列表已改用 data-toggle（通用处理器做纯 DOM 切换 .open，不闪）；
+           此 handler 保留供历史弹窗等场景使用，仅更新状态不触发整页刷新 */
+        var id = t.dataset.id || t.dataset.hid;
+        if (id) { taskExp[id] = !taskExp[id]; }
       },
       hist: function () {
         var histExp = {};   // 历史记录展开态（按 id），点行展开查看备注 / 操作
@@ -9182,17 +9268,16 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
               '<div class="task-row-main"><span class="item-title">' + esc(x.title) + '</span>' +
               '<span class="task-row-meta">' + meta + '</span></div>' +
               caret + '</div>';
-            if (!expanded) return row;
             return row + '<div class="task-detail">' +
               (x.desc ? '<div class="item-note">' + esc(x.desc) + '</div>' : '<div class="small muted">（无备注）</div>') +
               '<div class="task-ops-row">' + UI.ops(x.id, 'edit', 'hdel') + '</div>' +
               '</div>';
           },
           acts: {
-            texpand: function (t, e, redraw) {
-              var id = t.dataset.hid;
-              histExp[id] = !histExp[id];
-              if (redraw) redraw();
+            texpand: function (t) {
+              var open = t.classList.toggle('open');
+              var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
+              var id = t.dataset.hid; if (id) histExp[id] = open;
             },
             edit: function (t, e, redraw) {
               var x = D().tasks.filter(function (a) { return a.id === t.dataset.id; })[0];
@@ -9479,7 +9564,8 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var f = [
       { k: 'date', label: '日期', type: 'date', req: true, def: U.today() },
       { k: 'cat', label: '分类', type: 'select', catns: 'workCats', options: Cats.get('workCats').map(function (c) { return { v: c, t: c }; }), def: Cats.get('workCats')[0] || '' },
-      { k: 'start', label: '起止时间', type: 'startendrow' },
+      { k: 'start', label: '开始时间（几点几分）', type: 'time' },
+      { k: 'end', label: '结束时间（几点几分）', type: 'time' },
       { k: 'mins', label: '时长（分钟）', type: 'number', min: 0, hint: '填了起止时间会自动计算，也可直接填' },
       { k: 'content', label: '工作内容', type: 'textarea', req: true, ph: '做了什么、进展如何、结论是什么…', rows: 5 }
     ];
@@ -9871,11 +9957,12 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         '</div></div>';
 
       /* 快捷入口 */
+      var bt = App.tab('baby', 'main', 'home');
       var shortcuts = '<div class="baby-grid">' +
-        '<div class="baby-qcard tap" data-act="goTab" data-tab="growth"><span class="baby-qicon">📏</span><span class="baby-qlabel">生长记录</span><span class="baby-qsub">WHO曲线</span></div>' +
-        '<div class="baby-qcard tap" data-act="goTab" data-tab="milestone"><span class="baby-qicon">🏆</span><span class="baby-qlabel">里程碑</span><span class="baby-qsub">记录</span></div>' +
-        '<div class="baby-qcard tap" data-act="goTab" data-tab="health"><span class="baby-qicon">💉</span><span class="baby-qlabel">疫苗提醒</span><span class="baby-qsub">健康管理</span></div>' +
-        '<div class="baby-qcard tap" data-act="goTab" data-tab="edu"><span class="baby-qicon">📚</span><span class="baby-qlabel">今日早教</span><span class="baby-qsub">任务清单</span></div>' +
+        '<div class="baby-qcard tap' + (bt === 'growth' ? ' on' : '') + '" data-act="goTab" data-tab="growth"><span class="baby-qicon">📏</span><span class="baby-qlabel">生长记录</span><span class="baby-qsub">WHO曲线</span></div>' +
+        '<div class="baby-qcard tap' + (bt === 'milestone' ? ' on' : '') + '" data-act="goTab" data-tab="milestone"><span class="baby-qicon">🏆</span><span class="baby-qlabel">里程碑</span><span class="baby-qsub">记录</span></div>' +
+        '<div class="baby-qcard tap' + (bt === 'health' ? ' on' : '') + '" data-act="goTab" data-tab="health"><span class="baby-qicon">💉</span><span class="baby-qlabel">疫苗提醒</span><span class="baby-qsub">健康管理</span></div>' +
+        '<div class="baby-qcard tap' + (bt === 'edu' ? ' on' : '') + '" data-act="goTab" data-tab="edu"><span class="baby-qicon">📚</span><span class="baby-qlabel">今日早教</span><span class="baby-qsub">任务清单</span></div>' +
         '</div>';
 
       /* 里程碑列表（最近5条，倒序） */
@@ -10742,7 +10829,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
                         (s.allDay ? '<span class="badge info">全天</span>' : '');
         // 展开区：操作按钮 + 备注
         var detail = '';
-        if (exp) {
+        if (true) {
           detail = '<div class="item-detail"><div class="wl-acts">' +
             '<button class="link-btn tap" data-act="schEdit" data-id="' + s.id + '">✏️ 编辑</button>' +
             '<button class="link-btn del tap" data-act="schDel" data-id="' + s.id + '">🗑 删除</button>' +
@@ -10756,11 +10843,20 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       }).join('') + '</div>' + ListPager.pager('schedule:day', items.length);
   }
 
-  /* ---------- 全部日程视图（搜索 + 时间段筛选 + 时间轴 + 折叠） ---------- */
+  /* ---------- 近期安排视图（搜索 + 时间段筛选 + 时间轴 + 折叠，仅未来 15 天） ---------- */
   function allSchedulesFiltered() {
     var arr = (D().schedules || []).slice();
     // 按日期+时间排序
     arr.sort(function (a, b) { return (a.date || '').localeCompare(b.date || '') || (a.time || '').localeCompare(b.time || ''); });
+    // 近期安排：仅显示未来 15 天窗口（今天 ~ 今天+14）
+    var today = U.today();
+    var tBase = U.parseDate(today);
+    var tMax = new Date(tBase.getTime() + 14 * 86400000);
+    var maxD = tMax.getFullYear() + '-' + U.pad(tMax.getMonth() + 1) + '-' + U.pad(tMax.getDate());
+    arr = arr.filter(function (s) {
+      var d = s.date || '';
+      return d >= today && d <= maxD;
+    });
     // 搜索过滤
     if (schSearch) {
       var q = schSearch.toLowerCase();
@@ -10778,7 +10874,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var arr = allSchedulesFiltered();
     if (!arr.length) {
       return '<div class="sch-empty"><span class="sch-empty-text">' +
-        (schSearch ? '没有匹配「' + esc(schSearch) + '」的日程' : '暂无日程') + '</span></div>';
+        (schSearch ? '没有匹配「' + esc(schSearch) + '」的日程' : '未来 15 天暂无安排') + '</span></div>';
     }
     var pageRows = ListPager.slice('schedule:all', arr);
     /* 按日期分组（参考财务流水 flow-date-header 模式） */
@@ -10788,7 +10884,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       if (!groups[d]) groups[d] = [];
       groups[d].push(s);
     });
-    var dates = Object.keys(groups).sort().reverse(); // 最新在前
+    var dates = Object.keys(groups).sort(); // 近期安排：时间升序（越近越靠前）
 
     var html = '<div class="timeline">';
     dates.forEach(function (date) {
@@ -10807,7 +10903,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         var timeBadge = (s.time) ? '<span class="badge grey">' + esc(s.time) + '</span>' :
                         (s.allDay ? '<span class="badge info">全天</span>' : '');
         var detail = '';
-        if (exp) {
+        if (true) {
           detail = '<div class="item-detail"><div class="wl-acts">' +
             '<button class="link-btn tap" data-act="schEdit" data-id="' + s.id + '">✏️ 编辑</button>' +
             '<button class="link-btn del tap" data-act="schDel" data-id="' + s.id + '">🗑 删除</button>' +
@@ -10835,7 +10931,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
   function viewTabsHTML() {
     return '<div class="sch-view-tabs">' +
       '<button class="sch-vtab' + (schView === 'day' ? ' on' : '') + ' tap" data-act="schDayView">📅 当天</button>' +
-      '<button class="sch-vtab' + (schView === 'all' ? ' on' : '') + ' tap" data-act="schAllView">📋 全部</button>' +
+      '<button class="sch-vtab' + (schView === 'all' ? ' on' : '') + ' tap" data-act="schAllView">📋 近期安排</button>' +
       '</div>';
   }
 
@@ -11107,7 +11203,11 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         calendarHTML() +
         viewTabsHTML() +
         (schView === 'all' ? allToolbarHTML() : '') +
-        (schView === 'day' ? dayListHTML() : '<div id="schAllList">' + allListHTML() + '</div>') +
+        /* 当天/全部列表统一包进白色卡片（参考任务/备考等项目的卡片式布局），
+           「全部」视图卡片内保留 #schAllList 以支持搜索局部重绘（不丢输入焦点） */
+        (schView === 'day'
+          ? UI.card({ title: '📅 当天日程', body: dayListHTML() })
+          : UI.card({ title: '📋 近期安排', body: '<div id="schAllList">' + allListHTML() + '</div>' })) +
         '<button class="sch-fab tap" data-act="schNew" aria-label="新建日程" title="新建日程">+</button>';
     },
 
@@ -11134,12 +11234,10 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       schEdit: function (t) { openForm(t.dataset.id); },
       schDel: function (t) { delSchedule(t.dataset.id); },
       schexpand: function (t, e) {
-        var id = t.dataset.id;
-        if (!id) return;
         // 如果点的是编辑/删除按钮，不触发展开/折叠（让按钮自己的 data-act 处理）
         if (e && e.target.closest('[data-act="schEdit"], [data-act="schDel"]')) return;
-        schExp[id] = !schExp[id];
-        App.refresh();
+        var open = t.classList.toggle('open');
+        schExp[t.dataset.id] = open;
       },
       schDayView: function () { schView = 'day'; ListPager.resetPg('schedule:day'); App.refresh(); },
       schAllView: function () { schView = 'all'; ListPager.resetPg('schedule:all'); App.refresh(); },
@@ -11252,7 +11350,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       pageBadge(x, arch) +
       (x.score !== '' && x.score !== undefined ? UI.scoreTag(x.score) : '');
     /* 主行：用 onclick 内联事件绕过 data-act 委托（与年度归档同样方案）；有封面时显示小缩略图 */
-    var row = '<div class="wl-hist-row' + (expanded ? ' open' : '') + '" onclick="__toggleMediaItem(\'' + x.id + '\')" role="button" tabindex="0" style="cursor:pointer">' +
+    var row = '<div class="wl-hist-row' + (expanded ? ' open' : '') + '" onclick="__toggleMediaItem(event, \'' + x.id + '\')" role="button" tabindex="0" style="cursor:pointer">' +
       '<div class="wl-hist-row-main">' +
         '<div class="row between" style="gap:8px;align-items:center"><span class="item-title" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' +
         (x.cover ? '<img class="row-thumb" src="' + x.cover + '" alt="" loading="lazy">' : '') +
@@ -11261,7 +11359,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         (metaLeft ? '<div class="item-meta">' + metaLeft + '</div>' : '') + '</div>' +
       caret + '</div>';
     /* 展开详情：仅在 expanded 时追加在行下方 */
-    if (!expanded) return row;
     var extraMeta = [];
     if (x.start && x.end) extraMeta.push('<span class="badge grey">历时 ' + (U.dayDiff(x.start, x.end) + 1) + ' 天</span>');
     if (total > 0) extraMeta.push('<span class="badge">⏱ 累计' + dur(total) + '</span>');
@@ -11649,7 +11746,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var aType = App.tab('media', 'archType', 'all');
     var info = viewYearContent(y, aType);
     var el = UI.sheet(y + ' 年归档', info.body, '<button class="btn ghost tap" data-x>关闭</button>');
-    var yab = el.querySelector('.modal-body'); if (yab) yab.classList.add('hist-body');
     /* 归档内交互 */
     el.addEventListener('click', function (e) {
       var b = e.target.closest('[data-act="archPage"]');
@@ -11687,12 +11783,13 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
   };
 
   /* 主列表：展开/折叠条目（由 renderMediaItem 的 onclick 内联调用） */
-  window.__toggleMediaItem = function (id) {
-    var was = mediaExpanded === id;
-    if (!was) App.rememberScroll('exp:' + id);
-    mediaExpanded = was ? null : id;
-    App.refresh();
-    if (was) App.returnToScroll('exp:' + id);
+  window.__toggleMediaItem = function (e, id) {
+    if (e && e.target && e.target.closest && e.target.closest('[data-act]')) return; // 点击内部操作按钮不折叠/展开
+    var row = document.querySelector('.wl-hist-row[onclick*="' + id + '"]');
+    if (!row) return;
+    var open = row.classList.toggle('open');
+    mediaExpanded = open ? id : null;
+    var c = row.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
   };
 
   /* 归档内：打开详情弹窗（由归档行 onclick 内联调用） */
@@ -11807,7 +11904,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         '<div class="row between" style="gap:8px;align-items:center"><span class="item-title" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(x.text) + '</span></div>' +
         '<div class="item-meta">' + meta + '</div>' +
       '</div>' + caret + '</div>';
-    if (!expanded) return row;
     return row + '<div class="fold-detail">' +
       '<div class="fold-ops">' + UI.ops(x.id, 'pedit', 'pdel') + '</div></div>';
   }
@@ -11838,7 +11934,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         (canMark ? '<button class="btn sm tap" data-act="rmark" data-id="' + x.id + '" style="flex-shrink:0;font-size:12px;padding:3px 10px">✓ 已复习</button>' : '') + '</div>' +
         '<div class="item-meta">' + meta + '</div>' +
       '</div>' + caret + '</div>';
-    if (!expanded || !x.content) return row;
     return row + '<div class="fold-detail">' +
       (x.content ? '<div class="note-text">📝 ' + esc(x.content) + '</div>' : '') + '</div>';
   }
@@ -11852,7 +11947,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         '<div class="item-meta"><span>' + U.fmtDate(x.date, true) + '</span>' +
         (x.content ? '<span class="badge grey">📝 有备注</span>' : '') + '</div>' +
       '</div>' + caret + '</div>';
-    if (!open) return row;
     return row + '<div class="fold-detail">' +
       '<div class="fold-ops">' + UI.ops(x.id, 'redit', 'rdel') + '</div>' +
       (x.content ? '<div class="note-text">📝 ' + esc(x.content) + '</div>' : '') + '</div>';
@@ -11873,7 +11967,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       ['年度最佳', top ? num(top.score) + ' ★' : '—'],
       ['影 / 剧 / 书', byType.movie + ' / ' + byType.tv + ' / ' + byType.book],
       ['读书页数', bookPages ? bookPages + ' 页' : '—']
-    ]);
+    ]) + '<div style="height:14px"></div>';
     if (top) body += '<div class="muted small" style="margin-bottom:10px">⭐ 年度最高分：《' + esc(top.title) + '》 ' + num(top.score) + ' ★</div>';
     var sorted = l.slice().sort(function (a, b) { return String(b.end).localeCompare(String(a.end)); });
     var pageKey = 'media:arch:' + y;
@@ -12047,7 +12141,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
             '<div class="item-meta">' + meta + '</div>' +
           '</div>' +
           '<span class="fold-caret">' + (expanded ? '▾' : '▸') + '</span></div>';
-        if (!expanded) return row;
         return row + '<div class="fold-detail">' +
           '<div class="fold-ops">' + UI.ops(x.id, 'eedit', 'edel') + '</div>' +
           (x.note ? '<div class="note-text">📝 ' + esc(x.note) + '</div>' : '') + '</div>';
@@ -12202,30 +12295,24 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       tab: function (t) { App.setTab('exam', 'main', t.dataset.k); App.refresh(); },
       pst: function (t) { App.setTab('exam', 'pst', t.dataset.k); planExp = {}; App.refresh(); },
       pexpand: function (t) {
-        var id = t.dataset.id, was = !!planExp[id];
-        if (!was) App.rememberScroll('exp:' + id);
-        planExp[id] = !was;
-        App.refresh();
-        if (was) App.returnToScroll('exp:' + id);
+        var open = t.classList.toggle('open');
+        planExp[t.dataset.id] = open;
+        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
       },
       eexpand: function (t) {
-        var id = t.dataset.id, was = !!examExp[id];
-        if (!was) App.rememberScroll('exp:e' + id);
-        examExp[id] = !was;
-        App.refresh();
-        if (was) App.returnToScroll('exp:e' + id);
+        var open = t.classList.toggle('open');
+        examExp[t.dataset.id] = open;
+        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
       },
       erexp: function (t) {
-        var id = t.dataset.id;
-        examRecExpanded[id] = !examRecExpanded[id];
-        App.refresh();
+        var open = t.classList.toggle('open');
+        examRecExpanded[t.dataset.id] = open;
+        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
       },
       rexpand: function (t) {
-        var id = t.dataset.id, was = !!reviewExp[id];
-        if (!was) App.rememberScroll('exp:r' + id);
-        reviewExp[id] = !was;
-        App.refresh();
-        if (was) App.returnToScroll('exp:r' + id);
+        var open = t.classList.toggle('open');
+        reviewExp[t.dataset.id] = open;
+        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
       },
       eprev: function () { eCur.day = U.shiftDay(eCur.day, -1); ListPager.resetPg('exam:plan'); ListPager.resetPg('exam:record'); App.refresh(); },
       enext: function () { eCur.day = U.shiftDay(eCur.day, 1); ListPager.resetPg('exam:plan'); ListPager.resetPg('exam:record'); App.refresh(); },
@@ -12417,15 +12504,14 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
               '<span class="item-title" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(x.text) + '</span>' +
               '<span style="flex-shrink:0">' + UI.scoreTag('') + '</span></div>' +
               '<div class="item-meta">' + meta + '</div></div>' + caret + '</div>';
-            if (!expanded) return row;
             return row + '<div class="fold-detail">' +
               '<div class="fold-ops">' + UI.ops(x.id, 'pedit', 'hdel') + '</div></div>';
           },
           acts: {
-            planhistexpand: function (t, e, redraw) {
-              var id = t.dataset.hid;
-              planHistExp[id] = !planHistExp[id];
-              if (redraw) redraw();
+            planhistexpand: function (t) {
+              var open = t.classList.toggle('open');
+              var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
+              var id = t.dataset.hid; if (id) planHistExp[id] = open;
             },
             pedit: function (t, e, redraw) {
               var x = D().exam.plans.filter(function (a) { return a.id === t.dataset.id; })[0];
@@ -12472,16 +12558,15 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
               '<span class="item-title" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(examCatText(x) || '学习') + '</span>' +
               '<span style="flex-shrink:0">' + UI.scoreTag('') + '</span></div>' +
               '<div class="item-meta">' + meta + '</div></div>' + caret + '</div>';
-            if (!expanded) return row;
             return row + '<div class="fold-detail">' +
               '<div class="fold-ops">' + UI.ops(x.id, 'redit', 'hdel') + '</div>' +
               (hasContent ? '<div class="note-text">📝 ' + studyContentHtml(x.content) + '</div>' : '') + '</div>';
           },
           acts: {
-            recexpand: function (t, e, redraw) {
-              var id = t.dataset.hid;
-              recHistExp[id] = !recHistExp[id];
-              if (redraw) redraw();
+            recexpand: function (t) {
+              var open = t.classList.toggle('open');
+              var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
+              var id = t.dataset.hid; if (id) recHistExp[id] = open;
             },
             redit: function (t, e, redraw) {
               var x = D().exam.records.filter(function (a) { return a.id === t.dataset.id; })[0];
@@ -12656,7 +12741,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var pending = isPending(c);
     var homePrice = num(ev().price) || 0.3353;
     var freeSaved = dv.charged * homePrice;   // 单位充免费，按家充电价折算"已省"金额
-    var row = '<div class="charge-row' + (open ? ' open' : '') + (pending && !dv.free ? ' pending' : '') + '" data-act="evexp" data-id="' + c.id + '">' +
+    var row = '<div class="charge-row' + (open ? ' open' : '') + (pending && !dv.free ? ' pending' : '') + '" data-toggle data-id="' + c.id + '">' +
       '<div class="charge-main">' +
         '<div class="row between"><span class="item-title">' + U.fmtDate(c.date) + '</span>' +
         '<span class="row" style="gap:6px;align-items:center;flex-shrink:0">' +
@@ -12665,7 +12750,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         '<span>充入 ' + dv.charged.toFixed(2) + ' 度</span>' +
         (km != null ? '<span>' + km + ' km</span>' : '') + '</span>' +
       '</div>' + caret + '</div>';
-    if (!open) return row;
+    /* 展开详情：始终渲染（CSS 控制显隐），点击行时通用 data-toggle 处理器切换 .open 类 */
     var detailInner;
     if (dv.free) {
       detailInner = '<div class="item-meta">' +
@@ -12739,7 +12824,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var open = fuelExpanded === c.id;
     var caret = '<span class="refuel-caret">' + (open ? '▾' : '▸') + '</span>';
     /* 主行：始终渲染（折叠/展开都可见），参考 task-row / stock-ov-row 模式 */
-    var row = '<div class="refuel-row' + (open ? ' open' : '') + '" data-act="fuelexp" data-id="' + c.id + '">' +
+    var row = '<div class="refuel-row' + (open ? ' open' : '') + '" data-toggle data-id="' + c.id + '">' +
       '<div class="refuel-main">' +
         '<div class="row between"><span class="item-title">' + U.fmtDate(c.date) + '</span>' +
         '<span class="row" style="gap:6px;align-items:center;flex-shrink:0">' +
@@ -12748,7 +12833,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         '<span>' + U.money(num(c.price)) + ' /升</span>' +
         (km != null ? '<span>' + km + ' km</span>' : '') + '</span>' +
       '</div>' + caret + '</div>';
-    if (!open) return row;
     return row + '<div class="refuel-detail">' +
       '<div class="refuel-ops">' + UI.ops(c.id, 'fedit', 'fdel') + '</div>' +
       '<div class="item-meta">' +
@@ -12962,7 +13046,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var open = sohExpanded === r.id;
     var caret = '<span class="charge-caret">' + (open ? '▾' : '▸') + '</span>';
     /* 主行：始终渲染（折叠/展开都可见），参考充电记录 charge-row 模式 */
-    var row = '<div class="charge-row' + (open ? ' open' : '') + '" data-act="sohexp" data-id="' + r.id + '">' +
+    var row = '<div class="charge-row' + (open ? ' open' : '') + '" data-toggle data-id="' + r.id + '">' +
       '<div class="charge-main">' +
         '<div class="row between"><span class="item-title">' + U.fmtDate(r.date) + '</span>' +
         '<span class="row" style="gap:6px;align-items:center;flex-shrink:0">' +
@@ -12973,7 +13057,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           '<span>耗电 ' + d.energy.toFixed(1) + ' 度</span>' +
         '</span>' +
       '</div>' + caret + '</div>';
-    if (!open) return row;
     return row + '<div class="charge-detail">' +
       '<div class="charge-ops">' + UI.ops(r.id, 'sohedit', 'sohdel') + '</div>' +
       '<div class="item-meta">' +
@@ -13265,9 +13348,9 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
 
     acts: {
       tab: function (t) { App.setTab('vehicle', 'main', t.dataset.k); App.refresh(); },
-      evexp: function (t) { evExpanded = evExpanded === t.dataset.id ? null : t.dataset.id; App.refresh(); },
-      fuelexp: function (t) { fuelExpanded = fuelExpanded === t.dataset.id ? null : t.dataset.id; App.refresh(); },
-      sohexp: function (t) { sohExpanded = sohExpanded === t.dataset.id ? null : t.dataset.id; App.refresh(); },
+      evexp: function (t) { evExpanded = evExpanded === t.dataset.id ? null : t.dataset.id; },
+      fuelexp: function (t) { fuelExpanded = fuelExpanded === t.dataset.id ? null : t.dataset.id; },
+      sohexp: function (t) { sohExpanded = sohExpanded === t.dataset.id ? null : t.dataset.id; },
 
       /* 电车快速记录：记充电 / 记单次行驶（电池健康）二选一 */
       evAdd: function () {
@@ -13950,8 +14033,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           }).join('') + (x.tags.length > 4 ? '<span class="badge grey" style="font-size:11px">+' + (x.tags.length - 4) + '</span>' : '') + '</div>' : '') +
         '</div>' +
         caret + '</div>';
-      /* 展开区：日记内容 + 操作按钮 */
-      if (!expanded) return row;
+      /* 展开区：日记内容 + 操作按钮（始终渲染，CSS 控制显隐） */
       return row + '<div class="fold-detail">' +
         (firstImg ? '<img class="di-thumb zoomable" data-act="zoom" data-src="' + firstImg + '" src="' + firstImg + '" alt="" style="max-width:100%;border-radius:8px;margin-bottom:8px">' : '') +
         (x.body ? '<div class="note-text" style="white-space:pre-wrap;word-break:break-word">' + esc(preview(x.body)) + '</div>' : '') +
@@ -14028,14 +14110,17 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       function renderTf() { tfEl.innerHTML = TF.btn(modId); }
       var el = UI.sheet('📔 历史日记',
         '<div id="dhTf">' + TF.btn(modId) + '</div>' +
+        '<div style="height:12px"></div>' +
         '<input class="input" id="dhq" placeholder="🔍 搜标题或正文关键词" value="' + esc(dh.q) + '">' +
+        '<div style="height:12px"></div>' +
         '<div class="small muted" style="margin-bottom:6px">按心情</div><div id="dhMood">' + moodPills() + '</div>' +
+        '<div style="height:10px"></div>' +
         '<div class="small muted" style="margin-bottom:6px">按标签</div><div id="dhTag">' + tagPills() + '</div>' +
+        '<div style="height:14px"></div>' +
         '<div id="dhList"></div>' +
         '<div id="dhPager"></div>',
         '<button class="btn ghost tap" data-x>关闭</button>');
       el.id = 'diaryHistSheet';
-      var dhb = el.querySelector('.modal-body'); if (dhb) dhb.classList.add('hist-body');
       var listEl = el.querySelector('#dhList');
       var pagerEl = el.querySelector('#dhPager');
       var tfEl = el.querySelector('#dhTf');
@@ -14127,7 +14212,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     },
 
     acts: {
-      diexp: function (t) { diaryExpanded = diaryExpanded === t.dataset.id ? null : t.dataset.id; App.refresh(); },
+      diexp: function (t) { diaryExpanded = diaryExpanded === t.dataset.id ? null : t.dataset.id; },
       view: function (t) { st.view = t.dataset.k; App.refresh(); },
       dmood: function (t) { st.mood = st.mood === t.dataset.k ? '' : t.dataset.k; App.refresh(); },
       dtag: function (t) { st.tag = st.tag === t.dataset.k ? '' : t.dataset.k; App.refresh(); },
@@ -14397,13 +14482,17 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     });
   }
 
-  /* 日记列表：展开/折叠条目（由 entryItem 的 onclick 内联调用） */
+  /* 日记列表：展开/折叠条目（纯 DOM 切换，不触发 App.refresh() 避免闪烁） */
   window.__toggleDiary = function (id) {
     var was = diaryExpanded === id;
-    if (!was) App.rememberScroll('diexp:' + id);
     diaryExpanded = was ? null : id;
-    App.refresh();
-    if (was) App.returnToScroll('diexp:' + id);
+    // 纯 DOM 切换：关闭当前展开的，打开点击的
+    var rows = document.querySelectorAll('.wl-hist-row');
+    rows.forEach(function(r) { r.classList.remove('open'); var c = r.querySelector('[class*="caret"]'); if (c) c.textContent = '▸'; });
+    if (!was) {
+      var target = document.querySelector('.wl-hist-row[onclick*="' + id + '"]');
+      if (target) { target.classList.add('open'); var c = target.querySelector('[class*="caret"]'); if (c) c.textContent = '▾'; }
+    }
   };
 
   TF.def('diary_main', '10d');
@@ -14469,7 +14558,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         '<div class="item-meta"><span>' + U.fmtDate(x.date, true) + '</span><span class="badge grey">' + num(x.mins) + ' 分钟</span>' +
         (x.note ? '<span class="badge grey">📝 有备注</span>' : '') + '</div>' +
       '</div>' + caret + '</div>';
-    if (!open) return row;
     return row + '<div class="fold-detail">' +
       '<div class="fold-ops">' + UI.ops(x.id, null, 'sdel') + '</div>' +
       (x.note ? '<div class="note-text">📝 ' + esc(x.note) + '</div>' : '') + '</div>';
@@ -14487,7 +14575,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         '<span class="badge grey">📅 ' + U.fmtDate(x.date) + '</span>' +
         (x.note ? '<span class="badge grey">📝 有备注</span>' : '') + '</div>' +
       '</div>' + caret + '</div>';
-    if (!open) return row;
     return row + '<div class="fold-detail">' +
       '<div class="fold-ops">' + UI.ops(x.id, 'fedit', 'fdel') + '</div>' +
       (x.note ? '<div class="note-text">📝 ' + esc(x.note) + '</div>' : '') + '</div>';
@@ -14571,7 +14658,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       var today = U.today();
       var water = num((bd.water || {})[today]);
       var wGoal = num(bd.wGoal) || 1500;
-      var waterTxt = (water > 0 ? water : '0') + ' / ' + wGoal + ' ml';
+      var waterTxt = (water > 0 ? water : '0') + '/' + wGoal + ' ml';
       var waterSub;
       if (water >= wGoal) waterSub = '✓ 已达标';
       else if (water > 0) waterSub = '还差 ' + (wGoal - water) + ' ml';
@@ -14645,7 +14732,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
                 '<div class="measure-row-main">' +
                   '<div class="row between"><span class="item-title">' + U.fmtDate(x.date, true) + '</span>' +
                   '<span class="row" style="gap:6px;align-items:center;flex-shrink:0"><span class="badge">' + num(x[metric]) + ' ' + MU[metric] + '</span></span></div>';
-              if (!expanded) return row + '</div>' + caret + '</div>';
               return row + '</div>' + caret + '</div>' +
                 '<div class="measure-detail">' +
                   '<div class="measure-ops-row">' + UI.ops(x.id, 'medit', 'mdel') + '</div>' +
@@ -14779,16 +14865,14 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       tab: function (t) { App.setTab('body', 'main', t.dataset.k); App.refresh(); },
       metric: function (t) { App.setTab('body', 'metric', t.dataset.k); ListPager.resetPg('body:measure'); measureExpanded = null; App.refresh(); },
       mexp: function (t) {
-        var id = t.dataset.id, was = measureExpanded === id;
-        if (!was) App.rememberScroll('exp:' + id);
-        measureExpanded = was ? null : id;
-        App.refresh();
-        if (was) App.returnToScroll('exp:' + id);
+        var open = t.classList.toggle('open');
+        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
+        measureExpanded = open ? t.dataset.id : null;
       },
       bexp: function (t) {
-        var id = t.dataset.id;
-        bodyExp[id] = !bodyExp[id];
-        App.refresh();
+        var open = t.classList.toggle('open');
+        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
+        bodyExp[t.dataset.id] = open;
       },
 
       mnew: function () {
@@ -15190,7 +15274,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       '<div class="item-title' + (done ? ' strike' : '') + '">' + esc(x.name) + '</div>' +
       (meta ? '<span class="buy-item-meta">' + meta + '</span>' : '') +
       '</div>' + caret + '</div>';
-    if (!expanded) return row;
     return row + '<div class="buy-item-detail">' +
       '<div class="buy-item-ops">' + UI.ops(x.id, 'bedit', 'bdel') + '</div>' +
       (x.note ? '<div class="note-text">📝 ' + esc(x.note) + '</div>' : '') + '</div>';
@@ -15211,7 +15294,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var row = '<div class="consum-row' + (x.archived ? ' archived' : '') + (expanded ? ' open' : '') + '" data-act="citem" data-id="' + x.id + '"><div class="consum-main">' +
       '<div class="row between"><span class="item-title">' + archivedBadge + '🔔 ' + esc(x.name) + '</span><span class="badge ' + dueCls + '">📅 ' + dueTxt + '</span></div>' +
       '</div>' + caret + '</div>';
-    if (!expanded) return row;
     // 撤销「生产日期+有效期」方案：耗材统一按「开封/启用日期 + 周期」计算到期
     var open = x.open, cycle = num(x.cycle) || 1;
     var elapsed = U.dayDiff(open, U.today());
@@ -15309,7 +15391,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           '<span class="stock-ov-num">' + num(x.left) + ' / ' + num(x.qty) + un + '</span>' +
           '<span class="stock-ov-caret">' + (expanded ? '▾' : '▸') + '</span>' +
           '</div>';
-        if (expanded) {
+        if (true) {
           var logs = (x.logs || []);
           var buys = (x.buys || []);
           var bs = normBatches(x);
@@ -15424,26 +15506,20 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     acts: {
       tab: function (t) { App.setTab('items', 'main', t.dataset.k); App.refresh(); },
       kexp: function (t) {
-        var id = t.dataset.id, was = stockExpanded === id;
-        if (!was) App.rememberScroll('exp:' + id);
-        stockExpanded = was ? null : id;
-        App.refresh();
-        if (was) App.returnToScroll('exp:' + id);
+        var open = t.classList.toggle('open');
+        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
+        stockExpanded = open ? t.dataset.id : null;
       },
       kwarn: function () { stockWarnOnly = !stockWarnOnly; stockExpanded = null; ListPager.resetPg('items:stock'); App.refresh(); },
       bitem: function (t) {
-        var id = t.dataset.id, was = buyExpanded === id;
-        if (!was) App.rememberScroll('exp:' + id);
-        buyExpanded = was ? null : id;
-        App.refresh();
-        if (was) App.returnToScroll('exp:' + id);
+        var open = t.classList.toggle('open');
+        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
+        buyExpanded = open ? t.dataset.id : null;
       },
       citem: function (t) {
-        var id = t.dataset.id, was = consumExpanded === id;
-        if (!was) App.rememberScroll('exp:' + id);
-        consumExpanded = was ? null : id;
-        App.refresh();
-        if (was) App.returnToScroll('exp:' + id);
+        var open = t.classList.toggle('open');
+        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
+        consumExpanded = open ? t.dataset.id : null;
       },
       ktoggleArchived: function () { stockShowArchived = !stockShowArchived; stockExpanded = null; ListPager.resetPg('items:stock'); App.refresh(); },
       karchive: function (t) {
@@ -16639,9 +16715,9 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
             '<div class="field full" style="margin-top:10px"><div class="field-r"><input class="input" id="newcat-' + key + '" placeholder="新增' + title + '"></div></div>' +
             '<button class="btn primary sm tap" data-act="finCatAdd" data-k="' + key + '" style="margin-bottom:14px">+ 添加' + title + '</button>';
         }
-        function renderAll() { return section('catExpense', '支出分类') + section('catIncome', '收入分类'); }
+        function renderAll() { return section('catExpense', '支出分类') + '<div style="height:10px"></div>' + section('catIncome', '收入分类'); }
         var el = UI.sheet('🗂 收支分类管理', renderAll(), '<button class="btn ghost tap" data-x>关闭</button>');
-        var body = el.querySelector('.modal-body'); if (body) body.classList.add('hist-body');
+        var body = el.querySelector('.modal-body');
         el.addEventListener('click', function (e) {
           var b = e.target.closest('[data-act]'); if (!b) return;
           var a = b.dataset.act, key = b.dataset.k;
@@ -16997,12 +17073,11 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var prev = document.getElementById('finHistSheet'); if (prev) prev.remove();
     var fType = '', fAcc = '', q = '';
     var el = UI.sheet('💰 收支流水 · 全部历史',
-      '<div id="finHistBar"></div>' +
+      '<div id="finHistBar"></div><div style="height:10px"></div>' +
       '<div class="row" style="gap:8px;align-items:center"><input class="input" id="finHistQ" placeholder="🔍 搜索分类 / 账户 / 备注…" style="flex:1;min-width:0"><span id="finHistTf"></span></div>' +
-      '<div id="finHistList"></div>',
+      '<div style="height:12px"></div><div id="finHistList"></div>',
       '<button class="btn ghost tap" data-x>关闭</button>');
     el.id = 'finHistSheet';
-    var fhb = el.querySelector('.modal-body'); if (fhb) fhb.classList.add('hist-body');
     var barEl = el.querySelector('#finHistBar');
     var listEl = el.querySelector('#finHistList');
     var tfEl = el.querySelector('#finHistTf');
@@ -17016,7 +17091,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         '<input type="file" id="finFile" accept=".xlsx,.xls,.csv" style="display:none">' +
         '</div>';
       var typePills = UI.pills([{ k: '', t: '全部' }, { k: 'in', t: '收入' }, { k: 'out', t: '支出' }, { k: 'transfer', t: '转账' }], fType, 'finHType');
-      var accPills = F().accounts.length ? UI.pills([{ k: '', t: '全部账户' }].concat(F().accounts.map(function (a) { return { k: a.id, t: a.name }; })), fAcc, 'finHAcc') : '';
+      var accPills = F().accounts.length ? '<div style="height:6px"></div>' + UI.pills([{ k: '', t: '全部账户' }].concat(F().accounts.map(function (a) { return { k: a.id, t: a.name }; })), fAcc, 'finHAcc') : '';
       barEl.innerHTML = io + typePills + accPills;
     }
 
@@ -17144,7 +17219,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         return;
       }
       // 整行折叠：参考其他模块 view.onclick 中的折叠逻辑
-      var tog = e.target.closest('.item.clickable[data-toggle]');
+      var tog = e.target.closest('.item.clickable[data-toggle]') || e.target.closest('.task-tl-item[data-toggle]');
       if (tog) { tog.classList.toggle('open'); }
     });
     if (qe) qe.oninput = function () { q = this.value; draw(); };
@@ -17218,31 +17293,26 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       (n < 0 ? 'font-size:13px;line-height:1.35;' : 'font-size:22px;') + '">' +
       (n === 0 ? '今天' : n < 0 ? passedText(nd) : n) + '</div>' +
       (n > 0 ? '<div class="small muted">天</div>' : '') + '</div>';
-    // 折叠态
-    if (!expanded) {
-      return '<div class="item' + (n >= 0 && n <= 7 ? ' hl' : '') + '" data-act="aexp" data-id="' + x.id + '">' +
-        '<div class="item-main"><div class="row between"><span class="item-title">' + esc(x.name) + (n === 0 ? ' 🎉' : '') + '</span>' +
-        '<span class="row" style="gap:6px;align-items:center;flex-shrink:0">' + countHtml + ' <span style="font-size:11px;color:var(--brown-3)">▸</span></span></div>' +
-        '<div class="item-meta"><span class="badge grey">' + esc(x.type || '纪念日') + '</span>' +
-        '<span>' + U.fmtDate(nd, true) + '</span>' +
-        (isLunar ? '<span class="badge purple">农历</span>' : '') +
-        (x.yearly ? '<span class="badge">每年</span>' : '') + '</div></div></div>';
-    }
-    // 展开态：操作按钮（编辑/删除）改到底部独立一行，全宽 btn，与折叠态右上箭头呼应
-    return '<div class="item' + (n >= 0 && n <= 7 ? ' hl' : '') + ' open" data-act="aexp" data-id="' + x.id + '">' +
+    var caret = '<span class="fold-caret">' + (expanded ? '▾' : '▸') + '</span>';
+    /* 主行 + 详情始终渲染（详情默认隐藏，点击行由 aexp 处理器纯 DOM 切换 .open，不触发 App.refresh 避免闪烁） */
+    return '<div class="item anniv-row' + (n >= 0 && n <= 7 ? ' hl' : '') + (expanded ? ' open' : '') + '" data-act="aexp" data-id="' + x.id + '">' +
       '<div class="item-main">' +
-      '<div class="row between"><span class="item-title">' + esc(x.name) + (n === 0 ? ' 🎉' : '') + '</span>' +
-      '<span class="row" style="gap:6px;align-items:center;flex-shrink:0">' + countHtml + ' <span style="font-size:11px;color:var(--brown-3)">▾</span></span></div>' +
-      '<div class="item-meta">' +
-      '<span class="badge grey">' + esc(x.type || '纪念日') + '</span>' +
-      (isLunar ? '<span class="badge purple">农历 · ' + lunarTxt + '</span>' : '') +
-      '<span>' + U.fmtDate(nd, true) + '</span>' +
-      (x.yearly ? '<span class="badge">每年重复' + (years > 0 ? ' · 第 ' + years + ' 年' : '') + '</span>' : '') +
-      (x.note ? '<span>' + esc(x.note) + '</span>' : '') + '</div>' +
-      '<div class="item-ops-row">' +
-      '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
-      '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>' +
-      '</div></div></div>';
+        '<div class="row between"><span class="item-title">' + esc(x.name) + (n === 0 ? ' 🎉' : '') + '</span>' +
+        '<span class="row" style="gap:6px;align-items:center;flex-shrink:0">' + countHtml + ' ' + caret + '</span></div>' +
+        '<div class="item-meta">' +
+          '<span class="badge grey">' + esc(x.type || '纪念日') + '</span>' +
+          (isLunar ? '<span class="badge purple">农历 · ' + lunarTxt + '</span>' : '') +
+          '<span>' + U.fmtDate(nd, true) + '</span>' +
+          (x.yearly ? '<span class="badge">每年重复' + (years > 0 ? ' · 第 ' + years + ' 年' : '') + '</span>' : '') +
+        '</div>' +
+        '<div class="fold-detail">' +
+          (x.note ? '<div class="note-text">📝 ' + esc(x.note) + '</div>' : '') +
+          '<div class="item-ops-row">' +
+            '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
+            '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>' +
+          '</div>' +
+        '</div>' +
+      '</div></div>';
   }
 
   var anniv = {
@@ -17285,7 +17355,11 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       if (q) q.oninput = function () { anQ = this.value; ListPager.resetPg('people:anniv'); var b = view.querySelector('#anList'); if (b) b.innerHTML = anniv.items(anQ); };
     },
     acts: {
-      aexp: function (t) { annivExpanded = annivExpanded === t.dataset.id ? null : t.dataset.id; App.refresh(); },
+      aexp: function (t) {
+        var open = t.classList.toggle('open');
+        annivExpanded = open ? t.dataset.id : null;
+        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
+      },
       new: function () {
         UI.form({ title: '添加纪念日', values: { yearly: true, cal: 'solar', date: U.today(), lmonth: 7, lday: 7, lisLeap: false }, fields: aFields() }).then(function (v) {
           if (!v) return; v.id = U.uid(); D().anniv.push(v); Store.save(); App.refresh();
@@ -17366,7 +17440,11 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       if (q) q.oninput = function () { soQ = this.value; ListPager.resetPg('people:social'); var b = view.querySelector('#soList'); if (b) b.innerHTML = social.items(soQ); };
     },
     acts: {
-      soexp: function (t) { socialExpanded = socialExpanded === t.dataset.id ? null : t.dataset.id; App.refresh(); },
+      soexp: function (t) {
+        var open = t.classList.toggle('open');
+        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
+        socialExpanded = open ? t.dataset.id : null;
+      },
       new: function () {
         UI.form({ title: '添加人情记录', values: { date: U.today() }, fields: soFields() }).then(function (v) {
           if (!v) return; v.id = U.uid(); D().social.push(v); Store.save(); App.refresh();
@@ -17406,7 +17484,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           (back ? '<span title="回赠 ' + U.moneyFull(back) + '">回赠 ' + money(back) + '</span>' : '') +
         '</span>' +
       '</div>' + caret + '</div>';
-    if (!open) return row;
     return row + '<div class="social-detail">' +
       '<div class="social-ops-row">' + UI.ops(x.id, 'edit', 'del') + '</div>' +
       '<div class="note-text">📤 我方送出：' + (x.outGift ? esc(x.outGift) : '—') + (out ? ' · <span title="' + U.moneyFull(out) + '">' + money(out) + '</span>' : '') + '</div>' +
@@ -17480,7 +17557,11 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       if (q) q.oninput = function () { wiQ = this.value; ListPager.resetPg('people:wish'); var b = view.querySelector('#wiList'); if (b) b.innerHTML = wish.items(wiQ); };
     },
     acts: {
-      wexp: function (t) { wishExpanded = wishExpanded === t.dataset.id ? null : t.dataset.id; App.refresh(); },
+      wexp: function (t) {
+        var open = t.classList.toggle('open');
+        wishExpanded = open ? t.dataset.id : null;
+        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
+      },
       f: function (t) { App.setTab('wish', 'f', t.dataset.k); ListPager.resetPg('people:wish'); App.refresh(); },
       new: function () {
         UI.form({ title: '添加愿望', fields: wiFields() }).then(function (v) {
@@ -17524,7 +17605,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         '<div class="wish-row-title">' + (x.done ? '✅ ' : '') + esc(x.title) + '</div>' +
         '<div class="wish-row-meta">' + meta + '</div>' +
       '</div>' + caret + '</div>';
-    if (!expanded) return row;
     return row + '<div class="wish-detail">' +
       '<div class="wish-ops">' +
         '<button class="link-btn tap" data-act="toggle" data-id="' + x.id + '">' + (x.done ? '↺ 标为未实现' : '✓ 标记已实现') + '</button>' +
@@ -17574,7 +17654,11 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       if (q) q.oninput = function () { faQ = this.value; ListPager.resetPg('people:family'); var b = view.querySelector('#faList'); if (b) b.innerHTML = family.items(faQ); };
     },
     acts: {
-      fexp: function (t) { familyExpanded = familyExpanded === t.dataset.id ? null : t.dataset.id; App.refresh(); },
+      fexp: function (t) {
+        var open = t.classList.toggle('open');
+        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
+        familyExpanded = open ? t.dataset.id : null;
+      },
       new: function () {
         UI.form({ title: '添加成员', fields: fFields() }).then(function (v) {
           if (!v) return; v.id = U.uid(); D().family.push(v); Store.save(); App.refresh();
@@ -17671,7 +17755,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           return '<span class="pill" style="pointer-events:none;font-size:11px">' + r[0] + ' ' + esc(r[1]) + r[2] + '</span>';
         }).join('') + '</div>' : '') +
       '</div>' + caret + '</div>';
-    if (!expanded) return row;
     return row + '<div class="family-detail">' +
       (x.like ? '<div class="note-text">💚 喜好：' + esc(x.like) + '</div>' : '') +
       (x.avoid ? '<div class="note-text">🚫 忌口 / 忌讳：' + esc(x.avoid) + '</div>' : '') +
@@ -17765,9 +17848,9 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         App.refresh();
       },
       crexp: function (t) {
-        var id = t.dataset.id;
-        catRecExpanded = catRecExpanded === id ? null : id;
-        App.refresh();
+        var open = t.classList.toggle('open');
+        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
+        catRecExpanded = open ? t.dataset.id : null;
       },
       psel: function (t, e) {
         if (e.target.closest('[data-act="pedit"],[data-act="pdel"]')) return;
@@ -17840,7 +17923,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var row = '<div class="cat-rec-row' + (expanded ? ' open' : '') + '" data-act="crexp" data-id="' + x.id + '">' +
       '<div class="cat-rec-main"><div class="pills" style="margin:0">' + pills.join('') + '</div></div>' +
       '<span class="cat-rec-caret">' + (expanded ? '▾' : '▸') + '</span></div>';
-    if (!expanded) return row;
     return row + '<div class="cat-rec-detail">' +
       '<div class="cat-rec-ops">' + UI.ops(x.id, 'redit', 'rdel') + '</div>' +
       (x.note ? '<div class="note-text">📝 ' + esc(x.note) + '</div>' : '') +
@@ -18075,7 +18157,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       return UI.head('⚙️ 设置', '数据备份、基础参数与使用说明') +
         UI.card({
           title: '💾 数据备份（本地）',
-          sub: '当前占用 ' + kb + ' KB',
+          sub: '当前占用 ' + kb + ' KB（导出的备份文件与此大小接近）',
           body:
             '<p class="small muted" style="margin-bottom:12px">数据默认只保存在本机浏览器。换设备或清理缓存前，建议导出一份留底，需要时再用「导入」恢复。</p>' +
             '<div class="row" style="gap:8px;flex-wrap:wrap">' +
@@ -18312,7 +18394,8 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       },
       export: function () {
         var payload = { app: '个人工作台', version: 1, exportedAt: new Date().toLocaleString('zh-CN'), data: Store.data };
-        var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        /* 紧凑序列化（无缩进）：与「当前占用」同口径，导出文件大小 ≈ 页面显示的占用值 */
+        var blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
         var a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = '工作台备份-' + U.today() + '.json';
@@ -20050,7 +20133,11 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       },
 
       /* ---- 案件 ---- */
-      cExp: function (t) { jwExp[t.dataset.id] = !jwExp[t.dataset.id]; App.refresh(); },
+      cExp: function (t) {
+        var id = t.dataset.id; jwExp[id] = !jwExp[id];
+        var x = J().cases.filter(function (a) { return a.id === id; })[0];
+        if (x) t.outerHTML = renderCase(x);
+      },
       cnew: function () {
         UI.form({ title: '新增案件 / 问题线索', values: { acceptDate: U.today() }, fields: caseFields() })
           .then(function (v) {
@@ -20505,7 +20592,11 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       },
 
       /* ---- 监督检查 ---- */
-      iExp: function (t) { jwExp[t.dataset.id] = !jwExp[t.dataset.id]; App.refresh(); },
+      iExp: function (t) {
+        var id = t.dataset.id; jwExp[id] = !jwExp[id];
+        var x = J().inspects.filter(function (a) { return a.id === id; })[0];
+        if (x) t.outerHTML = renderInspect(x);
+      },
       inew: function () {
         UI.form({ title: '新增监督检查任务', values: { status: '计划中', rectifyStatus: '不涉及', planDate: U.today() }, fields: inspectFields() })
           .then(function (v) {
@@ -20556,7 +20647,11 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       },
 
       /* ---- 材料报送 ---- */
-      sExp: function (t) { jwExp[t.dataset.id] = !jwExp[t.dataset.id]; App.refresh(); },
+      sExp: function (t) {
+        var id = t.dataset.id; jwExp[id] = !jwExp[id];
+        var x = J().submits.filter(function (a) { return a.id === id; })[0];
+        if (x) t.outerHTML = renderSubmit(x);
+      },
       snew: function () {
         UI.form({ title: '新增材料报送任务', values: { status: '待报送', period: '一次性', dueDate: U.today() }, fields: submitFields() })
           .then(function (v) {
@@ -20597,7 +20692,11 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       },
 
       /* ---- 处分台账 ---- */
-      pExp: function (t) { jwExp[t.dataset.id] = !jwExp[t.dataset.id]; App.refresh(); },
+      pExp: function (t) {
+        var id = t.dataset.id; jwExp[id] = !jwExp[id];
+        var x = J().punish.filter(function (a) { return a.id === id; })[0];
+        if (x) t.outerHTML = renderPun(x);
+      },
       pnew: function () {
         UI.form({ title: '新增处分台账记录', values: { cat: '党纪处分', date: U.today() }, fields: punFields() })
           .then(function (v) {
