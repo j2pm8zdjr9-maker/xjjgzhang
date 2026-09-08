@@ -241,7 +241,9 @@ a{ color:var(--olive-deep); text-decoration:none; }
 @keyframes fadeInUp{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;} }
 @keyframes fadeIn{ from{opacity:0;} to{opacity:1;} }
 @keyframes popIn{ from{opacity:0; transform:translateY(12px) scale(.97);} to{opacity:1; transform:none;} }
-.view > *{ animation:fadeInUp .30s var(--ease) both; }
+/* 进场动画只挂在 .view.anim 上：仅切换模块（App.go）时播放；
+   就地刷新（App.refresh）不加该类，避免全量重绘时 fadeInUp 重放导致整屏闪一下 */
+.view.anim > *{ animation:fadeInUp .30s var(--ease) both; }
 .modal-mask .modal{ animation:popIn .28s var(--ease) both; }
 /* 尊重系统「减少动态效果」偏好 */
 @media (prefers-reduced-motion: reduce){
@@ -582,7 +584,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 }
 .body-card .body-card-info{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
 .body-card .body-card-t{ font-size:11.5px; color:var(--brown-3); font-weight:600; letter-spacing:.2px; line-height:1.2; }
-.body-card .body-card-v{ font-size:16px; color:var(--brown); font-weight:700; line-height:1.2; white-space:normal; overflow:visible; }
+.body-card .body-card-v{ font-size:16px; color:var(--brown); font-weight:700; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .body-card .body-card-s{ font-size:10.5px; color:var(--brown-3); line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .body-card.on{ border-color:var(--bd-c); background:var(--bd-bg); box-shadow:0 2px 8px rgba(60,40,20,.06); }
 /* 4 子项目主色：体重=绿、饮水=蓝、运动=橙、饮食=粉 */
@@ -1079,8 +1081,14 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .stock-ov-detail .stock-ov-ops{ margin-bottom:4px; }
 .stock-note{ margin-top:6px; padding-top:6px; border-top:1px dashed var(--line,#e3ddcf); }
 .buy-list{ display:flex; flex-direction:column; gap:4px; margin-top:4px; }
-.buy-row{ display:grid; grid-template-columns:auto 1fr auto; gap:12px; font-size:13px; color:var(--brown-2); padding:4px 8px; background:var(--olive-05); border-radius:8px; }
+.buy-row{ display:grid; grid-template-columns:auto minmax(0,1fr) auto auto; gap:6px; font-size:13px; color:var(--brown-2); padding:4px 6px; background:var(--olive-05); border-radius:8px; }
 .buy-row > span:last-child{ text-align:right; }
+.buy-row > span:nth-child(2){ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.buy-row[data-rec]{ cursor:pointer; }
+.row-acts{ display:flex; gap:3px; flex-shrink:0; align-items:center; }
+.ic-btn{ border:1px solid var(--line); background:var(--card); border-radius:6px; width:26px; height:26px; padding:0; font-size:13px; line-height:1; cursor:pointer; color:var(--brown-2); display:inline-flex; align-items:center; justify-content:center; }
+.ic-btn:active{ background:var(--olive-10); }
+.ic-btn.del{ color:var(--danger); }
 .rec-sec{ margin-top:10px; }
 .rec-h{ display:block; font-size:13px; color:var(--brown); margin-bottom:2px; }
 .rec-more{ margin-top:6px; }
@@ -1123,22 +1131,10 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .fold-detail,
 .task-detail, .media-detail, .social-detail, .family-detail,
 .measure-detail, .buy-item-detail, .consum-detail,
-.charge-detail, .refuel-detail,
-.wish-detail, .stock-ov-detail, .cat-rec-detail{
+.charge-detail, .refuel-detail{
   padding:10px 12px 12px; border-radius:0 0 10px 10px;
   background:var(--card); border:1px solid var(--line); border-top:none;
-  display:none;
 }
-/* 详情始终渲染、靠 .open 用 CSS 显隐（纯 DOM 切换，避免 App.refresh() 整页重绘闪烁） */
-.task-row.open + .task-detail{ display:block; animation:detailIn .18s ease; }
-.charge-row.open + .charge-detail, .refuel-row.open + .refuel-detail{ display:block; animation:detailIn .18s ease; background:var(--olive-open); border-color:var(--olive-24); }
-.wl-hist-row.open .fold-detail, .wl-hist-row.open + .fold-detail{ display:block; animation:detailIn .18s ease; }
-.social-row.open + .social-detail, .wish-row.open + .wish-detail, .family-row.open + .family-detail{ display:block; animation:detailIn .18s ease; }
-.buy-item-row.open + .buy-item-detail, .consum-row.open + .consum-detail{ display:block; animation:detailIn .18s ease; }
-.cat-rec-row.open + .cat-rec-detail{ display:block; animation:detailIn .18s ease; }
-.stock-ov-row.open + .stock-ov-detail{ display:block; animation:detailIn .18s ease; }
-.measure-row.open + .measure-detail{ display:block; animation:detailIn .18s ease; }
-.anniv-row.open .fold-detail{ display:block; animation:detailIn .18s ease; }
 /* 详情区操作栏：胶囊按钮组（左对齐成组，删除靠右独立），带底部分隔线 */
 .fold-ops,
 .buy-item-ops, .consum-ops, .task-ops-row, .media-ops-row,
@@ -1177,8 +1173,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .charge-ops .link-btn.del, .refuel-ops .link-btn.del,
 .item-detail>.item-ops .link-btn.del{
   color:var(--danger);
-  background:var(--bg);
-  border-color:rgba(180,85,63,.30);
+  background:rgba(180,85,63,.07); border-color:rgba(180,85,63,.22);
   margin-left:auto;   /* 删除与其他操作分离，靠右 */
 }
 .fold-ops .link-btn.del:hover, .buy-item-ops .link-btn.del:hover,
@@ -1243,9 +1238,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .task-tl-detail{
   padding:8px 12px 10px; border-radius:0 0 10px 10px; background:var(--card);
   border:1px solid var(--line); border-top:none;
-  display:none;
 }
-.task-tl-item.open .task-tl-detail{ display:block; animation:detailIn .18s ease; }
 
 /* 影剧书主视图内联搜索框：独立一行，标题行只留「全部时间」，避免窄屏整块换行 */
 .media-head-right{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
@@ -1423,8 +1416,6 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .charge-row.open, .refuel-row.open{ background:var(--olive-open); box-shadow:inset 0 0 0 1px var(--olive-24); border-radius:10px 10px 0 0; border-bottom-color:transparent; }
 /* 待抄表充电记录（未填电表）→ 置顶并黄色高亮提醒 */
 .charge-row.pending{ background:rgba(201,128,58,.08); border-color:rgba(201,128,58,.35); }
-/* 展开态统一操作色：待抄表行展开后也回到主题展开底色（避免同屏橙蓝混杂），橙色提醒由「待抄表」徽章承担 */
-.charge-row.pending.open, .charge-row.pending.open + .charge-detail{ background:var(--olive-open); border-color:var(--olive-24); }
 .charge-main, .refuel-main{ flex:1; min-width:0; display:flex; flex-direction:column; gap:4px; }
 .charge-meta, .refuel-meta{ display:flex; flex-wrap:wrap; gap:5px; align-items:center; font-size:12px; line-height:1.45; color:var(--brown-3); }
 .charge-caret, .refuel-caret{ /* 统一由 .fold-caret 覆盖 */ }
@@ -2535,9 +2526,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .baby-qcard{ display:flex; flex-direction:column; align-items:center; gap:5px;
   padding:12px 6px; border:1px solid var(--line); border-radius:12px;
   background:var(--card); cursor:pointer; transition:background .15s; text-align:center; }
-.baby-qcard:active,.baby-qcard:hover{ background:#EEF3FC; }
-.baby-qcard.on{ background:#EAF0FB !important; border-color:var(--olive) !important; box-shadow:0 3px 10px var(--olive-24) !important; }
-.baby-qcard.on .baby-qlabel{ color:var(--olive-deep) !important; font-weight:700 !important; }
+.baby-qcard:active,.baby-qcard:hover{ background:var(--olive-05); }
 .baby-qicon{ font-size:22px; }
 .baby-qlabel{ font-size:12px; color:var(--brown-2); font-weight:550; }
 .baby-qsub{ font-size:11px; color:var(--brown-3); }
@@ -3021,7 +3010,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
      主题：燕麦灰蓝底(#6E8494) + 长春花蓝强调(#7FA0E4) + 圆点纹理
      增强：① 首页问候语头 ② 卡片标题小竖条 ③ 品牌标换叶子
      仅追加样式与脚本，不改动任何原有结构；
-     删除 <style id="healing-reskin"> 与 <script id="healing-reskin-js"> 即可还原。 -->
+     删除 id 为 healing-reskin 的 style 块与 id 为 healing-reskin-js 的 script 块即可还原。 -->
 <style id="healing-reskin">
 :root{
   /* 燕麦灰蓝中性面 + 长春花蓝（periwinkle）主色，单一治愈风格 */
@@ -3422,59 +3411,18 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   flex:1 1 0 !important; min-width:0 !important; justify-content:center !important; margin-left:0 !important;
 }
 
-/* ==================== 全站操作行统一：按钮自动等分、强制同一行 ====================
-   适用所有展开/详情区操作行（UI.ops 生成的 .item-ops 内嵌 + 外层可能平级追加按钮）。
-   ① 用 display:contents 把 .item-ops「拆壳」，让所有按钮变成容器的直接 flex 项；
-   ② 每个按钮 flex:1 1 0 → 真 N 等分：2 个各占一半、3 个各占三分之一、按钮增减自动重算；
-   ③ nowrap + 紧凑内边距 + ellipsis，保证再多按钮也不换行、不撑破。
-   按钮 ≥6 个时（极少）退回自然宽度，避免每个被压得过窄。 */
-:is(.fold-ops,.buy-item-ops,.consum-ops,.task-ops-row,.media-ops-row,
-    .social-ops-row,.family-ops-row,.measure-ops-row,.charge-ops,.refuel-ops,
-    .item-detail-ops,.wl-acts,.item-ops-row,.item-detail>.item-ops,
-    .ev-ops,.encourage-ops){
-  display:flex !important; flex-wrap:nowrap !important;
-  gap:5px !important; align-items:stretch !important;
+/* 充电/加油记录操作行：按钮数量自适应等宽铺满一行。
+   结构特殊：编辑/删除包在 .item-ops 里，填电表按钮在外层平级——
+   用 display:contents 把 .item-ops「拆壳」，所有按钮提升为直接 flex 项后 N 等分：
+   只有编辑/删除 → 两个各占一半；有待抄表多一个「填电表」 → 三个各占三分之一；
+   填完电表按钮消失，自动回到两等分。 */
+.charge-ops, .refuel-ops{
+  flex-wrap:nowrap !important; gap:6px !important; align-items:stretch !important;
 }
-:is(.fold-ops,.buy-item-ops,.consum-ops,.task-ops-row,.media-ops-row,
-    .social-ops-row,.family-ops-row,.measure-ops-row,.charge-ops,.refuel-ops,
-    .item-detail-ops,.wl-acts,.item-ops-row,.ev-ops,.encourage-ops) .item-ops{
-  display:contents !important;
-}
-:is(.fold-ops,.buy-item-ops,.consum-ops,.task-ops-row,.media-ops-row,
-    .social-ops-row,.family-ops-row,.measure-ops-row,.charge-ops,.refuel-ops,
-    .item-detail-ops,.wl-acts,.item-ops-row,.item-detail>.item-ops,
-    .ev-ops,.encourage-ops) .link-btn{
+.charge-ops .item-ops, .refuel-ops .item-ops{ display:contents !important; }
+.charge-ops .link-btn, .refuel-ops .link-btn{
   flex:1 1 0 !important; min-width:0 !important;
   justify-content:center !important; margin-left:0 !important;
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  padding-left:6px !important; padding-right:6px !important;
-}
-/* 按钮 ≥4 个：自动缩小字号/内边距，保证 4 个按钮等分后文字仍能完整显示不截断 */
-:is(.fold-ops,.buy-item-ops,.consum-ops,.task-ops-row,.media-ops-row,
-    .social-ops-row,.family-ops-row,.measure-ops-row,.charge-ops,.refuel-ops,
-    .item-detail-ops,.wl-acts,.item-ops-row,.item-detail>.item-ops,
-    .ev-ops,.encourage-ops):has(> .link-btn:nth-child(4)){
-  gap:4px !important;
-}
-:is(.fold-ops,.buy-item-ops,.consum-ops,.task-ops-row,.media-ops-row,
-    .social-ops-row,.family-ops-row,.measure-ops-row,.charge-ops,.refuel-ops,
-    .item-detail-ops,.wl-acts,.item-ops-row,.item-detail>.item-ops,
-    .ev-ops,.encourage-ops):has(> .link-btn:nth-child(4)) .link-btn{
-  font-size:11.5px !important; padding-left:2px !important; padding-right:2px !important;
-  letter-spacing:-.2px !important;
-}
-/* 按钮 ≥6 个：退回自然宽度（避免每个被压得只剩几十像素） */
-:is(.fold-ops,.buy-item-ops,.consum-ops,.task-ops-row,.media-ops-row,
-    .social-ops-row,.family-ops-row,.measure-ops-row,.charge-ops,.refuel-ops,
-    .item-detail-ops,.wl-acts,.item-ops-row,.item-detail>.item-ops,
-    .ev-ops,.encourage-ops):has(> .link-btn:nth-child(6)){
-  flex-wrap:wrap !important;
-}
-:is(.fold-ops,.buy-item-ops,.consum-ops,.task-ops-row,.media-ops-row,
-    .social-ops-row,.family-ops-row,.measure-ops-row,.charge-ops,.refuel-ops,
-    .item-detail-ops,.wl-acts,.item-ops-row,.item-detail>.item-ops,
-    .ev-ops,.encourage-ops):has(> .link-btn:nth-child(6)) .link-btn{
-  flex:0 1 auto !important;
 }
 
 /* 详情区操作胶囊按钮：默认浅色（参考模板的浅胶囊），hover 用强调色跟随主题。
@@ -3503,7 +3451,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   border-color:var(--olive-24) !important;
   color:var(--olive-deep) !important;
 }
-/* 删除胶囊：与其他操作按钮一致为白底（与展开区主题底呼应），仅保留红字红边区分删除语义 */
+/* 删除胶囊：保持红字浅红底（不被上面的浅色覆盖刷成灰色） */
 .fold-ops .link-btn.del, .buy-item-ops .link-btn.del,
 .consum-ops .link-btn.del, .task-ops-row .link-btn.del,
 .media-ops-row .link-btn.del, .social-ops-row .link-btn.del,
@@ -3511,8 +3459,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .charge-ops .link-btn.del, .refuel-ops .link-btn.del,
 .item-detail>.item-ops .link-btn.del,
 .encourage-ops .link-btn.del{
-  background:rgba(255,255,255,.82) !important;
-  border-color:rgba(216,120,106,.38) !important;
+  background:rgba(216,120,106,.10) !important;
+  border-color:rgba(216,120,106,.28) !important;
   color:#B2574A !important;
   margin-left:auto;
 }
@@ -3523,8 +3471,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .charge-ops .link-btn.del:hover, .refuel-ops .link-btn.del:hover,
 .item-detail>.item-ops .link-btn.del:hover,
 .encourage-ops .link-btn.del:hover{
-  background:rgba(216,120,106,.14) !important;
-  border-color:rgba(216,120,106,.42) !important;
+  background:rgba(216,120,106,.16) !important;
+  border-color:rgba(216,120,106,.40) !important;
   color:#A8433A !important;
 }
 
@@ -4966,18 +4914,20 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       if (ns && ns.value) { ns.value = ''; this.filterNav(''); }
       Store.save(true);
       if (!noHash && location.hash !== '#' + id) { location.hash = '#' + id; }
-      this.paint();
+      this.paint(true);
       document.body.classList.remove('nav-open');
       var v = document.getElementById('view');
       if (v) v.scrollIntoView ? window.scrollTo(0, 0) : 0;
     },
 
-    paint: function () {
+    paint: function (fresh) {
       var mod = this.modules[this.current];
       if (!mod) return;
       var self = this;
       var view = document.getElementById('view');
       view.innerHTML = mod.render();
+      /* 进场动画只在切换模块时播放；就地刷新（refresh）不加重放，避免闪屏 */
+      view.classList.toggle('anim', !!fresh);
       var onHome = this.current === 'home';
       var pt = document.getElementById('pageTitle');
       pt.textContent = mod.icon + ' ' + mod.name;
@@ -5053,14 +5003,11 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       }
 
       view.onclick = function (e) {
-        // 通用展开/折叠：点击任意带 data-toggle 的行（.item.clickable / .task-tl-item / .charge-row / .refuel-row 等）切换 open（排除内部按钮与操作区）
-        var tog = e.target.closest('[data-toggle]');
-        if (tog && !e.target.closest('[data-act]') && !e.target.closest('.item-ops')) {
+        // 通用展开/折叠：点击 .item.clickable[data-toggle] 切换 open（排除内部按钮与操作区）
+        var tog = e.target.closest('.item.clickable');
+        if (tog && tog.hasAttribute('data-toggle') && !e.target.closest('[data-act]') && !e.target.closest('.item-ops')) {
           e.preventDefault();
           tog.classList.toggle('open');
-          // 同步 taskExp 状态（供渲染时读取初始展开态）
-          var tid = tog.dataset.id;
-          if (tid && typeof taskExp !== 'undefined') taskExp[tid] = tog.classList.contains('open');
           return;
         }
         var t = e.target.closest('[data-act]');
@@ -5140,10 +5087,10 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     },
   };
 
-  // 导航高亮修正
+  // 导航高亮修正（透传 fresh 参数：入场动画只在切换模块时播放）
   var _paint = App.paint;
-  App.paint = function () {
-    _paint.call(this);
+  App.paint = function (fresh) {
+    _paint.call(this, fresh);
     var cur = this.current;
     [].forEach.call(document.querySelectorAll('.nav-item'), function (n) {
       n.classList.toggle('on', n.dataset.id === cur);
@@ -7282,7 +7229,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
 
     el.addEventListener('click', function (e) {
       // 通用展开/折叠：点击带备注的卡片原地展开备注（与主视图 .item.clickable[data-toggle] 行为一致）
-      var tog = e.target.closest('.item.clickable') || e.target.closest('.task-tl-item');
+      var tog = e.target.closest('.item.clickable');
       if (tog && tog.hasAttribute('data-toggle') && !e.target.closest('[data-act]') && !e.target.closest('.item-ops')) {
         e.preventDefault(); tog.classList.toggle('open'); return;
       }
@@ -8898,9 +8845,8 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       tLogBadge(x) +
       (subs.length ? '<span class="badge grey">子任务 ' + sd + '/' + subs.length + '</span>' : '');
     var caret = '<span class="task-tl-caret">' + (expanded ? '▾' : '▸') + '</span>';
-    /* 主行：始终渲染（折叠/展开都可见），时间轴 + 日期分组样式
-       用 data-toggle 让通用点击处理器做纯 DOM 切换 .open（不触发 App.refresh() 避免闪烁） */
-    var row = '<div class="task-tl-item' + (isDone ? ' done' : '') + (expanded ? ' open' : '') + '" data-toggle data-id="' + x.id + '">' +
+    /* 主行：始终渲染（折叠/展开都可见），时间轴 + 日期分组样式 */
+    var row = '<div class="task-tl-item' + (isDone ? ' done' : '') + (expanded ? ' open' : '') + '" data-act="texpand" data-id="' + x.id + '">' +
       '<div class="task-tl-rail"><span class="task-tl-dot"></span><span class="task-tl-line"></span></div>' +
       '<div class="task-tl-body">' +
       '<div class="task-tl-row">' +
@@ -8910,7 +8856,8 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           '<span class="task-tl-meta">' + meta + '</span>' +
         '</div>' + caret +
       '</div>';
-    /* 展开详情：始终渲染（CSS 控制显隐），点击行时通用 data-toggle 处理器切换 .open 类 */
+    /* 展开详情：仅在 expanded 时追加在行下方 */
+    if (!expanded) return row + '</div></div>';
     var subHtml = subs.length ? '<div class="subs">' + subs.map(function (s) {
       return '<div class="sub' + (s.done ? ' done' : '') + '">' + UI.check(s.done, 'sub', x.id + '|' + s.id, true) +
         '<span class="grow">' + esc(s.t) + '</span>' +
@@ -8920,8 +8867,8 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       '<div class="task-ops-row">' +
       '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
       '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>' +
-      '<button class="link-btn tap" data-act="subadd" data-id="' + x.id + '" title="添加子任务">子任务</button>' +
-      (x.status !== 'doing' && !isDone ? '<button class="link-btn tap" data-act="doing" data-id="' + x.id + '" title="标为进行中">进行中</button>' : '') +
+      '<button class="link-btn tap" data-act="subadd" data-id="' + x.id + '">+ 子任务</button>' +
+      (x.status !== 'doing' && !isDone ? '<button class="link-btn tap" data-act="doing" data-id="' + x.id + '">标为进行中</button>' : '') +
       '</div>' +
       subHtml +
       (x.doneNote
@@ -9045,7 +8992,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     if (!x || !x.caseId || !window.JWLink) return '';
     try {
       var nm = window.JWLink.caseName(x.caseId);
-      return nm ? '<span class="badge purple">🔗 ' + U.esc(nm) + '</span>' : '';
+      return nm ? '<span class="badge info">🔗 ' + U.esc(nm) + '</span>' : '';
     } catch (e) { return ''; }
   }
   /* 完成登记弹窗（通用）：用于「关联案件」或「纯工作类」任务。
@@ -9207,10 +9154,11 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     acts: {
       st: function (t) { App.setTab('tasks', 'st', t.dataset.k); ListPager.resetPg('tasks:list'); App.refresh(); },
       texpand: function (t) {
-        /* 主列表已改用 data-toggle（通用处理器做纯 DOM 切换 .open，不闪）；
-           此 handler 保留供历史弹窗等场景使用，仅更新状态不触发整页刷新 */
-        var id = t.dataset.id || t.dataset.hid;
-        if (id) { taskExp[id] = !taskExp[id]; }
+        var id = t.dataset.id, was = !!taskExp[id];
+        if (!was) App.rememberScroll('exp:' + id);
+        taskExp[id] = !was;
+        App.refresh();
+        if (was) App.returnToScroll('exp:' + id);
       },
       hist: function () {
         var histExp = {};   // 历史记录展开态（按 id），点行展开查看备注 / 操作
@@ -9268,16 +9216,17 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
               '<div class="task-row-main"><span class="item-title">' + esc(x.title) + '</span>' +
               '<span class="task-row-meta">' + meta + '</span></div>' +
               caret + '</div>';
+            if (!expanded) return row;
             return row + '<div class="task-detail">' +
               (x.desc ? '<div class="item-note">' + esc(x.desc) + '</div>' : '<div class="small muted">（无备注）</div>') +
               '<div class="task-ops-row">' + UI.ops(x.id, 'edit', 'hdel') + '</div>' +
               '</div>';
           },
           acts: {
-            texpand: function (t) {
-              var open = t.classList.toggle('open');
-              var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
-              var id = t.dataset.hid; if (id) histExp[id] = open;
+            texpand: function (t, e, redraw) {
+              var id = t.dataset.hid;
+              histExp[id] = !histExp[id];
+              if (redraw) redraw();
             },
             edit: function (t, e, redraw) {
               var x = D().tasks.filter(function (a) { return a.id === t.dataset.id; })[0];
@@ -9603,14 +9552,14 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
   /* 由任务自动生成的工作留痕：标注来源，提醒删除会一并删除原任务 */
   function wTaskBadge(x) {
     if (!x || !x.fromTask) return '';
-    return '<span class="badge olive">📌 来自任务</span>';
+    return '<span class="badge info">📌 来自任务</span>';
   }
   /* 列表里的关联案件徽标；案件已删除则不显示 */
   function wCaseBadge(x) {
     if (!x || !x.caseId || !window.JWLink) return '';
     try {
       var nm = window.JWLink.caseName(x.caseId);
-      return nm ? '<span class="badge purple">🔗 ' + U.esc(nm) + '</span>' : '';
+      return nm ? '<span class="badge info">🔗 ' + U.esc(nm) + '</span>' : '';
     } catch (e) { return ''; }
   }
   function calcMins(v) {
@@ -9957,12 +9906,11 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         '</div></div>';
 
       /* 快捷入口 */
-      var bt = App.tab('baby', 'main', 'home');
       var shortcuts = '<div class="baby-grid">' +
-        '<div class="baby-qcard tap' + (bt === 'growth' ? ' on' : '') + '" data-act="goTab" data-tab="growth"><span class="baby-qicon">📏</span><span class="baby-qlabel">生长记录</span><span class="baby-qsub">WHO曲线</span></div>' +
-        '<div class="baby-qcard tap' + (bt === 'milestone' ? ' on' : '') + '" data-act="goTab" data-tab="milestone"><span class="baby-qicon">🏆</span><span class="baby-qlabel">里程碑</span><span class="baby-qsub">记录</span></div>' +
-        '<div class="baby-qcard tap' + (bt === 'health' ? ' on' : '') + '" data-act="goTab" data-tab="health"><span class="baby-qicon">💉</span><span class="baby-qlabel">疫苗提醒</span><span class="baby-qsub">健康管理</span></div>' +
-        '<div class="baby-qcard tap' + (bt === 'edu' ? ' on' : '') + '" data-act="goTab" data-tab="edu"><span class="baby-qicon">📚</span><span class="baby-qlabel">今日早教</span><span class="baby-qsub">任务清单</span></div>' +
+        '<div class="baby-qcard tap" data-act="goTab" data-tab="growth"><span class="baby-qicon">📏</span><span class="baby-qlabel">生长记录</span><span class="baby-qsub">WHO曲线</span></div>' +
+        '<div class="baby-qcard tap" data-act="goTab" data-tab="milestone"><span class="baby-qicon">🏆</span><span class="baby-qlabel">里程碑</span><span class="baby-qsub">记录</span></div>' +
+        '<div class="baby-qcard tap" data-act="goTab" data-tab="health"><span class="baby-qicon">💉</span><span class="baby-qlabel">疫苗提醒</span><span class="baby-qsub">健康管理</span></div>' +
+        '<div class="baby-qcard tap" data-act="goTab" data-tab="edu"><span class="baby-qicon">📚</span><span class="baby-qlabel">今日早教</span><span class="baby-qsub">任务清单</span></div>' +
         '</div>';
 
       /* 里程碑列表（最近5条，倒序） */
@@ -10829,7 +10777,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
                         (s.allDay ? '<span class="badge info">全天</span>' : '');
         // 展开区：操作按钮 + 备注
         var detail = '';
-        if (true) {
+        if (exp) {
           detail = '<div class="item-detail"><div class="wl-acts">' +
             '<button class="link-btn tap" data-act="schEdit" data-id="' + s.id + '">✏️ 编辑</button>' +
             '<button class="link-btn del tap" data-act="schDel" data-id="' + s.id + '">🗑 删除</button>' +
@@ -10843,20 +10791,11 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       }).join('') + '</div>' + ListPager.pager('schedule:day', items.length);
   }
 
-  /* ---------- 近期安排视图（搜索 + 时间段筛选 + 时间轴 + 折叠，仅未来 15 天） ---------- */
+  /* ---------- 全部日程视图（搜索 + 时间段筛选 + 时间轴 + 折叠） ---------- */
   function allSchedulesFiltered() {
     var arr = (D().schedules || []).slice();
     // 按日期+时间排序
     arr.sort(function (a, b) { return (a.date || '').localeCompare(b.date || '') || (a.time || '').localeCompare(b.time || ''); });
-    // 近期安排：仅显示未来 15 天窗口（今天 ~ 今天+14）
-    var today = U.today();
-    var tBase = U.parseDate(today);
-    var tMax = new Date(tBase.getTime() + 14 * 86400000);
-    var maxD = tMax.getFullYear() + '-' + U.pad(tMax.getMonth() + 1) + '-' + U.pad(tMax.getDate());
-    arr = arr.filter(function (s) {
-      var d = s.date || '';
-      return d >= today && d <= maxD;
-    });
     // 搜索过滤
     if (schSearch) {
       var q = schSearch.toLowerCase();
@@ -10874,7 +10813,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var arr = allSchedulesFiltered();
     if (!arr.length) {
       return '<div class="sch-empty"><span class="sch-empty-text">' +
-        (schSearch ? '没有匹配「' + esc(schSearch) + '」的日程' : '未来 15 天暂无安排') + '</span></div>';
+        (schSearch ? '没有匹配「' + esc(schSearch) + '」的日程' : '暂无日程') + '</span></div>';
     }
     var pageRows = ListPager.slice('schedule:all', arr);
     /* 按日期分组（参考财务流水 flow-date-header 模式） */
@@ -10884,7 +10823,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       if (!groups[d]) groups[d] = [];
       groups[d].push(s);
     });
-    var dates = Object.keys(groups).sort(); // 近期安排：时间升序（越近越靠前）
+    var dates = Object.keys(groups).sort().reverse(); // 最新在前
 
     var html = '<div class="timeline">';
     dates.forEach(function (date) {
@@ -10903,7 +10842,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         var timeBadge = (s.time) ? '<span class="badge grey">' + esc(s.time) + '</span>' :
                         (s.allDay ? '<span class="badge info">全天</span>' : '');
         var detail = '';
-        if (true) {
+        if (exp) {
           detail = '<div class="item-detail"><div class="wl-acts">' +
             '<button class="link-btn tap" data-act="schEdit" data-id="' + s.id + '">✏️ 编辑</button>' +
             '<button class="link-btn del tap" data-act="schDel" data-id="' + s.id + '">🗑 删除</button>' +
@@ -10931,7 +10870,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
   function viewTabsHTML() {
     return '<div class="sch-view-tabs">' +
       '<button class="sch-vtab' + (schView === 'day' ? ' on' : '') + ' tap" data-act="schDayView">📅 当天</button>' +
-      '<button class="sch-vtab' + (schView === 'all' ? ' on' : '') + ' tap" data-act="schAllView">📋 近期安排</button>' +
+      '<button class="sch-vtab' + (schView === 'all' ? ' on' : '') + ' tap" data-act="schAllView">📋 全部</button>' +
       '</div>';
   }
 
@@ -11203,11 +11142,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         calendarHTML() +
         viewTabsHTML() +
         (schView === 'all' ? allToolbarHTML() : '') +
-        /* 当天/全部列表统一包进白色卡片（参考任务/备考等项目的卡片式布局），
-           「全部」视图卡片内保留 #schAllList 以支持搜索局部重绘（不丢输入焦点） */
-        (schView === 'day'
-          ? UI.card({ title: '📅 当天日程', body: dayListHTML() })
-          : UI.card({ title: '📋 近期安排', body: '<div id="schAllList">' + allListHTML() + '</div>' })) +
+        (schView === 'day' ? dayListHTML() : '<div id="schAllList">' + allListHTML() + '</div>') +
         '<button class="sch-fab tap" data-act="schNew" aria-label="新建日程" title="新建日程">+</button>';
     },
 
@@ -11234,10 +11169,12 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       schEdit: function (t) { openForm(t.dataset.id); },
       schDel: function (t) { delSchedule(t.dataset.id); },
       schexpand: function (t, e) {
+        var id = t.dataset.id;
+        if (!id) return;
         // 如果点的是编辑/删除按钮，不触发展开/折叠（让按钮自己的 data-act 处理）
         if (e && e.target.closest('[data-act="schEdit"], [data-act="schDel"]')) return;
-        var open = t.classList.toggle('open');
-        schExp[t.dataset.id] = open;
+        schExp[id] = !schExp[id];
+        App.refresh();
       },
       schDayView: function () { schView = 'day'; ListPager.resetPg('schedule:day'); App.refresh(); },
       schAllView: function () { schView = 'all'; ListPager.resetPg('schedule:all'); App.refresh(); },
@@ -11350,7 +11287,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       pageBadge(x, arch) +
       (x.score !== '' && x.score !== undefined ? UI.scoreTag(x.score) : '');
     /* 主行：用 onclick 内联事件绕过 data-act 委托（与年度归档同样方案）；有封面时显示小缩略图 */
-    var row = '<div class="wl-hist-row' + (expanded ? ' open' : '') + '" onclick="__toggleMediaItem(event, \'' + x.id + '\')" role="button" tabindex="0" style="cursor:pointer">' +
+    var row = '<div class="wl-hist-row' + (expanded ? ' open' : '') + '" onclick="__toggleMediaItem(\'' + x.id + '\')" role="button" tabindex="0" style="cursor:pointer">' +
       '<div class="wl-hist-row-main">' +
         '<div class="row between" style="gap:8px;align-items:center"><span class="item-title" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' +
         (x.cover ? '<img class="row-thumb" src="' + x.cover + '" alt="" loading="lazy">' : '') +
@@ -11359,6 +11296,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         (metaLeft ? '<div class="item-meta">' + metaLeft + '</div>' : '') + '</div>' +
       caret + '</div>';
     /* 展开详情：仅在 expanded 时追加在行下方 */
+    if (!expanded) return row;
     var extraMeta = [];
     if (x.start && x.end) extraMeta.push('<span class="badge grey">历时 ' + (U.dayDiff(x.start, x.end) + 1) + ' 天</span>');
     if (total > 0) extraMeta.push('<span class="badge">⏱ 累计' + dur(total) + '</span>');
@@ -11783,13 +11721,12 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
   };
 
   /* 主列表：展开/折叠条目（由 renderMediaItem 的 onclick 内联调用） */
-  window.__toggleMediaItem = function (e, id) {
-    if (e && e.target && e.target.closest && e.target.closest('[data-act]')) return; // 点击内部操作按钮不折叠/展开
-    var row = document.querySelector('.wl-hist-row[onclick*="' + id + '"]');
-    if (!row) return;
-    var open = row.classList.toggle('open');
-    mediaExpanded = open ? id : null;
-    var c = row.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
+  window.__toggleMediaItem = function (id) {
+    var was = mediaExpanded === id;
+    if (!was) App.rememberScroll('exp:' + id);
+    mediaExpanded = was ? null : id;
+    App.refresh();
+    if (was) App.returnToScroll('exp:' + id);
   };
 
   /* 归档内：打开详情弹窗（由归档行 onclick 内联调用） */
@@ -11904,6 +11841,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         '<div class="row between" style="gap:8px;align-items:center"><span class="item-title" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(x.text) + '</span></div>' +
         '<div class="item-meta">' + meta + '</div>' +
       '</div>' + caret + '</div>';
+    if (!expanded) return row;
     return row + '<div class="fold-detail">' +
       '<div class="fold-ops">' + UI.ops(x.id, 'pedit', 'pdel') + '</div></div>';
   }
@@ -11934,6 +11872,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         (canMark ? '<button class="btn sm tap" data-act="rmark" data-id="' + x.id + '" style="flex-shrink:0;font-size:12px;padding:3px 10px">✓ 已复习</button>' : '') + '</div>' +
         '<div class="item-meta">' + meta + '</div>' +
       '</div>' + caret + '</div>';
+    if (!expanded || !x.content) return row;
     return row + '<div class="fold-detail">' +
       (x.content ? '<div class="note-text">📝 ' + esc(x.content) + '</div>' : '') + '</div>';
   }
@@ -11947,6 +11886,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         '<div class="item-meta"><span>' + U.fmtDate(x.date, true) + '</span>' +
         (x.content ? '<span class="badge grey">📝 有备注</span>' : '') + '</div>' +
       '</div>' + caret + '</div>';
+    if (!open) return row;
     return row + '<div class="fold-detail">' +
       '<div class="fold-ops">' + UI.ops(x.id, 'redit', 'rdel') + '</div>' +
       (x.content ? '<div class="note-text">📝 ' + esc(x.content) + '</div>' : '') + '</div>';
@@ -12141,6 +12081,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
             '<div class="item-meta">' + meta + '</div>' +
           '</div>' +
           '<span class="fold-caret">' + (expanded ? '▾' : '▸') + '</span></div>';
+        if (!expanded) return row;
         return row + '<div class="fold-detail">' +
           '<div class="fold-ops">' + UI.ops(x.id, 'eedit', 'edel') + '</div>' +
           (x.note ? '<div class="note-text">📝 ' + esc(x.note) + '</div>' : '') + '</div>';
@@ -12295,24 +12236,30 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       tab: function (t) { App.setTab('exam', 'main', t.dataset.k); App.refresh(); },
       pst: function (t) { App.setTab('exam', 'pst', t.dataset.k); planExp = {}; App.refresh(); },
       pexpand: function (t) {
-        var open = t.classList.toggle('open');
-        planExp[t.dataset.id] = open;
-        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
+        var id = t.dataset.id, was = !!planExp[id];
+        if (!was) App.rememberScroll('exp:' + id);
+        planExp[id] = !was;
+        App.refresh();
+        if (was) App.returnToScroll('exp:' + id);
       },
       eexpand: function (t) {
-        var open = t.classList.toggle('open');
-        examExp[t.dataset.id] = open;
-        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
+        var id = t.dataset.id, was = !!examExp[id];
+        if (!was) App.rememberScroll('exp:e' + id);
+        examExp[id] = !was;
+        App.refresh();
+        if (was) App.returnToScroll('exp:e' + id);
       },
       erexp: function (t) {
-        var open = t.classList.toggle('open');
-        examRecExpanded[t.dataset.id] = open;
-        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
+        var id = t.dataset.id;
+        examRecExpanded[id] = !examRecExpanded[id];
+        App.refresh();
       },
       rexpand: function (t) {
-        var open = t.classList.toggle('open');
-        reviewExp[t.dataset.id] = open;
-        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
+        var id = t.dataset.id, was = !!reviewExp[id];
+        if (!was) App.rememberScroll('exp:r' + id);
+        reviewExp[id] = !was;
+        App.refresh();
+        if (was) App.returnToScroll('exp:r' + id);
       },
       eprev: function () { eCur.day = U.shiftDay(eCur.day, -1); ListPager.resetPg('exam:plan'); ListPager.resetPg('exam:record'); App.refresh(); },
       enext: function () { eCur.day = U.shiftDay(eCur.day, 1); ListPager.resetPg('exam:plan'); ListPager.resetPg('exam:record'); App.refresh(); },
@@ -12504,14 +12451,15 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
               '<span class="item-title" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(x.text) + '</span>' +
               '<span style="flex-shrink:0">' + UI.scoreTag('') + '</span></div>' +
               '<div class="item-meta">' + meta + '</div></div>' + caret + '</div>';
+            if (!expanded) return row;
             return row + '<div class="fold-detail">' +
               '<div class="fold-ops">' + UI.ops(x.id, 'pedit', 'hdel') + '</div></div>';
           },
           acts: {
-            planhistexpand: function (t) {
-              var open = t.classList.toggle('open');
-              var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
-              var id = t.dataset.hid; if (id) planHistExp[id] = open;
+            planhistexpand: function (t, e, redraw) {
+              var id = t.dataset.hid;
+              planHistExp[id] = !planHistExp[id];
+              if (redraw) redraw();
             },
             pedit: function (t, e, redraw) {
               var x = D().exam.plans.filter(function (a) { return a.id === t.dataset.id; })[0];
@@ -12558,15 +12506,16 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
               '<span class="item-title" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(examCatText(x) || '学习') + '</span>' +
               '<span style="flex-shrink:0">' + UI.scoreTag('') + '</span></div>' +
               '<div class="item-meta">' + meta + '</div></div>' + caret + '</div>';
+            if (!expanded) return row;
             return row + '<div class="fold-detail">' +
               '<div class="fold-ops">' + UI.ops(x.id, 'redit', 'hdel') + '</div>' +
               (hasContent ? '<div class="note-text">📝 ' + studyContentHtml(x.content) + '</div>' : '') + '</div>';
           },
           acts: {
-            recexpand: function (t) {
-              var open = t.classList.toggle('open');
-              var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
-              var id = t.dataset.hid; if (id) recHistExp[id] = open;
+            recexpand: function (t, e, redraw) {
+              var id = t.dataset.hid;
+              recHistExp[id] = !recHistExp[id];
+              if (redraw) redraw();
             },
             redit: function (t, e, redraw) {
               var x = D().exam.records.filter(function (a) { return a.id === t.dataset.id; })[0];
@@ -12741,7 +12690,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var pending = isPending(c);
     var homePrice = num(ev().price) || 0.3353;
     var freeSaved = dv.charged * homePrice;   // 单位充免费，按家充电价折算"已省"金额
-    var row = '<div class="charge-row' + (open ? ' open' : '') + (pending && !dv.free ? ' pending' : '') + '" data-toggle data-id="' + c.id + '">' +
+    var row = '<div class="charge-row' + (open ? ' open' : '') + (pending && !dv.free ? ' pending' : '') + '" data-act="evexp" data-id="' + c.id + '">' +
       '<div class="charge-main">' +
         '<div class="row between"><span class="item-title">' + U.fmtDate(c.date) + '</span>' +
         '<span class="row" style="gap:6px;align-items:center;flex-shrink:0">' +
@@ -12750,7 +12699,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         '<span>充入 ' + dv.charged.toFixed(2) + ' 度</span>' +
         (km != null ? '<span>' + km + ' km</span>' : '') + '</span>' +
       '</div>' + caret + '</div>';
-    /* 展开详情：始终渲染（CSS 控制显隐），点击行时通用 data-toggle 处理器切换 .open 类 */
+    if (!open) return row;
     var detailInner;
     if (dv.free) {
       detailInner = '<div class="item-meta">' +
@@ -12824,7 +12773,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var open = fuelExpanded === c.id;
     var caret = '<span class="refuel-caret">' + (open ? '▾' : '▸') + '</span>';
     /* 主行：始终渲染（折叠/展开都可见），参考 task-row / stock-ov-row 模式 */
-    var row = '<div class="refuel-row' + (open ? ' open' : '') + '" data-toggle data-id="' + c.id + '">' +
+    var row = '<div class="refuel-row' + (open ? ' open' : '') + '" data-act="fuelexp" data-id="' + c.id + '">' +
       '<div class="refuel-main">' +
         '<div class="row between"><span class="item-title">' + U.fmtDate(c.date) + '</span>' +
         '<span class="row" style="gap:6px;align-items:center;flex-shrink:0">' +
@@ -12833,6 +12782,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         '<span>' + U.money(num(c.price)) + ' /升</span>' +
         (km != null ? '<span>' + km + ' km</span>' : '') + '</span>' +
       '</div>' + caret + '</div>';
+    if (!open) return row;
     return row + '<div class="refuel-detail">' +
       '<div class="refuel-ops">' + UI.ops(c.id, 'fedit', 'fdel') + '</div>' +
       '<div class="item-meta">' +
@@ -13046,7 +12996,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var open = sohExpanded === r.id;
     var caret = '<span class="charge-caret">' + (open ? '▾' : '▸') + '</span>';
     /* 主行：始终渲染（折叠/展开都可见），参考充电记录 charge-row 模式 */
-    var row = '<div class="charge-row' + (open ? ' open' : '') + '" data-toggle data-id="' + r.id + '">' +
+    var row = '<div class="charge-row' + (open ? ' open' : '') + '" data-act="sohexp" data-id="' + r.id + '">' +
       '<div class="charge-main">' +
         '<div class="row between"><span class="item-title">' + U.fmtDate(r.date) + '</span>' +
         '<span class="row" style="gap:6px;align-items:center;flex-shrink:0">' +
@@ -13057,6 +13007,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           '<span>耗电 ' + d.energy.toFixed(1) + ' 度</span>' +
         '</span>' +
       '</div>' + caret + '</div>';
+    if (!open) return row;
     return row + '<div class="charge-detail">' +
       '<div class="charge-ops">' + UI.ops(r.id, 'sohedit', 'sohdel') + '</div>' +
       '<div class="item-meta">' +
@@ -13348,9 +13299,9 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
 
     acts: {
       tab: function (t) { App.setTab('vehicle', 'main', t.dataset.k); App.refresh(); },
-      evexp: function (t) { evExpanded = evExpanded === t.dataset.id ? null : t.dataset.id; },
-      fuelexp: function (t) { fuelExpanded = fuelExpanded === t.dataset.id ? null : t.dataset.id; },
-      sohexp: function (t) { sohExpanded = sohExpanded === t.dataset.id ? null : t.dataset.id; },
+      evexp: function (t) { evExpanded = evExpanded === t.dataset.id ? null : t.dataset.id; App.refresh(); },
+      fuelexp: function (t) { fuelExpanded = fuelExpanded === t.dataset.id ? null : t.dataset.id; App.refresh(); },
+      sohexp: function (t) { sohExpanded = sohExpanded === t.dataset.id ? null : t.dataset.id; App.refresh(); },
 
       /* 电车快速记录：记充电 / 记单次行驶（电池健康）二选一 */
       evAdd: function () {
@@ -14033,7 +13984,8 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           }).join('') + (x.tags.length > 4 ? '<span class="badge grey" style="font-size:11px">+' + (x.tags.length - 4) + '</span>' : '') + '</div>' : '') +
         '</div>' +
         caret + '</div>';
-      /* 展开区：日记内容 + 操作按钮（始终渲染，CSS 控制显隐） */
+      /* 展开区：日记内容 + 操作按钮 */
+      if (!expanded) return row;
       return row + '<div class="fold-detail">' +
         (firstImg ? '<img class="di-thumb zoomable" data-act="zoom" data-src="' + firstImg + '" src="' + firstImg + '" alt="" style="max-width:100%;border-radius:8px;margin-bottom:8px">' : '') +
         (x.body ? '<div class="note-text" style="white-space:pre-wrap;word-break:break-word">' + esc(preview(x.body)) + '</div>' : '') +
@@ -14212,7 +14164,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     },
 
     acts: {
-      diexp: function (t) { diaryExpanded = diaryExpanded === t.dataset.id ? null : t.dataset.id; },
+      diexp: function (t) { diaryExpanded = diaryExpanded === t.dataset.id ? null : t.dataset.id; App.refresh(); },
       view: function (t) { st.view = t.dataset.k; App.refresh(); },
       dmood: function (t) { st.mood = st.mood === t.dataset.k ? '' : t.dataset.k; App.refresh(); },
       dtag: function (t) { st.tag = st.tag === t.dataset.k ? '' : t.dataset.k; App.refresh(); },
@@ -14482,17 +14434,13 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     });
   }
 
-  /* 日记列表：展开/折叠条目（纯 DOM 切换，不触发 App.refresh() 避免闪烁） */
+  /* 日记列表：展开/折叠条目（由 entryItem 的 onclick 内联调用） */
   window.__toggleDiary = function (id) {
     var was = diaryExpanded === id;
+    if (!was) App.rememberScroll('diexp:' + id);
     diaryExpanded = was ? null : id;
-    // 纯 DOM 切换：关闭当前展开的，打开点击的
-    var rows = document.querySelectorAll('.wl-hist-row');
-    rows.forEach(function(r) { r.classList.remove('open'); var c = r.querySelector('[class*="caret"]'); if (c) c.textContent = '▸'; });
-    if (!was) {
-      var target = document.querySelector('.wl-hist-row[onclick*="' + id + '"]');
-      if (target) { target.classList.add('open'); var c = target.querySelector('[class*="caret"]'); if (c) c.textContent = '▾'; }
-    }
+    App.refresh();
+    if (was) App.returnToScroll('diexp:' + id);
   };
 
   TF.def('diary_main', '10d');
@@ -14558,6 +14506,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         '<div class="item-meta"><span>' + U.fmtDate(x.date, true) + '</span><span class="badge grey">' + num(x.mins) + ' 分钟</span>' +
         (x.note ? '<span class="badge grey">📝 有备注</span>' : '') + '</div>' +
       '</div>' + caret + '</div>';
+    if (!open) return row;
     return row + '<div class="fold-detail">' +
       '<div class="fold-ops">' + UI.ops(x.id, null, 'sdel') + '</div>' +
       (x.note ? '<div class="note-text">📝 ' + esc(x.note) + '</div>' : '') + '</div>';
@@ -14575,6 +14524,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         '<span class="badge grey">📅 ' + U.fmtDate(x.date) + '</span>' +
         (x.note ? '<span class="badge grey">📝 有备注</span>' : '') + '</div>' +
       '</div>' + caret + '</div>';
+    if (!open) return row;
     return row + '<div class="fold-detail">' +
       '<div class="fold-ops">' + UI.ops(x.id, 'fedit', 'fdel') + '</div>' +
       (x.note ? '<div class="note-text">📝 ' + esc(x.note) + '</div>' : '') + '</div>';
@@ -14658,7 +14608,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       var today = U.today();
       var water = num((bd.water || {})[today]);
       var wGoal = num(bd.wGoal) || 1500;
-      var waterTxt = (water > 0 ? water : '0') + '/' + wGoal + ' ml';
+      var waterTxt = (water > 0 ? water : '0') + ' / ' + wGoal + ' ml';
       var waterSub;
       if (water >= wGoal) waterSub = '✓ 已达标';
       else if (water > 0) waterSub = '还差 ' + (wGoal - water) + ' ml';
@@ -14732,6 +14682,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
                 '<div class="measure-row-main">' +
                   '<div class="row between"><span class="item-title">' + U.fmtDate(x.date, true) + '</span>' +
                   '<span class="row" style="gap:6px;align-items:center;flex-shrink:0"><span class="badge">' + num(x[metric]) + ' ' + MU[metric] + '</span></span></div>';
+              if (!expanded) return row + '</div>' + caret + '</div>';
               return row + '</div>' + caret + '</div>' +
                 '<div class="measure-detail">' +
                   '<div class="measure-ops-row">' + UI.ops(x.id, 'medit', 'mdel') + '</div>' +
@@ -14865,14 +14816,16 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       tab: function (t) { App.setTab('body', 'main', t.dataset.k); App.refresh(); },
       metric: function (t) { App.setTab('body', 'metric', t.dataset.k); ListPager.resetPg('body:measure'); measureExpanded = null; App.refresh(); },
       mexp: function (t) {
-        var open = t.classList.toggle('open');
-        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
-        measureExpanded = open ? t.dataset.id : null;
+        var id = t.dataset.id, was = measureExpanded === id;
+        if (!was) App.rememberScroll('exp:' + id);
+        measureExpanded = was ? null : id;
+        App.refresh();
+        if (was) App.returnToScroll('exp:' + id);
       },
       bexp: function (t) {
-        var open = t.classList.toggle('open');
-        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
-        bodyExp[t.dataset.id] = open;
+        var id = t.dataset.id;
+        bodyExp[id] = !bodyExp[id];
+        App.refresh();
       },
 
       mnew: function () {
@@ -15274,6 +15227,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       '<div class="item-title' + (done ? ' strike' : '') + '">' + esc(x.name) + '</div>' +
       (meta ? '<span class="buy-item-meta">' + meta + '</span>' : '') +
       '</div>' + caret + '</div>';
+    if (!expanded) return row;
     return row + '<div class="buy-item-detail">' +
       '<div class="buy-item-ops">' + UI.ops(x.id, 'bedit', 'bdel') + '</div>' +
       (x.note ? '<div class="note-text">📝 ' + esc(x.note) + '</div>' : '') + '</div>';
@@ -15294,6 +15248,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var row = '<div class="consum-row' + (x.archived ? ' archived' : '') + (expanded ? ' open' : '') + '" data-act="citem" data-id="' + x.id + '"><div class="consum-main">' +
       '<div class="row between"><span class="item-title">' + archivedBadge + '🔔 ' + esc(x.name) + '</span><span class="badge ' + dueCls + '">📅 ' + dueTxt + '</span></div>' +
       '</div>' + caret + '</div>';
+    if (!expanded) return row;
     // 撤销「生产日期+有效期」方案：耗材统一按「开封/启用日期 + 周期」计算到期
     var open = x.open, cycle = num(x.cycle) || 1;
     var elapsed = U.dayDiff(open, U.today());
@@ -15391,7 +15346,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           '<span class="stock-ov-num">' + num(x.left) + ' / ' + num(x.qty) + un + '</span>' +
           '<span class="stock-ov-caret">' + (expanded ? '▾' : '▸') + '</span>' +
           '</div>';
-        if (true) {
+        if (expanded) {
           var logs = (x.logs || []);
           var buys = (x.buys || []);
           var bs = normBatches(x);
@@ -15506,20 +15461,26 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     acts: {
       tab: function (t) { App.setTab('items', 'main', t.dataset.k); App.refresh(); },
       kexp: function (t) {
-        var open = t.classList.toggle('open');
-        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
-        stockExpanded = open ? t.dataset.id : null;
+        var id = t.dataset.id, was = stockExpanded === id;
+        if (!was) App.rememberScroll('exp:' + id);
+        stockExpanded = was ? null : id;
+        App.refresh();
+        if (was) App.returnToScroll('exp:' + id);
       },
       kwarn: function () { stockWarnOnly = !stockWarnOnly; stockExpanded = null; ListPager.resetPg('items:stock'); App.refresh(); },
       bitem: function (t) {
-        var open = t.classList.toggle('open');
-        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
-        buyExpanded = open ? t.dataset.id : null;
+        var id = t.dataset.id, was = buyExpanded === id;
+        if (!was) App.rememberScroll('exp:' + id);
+        buyExpanded = was ? null : id;
+        App.refresh();
+        if (was) App.returnToScroll('exp:' + id);
       },
       citem: function (t) {
-        var open = t.classList.toggle('open');
-        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
-        consumExpanded = open ? t.dataset.id : null;
+        var id = t.dataset.id, was = consumExpanded === id;
+        if (!was) App.rememberScroll('exp:' + id);
+        consumExpanded = was ? null : id;
+        App.refresh();
+        if (was) App.returnToScroll('exp:' + id);
       },
       ktoggleArchived: function () { stockShowArchived = !stockShowArchived; stockExpanded = null; ListPager.resetPg('items:stock'); App.refresh(); },
       karchive: function (t) {
@@ -15542,35 +15503,42 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         var kind = t.dataset.kind;
         var un = x.uname && x.uname !== '%' ? ' ' + esc(x.uname) : '';
         var titleMap = { use: '使用记录 · ' + x.name, buy: '购买补充记录 · ' + x.name, batch: '批次明细 · ' + x.name };
-        var html = '';
-        if (kind === 'use') {
-          var arr = (x.logs || []).slice().sort(function (a, b) { return (b.d || '') < (a.d || '') ? -1 : 1; });
-          html = arr.length ? '<div class="buy-list">' + arr.map(function (l) {
-            return '<div class="buy-row"><span>' + U.fmtDate(l.d) + '</span><span>用 ' + num(l.v) + un + '</span><span></span></div>';
-          }).join('') + '</div>' : '<div class="small muted">暂无使用记录</div>';
-        } else if (kind === 'buy') {
-          var arr2 = (x.buys || []).slice().sort(function (a, b) { return (b.d || '') < (a.d || '') ? -1 : 1; });
-          html = arr2.length ? '<div class="buy-list">' + arr2.map(function (b) {
-            return '<div class="buy-row"><span>' + U.fmtDate(b.d) + '</span><span>补充 ' + num(b.qty) + un + '</span><span>' + (num(b.price) ? U.money(b.price) : '—') + '</span></div>';
-          }).join('') + '</div>' : '<div class="small muted">暂无购买补充记录</div>';
-        } else if (kind === 'batch') {
-          var bs = sortBatches(normBatches(x));
-          var latestKey2 = null;
-          for (var bi2 = 0; bi2 < bs.length; bi2++) { if (num(bs[bi2].left) > 0) { latestKey2 = bs[bi2].id; break; } }
-          html = bs.length ? '<div class="buy-list">' + bs.map(function (b) {
-            var bl = num(b.left);
-            var usedUp = bl <= 0;
-            var st = '';
-            if (b.id === latestKey2) st = '<span class="badge fresh">🆕 最新</span>';
-            if (usedUp) st = '<span class="badge grey">已用完</span>';
-            else if (b.exp && !st) { var L = expLabel(b.exp); if (L) st = '<span class="badge ' + L.cls + '">⏳ ' + L.t + '</span>'; }
-            return '<div class="buy-row">' +
-              '<span>' + (b.d ? U.fmtDate(b.d) : '购入') + '</span>' +
-              '<span>剩 ' + num(bl) + ' / ' + num(b.qty) + un + (b.exp ? ' · 至 ' + U.fmtDate(b.exp) : ' · 无保质期') + '</span>' +
-              '<span>' + st + '</span></div>';
-          }).join('') + '</div>' : '<div class="small muted">暂无批次</div>';
+        var emptyMap = { use: '暂无使用记录', buy: '暂无购买补充记录', batch: '暂无批次' };
+        function draw() {
+          if (kind === 'use') {
+            var uo = (x.logs || []).map(function (l, i) { return { l: l, i: i }; }).sort(function (a, b) { return (b.l.d || '') < (a.l.d || '') ? -1 : 1; });
+            return uo.length ? '<div class="buy-list">' + uo.map(function (o) {
+              return '<div class="buy-row" data-rec="edit" data-rid="' + o.i + '" data-kind="use" title="点击编辑"><span>' + U.fmtDate(o.l.d) + '</span><span>用 ' + num(o.l.v) + un + '</span><span class="row-acts">' + recActsHtml('use', o.i) + '</span></div>';
+            }).join('') + '</div>' : '<div class="small muted">' + emptyMap.use + '</div>';
+          } else if (kind === 'buy') {
+            var bo = (x.buys || []).map(function (b, i) { return { b: b, i: i }; }).sort(function (a, b) { return (b.b.d || '') < (a.b.d || '') ? -1 : 1; });
+            return bo.length ? '<div class="buy-list">' + bo.map(function (o) {
+              return '<div class="buy-row" data-rec="edit" data-rid="' + o.i + '" data-kind="buy" title="点击编辑"><span>' + U.fmtDate(o.b.d) + '</span><span>补充 ' + num(o.b.qty) + un + (num(o.b.price) ? ' · ' + U.money(o.b.price) : '') + '</span><span class="row-acts">' + recActsHtml('buy', o.i) + '</span></div>';
+            }).join('') + '</div>' : '<div class="small muted">' + emptyMap.buy + '</div>';
+          } else {
+            var bs = sortBatches(normBatches(x));
+            var latestKey2 = null;
+            for (var bi2 = 0; bi2 < bs.length; bi2++) { if (num(bs[bi2].left) > 0) { latestKey2 = bs[bi2].id; break; } }
+            return bs.length ? '<div class="buy-list">' + bs.map(function (b) {
+              var bl = num(b.left), usedUp = bl <= 0, st = '';
+              if (b.id === latestKey2) st = '<span class="badge fresh">🆕 最新</span>';
+              if (usedUp) st = '<span class="badge grey">已用完</span>';
+              else if (b.exp && !st) { var L = expLabel(b.exp); if (L) st = '<span class="badge ' + L.cls + '">⏳ ' + L.t + '</span>'; }
+              return '<div class="buy-row" data-rec="edit" data-rid="' + b.id + '" data-kind="batch" title="点击编辑">' +
+                '<span>' + (b.d ? U.fmtDate(b.d) : '购入') + '</span>' +
+                '<span>剩 ' + num(bl) + ' / ' + num(b.qty) + un + (b.exp ? ' · 至 ' + U.fmtDate(b.exp) : ' · 无保质期') + '</span>' +
+                '<span>' + (st || '') + '</span>' +
+                '<span class="row-acts">' + recActsHtml('batch', b.id) + '</span></div>';
+            }).join('') + '</div>' : '<div class="small muted">' + emptyMap.batch + '</div>';
+          }
         }
-        UI.sheet(titleMap[kind] || '全部记录', html);
+        var el = UI.sheet(titleMap[kind] || '全部记录', '<div class="rec-rows">' + draw() + '</div>');
+        el.addEventListener('click', function (e) {
+          var btn = e.target.closest('[data-rec]'); if (!btn) return;
+          var op = btn.getAttribute('data-rec'), rid = btn.getAttribute('data-rid'), k = btn.getAttribute('data-kind');
+          if (op === 'edit') stockRecEdit(x, k, rid, el, draw);
+          else stockRecDel(x, k, rid, el, draw);
+        });
       },
       kmore: function (t) {
         var x = D().items.stock.filter(function (a) { return a.id === t.dataset.id; })[0];
@@ -15731,10 +15699,23 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       chist: function (t) {
         var x = D().items.consum.filter(function (a) { return a.id === t.dataset.id; })[0];
         if (!x) return; x = normConsum(x);
-        var arr = (x.history || []).slice().reverse().map(function (h) {
-          return '<div class="buy-row"><span>' + U.fmtDate(h) + '</span><span>已换新</span><span></span></div>';
-        }).join('');
-        UI.sheet('更换记录 · ' + x.name, arr ? '<div class="buy-list">' + arr + '</div>' : '<div class="small muted">暂无更换记录</div>');
+        function draw() {
+          var arr = (x.history || []).map(function (h, i) { return { h: h, i: i }; }).reverse();
+          return arr.length ? '<div class="buy-list">' + arr.map(function (o) {
+            return '<div class="buy-row" data-rec="edit" data-rid="' + o.i + '" data-kind="hist" title="点击编辑"><span>' + U.fmtDate(o.h) + '</span><span>已换新</span><span class="row-acts">' + recActsHtml('hist', o.i) + '</span></div>';
+          }).join('') + '</div>' : '<div class="small muted">暂无更换记录</div>';
+        }
+        var el = UI.sheet('更换记录 · ' + x.name, '<div class="rec-rows">' + draw() + '</div>');
+        el.addEventListener('click', function (e) {
+          var btn = e.target.closest('[data-rec]'); if (!btn) return;
+          var op = btn.getAttribute('data-rec'), rid = +btn.getAttribute('data-rid');
+          if (op === 'edit') {
+            UI.form({ title: '编辑更换日期', values: { d: x.history[rid] }, fields: [{ k: 'd', label: '换新日期', type: 'date', def: x.history[rid], req: true }] })
+              .then(function (r) { if (!r) return; x.history[rid] = r.d; Store.save(); App.refresh(); refreshRows(el, draw); });
+          } else {
+            UI.confirm('确认删除', '删除该更换记录？', '删除').then(function (ok) { if (!ok) return; x.history.splice(rid, 1); Store.save(); App.refresh(); refreshRows(el, draw); });
+          }
+        });
       },
       crenew: function (t) {
         var x = D().items.consum.filter(function (a) { return a.id === t.dataset.id; })[0];
@@ -15958,6 +15939,83 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var nb = { id: U.uid(), d: d, qty: add, left: add, exp: exp || '', price: num(price) || 0, _seq: Date.now() };
     bs.push(nb);
     return nb;
+  }
+  /* 按 delta 调整批次库存：正数退回（加到最早到期批，left 同步放大 qty 以容纳），负数按最早到期先扣 */
+  function adjustStock(x, delta) {
+    var bs = normBatches(x);
+    if (!bs.length) {
+      if (delta > 0) x.batches = [{ id: U.uid(), d: U.today(), qty: delta, left: delta, exp: '', price: 0, _seq: Date.now() }];
+    } else if (delta > 0) {
+      var head = bs.slice().sort(function (a, b2) { var ea = a.exp || '9999-12-31', eb = b2.exp || '9999-12-31'; return ea < eb ? -1 : ea > eb ? 1 : 0; })[0];
+      head.left = num(head.left) + delta;
+      if (num(head.left) > num(head.qty)) head.qty = num(head.left);
+    } else {
+      var need = -delta;
+      var sorted = bs.slice().sort(function (a, b2) { var ea = a.exp || '9999-12-31', eb = b2.exp || '9999-12-31'; return ea < eb ? -1 : ea > eb ? 1 : 0; });
+      for (var i = 0; i < sorted.length && need > 0; i++) {
+        var take = Math.min(need, num(sorted[i].left));
+        sorted[i].left = num(sorted[i].left) - take; need -= take;
+      }
+    }
+    var t = stockTotals(x); x.qty = t.qty; x.left = t.left;
+  }
+  // 记录行操作按钮 HTML（✎ 编辑 / 🗑 删除），data-kind 区分 use/buy/batch/hist
+  function recActsHtml(kind, rid) {
+    return '<button class="ic-btn tap" data-rec="edit" data-rid="' + rid + '" data-kind="' + kind + '" title="编辑">✎</button>' +
+      '<button class="ic-btn del tap" data-rec="del" data-rid="' + rid + '" data-kind="' + kind + '" title="删除">🗑</button>';
+  }
+  function refreshRows(el, draw) { var c = el.querySelector('.rec-rows'); if (c) c.innerHTML = draw(); }
+  // 编辑单条记录：使用(d,v) / 购买(d,qty,price) / 批次(d,qty,left,exp,price)
+  function stockRecEdit(x, kind, rid, el, draw) {
+    var un = x.uname && x.uname !== '%' ? ' ' + esc(x.uname) : '';
+    if (kind === 'use') {
+      var l = x.logs[+rid]; if (!l) return;
+      UI.form({ title: '编辑使用记录', values: { d: l.d, v: l.v }, fields: [
+        { k: 'd', label: '日期', type: 'date', def: l.d, req: true },
+        { k: 'v', label: '消耗数量' + (un ? '（' + x.uname + '）' : '（%）'), type: 'number', min: 0, req: true }
+      ] }).then(function (r) {
+        if (!r) return;
+        var oldV = num(l.v); l.d = r.d; l.v = num(r.v);
+        adjustStock(x, oldV - num(r.v)); normItem(x); Store.save(); App.refresh(); refreshRows(el, draw);
+      });
+    } else if (kind === 'buy') {
+      var b = x.buys[+rid]; if (!b) return;
+      UI.form({ title: '编辑购买记录', values: { d: b.d, qty: b.qty, price: b.price }, fields: [
+        { k: 'd', label: '日期', type: 'date', def: b.d, req: true },
+        { k: 'qty', label: '补充数量' + (un ? '（' + x.uname + '）' : '（个）'), type: 'number', min: 0, req: true },
+        { k: 'price', label: '花费（选填）', type: 'number', min: 0 }
+      ] }).then(function (r) {
+        if (!r) return;
+        var oldQ = num(b.qty); b.d = r.d; b.qty = num(r.qty); b.price = num(r.price) || 0;
+        adjustStock(x, num(r.qty) - oldQ); normItem(x); Store.save(); App.refresh(); refreshRows(el, draw);
+      });
+    } else if (kind === 'batch') {
+      var bb = (x.batches || []).filter(function (z) { return z.id === rid; })[0]; if (!bb) return;
+      UI.form({ title: '编辑批次', values: { d: bb.d, qty: bb.qty, left: bb.left, exp: bb.exp || '', price: bb.price || 0 }, fields: [
+        { k: 'd', label: '购入日期', type: 'date', def: bb.d, req: true },
+        { k: 'qty', label: '总量' + (un ? '（' + x.uname + '）' : '（个）'), type: 'number', min: 0, req: true },
+        { k: 'left', label: '剩余' + (un ? '（' + x.uname + '）' : '（个）'), type: 'number', min: 0, req: true, hint: '剩余不能超过总量' },
+        { k: 'exp', label: '保质期至（选填）', type: 'date' },
+        { k: 'price', label: '花费（选填）', type: 'number', min: 0 }
+      ] }).then(function (r) {
+        if (!r) return;
+        var q = num(r.qty), lf = Math.min(num(r.left), q);
+        bb.d = r.d; bb.qty = q; bb.left = lf; bb.exp = r.exp || ''; bb.price = num(r.price) || 0; bb._seq = Date.now();
+        normItem(x); Store.save(); App.refresh(); refreshRows(el, draw);
+      });
+    }
+  }
+  function stockRecDel(x, kind, rid, el, draw) {
+    var msg = kind === 'use' ? '删除该使用记录？将把消耗的数量退回库存。'
+      : kind === 'buy' ? '删除该购买记录？将从库存扣减该数量。'
+      : '删除该批次？将减少库存总量与剩余。';
+    UI.confirm('确认删除', msg, '删除').then(function (ok) {
+      if (!ok) return;
+      if (kind === 'use') { var l = x.logs[+rid]; if (l) { adjustStock(x, num(l.v)); x.logs.splice(+rid, 1); } }
+      else if (kind === 'buy') { var b = x.buys[+rid]; if (b) { adjustStock(x, -num(b.qty)); x.buys.splice(+rid, 1); } }
+      else if (kind === 'batch') { x.batches = (x.batches || []).filter(function (z) { return z.id !== rid; }); }
+      normItem(x); Store.save(); App.refresh(); refreshRows(el, draw);
+    });
   }
   // 物品数据兼容与预警：老数据 left 是百分比，自动按 qty=100 / uname='%' 兼容
   function normItem(x) {
@@ -17219,7 +17277,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         return;
       }
       // 整行折叠：参考其他模块 view.onclick 中的折叠逻辑
-      var tog = e.target.closest('.item.clickable[data-toggle]') || e.target.closest('.task-tl-item[data-toggle]');
+      var tog = e.target.closest('.item.clickable[data-toggle]');
       if (tog) { tog.classList.toggle('open'); }
     });
     if (qe) qe.oninput = function () { q = this.value; draw(); };
@@ -17293,26 +17351,31 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       (n < 0 ? 'font-size:13px;line-height:1.35;' : 'font-size:22px;') + '">' +
       (n === 0 ? '今天' : n < 0 ? passedText(nd) : n) + '</div>' +
       (n > 0 ? '<div class="small muted">天</div>' : '') + '</div>';
-    var caret = '<span class="fold-caret">' + (expanded ? '▾' : '▸') + '</span>';
-    /* 主行 + 详情始终渲染（详情默认隐藏，点击行由 aexp 处理器纯 DOM 切换 .open，不触发 App.refresh 避免闪烁） */
-    return '<div class="item anniv-row' + (n >= 0 && n <= 7 ? ' hl' : '') + (expanded ? ' open' : '') + '" data-act="aexp" data-id="' + x.id + '">' +
+    // 折叠态
+    if (!expanded) {
+      return '<div class="item' + (n >= 0 && n <= 7 ? ' hl' : '') + '" data-act="aexp" data-id="' + x.id + '">' +
+        '<div class="item-main"><div class="row between"><span class="item-title">' + esc(x.name) + (n === 0 ? ' 🎉' : '') + '</span>' +
+        '<span class="row" style="gap:6px;align-items:center;flex-shrink:0">' + countHtml + ' <span style="font-size:11px;color:var(--brown-3)">▸</span></span></div>' +
+        '<div class="item-meta"><span class="badge grey">' + esc(x.type || '纪念日') + '</span>' +
+        '<span>' + U.fmtDate(nd, true) + '</span>' +
+        (isLunar ? '<span class="badge purple">农历</span>' : '') +
+        (x.yearly ? '<span class="badge">每年</span>' : '') + '</div></div></div>';
+    }
+    // 展开态：操作按钮（编辑/删除）改到底部独立一行，全宽 btn，与折叠态右上箭头呼应
+    return '<div class="item' + (n >= 0 && n <= 7 ? ' hl' : '') + ' open" data-act="aexp" data-id="' + x.id + '">' +
       '<div class="item-main">' +
-        '<div class="row between"><span class="item-title">' + esc(x.name) + (n === 0 ? ' 🎉' : '') + '</span>' +
-        '<span class="row" style="gap:6px;align-items:center;flex-shrink:0">' + countHtml + ' ' + caret + '</span></div>' +
-        '<div class="item-meta">' +
-          '<span class="badge grey">' + esc(x.type || '纪念日') + '</span>' +
-          (isLunar ? '<span class="badge purple">农历 · ' + lunarTxt + '</span>' : '') +
-          '<span>' + U.fmtDate(nd, true) + '</span>' +
-          (x.yearly ? '<span class="badge">每年重复' + (years > 0 ? ' · 第 ' + years + ' 年' : '') + '</span>' : '') +
-        '</div>' +
-        '<div class="fold-detail">' +
-          (x.note ? '<div class="note-text">📝 ' + esc(x.note) + '</div>' : '') +
-          '<div class="item-ops-row">' +
-            '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
-            '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>' +
-          '</div>' +
-        '</div>' +
-      '</div></div>';
+      '<div class="row between"><span class="item-title">' + esc(x.name) + (n === 0 ? ' 🎉' : '') + '</span>' +
+      '<span class="row" style="gap:6px;align-items:center;flex-shrink:0">' + countHtml + ' <span style="font-size:11px;color:var(--brown-3)">▾</span></span></div>' +
+      '<div class="item-meta">' +
+      '<span class="badge grey">' + esc(x.type || '纪念日') + '</span>' +
+      (isLunar ? '<span class="badge purple">农历 · ' + lunarTxt + '</span>' : '') +
+      '<span>' + U.fmtDate(nd, true) + '</span>' +
+      (x.yearly ? '<span class="badge">每年重复' + (years > 0 ? ' · 第 ' + years + ' 年' : '') + '</span>' : '') +
+      (x.note ? '<span>' + esc(x.note) + '</span>' : '') + '</div>' +
+      '<div class="item-ops-row">' +
+      '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
+      '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>' +
+      '</div></div></div>';
   }
 
   var anniv = {
@@ -17355,11 +17418,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       if (q) q.oninput = function () { anQ = this.value; ListPager.resetPg('people:anniv'); var b = view.querySelector('#anList'); if (b) b.innerHTML = anniv.items(anQ); };
     },
     acts: {
-      aexp: function (t) {
-        var open = t.classList.toggle('open');
-        annivExpanded = open ? t.dataset.id : null;
-        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
-      },
+      aexp: function (t) { annivExpanded = annivExpanded === t.dataset.id ? null : t.dataset.id; App.refresh(); },
       new: function () {
         UI.form({ title: '添加纪念日', values: { yearly: true, cal: 'solar', date: U.today(), lmonth: 7, lday: 7, lisLeap: false }, fields: aFields() }).then(function (v) {
           if (!v) return; v.id = U.uid(); D().anniv.push(v); Store.save(); App.refresh();
@@ -17440,11 +17499,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       if (q) q.oninput = function () { soQ = this.value; ListPager.resetPg('people:social'); var b = view.querySelector('#soList'); if (b) b.innerHTML = social.items(soQ); };
     },
     acts: {
-      soexp: function (t) {
-        var open = t.classList.toggle('open');
-        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
-        socialExpanded = open ? t.dataset.id : null;
-      },
+      soexp: function (t) { socialExpanded = socialExpanded === t.dataset.id ? null : t.dataset.id; App.refresh(); },
       new: function () {
         UI.form({ title: '添加人情记录', values: { date: U.today() }, fields: soFields() }).then(function (v) {
           if (!v) return; v.id = U.uid(); D().social.push(v); Store.save(); App.refresh();
@@ -17484,6 +17539,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           (back ? '<span title="回赠 ' + U.moneyFull(back) + '">回赠 ' + money(back) + '</span>' : '') +
         '</span>' +
       '</div>' + caret + '</div>';
+    if (!open) return row;
     return row + '<div class="social-detail">' +
       '<div class="social-ops-row">' + UI.ops(x.id, 'edit', 'del') + '</div>' +
       '<div class="note-text">📤 我方送出：' + (x.outGift ? esc(x.outGift) : '—') + (out ? ' · <span title="' + U.moneyFull(out) + '">' + money(out) + '</span>' : '') + '</div>' +
@@ -17557,11 +17613,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       if (q) q.oninput = function () { wiQ = this.value; ListPager.resetPg('people:wish'); var b = view.querySelector('#wiList'); if (b) b.innerHTML = wish.items(wiQ); };
     },
     acts: {
-      wexp: function (t) {
-        var open = t.classList.toggle('open');
-        wishExpanded = open ? t.dataset.id : null;
-        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
-      },
+      wexp: function (t) { wishExpanded = wishExpanded === t.dataset.id ? null : t.dataset.id; App.refresh(); },
       f: function (t) { App.setTab('wish', 'f', t.dataset.k); ListPager.resetPg('people:wish'); App.refresh(); },
       new: function () {
         UI.form({ title: '添加愿望', fields: wiFields() }).then(function (v) {
@@ -17605,6 +17657,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         '<div class="wish-row-title">' + (x.done ? '✅ ' : '') + esc(x.title) + '</div>' +
         '<div class="wish-row-meta">' + meta + '</div>' +
       '</div>' + caret + '</div>';
+    if (!expanded) return row;
     return row + '<div class="wish-detail">' +
       '<div class="wish-ops">' +
         '<button class="link-btn tap" data-act="toggle" data-id="' + x.id + '">' + (x.done ? '↺ 标为未实现' : '✓ 标记已实现') + '</button>' +
@@ -17654,11 +17707,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       if (q) q.oninput = function () { faQ = this.value; ListPager.resetPg('people:family'); var b = view.querySelector('#faList'); if (b) b.innerHTML = family.items(faQ); };
     },
     acts: {
-      fexp: function (t) {
-        var open = t.classList.toggle('open');
-        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
-        familyExpanded = open ? t.dataset.id : null;
-      },
+      fexp: function (t) { familyExpanded = familyExpanded === t.dataset.id ? null : t.dataset.id; App.refresh(); },
       new: function () {
         UI.form({ title: '添加成员', fields: fFields() }).then(function (v) {
           if (!v) return; v.id = U.uid(); D().family.push(v); Store.save(); App.refresh();
@@ -17755,6 +17804,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           return '<span class="pill" style="pointer-events:none;font-size:11px">' + r[0] + ' ' + esc(r[1]) + r[2] + '</span>';
         }).join('') + '</div>' : '') +
       '</div>' + caret + '</div>';
+    if (!expanded) return row;
     return row + '<div class="family-detail">' +
       (x.like ? '<div class="note-text">💚 喜好：' + esc(x.like) + '</div>' : '') +
       (x.avoid ? '<div class="note-text">🚫 忌口 / 忌讳：' + esc(x.avoid) + '</div>' : '') +
@@ -17848,9 +17898,9 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         App.refresh();
       },
       crexp: function (t) {
-        var open = t.classList.toggle('open');
-        var c = t.querySelector('[class*="caret"]'); if (c) c.textContent = open ? '▾' : '▸';
-        catRecExpanded = open ? t.dataset.id : null;
+        var id = t.dataset.id;
+        catRecExpanded = catRecExpanded === id ? null : id;
+        App.refresh();
       },
       psel: function (t, e) {
         if (e.target.closest('[data-act="pedit"],[data-act="pdel"]')) return;
@@ -17923,6 +17973,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var row = '<div class="cat-rec-row' + (expanded ? ' open' : '') + '" data-act="crexp" data-id="' + x.id + '">' +
       '<div class="cat-rec-main"><div class="pills" style="margin:0">' + pills.join('') + '</div></div>' +
       '<span class="cat-rec-caret">' + (expanded ? '▾' : '▸') + '</span></div>';
+    if (!expanded) return row;
     return row + '<div class="cat-rec-detail">' +
       '<div class="cat-rec-ops">' + UI.ops(x.id, 'redit', 'rdel') + '</div>' +
       (x.note ? '<div class="note-text">📝 ' + esc(x.note) + '</div>' : '') +
@@ -18157,7 +18208,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       return UI.head('⚙️ 设置', '数据备份、基础参数与使用说明') +
         UI.card({
           title: '💾 数据备份（本地）',
-          sub: '当前占用 ' + kb + ' KB（导出的备份文件与此大小接近）',
+          sub: '当前占用 ' + kb + ' KB',
           body:
             '<p class="small muted" style="margin-bottom:12px">数据默认只保存在本机浏览器。换设备或清理缓存前，建议导出一份留底，需要时再用「导入」恢复。</p>' +
             '<div class="row" style="gap:8px;flex-wrap:wrap">' +
@@ -19519,7 +19570,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
               '<div class="jw-tl-card tap" data-act="cTodoMenu" data-id="' + x.id + '" data-tid="' + td.id + '">' +
                 '<div class="jw-tl-head">' +
                   (td.due ? dueBadge(td.due, false) : '') +
-                  (td.cat ? '<span class="badge ' + UI.catColor(td.cat) + '">' + esc(td.cat) + '</span>' : '') +
+                  (td.cat ? '<span class="badge cream">' + esc(td.cat) + '</span>' : '') +
                 '</div>' +
                 '<div class="jw-tl-text">' + esc(td.t) + '</div>' +
               '</div>' +
@@ -19567,9 +19618,9 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         '<div class="jw-tl-card tap" data-act="cLogEdit" data-id="' + x.id + '" data-lid="' + l.id + '">' +
           '<div class="jw-tl-head">' +
             ((l.start || l.end) ? '<span class="badge grey">🕐 ' + esc(l.start || '?') + (l.end && l.end !== l.start ? '–' + esc(l.end) : '') + '</span>' : '') +
-            (l.cat ? '<span class="badge ' + UI.catColor(l.cat) + '">' + esc(l.cat) + '</span>' : '') +
+            (l.cat ? '<span class="badge cream">' + esc(l.cat) + '</span>' : '') +
             (l.src === 'worklog' ? '<span class="badge info jw-tl-src">工作留痕</span>' : '') +
-            (l.src === 'task' ? '<span class="badge cream jw-tl-src">任务待办</span>' : '') +
+            (l.src === 'task' ? '<span class="badge info jw-tl-src">任务待办</span>' : '') +
           '</div>' +
           '<div class="jw-tl-text' + (isClose ? ' jw-log-t-close' : '') + '">' + esc(l.t) + '</div>' +
         '</div>' +
@@ -19731,7 +19782,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     }
     if (x.note) pairs.push(['备注', x.note]);
     var meta =
-      '<span class="badge ' + (x.type ? UI.catColor(x.type) : 'grey') + '">' + esc(x.type || '监督检查') + '</span>' +
+      '<span class="badge ' + (x.type ? 'cream' : 'grey') + '">' + esc(x.type || '监督检查') + '</span>' +
       '<span class="badge ' + (done ? 'grey' : '') + '">' + esc(x.status || '计划中') + '</span>' +
       (x.rectifyStatus && x.rectifyStatus !== '不涉及'
         ? '<span class="badge ' + (rectifyOpen ? 'warn' : '') + '">整改·' + esc(x.rectifyStatus) + '</span>' : '') +
@@ -19762,7 +19813,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     if (x.sentDate) pairs.push(['实际报送', cnDate(x.sentDate)]);
     if (x.note) pairs.push(['备注', x.note]);
     var meta =
-      '<span class="badge ' + (x.period ? UI.catColor(x.period) : 'grey') + '">' + esc(x.period || '报送') + '</span>' +
+      '<span class="badge ' + (x.period ? 'cream' : 'grey') + '">' + esc(x.period || '报送') + '</span>' +
       '<span class="badge ' + (sent ? 'grey' : '') + '">' + esc(x.status || '待报送') + '</span>' +
       (x.to ? '<span class="badge grey">' + esc(x.to) + '</span>' : '') +
       dueBadge(x.dueDate, sent);
@@ -20133,11 +20184,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       },
 
       /* ---- 案件 ---- */
-      cExp: function (t) {
-        var id = t.dataset.id; jwExp[id] = !jwExp[id];
-        var x = J().cases.filter(function (a) { return a.id === id; })[0];
-        if (x) t.outerHTML = renderCase(x);
-      },
+      cExp: function (t) { jwExp[t.dataset.id] = !jwExp[t.dataset.id]; App.refresh(); },
       cnew: function () {
         UI.form({ title: '新增案件 / 问题线索', values: { acceptDate: U.today() }, fields: caseFields() })
           .then(function (v) {
@@ -20223,7 +20270,8 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         });
       },
       /* ---- 办理进度：点节点即改时间 / 分类 / 内容 ---- */
-      cLogEdit: function (t) {
+      /* after：可选回调，保存/删除后触发（用于「全部已办」弹层就地刷新列表） */
+      cLogEdit: function (t, after) {
         var x = findCase(t.dataset.id); if (!x) return;
         var l = findIn(x.logs || [], t.dataset.lid); if (!l) return;
         var srcName = l.src === 'worklog' ? '工作留痕' : (l.src === 'task' ? '任务待办' : '');
@@ -20242,11 +20290,11 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           onDanger: function () {
             var imp = (window.JWLink && window.JWLink.impactText) ? window.JWLink.impactText('log', l) : [];
             if (!imp.length) {
-              UI.confirm('删除办理记录', '确定删除这条记录？删除后不可恢复。', '删除', true).then(function (yes) { if (yes) { jw.acts.deleteLog(x, lid); U.toast('已删除'); } });
+              UI.confirm('删除办理记录', '确定删除这条记录？删除后不可恢复。', '删除', true).then(function (yes) { if (yes) { jw.acts.deleteLog(x, lid); U.toast('已删除'); if (after) after(); } });
               return;
             }
             UI.confirm('删除办理记录', '确定删除这条记录？将一并删除以下关联记录：' + imp.join('；') + '。删除后不可恢复。', '删除', true).then(function (yes) {
-              if (yes) { jw.acts.deleteLog(x, lid); U.toast('已删除，关联记录同步清除'); }
+              if (yes) { jw.acts.deleteLog(x, lid); U.toast('已删除，关联记录同步清除'); if (after) after(); }
             });
           }
         }).then(function (v) {
@@ -20258,6 +20306,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           l.t = v.t;
           if (window.JWLink && l.src) { try { window.JWLink.syncEdit('log', l); } catch (e) {} }
           Store.save(); App.refresh(); U.toast('办理进度已更新');
+          if (after) after();
         });
       },
       /* 时间轴排序切换：最新在上 ⇄ 最早在上；切换后重置分页到第一页 */
@@ -20266,30 +20315,62 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         window.ListPager.resetPg('jiwei:logs:' + t.dataset.id);
         App.refresh();
       },
-      /* 查看全部已办记录：弹 sheet，按当前排序方向展示 */
+      /* 查看全部已办记录：弹 sheet（带搜索框），按当前排序方向展示；条目可点击进入编辑。
+         点条目不再先关弹层：编辑表单叠在弹层之上，叉/取消关闭表单后仍回到本弹层；
+         保存/删除后通过 after 回调就地刷新弹层列表与标题条数。 */
       cLogAll: function (t) {
         var x = findCase(t.dataset.id); if (!x) return;
-        var allLogs2 = (x.logs || []).filter(function (l) { return l.t !== '办结'; });
         var desc = jwLogDesc[x.id] !== false;
-        var logs2 = allLogs2.slice().sort(function (a, b) {
-          var ka = logSortKey(a), kb = logSortKey(b);
-          return desc ? (ka < kb ? 1 : (ka > kb ? -1 : 0)) : (ka < kb ? -1 : (ka > kb ? 1 : 0));
+        var q = '';
+        function allDone() { return (x.logs || []).filter(function (l) { return l.t !== '办结'; }); }
+        function draw() {
+          var logs2 = allDone().filter(function (l) {
+            if (!q) return true;
+            var hay = ((l.t || '') + ' ' + (l.cat || '') + ' ' + (l.d || '')).toLowerCase();
+            return hay.indexOf(q) >= 0;
+          }).sort(function (a, b) {
+            var ka = logSortKey(a), kb = logSortKey(b);
+            return desc ? (ka < kb ? 1 : (ka > kb ? -1 : 0)) : (ka < kb ? -1 : (ka > kb ? 1 : 0));
+          });
+          if (!logs2.length) return '<div class="small muted" style="padding:10px 2px">' +
+            (q ? '没有匹配「' + esc(q) + '」的记录' : '暂无已办记录') + '</div>';
+          var groups2 = {};
+          logs2.forEach(function (l) { var d = l.d || '未填日期'; if (!groups2[d]) groups2[d] = []; groups2[d].push(l); });
+          var dates2 = Object.keys(groups2).sort();
+          if (desc) dates2.reverse();
+          var inner = '<div class="jw-tl">';
+          dates2.forEach(function (d) {
+            inner += '<div class="jw-tl-date-hd">' +
+              '<span class="jw-tl-date-text">' + esc(d === '未填日期' ? d : U.fmtDate(d, true)) + '</span>' +
+              '<span class="jw-tl-date-count">' + groups2[d].length + ' 条</span>' +
+              '</div>';
+            groups2[d].forEach(function (l) { inner += renderJWLogCard(x, l); });
+          });
+          return inner + '</div>';
+        }
+        var el = UI.sheet((x.title || '案件') + ' · 全部已办（' + allDone().length + ' 条）',
+          '<div class="sch-search-box" style="margin-bottom:10px">' +
+            '<span class="sch-search-ico">🔍</span>' +
+            '<input class="sch-search-input jw-all-search" type="text" placeholder="搜索办理内容 / 分类 / 日期…" />' +
+          '</div>' +
+          '<div class="jw-all-list">' + draw() + '</div>');
+        var inp = el.querySelector('.jw-all-search');
+        if (inp) inp.addEventListener('input', function () {
+          q = inp.value.trim().toLowerCase();
+          var list = el.querySelector('.jw-all-list');
+          if (list) list.innerHTML = draw();
         });
-        var groups2 = {};
-        logs2.forEach(function (l) { var d = l.d || '未填日期'; if (!groups2[d]) groups2[d] = []; groups2[d].push(l); });
-        var dates2 = Object.keys(groups2).sort();
-        if (desc) dates2.reverse();
-        var inner = '<div class="jw-tl">';
-        dates2.forEach(function (d) {
-          inner += '<div class="jw-tl-date-hd">' +
-            '<span class="jw-tl-date-text">' + esc(d === '未填日期' ? d : U.fmtDate(d, true)) + '</span>' +
-            '<span class="jw-tl-date-count">' + groups2[d].length + ' 条</span>' +
-            '</div>';
-          groups2[d].forEach(function (l) { inner += renderJWLogCard(x, l); });
+        /* sheet 内不走模块 data-act 委托，这里本地接管：点条目 → 叠开编辑表单（弹层保持打开） */
+        el.addEventListener('click', function (e) {
+          var card = e.target.closest('[data-act="cLogEdit"]');
+          if (!card) return;
+          jw.acts.cLogEdit(card, function () {
+            var list = el.querySelector('.jw-all-list');
+            if (list) list.innerHTML = draw();
+            var h = el.querySelector('.modal-head h3');
+            if (h) h.textContent = (x.title || '案件') + ' · 全部已办（' + allDone().length + ' 条）';
+          });
         });
-        inner += '</div>';
-        var title = (x.title || '案件') + ' · 全部已办（' + allLogs2.length + ' 条）';
-        UI.sheet(title, inner);
       },
       /* 待办条目：点击整条 → 直接进入编辑表单（与办理进度操作逻辑一致）。
          可修改内容/期限、勾选完成即归入办理进度、删除（一并移除关联任务）。 */
@@ -20592,11 +20673,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       },
 
       /* ---- 监督检查 ---- */
-      iExp: function (t) {
-        var id = t.dataset.id; jwExp[id] = !jwExp[id];
-        var x = J().inspects.filter(function (a) { return a.id === id; })[0];
-        if (x) t.outerHTML = renderInspect(x);
-      },
+      iExp: function (t) { jwExp[t.dataset.id] = !jwExp[t.dataset.id]; App.refresh(); },
       inew: function () {
         UI.form({ title: '新增监督检查任务', values: { status: '计划中', rectifyStatus: '不涉及', planDate: U.today() }, fields: inspectFields() })
           .then(function (v) {
@@ -20647,11 +20724,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       },
 
       /* ---- 材料报送 ---- */
-      sExp: function (t) {
-        var id = t.dataset.id; jwExp[id] = !jwExp[id];
-        var x = J().submits.filter(function (a) { return a.id === id; })[0];
-        if (x) t.outerHTML = renderSubmit(x);
-      },
+      sExp: function (t) { jwExp[t.dataset.id] = !jwExp[t.dataset.id]; App.refresh(); },
       snew: function () {
         UI.form({ title: '新增材料报送任务', values: { status: '待报送', period: '一次性', dueDate: U.today() }, fields: submitFields() })
           .then(function (v) {
@@ -20692,11 +20765,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       },
 
       /* ---- 处分台账 ---- */
-      pExp: function (t) {
-        var id = t.dataset.id; jwExp[id] = !jwExp[id];
-        var x = J().punish.filter(function (a) { return a.id === id; })[0];
-        if (x) t.outerHTML = renderPun(x);
-      },
+      pExp: function (t) { jwExp[t.dataset.id] = !jwExp[t.dataset.id]; App.refresh(); },
       pnew: function () {
         UI.form({ title: '新增处分台账记录', values: { cat: '党纪处分', date: U.today() }, fields: punFields() })
           .then(function (v) {
