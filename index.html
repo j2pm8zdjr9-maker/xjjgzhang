@@ -42,6 +42,9 @@ html{ -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; 
   /* ===== 主色（主题变量，随 data-tone 整套风格切换；默认「青墨」） ===== */
   --olive:#2F6F62; --olive-soft:#4A8F80; --olive-deep:#245850; --olive-darker:#1A3F3A;
   --olive-05:rgba(47,111,98,.05); --olive-10:rgba(47,111,98,.10); --olive-16:rgba(47,111,98,.16); --olive-24:rgba(47,111,98,.26); --olive-open:rgba(47,111,98,.18);
+  /* 悬停/按压实底色：olive-05 是半透明色，直接替换白卡底会透出深色页面背景（healing 等主题下
+   * hover 时卡片像"消失"）。此变量把同样的主色淡调实化到卡片底色上，用于行/卡片的 hover/active */
+  --card-hov: color-mix(in srgb, var(--olive) 6%, var(--card));
   --on:#FFFFFF; /* 主色实心底上的文字/图标色 */
   /* 展开态背景：比 hover(--olive-05) 明显、跟随主题色 */
 
@@ -198,7 +201,10 @@ html{ -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; 
 :root[data-theme="dark"][data-tone="amber"]{ --bg:#18140C; --card:#221C14; --cream:#262016; --cream-soft:#1A160E; --brown:#F0E8D8; --brown-2:#C8BCA4; --brown-3:#9A8E78; --brown-4:#6A6050; --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.16); --olive:#E8C070; --olive-soft:#F0D090; --olive-deep:#D4A850; --olive-darker:#F4E0B0; --olive-05:rgba(232,192,112,.08); --olive-10:rgba(232,192,112,.14); --olive-16:rgba(232,192,112,.22); --olive-24:rgba(232,192,112,.32); --olive-open:rgba(232,192,112,.30); --on:#1A160C; --warn:#E0A85C; --danger:#E07A6A; --info:#7AA0A8; --badge-grey-bg:rgba(255,255,255,.12); --badge-grey-fg:#F0E8D8; --badge-warn-bg:rgba(224,168,92,.24); --badge-warn-fg:#F0C888; --badge-danger-bg:rgba(224,122,106,.26); --badge-danger-fg:#F0A090; --badge-info-bg:rgba(122,160,168,.24); --badge-info-fg:#A8C8D0; --badge-cream-bg:rgba(232,212,160,.22); --badge-cream-fg:#F0E0B0; --badge-purple-bg:rgba(176,160,232,.24); --badge-purple-fg:#C8B8F0; }
 
 *,*::before,*::after{ box-sizing:border-box; }
-html{ zoom: var(--font-scale, 1); overflow-x:hidden; height: var(--app-dvh); }
+html{ zoom: var(--font-scale, 1); overflow-x:hidden; height: var(--app-dvh);
+  /* 弹窗锁定滚动（body overflow:hidden）时滚动条消失/恢复会导致整页内容左右位移 ~8px，
+     scrollbar-gutter:stable 让滚动条位置始终占位，弹窗开关不再引起布局抖动 */
+  scrollbar-gutter: stable; }
 body{ height:100%; overflow-x:hidden; }
 .font-range{ -webkit-appearance:none; appearance:none; width:100%; height:26px; background:transparent; cursor:pointer; }
 .font-range::-webkit-slider-runnable-track{ height:6px; border-radius:999px; background:rgba(51,25,21,.12); }
@@ -551,7 +557,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
   padding:9px 3px; border:1px solid var(--line); border-radius:12px;
   background:var(--card); cursor:pointer; text-align:center; min-width:0;
   transition:background .15s, border-color .15s, box-shadow .15s; }
-.qcard:active,.qcard:hover{ background:var(--olive-05); }
+.qcard:active,.qcard:hover{ background:var(--card-hov); }
 .qcard.on{ border-color:var(--olive); background:var(--olive-05); box-shadow:0 2px 8px var(--olive-24); }
 .qcard .qi{ font-size:18px; line-height:1; }
 .qcard .qt{ font-size:11.5px; color:var(--brown-2); font-weight:600; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
@@ -613,7 +619,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 }
 
 /* 筛选小药丸 */
-.pills{ display:flex; gap:8px; flex-wrap:wrap; }
+.pills{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
 .cat-filter-row{ margin:0 0 8px; }
 .exam-filter .cat-filter-row{ margin-bottom:4px; }
 .exam-filter .cat-filter-row:last-child{ margin-bottom:0; }
@@ -621,12 +627,12 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 /* 备考倒计时：天数数字更醒目 */
 .exam-count-num{
   display:inline-flex; align-items:center; justify-content:center;
-  min-width:66px; height:66px; padding:0 16px;
+  min-width:50px; height:50px; padding:0 12px;
   border-radius:50%;
-  font-size:36px; font-weight:800; letter-spacing:.5px; line-height:1;
-  flex-shrink:0; box-shadow:0 4px 14px rgba(0,0,0,.12);
+  font-size:28px; font-weight:800; letter-spacing:.5px; line-height:1;
+  flex-shrink:0; box-shadow:0 3px 10px rgba(0,0,0,.10);
 }
-.exam-count-num.today, .exam-count-num.ended{ font-size:18px; letter-spacing:0; }
+.exam-count-num.today, .exam-count-num.ended{ font-size:15px; letter-spacing:0; }
 .exam-count-num.normal{ background:rgba(138,168,50,.16); color:var(--olive-deep); box-shadow:0 4px 14px rgba(138,168,50,.22); }
 .exam-count-num.warn{ background:rgba(234,179,8,.16); color:var(--warn); box-shadow:0 4px 14px rgba(234,179,8,.22); }
 .exam-count-num.urgent{ background:rgba(220,38,38,.12); color:var(--danger); box-shadow:0 4px 16px rgba(220,38,38,.30); border:1px solid rgba(220,38,38,.35); }
@@ -761,7 +767,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 /* 记账分类选择弹窗：滚动列表 + 弹窗内新增 */
 .cat-pick-list{ display:flex; flex-direction:column; gap:4px; max-height:46vh; overflow:auto; margin-bottom:12px; }
 .cat-pick-item{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:11px 14px; border:none; border-radius:10px; background:transparent; font-size:15px; color:var(--brown); cursor:pointer; text-align:left; transition:background .12s; }
-.cat-pick-item:hover{ background:var(--olive-05); }
+.cat-pick-item:hover{ background:var(--card-hov); }
 .cat-pick-item:active{ transform:scale(.985); }
 .cat-pick-item.on{ background:var(--olive-10); color:var(--olive-deep); font-weight:650; }
 .cat-pick-check{ color:var(--olive-deep); font-weight:700; flex-shrink:0; }
@@ -833,7 +839,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
   padding:8px 12px; border:1px solid var(--line); border-radius:var(--r);
   background:var(--card); transition:background-color var(--t), border-color var(--t), box-shadow var(--t);
 }
-.item:hover{ border-color:var(--olive-24); background:var(--olive-05); }
+.item:hover{ border-color:var(--olive-24); background:var(--card-hov); }
 .item .item-main{ flex:1; min-width:0; display:flex; flex-direction:column; gap:4px; }
 .item .item-title{ font-size:14.5px; font-weight:560; line-height:1.4; word-break:break-word; min-width:0; flex:1 1 auto; }
 .item .row.between .item-title{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -993,7 +999,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .flow-date-text{ font-size:14.5px; font-weight:650; color:var(--brown); }
 .flow-date-sum{ font-size:12.5px; color:var(--brown-3); font-variant-numeric:tabular-nums; white-space:nowrap; }
 .flow-card{ padding:9px 10px; border-radius:11px; background:var(--card); border:1px solid var(--line-2); cursor:pointer; transition:background .12s, border-color .15s; margin-bottom:5px; }
-.flow-card:active{ background:var(--olive-05); }
+.flow-card:active{ background:var(--card-hov); }
 .flow-card-main{ display:flex; align-items:center; gap:9px; }
 .flow-cat-icon{ flex-shrink:0; font-size:20px; width:26px; text-align:center; line-height:1; }
 .flow-cat-name{ flex:1; min-width:0; font-size:14.5px; font-weight:600; color:var(--brown); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -1066,42 +1072,58 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .stock-sort{ display:inline-flex; align-items:center; gap:6px; font-size:13px; color:var(--brown-2); }
 .stock-sort select{ min-width:130px; }
 .stock-ov{ display:flex; flex-direction:column; gap:8px; }
-.stock-ov-row{ display:grid; grid-template-columns:minmax(0,1fr) 120px auto 18px; align-items:center; gap:12px; padding:6px 9px; border-radius:10px; background:var(--card); cursor:pointer; transition:background .15s; }
-.stock-ov-row:hover{ background:var(--olive-05); }
+.stock-ov-row{ display:flex; align-items:center; gap:12px; padding:7px 9px; border-radius:10px; background:var(--card); cursor:pointer; transition:background .15s; }
+.stock-ov-row:hover{ background:var(--card-hov); }
 .stock-ov-row.archived{ opacity:.65; }
 .stock-ov-row.open{ background:var(--olive-open); box-shadow:inset 0 0 0 1px var(--olive-24); }
 .stock-ov-ops{ display:flex; gap:8px; flex-wrap:wrap; }
-.stock-ov-name{ font-size:14px; color:var(--brown); min-width:0; }
+.stock-ov-main{ flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:4px; }
+.stock-ov-side{ flex:0 0 auto; display:flex; flex-direction:column; align-items:flex-end; gap:3px; }
+.stock-ov-name{ font-size:14px; color:var(--brown); min-width:0; display:flex; align-items:center; gap:6px; flex-wrap:nowrap; overflow:hidden; }
+.stock-ov-title{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:0 1 auto; min-width:0; }
+.stock-ov-meta{ display:flex; align-items:center; gap:6px; flex-wrap:nowrap; min-width:0; overflow:hidden; }
+.stock-ov-meta > .badge{ flex:0 0 auto; }
 .stock-ov-bar{ min-width:0; }
 .stock-ov-num{ font-size:13px; color:var(--brown-2); white-space:nowrap; text-align:right; }
 .stock-ov-caret{ color:var(--brown-2); font-size:12px; text-align:right; }
+/* 库存总览操作行：5 颗胶囊等分铺满一行（走 3455 起的全局等分块，不再横向滚动） */
 .stock-ov-row.low .stock-ov-name,
 .stock-ov-row.low .stock-ov-num{ color:var(--danger,#C0392B); font-weight:700; }
 .stock-ov-detail{ margin:-2px 0 4px; padding:8px 12px 10px; border-radius:0 0 10px 10px; background:var(--card); border-top:1px dashed var(--line,#e3ddcf); }
 .stock-ov-detail .stock-ov-ops{ margin-bottom:4px; }
-.stock-note{ margin-top:6px; padding-top:6px; border-top:1px dashed var(--line,#e3ddcf); }
+.stock-note{ margin:0 0 8px; padding-bottom:8px; border-bottom:1px dashed var(--line,#e3ddcf); }
 .buy-list{ display:flex; flex-direction:column; gap:4px; margin-top:4px; }
-.buy-row{ display:grid; grid-template-columns:auto minmax(0,1fr) auto auto; gap:6px; font-size:13px; color:var(--brown-2); padding:4px 6px; background:var(--olive-05); border-radius:8px; }
-.buy-row > span:last-child{ text-align:right; }
-.buy-row > span:nth-child(2){ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.buy-row{ display:flex; flex-wrap:nowrap; align-items:center; gap:8px; font-size:13px; color:var(--brown-2); padding:4px 6px; background:var(--olive-05); border-radius:8px; }
+.buy-row > span{ flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.buy-row > span:first-child{ flex:0 0 auto; }
+.buy-row > span:nth-child(2){ flex:1 1 auto; }
+.buy-row > span:nth-child(3){ flex:0 0 auto; }
+.buy-row > span:last-child{ flex:0 0 auto; text-align:right; }
+.buy-row > .row-acts{ overflow:visible; }
 .buy-row[data-rec]{ cursor:pointer; }
-.row-acts{ display:flex; gap:3px; flex-shrink:0; align-items:center; }
+.row-acts{ display:flex; gap:4px; flex-shrink:0; align-items:center; }
+.row-acts .link-btn{ font-size:12px; padding:2px 6px; flex:0 0 auto; white-space:nowrap; }
 .ic-btn{ border:1px solid var(--line); background:var(--card); border-radius:6px; width:26px; height:26px; padding:0; font-size:13px; line-height:1; cursor:pointer; color:var(--brown-2); display:inline-flex; align-items:center; justify-content:center; }
 .ic-btn:active{ background:var(--olive-10); }
 .ic-btn.del{ color:var(--danger); }
 .rec-sec{ margin-top:10px; }
-.rec-h{ display:block; font-size:13px; color:var(--brown); margin-bottom:2px; }
+.rec-h-row{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:2px; min-width:0; }
+.rec-h{ display:block; font-size:13px; color:var(--brown); margin-bottom:0; flex:0 1 auto; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.rec-h-row .link-btn{ flex:0 0 auto; font-size:12px; padding:2px 8px; white-space:nowrap; }
 .rec-more{ margin-top:6px; }
 .row-low td:first-child{ box-shadow:inset 3px 0 0 var(--danger,#C0392B); }
 @media (max-width:600px){
-  .stock-ov-row{ grid-template-columns:1fr auto 16px; row-gap:6px; }
-  .stock-ov-bar{ grid-column:1 / -1; }
-  .stock-ov-ops{ grid-column:1 / -1; justify-content:flex-start; }
+  .stock-ov-row{ gap:8px; padding:7px 8px; }
+  .stock-ov-name{ font-size:13.5px; }
+  /* 库存总览 6 颗胶囊最密，再压一点间距，保证常见手机宽度下一行完整显示 */
+  .stock-ov-detail .stock-ov-ops{ gap:4px !important; }
+  .buy-row{ gap:6px; }
+  .row-acts .link-btn{ font-size:11px; padding:1px 4px; }
 }
 
 /* 任务列表行（参考库存总览 stock-ov-row 模式） */
 .task-row{ display:flex; flex-wrap:wrap; align-items:flex-start; gap:8px; padding:8px 11px; border-radius:10px; background:var(--card); cursor:pointer; transition:background .15s, box-shadow .15s; border:1px solid var(--line); }
-.task-row:hover{ background:var(--olive-05); }
+.task-row:hover{ background:var(--card-hov); }
 .task-row.open{ background:var(--olive-open); box-shadow:inset 0 0 0 1px var(--olive-24); border-radius:10px 10px 0 0; border-bottom-color:transparent; }
 .task-row.done{ opacity:.55; }
 .task-row.done .item-title{ text-decoration:line-through; color:var(--brown-3); }
@@ -1113,7 +1135,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 
 /* 历史弹窗内折叠行（工作留痕等）——复用统一 fold-* 基础类 */
 .wl-hist-row{ display:flex; align-items:flex-start; gap:8px; padding:10px 12px; border-radius:10px; background:var(--card); cursor:pointer; transition:background .15s, box-shadow .15s; border:1px solid var(--line); }
-.wl-hist-row:hover{ background:var(--olive-05); }
+.wl-hist-row:hover{ background:var(--card-hov); }
 .wl-hist-row.open{ background:var(--olive-open); box-shadow:inset 0 0 0 1px var(--olive-24); border-radius:10px 10px 0 0; border-bottom-color:transparent; }
 .wl-hist-row-main{ flex:1; min-width:0; display:flex; flex-direction:column; gap:4px; }
 
@@ -1213,7 +1235,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
   padding:8px 11px; border-radius:10px; background:var(--card); cursor:pointer;
   transition:background .15s, box-shadow .15s; border:1px solid var(--line);
 }
-.task-tl-row:hover{ background:var(--olive-05); }
+.task-tl-row:hover{ background:var(--card-hov); }
 .task-tl-item.open .task-tl-row{
   background:var(--olive-05); box-shadow:inset 0 0 0 1px var(--olive-16);
   border-radius:10px 10px 0 0; border-bottom-color:transparent;
@@ -1322,31 +1344,26 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 
 /* 列表行右侧：状态胶囊 + 日期，与标题同行显示 */
 .media-row-side{ display:flex; align-items:center; gap:6px; flex-shrink:0; font-size:12px; color:var(--brown-3); white-space:nowrap; }
-/* 展开操作栏字号自适应：默认 13px 胶囊；≥4 个按钮自动缩小字号与内边距，保证一行不换行 */
+/* 展开操作栏字号自适应：默认 13px 胶囊；≥4 个按钮适度缩小字号与内边距，保证一行不换行 */
 :is(.fold-ops,.buy-item-ops,.consum-ops,.task-ops-row,.media-ops-row,
 .social-ops-row,.family-ops-row,.measure-ops-row,.charge-ops,.refuel-ops,
-.item-detail-ops,.wl-acts,.item-ops-row,.item-detail>.item-ops):has(> :nth-child(4)) .link-btn{
-  font-size:12.5px; padding:4px 10px;
+.item-detail-ops,.wl-acts,.item-ops-row,.item-detail>.item-ops,
+.hist-ops,.ev-ops,.stock-ov-ops,.wish-ops,.cat-detail-ops,.cat-rec-ops):has(.link-btn:nth-child(4)) .link-btn{
+  font-size:12.5px; padding:3px 9px;
 }
-/* 窄屏（≤370px，360/320 等机型）统一回退，尽量保持一行 */
+/* 窄屏（≤370px，360/320 等机型）：仅对 ≥4 颗按钮的密集操作行回退，2-3 颗保持 13px */
 @media (max-width:370px){
-  .fold-ops .link-btn, .buy-item-ops .link-btn, .consum-ops .link-btn,
-  .task-ops-row .link-btn, .media-ops-row .link-btn, .social-ops-row .link-btn,
-  .family-ops-row .link-btn, .measure-ops-row .link-btn, .charge-ops .link-btn,
-  .refuel-ops .link-btn, .item-detail-ops .link-btn, .wl-acts .link-btn,
-  .item-ops-row .link-btn, .item-detail > .item-ops .link-btn{
-    font-size:12px; padding:4px 8px;
-  }
   :is(.fold-ops,.buy-item-ops,.consum-ops,.task-ops-row,.media-ops-row,
   .social-ops-row,.family-ops-row,.measure-ops-row,.charge-ops,.refuel-ops,
-  .item-detail-ops,.wl-acts,.item-ops-row,.item-detail>.item-ops):has(> :nth-child(4)) .link-btn{
-    font-size:11.5px; padding:3px 6px;
+  .item-detail-ops,.wl-acts,.item-ops-row,.item-detail>.item-ops,
+  .hist-ops,.ev-ops,.stock-ov-ops,.wish-ops,.cat-detail-ops,.cat-rec-ops):has(.link-btn:nth-child(4)) .link-btn{
+    font-size:12px; padding:3px 7px;
   }
 }
 
 /* 影剧书列表行（参考 task-row / stock-ov-row 模式） */
 .media-row{ display:flex; align-items:flex-start; gap:8px; padding:10px 12px; border-radius:10px; background:var(--card); cursor:pointer; transition:background .15s, box-shadow .15s; border:1px solid var(--line); }
-.media-row:hover{ background:var(--olive-05); }
+.media-row:hover{ background:var(--card-hov); }
 .media-row.open{ background:var(--olive-open); box-shadow:inset 0 0 0 1px var(--olive-24); border-radius:10px 10px 0 0; border-bottom-color:transparent; }
 .media-row-main{ flex:1; min-width:0; display:flex; flex-direction:column; gap:4px; }
 .media-row-meta{ display:flex; flex-wrap:wrap; gap:5px; align-items:center; font-size:12px; line-height:1.45; color:var(--brown-3); }
@@ -1356,7 +1373,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 
 /* 人情记录行 / 家人档案行（参考 task-row / stock-ov-row 模式） */
 .social-row, .family-row{ display:flex; align-items:flex-start; gap:8px; padding:10px 12px; border-radius:10px; background:var(--card); cursor:pointer; transition:background .15s, box-shadow .15s; border:1px solid var(--line); }
-.social-row:hover, .family-row:hover{ background:var(--olive-05); }
+.social-row:hover, .family-row:hover{ background:var(--card-hov); }
 .social-row.open, .family-row.open{ background:var(--olive-open); box-shadow:inset 0 0 0 1px var(--olive-24); border-radius:10px 10px 0 0; border-bottom-color:transparent; }
 .social-row-main, .family-row-main{ flex:1; min-width:0; display:flex; flex-direction:column; gap:4px; }
 .social-row-meta{ display:flex; flex-wrap:wrap; gap:5px; align-items:center; font-size:12px; line-height:1.45; color:var(--brown-3); }
@@ -1366,7 +1383,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 
 /* 宠物档案记录折叠行（参考 task-row / stock-ov-row 模式） */
 .cat-rec-row{ display:flex; align-items:flex-start; gap:8px; padding:10px 12px; border-radius:10px; background:var(--card); cursor:pointer; transition:background .15s, box-shadow .15s; border:1px solid var(--line); }
-.cat-rec-row:hover{ background:var(--olive-05); }
+.cat-rec-row:hover{ background:var(--card-hov); }
 .cat-rec-row.open{ background:var(--olive-open); box-shadow:inset 0 0 0 1px var(--olive-24); border-radius:10px 10px 0 0; border-bottom-color:transparent; }
 .cat-rec-main{ flex:1; min-width:0; display:flex; align-items:center; }
 .cat-rec-caret{ flex-shrink:0; color:#bbb; font-size:12px; margin-top:3px; line-height:1; }
@@ -1376,7 +1393,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 
 /* 愿望清单折叠行（参考 task-row / stock-ov-row 模式） */
 .wish-row{ display:flex; align-items:flex-start; gap:8px; padding:10px 12px; border-radius:10px; background:var(--card); cursor:pointer; transition:background .15s, box-shadow .15s; border:1px solid var(--line); }
-.wish-row:hover{ background:var(--olive-05); }
+.wish-row:hover{ background:var(--card-hov); }
 .wish-row.open{ background:var(--olive-open); box-shadow:inset 0 0 0 1px var(--olive-24); border-radius:10px 10px 0 0; border-bottom-color:transparent; }
 .wish-row.done{ opacity:.55; }
 .wish-row.done .wish-row-title{ text-decoration:line-through; color:var(--brown-3); }
@@ -1390,7 +1407,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 
 /* 身材测量记录行（参考 task-row / stock-ov-row 模式） */
 .measure-row{ display:flex; align-items:flex-start; gap:8px; padding:10px 12px; border-radius:10px; background:var(--card); cursor:pointer; transition:background .15s, box-shadow .15s; border:1px solid var(--line); }
-.measure-row:hover{ background:var(--olive-05); }
+.measure-row:hover{ background:var(--card-hov); }
 .measure-row.open{ background:var(--olive-open); box-shadow:inset 0 0 0 1px var(--olive-24); border-radius:10px 10px 0 0; border-bottom-color:transparent; }
 .measure-row-main{ flex:1; min-width:0; display:flex; flex-direction:column; gap:4px; }
 .measure-caret{ /* 统一由 .fold-caret 覆盖 */ }
@@ -1399,7 +1416,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 
 /* 采购清单项 / 耗材项（参考 task-row / stock-ov-row 模式） */
 .buy-item-row, .consum-row{ display:flex; align-items:flex-start; gap:8px; padding:10px 12px; border-radius:10px; background:var(--card); cursor:pointer; transition:background .15s, box-shadow .15s; border:1px solid var(--line); }
-.buy-item-row:hover, .consum-row:hover{ background:var(--olive-05); }
+.buy-item-row:hover, .consum-row:hover{ background:var(--card-hov); }
 .consum-row.archived{ opacity:.75; }
 .buy-item-row.open, .consum-row.open{ background:var(--olive-open); box-shadow:inset 0 0 0 1px var(--olive-24); border-radius:10px 10px 0 0; border-bottom-color:transparent; }
 .buy-item-row.done .item-title{ color:var(--brown-4); text-decoration:line-through; }
@@ -1412,7 +1429,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 
 /* 车辆充电 / 加油记录行（参考 task-row / stock-ov-row 模式） */
 .charge-row, .refuel-row{ display:flex; align-items:flex-start; gap:8px; padding:10px 12px; border-radius:10px; background:var(--card); cursor:pointer; transition:background .15s, box-shadow .15s; border:1px solid var(--line); }
-.charge-row:hover, .refuel-row:hover{ background:var(--olive-05); }
+.charge-row:hover, .refuel-row:hover{ background:var(--card-hov); }
 .charge-row.open, .refuel-row.open{ background:var(--olive-open); box-shadow:inset 0 0 0 1px var(--olive-24); border-radius:10px 10px 0 0; border-bottom-color:transparent; }
 /* 待抄表充电记录（未填电表）→ 置顶并黄色高亮提醒 */
 .charge-row.pending{ background:rgba(201,128,58,.08); border-color:rgba(201,128,58,.35); }
@@ -1442,7 +1459,7 @@ table.tbl th{
 }
 table.tbl td{ padding:13px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
 table.tbl tbody tr{ transition:background-color var(--t); }
-table.tbl tbody tr:hover{ background:var(--olive-05); }
+table.tbl tbody tr:hover{ background:var(--card-hov); }
 table.tbl td.ops{ white-space:nowrap; text-align:right; }
 
 /* 时间线 */
@@ -1637,7 +1654,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .sub{ display:flex; align-items:center; gap:9px; font-size:13.5px; color:var(--brown-2); padding:5px 8px; border-radius:9px; transition:background-color var(--t); }
 .sub .grow{ min-width:0; flex:1; word-break:break-word; overflow-wrap:anywhere; }
 .sub .note-inline{ color:var(--brown-3); font-size:12.5px; }
-.sub:hover{ background:var(--olive-05); }
+.sub:hover{ background:var(--card-hov); }
 .sub.done span{ text-decoration:line-through; color:var(--brown-4); }
 .check.mini{ width:20px; height:20px; flex:0 0 20px; border-radius:6px; }
 .check.mini svg{ width:12px; height:12px; }
@@ -2055,7 +2072,21 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .hs-cell.on{ background:var(--olive); color:var(--on); }
 
 /* ============ 通用历史记录弹窗（Hist） ============ */
-.hist-search{ margin-bottom:2px; }
+.hist-search{ margin-bottom:2px; padding:7px 10px; min-height:36px; font-size:14px; }
+/* 历史记录弹窗紧凑化：减小行间距与行内边距，适配所有历史记录视图 */
+.hist-list{ gap:4px; }
+.hist-list > .item{ padding:6px 10px; }
+.hist-list > .item .item-main{ gap:2px; }
+.hist-list > .item .item-title{ line-height:1.35; }
+.hist-list > .item .item-meta{ gap:4px; line-height:1.35; }
+.hist-list > .item .item-detail{ margin-top:4px; padding-top:4px; }
+.hist-list .hist-ops{ margin-top:4px !important; }
+/* wl-hist-row 类历史行（如备考的学习计划/学习记录/复习总览）同样紧凑化 */
+.hist-list > .wl-hist-row{ padding:6px 10px; }
+.hist-list > .wl-hist-row .wl-hist-row-main{ gap:3px; }
+.hist-list > .wl-hist-row .item-title{ line-height:1.35; }
+.hist-list > .wl-hist-row .item-meta{ display:flex; gap:4px; flex-wrap:wrap; align-items:center; line-height:1.35; }
+.hist-list > .wl-hist-row .fold-detail{ margin-top:4px; padding-top:4px; }
 #histSum-diary_hist, #histSum-worklog, #histSum-finance, #histSum-vehicle,
 #histSum-exam_plan, #histSum-exam_record, #histSum-exam_note,
 #histSum-body, #histSum-items, #histSum-tasks{
@@ -2135,7 +2166,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   padding:14px 6px; border:1px solid var(--olive-soft); border-radius:14px; background:var(--cream-soft);
   color:var(--olive-darker); font-weight:700; line-height:1.15;
 }
-.water-q:active{ transform:scale(.975); background:var(--olive-05); }
+.water-q:active{ transform:scale(.975); background:var(--card-hov); }
 .water-q .wq-plus{ font-size:13px; color:var(--olive); }
 .water-q .wq-num{ font-size:22px; }
 .water-q .wq-unit{ font-size:12px; color:#9A8A85; font-weight:500; margin-top:1px; }
@@ -2157,7 +2188,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   padding:16px 6px; border:1px solid var(--line); border-radius:12px; background:var(--card);
   font-size:17px; font-weight:700; color:var(--brown);
 }
-.cw-step:active{ transform:scale(.97); background:var(--olive-05); }
+.cw-step:active{ transform:scale(.97); background:var(--card-hov); }
 
 /* ============ 分类管理：直接显示数量设置 ============ */
 .cat-pin-box{
@@ -2284,6 +2315,11 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .sch-cell.tap:active{ transform:scale(.94); transition:transform .1s; }
 
 /* 当天日程列表 */
+/* 日程列表显示区：背景框卡片（与月历 .sch-calendar 同风格，列表整体包进卡片） */
+.sch-list-card{
+  background:var(--card); border:1px solid var(--line); border-radius:14px;
+  padding:12px 10px; margin-bottom:12px;
+}
 .sch-empty{
   text-align:center; padding:36px 16px 20px; color:var(--brown-3);
 }
@@ -2300,7 +2336,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   background:var(--card); border:1px solid var(--line);
   margin-bottom:6px; transition:background .15s;
 }
-.sch-item:active{ background:var(--olive-05); }
+.sch-item:active{ background:var(--card-hov); }
 .sch-item-left{ padding-top:3px; flex-shrink:0; }
 .sch-color-dot{
   width:9px; height:9px; border-radius:50%; display:block;
@@ -2526,7 +2562,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .baby-qcard{ display:flex; flex-direction:column; align-items:center; gap:5px;
   padding:12px 6px; border:1px solid var(--line); border-radius:12px;
   background:var(--card); cursor:pointer; transition:background .15s; text-align:center; }
-.baby-qcard:active,.baby-qcard:hover{ background:var(--olive-05); }
+.baby-qcard:active,.baby-qcard:hover{ background:var(--card-hov); }
 .baby-qicon{ font-size:22px; }
 .baby-qlabel{ font-size:12px; color:var(--brown-2); font-weight:550; }
 .baby-qsub{ font-size:11px; color:var(--brown-3); }
@@ -2607,12 +2643,18 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 </style>
 <style data-page-node-id="lz2T3hXKC96GE2qjWnRicS" data-pnid-children="52bddsabxBmUrTOQONdDsS">
   /* 优化：今天要处理 / 概览空值弱化 / 模块折叠 */
-  .tf-row{ display:flex; align-items:center; gap:10px; padding:9px 10px; border:1px solid var(--line-2); border-radius:11px; background:var(--card); margin-bottom:8px; }
+  .tf-row{ display:flex; align-items:center; gap:10px; padding:9px 10px; border:1px solid var(--line-2); border-radius:11px; background:var(--card); margin-bottom:8px; cursor:pointer; transition:background .15s; }
+  .tf-row:hover{ background:var(--card-hov); }
+  .tf-row.warn:hover{ background:color-mix(in srgb, #D9483B 5%, #FFF6F4); }
   .tf-tag{ flex:0 0 auto; font-size:12px; color:var(--brown-2); background:var(--cream-soft); border:1px solid var(--olive-soft); border-radius:999px; padding:2px 9px; }
   .tf-tag.warn{ color:#fff; background:#D9483B; border-color:#D9483B; }
   .tf-row.warn{ border-color:#E9A39C; background:#FFF6F4; }
   .tf-name{ flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:14px; color:var(--brown); }
   .tf-go{ flex:0 0 auto; }
+  /* 今天要处理：行内操作组（逾期条目保留「延期」，跳转由点击整行完成） */
+  .tf-ops{ display:flex; align-items:center; gap:6px; flex:0 0 auto; flex-wrap:wrap; justify-content:flex-end; }
+  .tf-delay{ color:var(--olive-deep); border-color:var(--olive-24); background:var(--olive-05); }
+  .tf-delay:hover{ color:var(--olive-deep); background:var(--olive-10); border-color:var(--olive-24); }
   .ov.muted .ov-v, .ov.muted .ov-k{ opacity:.4; }
   .nav-card.hide-more{ display:none; }
   .nav-grid.show-all .nav-card.hide-more{ display:inline-flex; }
@@ -2837,13 +2879,14 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   .jw-tl-todo .jw-tl-main{ border-style:dashed; background:var(--olive-10); border-color:var(--olive-16); }
   .jw-tl-src{ font-size:10px; }
   /* 办理进度已办：按日期分组 + 卡片式记录（参考记账记录） */
-  .jw-tl-date-hd{ display:flex; align-items:center; justify-content:space-between; padding:5px 4px 3px; margin-left:23px; }
+  .jw-tl-date-hd{ display:flex; align-items:center; justify-content:space-between; padding:5px 4px 3px; }
   .jw-tl-date-text{ font-size:14px; font-weight:650; color:var(--brown); }
   .jw-tl-date-count{ font-size:12px; color:var(--brown-2); font-variant-numeric:tabular-nums; }
   .jw-tl-card{ padding:7px 9px; border-radius:9px; background:var(--card); border:1px solid var(--line-2); cursor:pointer; transition:background .12s, border-color .15s; }
   .jw-tl-card:hover{ border-color:var(--olive); background:var(--olive-10); }
   .jw-tl-card:active{ background:var(--olive-16); }
-  .jw-tl-card .jw-tl-head{ margin-bottom:3px; }
+  /* 办理内容在上作标题、徽章行在下：head 用上边距分隔 */
+  .jw-tl-card .jw-tl-head{ margin-bottom:0; margin-top:4px; }
   .jw-tl-card .jw-tl-text{ font-size:13.5px; }
   /* 阶段进度条：节点可点击调整时间 */
   .jw-stage-node{ cursor:pointer; border-radius:8px; padding:2px 0; }
@@ -2864,7 +2907,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     border:1px solid var(--line); border-radius:50%; background:#fff; color:var(--brown-2);
     cursor:pointer; transition:background .12s, border-color .15s, color .12s;
   }
-  .jw-edit-btn:hover{ border-color:var(--olive-soft); background:var(--olive-05); color:var(--olive-darker); }
+  .jw-edit-btn:hover{ border-color:var(--olive-soft); background:var(--card-hov); color:var(--olive-darker); }
   .jw-edit-btn:active{ background:var(--olive-16); transform:scale(.96); }
   /* 案件信息：单列标签-值同行，带分隔线，桌面/手机都清晰可读 */
   .jw-info-grid{
@@ -2941,6 +2984,43 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     .view{ gap:7px !important; }
     .section-gap{ gap:6px !important; }
   }
+
+  /* ==================== 全站连贯 + 紧凑统一（能一行则一行 / 降低纵向高度） ====================
+     追加在样式表后段，覆盖前文同特异性旧值：
+     ① 列表行 / 详情展开区 / 卡片统一收紧内边距，纵向节奏全站一致；
+     ② 元信息徽章行统一收紧间距与行高，减少折行造成的纵向增高；
+     ③ 展开后的操作项延续「一行等分」，并把按钮行自身的空隙一并收紧；
+     ④ 卡片内边距仅移动/平板 (≤1024px) 收紧，桌面保持原有宽松间距。 */
+  .item, .task-row, .task-tl-row, .media-row, .social-row, .family-row,
+  .cat-rec-row, .wl-hist-row{ padding:7px 11px; }
+  .item .item-main, .task-row-main, .task-tl-main, .wl-hist-row-main{ gap:3px; }
+  .item .item-title{ line-height:1.35; }
+  .item .item-meta, .task-row-meta, .task-tl-meta, .media-row-meta,
+  .social-row-meta, .wish-row-meta, .buy-item-meta, .charge-meta, .refuel-meta{
+    gap:4px; line-height:1.35;
+  }
+  .fold-detail, .task-detail, .media-detail, .social-detail, .family-detail,
+  .measure-detail, .buy-item-detail, .consum-detail, .charge-detail, .refuel-detail,
+  .wish-detail{ padding:8px 11px 10px; }
+  .item .item-detail{ margin-top:5px; padding-top:6px; }
+  .item-detail .item-note{ padding:5px 9px; }
+  .item-detail > .item-ops{ padding-top:4px; }
+  .item-ops-row, .item-detail-ops, .wl-acts{ margin-top:6px; }
+  .stock-ov-detail{ padding:6px 12px 8px; }
+  .rec-sec{ margin-top:8px; }
+  .rec-more{ margin-top:4px; }
+  .list{ gap:5px; }
+  .stock-ov{ gap:6px; }
+  .item-fold{ margin-top:5px; }
+  .pills{ gap:6px; }
+  .chip-row{ gap:6px; }
+  .pill{ min-height:28px; padding:4px 11px; }
+  @media (max-width:1024px){
+    .card{ padding:13px; }
+    .card.pad-s{ padding:11px; }
+    .card-head{ margin-bottom:10px; }
+  }
+
 
   /* 深色模式：把硬编码的浅色表面（#fff / #FFF5F3）改回深色卡片，避免暗色背景下出现刺眼的白块 */
   @media (prefers-color-scheme: dark){
@@ -3060,6 +3140,11 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .tabs{ border-radius:999px; padding:4px; }
 .tab{ border-radius:999px; }
 .pill{ border-radius:999px; }
+/* 分类筛选条行首的「🗂 分类：」管理胶囊：深色底白字，与未选（白底灰边）/选中（橄榄色实底）胶囊明显区分，点击打开分类管理 */
+.pill.cat-mng, .pill.sort-lbl{ background:var(--brown-2); border-color:var(--brown-2); color:var(--card); font-size:12px; padding:5px 10px; border-radius:999px; }
+.pill.cat-mng:active{ background:var(--brown); border-color:var(--brown); }
+.pill.sort-lbl{ cursor:default; font-weight:600; }
+.pill.sort-lbl:hover{ background:var(--brown-2); border-color:var(--brown-2); color:var(--card); }
 .nav-item{ border-radius:12px; }
 .icon-btn{ border-radius:12px; }
 
@@ -3250,7 +3335,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .item-detail>.item-ops, .encourage-ops{
   flex-wrap:nowrap !important;
   row-gap:0 !important;
-  gap:6px !important;
+  gap:8px !important;
 }
 .fold-ops .link-btn, .buy-item-ops .link-btn,
 .consum-ops .link-btn, .task-ops-row .link-btn,
@@ -3260,7 +3345,8 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .item-detail-ops .link-btn, .wl-acts .link-btn, .item-ops-row .link-btn,
 .item-detail>.item-ops .link-btn, .encourage-ops .link-btn{
   flex:1 1 0 !important; min-width:0 !important;
-  padding:5px 6px !important; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  padding:4px 10px !important; font-size:13px; border-radius:999px;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
   text-align:center; justify-content:center;
   display:inline-flex; align-items:center; gap:3px;
 }
@@ -3392,32 +3478,70 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
    按钮按内容宽度自然排布(71/61px 靠左)；而打卡与事件用 .item-detail>.item-ops 是直接子级
    命中 flex:1 均分 → 铺满整行。用户要求统一为「铺满一行、均分、不换行」。
    改：让 .fold-ops 内层 .item-ops 变成 flex 且拉伸到全宽，其内部 .link-btn 均分铺满。 */
-.fold-ops > .item-ops{
-  display:flex !important; flex:1 1 auto !important; width:100% !important;
-  min-width:0 !important; align-items:stretch !important; gap:6px !important;
+/* ==================== 操作胶囊行「全站统一：一行、等分、不换行」 ====================
+   根因：UI.ops() 把「编辑/删除/额外按钮」包在 .item-ops 里，该包裹层默认 block，
+   导致内部按钮的 flex:1 1 0 不生效 → 按钮按内容宽度左对齐、不铺满。
+   3258 段已对官方 op-row 类做 nowrap + 按钮 flex:1，但包裹层未拆壳，故 consum-ops 等仍不均分。
+   解决：对所有操作行容器（官方 + 各模块自定义 op-row）统一 ——
+     ① 容器 flex 一行不换行；② 内部 .item-ops 拆壳(display:contents)让按钮上浮为容器直接 flex 项；
+     ③ 所有胶囊按钮 flex:1 1 0 等分铺满；④ .del 不再右移。
+   排除：edu-task-ops(刻意迷你图标按钮)、tf-ops(行内单按钮) 等保持原样。 */
+.fold-ops, .buy-item-ops, .consum-ops, .task-ops-row, .media-ops-row,
+.social-ops-row, .family-ops-row, .measure-ops-row,
+.charge-ops, .refuel-ops, .item-detail-ops, .wl-acts, .item-ops-row,
+.encourage-ops, .hist-ops, .ev-ops, .stock-ov-ops, .wish-ops,
+.cat-detail-ops, .cat-rec-ops,
+.item-detail > .item-ops{
+  display:flex !important; flex-wrap:nowrap !important; gap:8px !important;
+  align-items:stretch !important; justify-content:flex-start;
 }
-.fold-ops > .item-ops .link-btn{
+/* 内部 .item-ops 包裹层拆壳，让按钮上浮为容器直接 flex 项 → 全局等分 */
+.fold-ops .item-ops, .buy-item-ops .item-ops, .consum-ops .item-ops,
+.task-ops-row .item-ops, .media-ops-row .item-ops, .social-ops-row .item-ops,
+.family-ops-row .item-ops, .measure-ops-row .item-ops,
+.charge-ops .item-ops, .refuel-ops .item-ops, .item-detail-ops .item-ops,
+.wl-acts .item-ops, .item-ops-row .item-ops, .encourage-ops .item-ops,
+.hist-ops .item-ops, .ev-ops .item-ops, .stock-ov-ops .item-ops,
+.wish-ops .item-ops, .cat-detail-ops .item-ops, .cat-rec-ops .item-ops,
+.item-detail > .item-ops .item-ops,
+.item-ops > .item-ops{
+  display:contents !important;
+}
+/* 胶囊按钮统一：按数量等分铺满一行（flex:1 1 0），字号 13px、纯胶囊造型；
+   ≥4 颗时由上方 :has 规则自适应缩小字号；行内不换行，极端情况按钮自身省略 */
+.fold-ops .link-btn, .buy-item-ops .link-btn, .consum-ops .link-btn,
+.task-ops-row .link-btn, .media-ops-row .link-btn, .social-ops-row .link-btn,
+.family-ops-row .link-btn, .measure-ops-row .link-btn,
+.charge-ops .link-btn, .refuel-ops .link-btn, .item-detail-ops .link-btn,
+.wl-acts .link-btn, .item-ops-row .link-btn, .encourage-ops .link-btn,
+.hist-ops .link-btn, .ev-ops .link-btn, .stock-ov-ops .link-btn,
+.wish-ops .link-btn, .cat-detail-ops .link-btn, .cat-rec-ops .link-btn,
+.item-detail > .item-ops .link-btn{
   flex:1 1 0 !important; min-width:0 !important; justify-content:center !important;
+  margin-left:0 !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  font-size:13px; padding:4px 10px; border-radius:999px !important;
+}
+/* .del 在等分组中不再右移，保持与其他胶囊一致 */
+.fold-ops .link-btn.del, .buy-item-ops .link-btn.del, .consum-ops .link-btn.del,
+.task-ops-row .link-btn.del, .media-ops-row .link-btn.del, .social-ops-row .link-btn.del,
+.family-ops-row .link-btn.del, .measure-ops-row .link-btn.del,
+.charge-ops .link-btn.del, .refuel-ops .link-btn.del, .item-detail-ops .link-btn.del,
+.wl-acts .link-btn.del, .item-ops-row .link-btn.del, .encourage-ops .link-btn.del,
+.hist-ops .link-btn.del, .ev-ops .link-btn.del, .stock-ov-ops .link-btn.del,
+.wish-ops .link-btn.del, .cat-detail-ops .link-btn.del, .cat-rec-ops .link-btn.del,
+.item-detail > .item-ops .link-btn.del{
   margin-left:0 !important;
-}
-.fold-ops > .item-ops .link-btn.del{
-  margin-left:0 !important;
-}
-/* 兜底：.fold-ops 直接含按钮（无 .item-ops 包裹，如影剧书 detailOps）且按钮 ≤3 时也铺满均分 */
-.fold-ops:has(> .link-btn) {
-  display:flex !important; justify-content:stretch !important; gap:6px !important;
-}
-.fold-ops:has(> .link-btn:nth-child(1)):not(:has(> .link-btn:nth-child(4))) > .link-btn{
-  flex:1 1 0 !important; min-width:0 !important; justify-content:center !important; margin-left:0 !important;
 }
 
-/* 充电/加油记录操作行：按钮数量自适应等宽铺满一行。
+/* 库存总览操作行已并入上方全局等分（5 颗胶囊铺满一行不换行），此前的
+   「放行自然宽度 + overflow-x 横向滚动」豁免已随「备注」按钮移除而删除。 */
+
+/* 充电/加油记录操作行：按钮数量自适应等分铺满一行。
    结构特殊：编辑/删除包在 .item-ops 里，填电表按钮在外层平级——
-   用 display:contents 把 .item-ops「拆壳」，所有按钮提升为直接 flex 项后 N 等分：
-   只有编辑/删除 → 两个各占一半；有待抄表多一个「填电表」 → 三个各占三分之一；
+   用 display:contents 把 .item-ops「拆壳」，所有按钮提升为直接 flex 项后 N 等分；
    填完电表按钮消失，自动回到两等分。 */
 .charge-ops, .refuel-ops{
-  flex-wrap:nowrap !important; gap:6px !important; align-items:stretch !important;
+  flex-wrap:nowrap !important; gap:8px !important; align-items:stretch !important;
 }
 .charge-ops .item-ops, .refuel-ops .item-ops{ display:contents !important; }
 .charge-ops .link-btn, .refuel-ops .link-btn{
@@ -3434,9 +3558,11 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .charge-ops .link-btn, .refuel-ops .link-btn,
 .item-detail-ops .link-btn, .wl-acts .link-btn, .item-ops-row .link-btn,
 .item-detail>.item-ops .link-btn,
-.ev-ops .link-btn, .encourage-ops .link-btn{
+.ev-ops .link-btn, .encourage-ops .link-btn,
+.hist-ops .link-btn, .stock-ov-ops .link-btn, .wish-ops .link-btn,
+.cat-detail-ops .link-btn, .cat-rec-ops .link-btn{
   background:rgba(255,255,255,.82) !important;
-  border-color:var(--line-2) !important;
+  border:1px solid var(--line-2) !important;
   color:var(--brown-2) !important;
 }
 .fold-ops .link-btn:hover, .buy-item-ops .link-btn:hover,
@@ -3446,7 +3572,9 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .charge-ops .link-btn:hover, .refuel-ops .link-btn:hover,
 .item-detail-ops .link-btn:hover, .wl-acts .link-btn:hover, .item-ops-row .link-btn:hover,
 .item-detail>.item-ops .link-btn:hover,
-.encourage-ops .link-btn:hover{
+.ev-ops .link-btn:hover, .encourage-ops .link-btn:hover,
+.hist-ops .link-btn:hover, .stock-ov-ops .link-btn:hover, .wish-ops .link-btn:hover,
+.cat-detail-ops .link-btn:hover, .cat-rec-ops .link-btn:hover{
   background:var(--olive-10) !important;
   border-color:var(--olive-24) !important;
   color:var(--olive-deep) !important;
@@ -3458,7 +3586,9 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .family-ops-row .link-btn.del, .measure-ops-row .link-btn.del,
 .charge-ops .link-btn.del, .refuel-ops .link-btn.del,
 .item-detail>.item-ops .link-btn.del,
-.encourage-ops .link-btn.del{
+.encourage-ops .link-btn.del,
+.hist-ops .link-btn.del, .stock-ov-ops .link-btn.del, .wish-ops .link-btn.del,
+.cat-detail-ops .link-btn.del, .cat-rec-ops .link-btn.del{
   background:rgba(216,120,106,.10) !important;
   border-color:rgba(216,120,106,.28) !important;
   color:#B2574A !important;
@@ -3470,7 +3600,9 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .family-ops-row .link-btn.del:hover, .measure-ops-row .link-btn.del:hover,
 .charge-ops .link-btn.del:hover, .refuel-ops .link-btn.del:hover,
 .item-detail>.item-ops .link-btn.del:hover,
-.encourage-ops .link-btn.del:hover{
+.encourage-ops .link-btn.del:hover,
+.hist-ops .link-btn.del:hover, .stock-ov-ops .link-btn.del:hover, .wish-ops .link-btn.del:hover,
+.cat-detail-ops .link-btn.del:hover, .cat-rec-ops .link-btn.del:hover{
   background:rgba(216,120,106,.16) !important;
   border-color:rgba(216,120,106,.40) !important;
   color:#A8433A !important;
@@ -5215,6 +5347,26 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     fmtDate: fmtDate, dayDiff: dayDiff, relDay: relDay, esc: esc, num: num, money: money, moneyFull: moneyFull,
     ym: ym, yr: yr, sortBy: sortBy, toast: toast, foldNotes: foldNotes
   };
+  /* ---------- 时长/时间段统一文案（工作留痕、纪检监察办理进度等共用） ---------- */
+  U.minsText = function (m) {
+    m = Math.round(num(m));
+    if (!m) return '0分';
+    var h = Math.floor(m / 60), mm = m % 60;
+    return (h ? h + '小时' : '') + (mm ? mm + '分' : (h ? '' : '0分'));
+  };
+  /* 时间段一句话：开始–结束（时长）；只有开始/只有时长时也有可读文案，空则返回 '' */
+  U.timeRangeText = function (start, end, mins) {
+    start = start || ''; end = end || '';
+    if (start && end && end !== start) {
+      var a = start.split(':'), b = end.split(':');
+      var m = (+b[0] * 60 + +b[1]) - (+a[0] * 60 + +a[1]);
+      if (m < 0) m += 1440;  // 跨零点按次日结束计
+      return start + ' – ' + end + '（' + U.minsText(m) + '）';
+    }
+    if (start) return start;
+    if (num(mins)) return '时长 ' + U.minsText(mins);
+    return '';
+  };
 
   /* ---------- 新增按钮可拖动：长按 380ms 进入拖动，松手吸附到左/右边（保留 fixed 悬浮） ---------- */
   /*   仅 .fab / .sch-fab（新增加号）可拖动；回顶按钮 .top-fab 不绑定。
@@ -6766,7 +6918,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
 
   function label(modId) {
     var s = state(modId);
-    if (s.span === 'all') return '全部时间';
+    if (s.span === 'all') return (modId === 'schedule:all') ? '全部日程' : '全部时间';
     if (s.span === 'today') return '今天';
     if (s.span === 'future') return '未来';
     if (s.span === '10d') return '近10天';
@@ -6780,7 +6932,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
 
   function rangeText(modId) {
     var s = state(modId);
-    if (!s.from && !s.to) return '全部时间';
+    if (!s.from && !s.to) return (modId === 'schedule:all') ? '全部日程' : '全部时间';
     var from = s.from || '—', to = s.to || '—';
     return from + ' ~ ' + to + (s.from && s.to ? ' · 共 ' + days(modId) + ' 天' : '');
   }
@@ -6907,8 +7059,12 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       if (preview) {
         var bad = draft.from && draft.to && draft.from > draft.to;
         preview.className = 'tf-preview' + (bad ? ' bad' : '');
-        preview.innerHTML = '<b>' + U.esc(rangeLabel(draft.from, draft.to)) + '</b>' +
-          '<span class="small muted">' + U.esc(rangeTextRaw(draft.from, draft.to)) + '</span>';
+        var emptyTxt = (modId === 'schedule:all') ? '全部日程' : '全部时间';
+        var prevFrom = draft.from, prevTo = draft.to;
+        var prevLbl = (!prevFrom && !prevTo) ? emptyTxt : rangeLabel(prevFrom, prevTo);
+        var prevRaw = (!prevFrom && !prevTo) ? emptyTxt : rangeTextRaw(prevFrom, prevTo);
+        preview.innerHTML = '<b>' + U.esc(prevLbl) + '</b>' +
+          '<span class="small muted">' + U.esc(prevRaw) + '</span>';
       }
     }
 
@@ -6973,8 +7129,8 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       '</div>' +
       '<div class="tf-cal-wrap" data-tf-cal hidden>' + buildCal(calY, calM) + '</div>' +
       '</div>' +
-      '<div class="tf-preview"><b>' + U.esc(rangeLabel(draft.from, draft.to)) + '</b>' +
-      '<span class="small muted">' + U.esc(rangeTextRaw(draft.from, draft.to)) + '</span></div>' +
+      '<div class="tf-preview"><b>' + U.esc((!draft.from && !draft.to) ? ((modId === 'schedule:all') ? '全部日程' : '全部时间') : rangeLabel(draft.from, draft.to)) + '</b>' +
+      '<span class="small muted">' + U.esc((!draft.from && !draft.to) ? ((modId === 'schedule:all') ? '全部日程' : '全部时间') : rangeTextRaw(draft.from, draft.to)) + '</span></div>' +
       '</div>' +
       '<div class="modal-foot">' +
       '<button class="btn ghost tap" data-tfclear>清除</button>' +
@@ -7140,7 +7296,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         var arrow = on ? (dir === 'desc' ? ' ↓' : ' ↑') : '';
         return '<button class="pill tap' + (on ? ' on' : '') + '" data-act="histSort" data-k="' + sk.k + '">' + sk.t + arrow + '</button>';
       }).join('') + '</div>';
-      return '<div style="height:10px"></div><div class="hist-sort">' + pills + '</div>';
+      return '<div style="height:6px"></div><div class="hist-sort">' + pills + '</div>';
     }
 
     function compute() {
@@ -7159,13 +7315,13 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var el = UI.sheet(
       cfg.title || '历史记录',
       '<div id="histTf-' + modId + '">' + TF.btn(modId) + '</div>' +
-      (cfg.search === false ? '' : '<div style="height:12px"></div><input class="input hist-search" id="histQ-' + modId + '" placeholder="' + esc(cfg.searchPh || '🔍 搜索…') + '" value="' + esc(getQ(modId)) + '">') +
-      (cfg.extraBar ? '<div style="height:10px"></div><div id="histExtra-' + modId + '">' + renderExtra() + '</div>' : '') +
-      (cfg.extraBar2 ? '<div style="height:10px"></div><div id="histExtra2-' + modId + '">' + renderExtra2() + '</div>' : '') +
-      (cfg.extraBar3 ? '<div style="height:10px"></div><div id="histExtra3-' + modId + '">' + renderExtra3() + '</div>' : '') +
+      (cfg.search === false ? '' : '<div style="height:8px"></div><input class="input hist-search" id="histQ-' + modId + '" placeholder="' + esc(cfg.searchPh || '🔍 搜索…') + '" value="' + esc(getQ(modId)) + '">') +
+      (cfg.extraBar ? '<div style="height:6px"></div><div id="histExtra-' + modId + '">' + renderExtra() + '</div>' : '') +
+      (cfg.extraBar2 ? '<div style="height:6px"></div><div id="histExtra2-' + modId + '">' + renderExtra2() + '</div>' : '') +
+      (cfg.extraBar3 ? '<div style="height:6px"></div><div id="histExtra3-' + modId + '">' + renderExtra3() + '</div>' : '') +
       '<div id="histSort-' + modId + '">' + renderSort() + '</div>' +
-      (cfg.summary ? '<div id="histSum-' + modId + '" style="margin-top:12px"></div>' : '') +
-      '<div style="height:14px"></div>' +
+      (cfg.summary ? '<div id="histSum-' + modId + '" style="margin-top:8px"></div>' : '') +
+      '<div style="height:8px"></div>' +
       '<div id="histList-' + modId + '"></div>' +
       (cfg.pager ? '<div id="histPager-' + modId + '"></div>' : ''),
       '<button class="btn ghost tap" data-x>关闭</button>'
@@ -7216,7 +7372,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       if (cfg.pager) setPg(modId, pg);
       var pageArr = cfg.pager ? arr.slice((pg - 1) * size, pg * size) : arr;
       listEl.innerHTML = pageArr.length
-        ? '<div class="list">' + pageArr.map(cfg.render).join('') + '</div>'
+        ? '<div class="list hist-list">' + pageArr.map(cfg.render).join('') + '</div>'
         : UI.empty(cfg.empty || '该时间段内没有匹配的记录', '🔍');
       if (pagerEl) pagerEl.innerHTML = pagerHTML(total, pages, pg);
       w.U.foldNotes(listEl);
@@ -7430,7 +7586,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       var arrow = on ? (cur.dir === 'desc' ? ' ↓' : ' ↑') : '';
       return '<button class="pill tap' + (on ? ' on' : '') + '" data-act="listSort" data-ns="' + ns + '" data-k="' + sk.k + '">' + sk.t + arrow + '</button>';
     }).join('');
-    return '<div class="pills">' + pills + '</div>';
+    return '<div class="pills"><span class="pill sort-lbl">排序：</span>' + pills + '</div>';
   }
 
   /* 渲染「已排序+分页」的列表 + 分页条 */
@@ -7769,7 +7925,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       html += '<button class="pill tap' + (restSel.length ? ' on' : '') + '" data-act="catMore" data-ns="' + ns + '" data-cur="' + U.esc(sel.join(',')) + '">' + U.esc(flexLabel) + '</button>';
       var mb = opts.margin !== undefined ? opts.margin : '8px';
       return '<div class="row cat-filter-row" style="gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 ' + mb + '">' +
-        (opts.label ? '<span class="small muted">' + U.esc(opts.label) + '</span>' : '') + html + '</div>';
+        (opts.label ? '<button class="pill cat-mng tap" data-act="catManage" data-ns="' + ns + '" data-title="' + U.esc(opts.label) + '" title="管理' + U.esc(opts.label) + '">🗂 ' + U.esc(opts.label) + '：</button>' : '') + html + '</div>';
     },
 
     /* 打开「全部分类」多选选择器（点击切换，✓ 标记，完成后关闭）。
@@ -8510,8 +8666,8 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         }
         var endBtn = h.ended
           ? '<button class="link-btn tap" data-act="restoreHabit" data-id="' + h.id + '">↩ 恢复</button>'
-          : '<button class="link-btn tap" data-act="endHabit" data-id="' + h.id + '">立即结束</button>';
-        /* 整行可点击折叠：圆圈与「立即结束」留在可见行；「编辑/删除」收入展开区 */
+          : '<button class="link-btn tap" data-act="endHabit" data-id="' + h.id + '">⏹ 立即结束</button>';
+        /* 整行可点击折叠：可见行只留圆圈+标题+徽章；「✏️编辑/⏹立即结束(↩恢复)/🗑删除」统一收入展开区一行等分 */
         return '<div class="item clickable' + (on ? ' done' : '') + '" data-toggle data-id="' + h.id + '">' +
           '<div class="item-main">' +
             UI.check(on, 'toggle', h.id) +
@@ -8519,13 +8675,13 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
             '<div class="item-meta">' +
               (sb ? '<span class="badge grey">' + sb + '</span>' : '') +
               (on && at ? '<span class="badge grey">⏰ ' + at + '</span>' : '') +
-              endBtn +
             '</div>' +
             '<span class="caret">▸</span>' +
           '</div>' +
           '<div class="item-detail">' +
             '<div class="item-ops">' +
               '<button class="link-btn tap" data-act="editHabit" data-id="' + h.id + '">✏️ 编辑</button>' +
+              endBtn +
               '<button class="link-btn del tap" data-act="delHabit" data-id="' + h.id + '">🗑 删除</button>' +
             '</div>' +
           '</div>' +
@@ -8640,9 +8796,9 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
             '</div>' +
             '<div class="item-detail">' + preview +
             '<div class="item-ops ev-ops">' +
-            '<button class="link-btn tap" data-act="evMark" data-id="' + ev.id + '">✓ 记录</button>' +
-            '<button class="link-btn tap" data-act="evBackfill" data-id="' + ev.id + '">＋ 补记</button>' +
-            '<button class="link-btn tap" data-act="evOpen" data-id="' + ev.id + '">📅 全部</button>' +
+            '<button class="link-btn tap" data-act="evMark" data-id="' + ev.id + '">✍️ 记录</button>' +
+            '<button class="link-btn tap" data-act="evBackfill" data-id="' + ev.id + '">➕ 补记</button>' +
+            '<button class="link-btn tap" data-act="evOpen" data-id="' + ev.id + '">📋 全部</button>' +
             '<button class="link-btn tap" data-act="evEdit" data-id="' + ev.id + '">✏️ 编辑</button>' +
             '<button class="link-btn del tap" data-act="evDel" data-id="' + ev.id + '">🗑 删除</button>' +
             '</div></div>' +
@@ -9010,12 +9166,12 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       okText: '完成',
       values: { doneAt: x.doneAt || U.today(), start: x.startTime || '', end: x.endTime || '', cat: x.wcat || '', content: x.doneNote || x.title || '' },
       fields: [
+        { k: 'content', label: '办理内容', type: 'textarea', full: true, rows: 4, req: true },
         { k: 'doneAt', label: '完成日期', type: 'date', req: true, def: U.today() },
         { k: 'start', label: '起止时间', type: 'startendrow' },
         { k: 'cat', label: '工作分类', type: 'select', full: true, req: cs.length > 0,
           options: [{ v: '', t: '不分类' }].concat(cs.map(function (c) { return { v: c, t: c }; })),
-          def: x.wcat || '' },
-        { k: 'content', label: '办理内容', type: 'textarea', full: true, rows: 4, req: true }
+          def: x.wcat || '' }
       ]
     }).then(function (v) {
       if (!v || !v.content) return;
@@ -9057,8 +9213,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         ]) +
         UI.card({
           title: '任务列表',
-          right: Cats.btn('taskTags', '分类标签') +
-            '<button class="btn ghost sm tap" data-act="hist">📜 历史记录</button>',
+          right: '<button class="btn ghost sm tap" data-act="hist">📜 历史记录</button>',
           body: UI.tabs([
               { k: 'todo', t: '待办' }, { k: 'doing', t: '进行中' },
               { k: 'done', t: '已完成' }, { k: 'all', t: '全部' }
@@ -9511,12 +9666,12 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
   }
   function wFields() {
     var f = [
+      { k: 'content', label: '工作内容', type: 'textarea', req: true, full: true, ph: '做了什么、进展如何、结论是什么…', rows: 3 },
       { k: 'date', label: '日期', type: 'date', req: true, def: U.today() },
       { k: 'cat', label: '分类', type: 'select', catns: 'workCats', options: Cats.get('workCats').map(function (c) { return { v: c, t: c }; }), def: Cats.get('workCats')[0] || '' },
-      { k: 'start', label: '开始时间（几点几分）', type: 'time' },
-      { k: 'end', label: '结束时间（几点几分）', type: 'time' },
+      { k: 'start', label: '起止时间（几点几分）', type: 'startendrow' },
       { k: 'mins', label: '时长（分钟）', type: 'number', min: 0, hint: '填了起止时间会自动计算，也可直接填' },
-      { k: 'content', label: '工作内容', type: 'textarea', req: true, ph: '做了什么、进展如何、结论是什么…', rows: 5 }
+      { k: 'note', label: '备注', type: 'textarea', full: true, rows: 2, ph: '可选，补充说明…' }
     ];
     var cl = wCaseField();
     if (cl) f.push(cl);
@@ -9596,8 +9751,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         UI.stats([[isToday ? '今日时长' : '当天时长', hm(dayTot), true], ['近 7 天', hm(wTot)], ['本月时长', hm(mTot)], ['累计时长', hm(tot)]]) +
         UI.card({
           title: '当天工作内容',
-          right: Cats.btn('workCats', '工作分类') +
-            '<button class="btn ghost sm tap" data-act="hist">📜 历史记录</button>',
+          right: '<button class="btn ghost sm tap" data-act="hist">📜 历史记录</button>',
           body: wDayNav() + Cats.filterBar('workCats', { label: '分类' }) + (todayArr.length ? this.list() : UI.empty(isToday ? '今天还没有工作记录' : '这一天没有工作记录', '📝'))
         }) +
         (todayArr.length ? UI.card({ title: (isToday ? '今日' : '当天') + '分类时长占比', body: this.catStat() }) : '') +
@@ -9671,12 +9825,12 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       var sheet = Hist.open({
         modId: 'worklog',
         title: '📝 工作留痕历史记录',
-        searchPh: '🔍 搜内容 / 分类 / 日期 / 时间段（如 2026-08-09、09:30）',
+        searchPh: '🔍 搜内容 / 备注 / 分类 / 日期 / 时间段（如 2026-08-09、09:30）',
         pager: true, defSize: 5,
         items: function () { return D().worklog; },
         date: function (x) { return x.date; },
         match: function (x, q) {
-          var hay = ((x.content || '') + ' ' + (x.cat || '') + ' ' + (x.date || '') + ' ' + (x.start || '') + ' ' + (x.end || '')).toLowerCase();
+          var hay = ((x.content || '') + ' ' + (x.note || '') + ' ' + (x.cat || '') + ' ' + (x.date || '') + ' ' + (x.start || '') + ' ' + (x.end || '')).toLowerCase();
           return hay.indexOf(q) >= 0;
         },
         sort: function (a, b) { return (b.date + (b.start || '')).localeCompare(a.date + (a.start || '')); },
@@ -9691,13 +9845,14 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           return UI.stats([['记录条数', arr.length, true], ['总时长', hm(tot)]]);
         },
         render: function (x) {
+          var timeTxt = U.timeRangeText(x.start, x.end, x.mins);
           var meta =
-            (x.start ? '<span class="badge grey">🕐 ' + esc(x.start) + (x.end && x.end !== x.start ? '–' + esc(x.end) : '') + '</span>' : '') +
-            (num(x.mins) ? '<span class="badge grey">⏱ ' + hm(x.mins) + '</span>' : '') +
+            (x.cat ? '<span class="badge">' + esc(x.cat) + '</span>' : '') +
+            (timeTxt ? '<span class="badge grey">🕐 ' + esc(timeTxt) + '</span>' : '') +
             wCaseBadge(x) + wTaskBadge(x);
           return '<div class="item clickable" data-toggle data-id="' + x.id + '">' +
             '<div class="item-main">' +
-            '<div class="item-title">' + (x.cat ? esc(x.cat) : '（未分类）') + '</div>' +
+            '<div class="item-title">' + esc(x.content || '（无内容）') + '</div>' +
             '<div class="item-meta">' + meta + '</div>' +
             '<span class="caret">▸</span></div>' +
             '<div class="item-detail">' +
@@ -9705,7 +9860,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
             '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
             '<button class="link-btn del tap" data-act="hdel" data-id="' + x.id + '">🗑 删除</button>' +
             '</div>' +
-            '<div class="item-note">' + esc(x.content || '（无备注）') + '</div>' +
+            (x.note ? '<div class="item-note">📝 ' + esc(x.note) + '</div>' : '') +
             '</div></div>';
         },
         acts: {
@@ -9759,20 +9914,22 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       var pageRows = ListPager.slice('worklog:list', arr);
       var html = '<div class="timeline"><div class="tl-day">当天工作内容 · ' + hm(dayMin) + '</div>';
       html += pageRows.map(function (x) {
+        /* 时间段一句话：16:07 – 16:08（1分），开始/时长/范围一眼可读 */
+        var timeTxt = U.timeRangeText(x.start, x.end, x.mins);
         var meta =
-          (x.start ? '<span class="badge grey">🕐 ' + esc(x.start) + (x.end && x.end !== x.start ? '–' + esc(x.end) : '') + '</span>' : '') +
-          (num(x.mins) ? '<span class="badge grey">⏱ ' + hm(x.mins) + '</span>' : '') +
+          (x.cat ? '<span class="badge">' + esc(x.cat) + '</span>' : '') +
+          (timeTxt ? '<span class="badge grey">🕐 ' + esc(timeTxt) + '</span>' : '') +
           wCaseBadge(x) + wTaskBadge(x);
         return '<div class="tl-item">' +
           '<div class="tl-rail"><span class="tl-time">' + (x.start || '·') + '</span><span class="tl-dot"></span><span class="tl-line"></span></div>' +
           '<div class="tl-body">' +
           '<div class="item clickable" data-toggle data-id="' + x.id + '">' +
           '<div class="item-main">' +
-          '<div class="item-title">' + (x.cat ? esc(x.cat) : '（未分类）') + '</div>' +
+          '<div class="item-title">' + esc(x.content || '（无内容）') + '</div>' +
           '<div class="item-meta">' + meta + '</div>' +
           '<span class="caret">▸</span></div>' +
           '<div class="item-detail">' +
-          '<div class="item-note">' + esc(x.content || '（无备注）') + '</div>' +
+          (x.note ? '<div class="item-note">📝 ' + esc(x.note) + '</div>' : '') +
           '<div class="item-detail-ops">' +
           '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
           '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>' +
@@ -10563,9 +10720,15 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
   var cal = { y: new Date().getFullYear(), m: new Date().getMonth() + 1 };
   var selDate = U.today();          // 当前选中的日期（用于显示当天日程列表）
   var schExp = {};                  // 当天日程列表：已展开备注的记录 id
-  var schView = 'day';              // 当前视图：'day'=当天 | 'all'=全部
-  var schSearch = '';               // 全部视图搜索关键词
+  var schView = 'day';              // 当前视图：'day'=当天 | 'all'=全部日程（近30天）
+  var schSearch = '';               // 全部日程视图搜索关键词
   // 时间筛选使用 TF（timefilter），modId = 'schedule:all'
+
+  /* 近期日程窗口：今天起共 30 天（含今天），用于「全部日程」视图过滤 */
+  function recentWindow() {
+    var start = U.today();
+    return { start: start, end: U.shiftDay(start, 29) };
+  }
 
   /* ---------- 颜色选项 ---------- */
   var COLORS = [
@@ -10791,10 +10954,16 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       }).join('') + '</div>' + ListPager.pager('schedule:day', items.length);
   }
 
-  /* ---------- 全部日程视图（搜索 + 时间段筛选 + 时间轴 + 折叠） ---------- */
+  /* ---------- 全部日程视图（近30天，搜索 + 时间段筛选 + 时间轴 + 折叠） ---------- */
   function allSchedulesFiltered() {
     var arr = (D().schedules || []).slice();
-    // 按日期+时间排序
+    /* 近30天窗口：今天起共 30 天（含今天），只显示这段时间内的日程 */
+    var win = recentWindow();
+    arr = arr.filter(function (s) {
+      var d = s.date || '';
+      return d >= win.start && d <= win.end;
+    });
+    // 按日期+时间排序（全部日程：最近日期在前）
     arr.sort(function (a, b) { return (a.date || '').localeCompare(b.date || '') || (a.time || '').localeCompare(b.time || ''); });
     // 搜索过滤
     if (schSearch) {
@@ -10813,7 +10982,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var arr = allSchedulesFiltered();
     if (!arr.length) {
       return '<div class="sch-empty"><span class="sch-empty-text">' +
-        (schSearch ? '没有匹配「' + esc(schSearch) + '」的日程' : '暂无日程') + '</span></div>';
+        (schSearch ? '没有匹配「' + esc(schSearch) + '」的日程' : '近 30 天内暂无日程') + '</span></div>';
     }
     var pageRows = ListPager.slice('schedule:all', arr);
     /* 按日期分组（参考财务流水 flow-date-header 模式） */
@@ -10823,7 +10992,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       if (!groups[d]) groups[d] = [];
       groups[d].push(s);
     });
-    var dates = Object.keys(groups).sort().reverse(); // 最新在前
+    var dates = Object.keys(groups).sort(); // 全部日程：最近的日期在前
 
     var html = '<div class="timeline">';
     dates.forEach(function (date) {
@@ -10859,22 +11028,22 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     return html;
   }
 
-  /* 仅重绘「全部」列表区（搜索时保留工具栏与输入框焦点） */
+  /* 仅重绘「全部日程」列表区（搜索时保留工具栏与输入框焦点） */
   function schRenderAllList() {
     var wrap = document.getElementById('schAllList');
     if (!wrap) return;
     wrap.innerHTML = allListHTML();
   }
 
-  /* ---------- 视图切换栏（当天 / 全部） ---------- */
+  /* ---------- 视图切换栏（当天 / 全部日程） ---------- */
   function viewTabsHTML() {
     return '<div class="sch-view-tabs">' +
       '<button class="sch-vtab' + (schView === 'day' ? ' on' : '') + ' tap" data-act="schDayView">📅 当天</button>' +
-      '<button class="sch-vtab' + (schView === 'all' ? ' on' : '') + ' tap" data-act="schAllView">📋 全部</button>' +
+      '<button class="sch-vtab' + (schView === 'all' ? ' on' : '') + ' tap" data-act="schAllView">🗓 全部日程</button>' +
       '</div>';
   }
 
-  /* ---------- 全部视图工具栏（搜索 + TF 时间筛选） ---------- */
+  /* ---------- 全部日程工具栏（搜索 + TF 时间筛选） ---------- */
   function allToolbarHTML() {
     return '<div class="sch-all-toolbar">' +
       '<div class="sch-search-box">' +
@@ -11142,7 +11311,9 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         calendarHTML() +
         viewTabsHTML() +
         (schView === 'all' ? allToolbarHTML() : '') +
-        (schView === 'day' ? dayListHTML() : '<div id="schAllList">' + allListHTML() + '</div>') +
+        (schView === 'day'
+          ? '<div class="sch-list-card">' + dayListHTML() + '</div>'
+          : '<div id="schAllList" class="sch-list-card">' + allListHTML() + '</div>') +
         '<button class="sch-fab tap" data-act="schNew" aria-label="新建日程" title="新建日程">+</button>';
     },
 
@@ -11508,7 +11679,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           UI.pills([{ k: 'list', t: '☰ 列表' }, { k: 'grid', t: '▦ 封面墙' }], mediaView(), 'mview') +
         '</div>' +
         '<div class="mf-row"><span class="mf-lbl">状态</span>' + UI.pills(stPills, App.tab('media', 'st', 'all'), 'st') + '</div>' +
-        '<div class="mf-row"><span class="mf-lbl">排序</span>' + ListPager.sortPills('media:list', mediaSortKeys) + '</div>' +
+        '<div class="mf-row">' + ListPager.sortPills('media:list', mediaSortKeys) + '</div>' +
         '</div>';
     },
 
@@ -11810,16 +11981,100 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     return 'doing';
   }
 
+  /* ---------- 学习计划与学习记录联动 ---------- */
+  /* 计算时长：优先 start/end，否则回退 x.mins */
+  function examMins(x) {
+    if (x.start && x.end) {
+      var a = x.start.split(':'), b = x.end.split(':');
+      var m = (+b[0] * 60 + +b[1]) - (+a[0] * 60 + +a[1]);
+      if (m < 0) m += 1440;
+      return m;
+    }
+    return num(x.mins);
+  }
+  function examTimeText(x) { return U.timeRangeText(x.start, x.end, examMins(x)); }
+  /* 完成计划：生成学习记录并双向绑定 */
+  function examRecordFromPlan(plan, v) {
+    var rec = {
+      id: U.uid(), planId: plan.id,
+      date: v.date || U.today(),
+      start: v.start || '', end: v.end || '',
+      mins: examMins(v),
+      subject: v.subject, contentCat: v.contentCat,
+      content: v.content || plan.text || '',
+      reviewStage: 0
+    };
+    D().exam.records.push(rec);
+    plan.recordId = rec.id;
+    plan.done = true;
+    plan.doneAt = rec.date;
+    plan.subject = v.subject;
+    plan.contentCat = v.contentCat;
+    plan.text = rec.content;
+  }
+  /* 取消完成：删除关联记录 */
+  function examUnlinkRecord(plan) {
+    if (plan.recordId) {
+      D().exam.records = D().exam.records.filter(function (a) { return a.id !== plan.recordId; });
+      plan.recordId = '';
+    }
+    plan.done = false;
+    plan.doneAt = '';
+  }
+  /* 编辑计划后同步到关联记录 */
+  function examSyncPlanToRecord(plan) {
+    if (!plan.recordId) return;
+    var r = D().exam.records.filter(function (a) { return a.id === plan.recordId; })[0];
+    if (!r) { plan.recordId = ''; return; }
+    r.subject = plan.subject;
+    r.contentCat = plan.contentCat;
+    r.content = plan.text || r.content;
+  }
+  /* 编辑记录后同步到关联计划 */
+  function examSyncRecordToPlan(record) {
+    if (!record.planId) return;
+    var p = D().exam.plans.filter(function (a) { return a.id === record.planId; })[0];
+    if (!p) { record.planId = ''; return; }
+    p.subject = record.subject;
+    p.contentCat = record.contentCat;
+    p.text = record.content || p.text;
+  }
+  /* 删除计划时级联删除关联记录 */
+  function examDeletePlan(plan) {
+    if (plan.recordId) {
+      D().exam.records = D().exam.records.filter(function (a) { return a.id !== plan.recordId; });
+    }
+    D().exam.plans = D().exam.plans.filter(function (a) { return a.id !== plan.id; });
+  }
+  /* 删除记录时解绑关联计划 */
+  function examDeleteRecord(record) {
+    if (record.planId) {
+      var p = D().exam.plans.filter(function (a) { return a.id === record.planId; })[0];
+      if (p) { p.done = false; p.recordId = ''; p.doneAt = ''; }
+    }
+    D().exam.records = D().exam.records.filter(function (a) { return a.id !== record.id; });
+  }
+
   /* 备考编辑（学习计划 / 学习记录 共用）：after 为保存后的回调（如历史弹窗重绘） */
   function editExamItem(it, after) {
     var x = it.x, kind = it.k;
     var fields = kind === 'plan'
       ? [{ k: 'text', label: '计划内容', req: true, full: true }].concat(examCatFields()).concat([{ k: 'due', label: '预计完成日期', type: 'date' }])
-      : [{ k: 'date', label: '日期', type: 'date', req: true }, { k: 'mins', label: '时长（分钟）', type: 'number', min: 0, req: true }].concat(examCatFields()).concat([{ k: 'content', label: '学了什么', type: 'textarea', rows: 4 }]);
+      : [{ k: 'date', label: '日期', type: 'date', req: true }, { k: 'start', label: '学习时段', type: 'startendrow', req: true }].concat(examCatFields()).concat([{ k: 'content', label: '学了什么', type: 'textarea', rows: 4 }]);
     UI.form({
       title: kind === 'plan' ? '编辑学习计划' : '编辑学习记录',
       values: x, fields: fields
-    }).then(function (v) { if (!v) return; Object.keys(v).forEach(function (k) { x[k] = v[k]; }); Store.save(); if (after) after(); });
+    }).then(function (v) {
+      if (!v) return;
+      Object.keys(v).forEach(function (k) { x[k] = v[k]; });
+      if (kind === 'record') {
+        x.mins = examMins(x);
+        examSyncRecordToPlan(x);
+      } else {
+        examSyncPlanToRecord(x);
+      }
+      Store.save(); if (after) after();
+    });
   }
 
   /* 学习计划展开态（按 id） */
@@ -11879,11 +12134,13 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
   function renderExamRecordItem(x) {
     var open = !!examRecExpanded[x.id];
     var caret = '<span class="fold-caret">' + (open ? '▾' : '▸') + '</span>';
+    var timeTxt = examTimeText(x);
     var row = '<div class="wl-hist-row' + (open ? ' open' : '') + '" data-act="erexp" data-id="' + x.id + '">' +
       '<div class="wl-hist-row-main">' +
         '<div class="row between" style="gap:8px;align-items:center"><span class="item-title" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(examCatText(x) || '学习') + '</span>' +
-        '<span class="badge">' + num(x.mins) + ' 分钟</span></div>' +
+        '</div>' +
         '<div class="item-meta"><span>' + U.fmtDate(x.date, true) + '</span>' +
+        (timeTxt ? '<span class="badge grey">🕐 ' + esc(timeTxt) + '</span>' : '') +
         (x.content ? '<span class="badge grey">📝 有备注</span>' : '') + '</div>' +
       '</div>' + caret + '</div>';
     if (!open) return row;
@@ -12013,9 +12270,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         UI.tabs([{ k: 'plan', t: '学习计划', i: '🗓' }, { k: 'record', t: '学习记录', i: '⏱' }, { k: 'review', t: '复习提醒', i: '🔔' }], t, 'tab') +
         '<div class="card exam-filter-card">' +
         examCatFilter() +
-        '<div class="row" style="gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 0">' +
-        Cats.btn('examSubject', '科目分类', '🗂 科目管理') + Cats.btn('examContent', '内容分类', '🗂 内容管理') +
-        '</div>' +
         this._statFor(t) +
         '</div>' +
         this._cardFor(t) +
@@ -12026,9 +12280,10 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
             var arr = D().exam.records.filter(function (x) { return x.date === date; });
             if (!arr.length) return { title: U.fmtDate(date, true) + ' · 学习记录', body: UI.empty('这一天没有学习记录', '⏱') };
             var body = '<div class="list">' + arr.map(function (x) {
+              var timeTxt = examTimeText(x);
               return '<div class="item"><div class="item-main">' +
                 '<div class="item-title">' + esc(examCatText(x) || '学习') + '</div>' +
-                '<div class="item-meta"><span class="badge">' + num(x.mins) + ' 分钟</span></div>' +
+                '<div class="item-meta">' + (timeTxt ? '<span class="badge grey">🕐 ' + esc(timeTxt) + '</span>' : '') + '</div>' +
                 studyContentHtml(x.content) +
                 '</div></div>';
             }).join('') + '</div>';
@@ -12076,9 +12331,13 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           (n === 0 ? '<span class="badge danger">⏰ 今天开考</span>' : '');
         var row = '<div class="wl-hist-row' + (n >= 0 && n <= 30 ? ' hl' : '') + (expanded ? ' open' : '') + '" data-act="eexpand" data-id="' + x.id + '">' +
           '<div class="wl-hist-row-main">' +
-            '<div class="row between" style="gap:8px;align-items:center"><span class="item-title" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(x.name) + '</span>' +
-            '<span class="exam-count-num ' + numCls + '">' + statusTxt + '</span></div>' +
-            '<div class="item-meta">' + meta + '</div>' +
+            '<div class="row between" style="gap:8px;align-items:center">' +
+              '<div class="row" style="gap:8px;align-items:center;flex:1;min-width:0;overflow:hidden">' +
+                '<span class="item-title" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:0 1 auto">' + esc(x.name) + '</span>' +
+                '<span class="row" style="gap:6px;align-items:center;flex-shrink:0;flex-wrap:nowrap">' + meta + '</span>' +
+              '</div>' +
+              '<span class="exam-count-num ' + numCls + '">' + statusTxt + '</span>' +
+            '</div>' +
           '</div>' +
           '<span class="fold-caret">' + (expanded ? '▾' : '▸') + '</span></div>';
         if (!expanded) return row;
@@ -12318,29 +12577,46 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
             { k: 'due', label: '预计完成日期', type: 'date' }
           ])
         }).then(function (v) {
-          if (!v) return; Object.keys(v).forEach(function (k) { x[k] = v[k]; }); Store.save(); App.refresh();
+          if (!v) return; Object.keys(v).forEach(function (k) { x[k] = v[k]; });
+          examSyncPlanToRecord(x); Store.save(); App.refresh();
         });
       },
       ptoggle: function (t) {
-        D().exam.plans.forEach(function (x) {
-          if (x.id === t.dataset.id) { x.done = !x.done; x.doneAt = x.done ? U.today() : ''; }
-        });
-        Store.save(); App.refresh();
+        var x = D().exam.plans.filter(function (a) { return a.id === t.dataset.id; })[0];
+        if (!x) return;
+        if (!x.done) {
+          UI.form({
+            title: '完成学习计划',
+            values: { date: U.today(), subject: x.subject, contentCat: x.contentCat, content: x.text },
+            fields: [
+              { k: 'date', label: '完成日期', type: 'date', req: true, def: U.today() },
+              { k: 'start', label: '学习时段', type: 'startendrow', req: true }
+            ].concat(examCatFields()).concat([
+              { k: 'content', label: '学习内容', req: true, full: true, ph: '填写本次学习的具体内容' }
+            ])
+          }).then(function (v) {
+            if (!v) return;
+            examRecordFromPlan(x, v); Store.save(); App.refresh(); U.toast('已完成并记录学习');
+          });
+        } else {
+          examUnlinkRecord(x); Store.save(); App.refresh();
+        }
       },
       pdel: function (t) {
-        D().exam.plans = D().exam.plans.filter(function (a) { return a.id !== t.dataset.id; });
-        Store.save(); App.refresh();
+        var x = D().exam.plans.filter(function (a) { return a.id === t.dataset.id; })[0];
+        if (!x) return;
+        UI.del(esc(x.text || '学习计划'), function () { examDeletePlan(x); Store.save(); App.refresh(); });
       },
       rnew: function () {
         UI.form({
           title: '学习记录', values: { date: eCur.day }, fields: [
             { k: 'date', label: '日期', type: 'date', req: true, def: U.today() },
-            { k: 'mins', label: '时长（分钟）', type: 'number', min: 0, req: true }
+            { k: 'start', label: '学习时段', type: 'startendrow', req: true }
           ].concat(examCatFields()).concat([
             { k: 'content', label: '学了什么', type: 'textarea', rows: 4 }
           ])
         }).then(function (v) {
-          if (!v) return; v.id = U.uid(); D().exam.records.push(v); Store.save(); App.refresh(); U.toast('已记录');
+          if (!v) return; v.id = U.uid(); v.mins = examMins(v); D().exam.records.push(v); Store.save(); App.refresh(); U.toast('已记录');
         });
       },
       redit: function (t) {
@@ -12349,17 +12625,19 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         UI.form({
           title: '编辑学习记录', values: x, fields: [
             { k: 'date', label: '日期', type: 'date', req: true },
-            { k: 'mins', label: '时长（分钟）', type: 'number', min: 0, req: true }
+            { k: 'start', label: '学习时段', type: 'startendrow', req: true }
           ].concat(examCatFields()).concat([
             { k: 'content', label: '学了什么', type: 'textarea', rows: 4 }
           ])
         }).then(function (v) {
-          if (!v) return; Object.keys(v).forEach(function (k) { x[k] = v[k]; }); Store.save(); App.refresh();
+          if (!v) return; Object.keys(v).forEach(function (k) { x[k] = v[k]; });
+          x.mins = examMins(x); examSyncRecordToPlan(x); Store.save(); App.refresh();
         });
       },
       rdel: function (t) {
-        D().exam.records = D().exam.records.filter(function (a) { return a.id !== t.dataset.id; });
-        Store.save(); App.refresh();
+        var x = D().exam.records.filter(function (a) { return a.id === t.dataset.id; })[0];
+        if (!x) return;
+        UI.del(esc(examCatText(x) || '学习记录'), function () { examDeleteRecord(x); Store.save(); App.refresh(); });
       },
       /* 标记已复习：推进艾宾浩斯复习阶段（与学习记录联动） */
       rmark: function (t) {
@@ -12394,7 +12672,9 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
               : st === 'overdue' ? '<span class="badge danger">已逾期</span>'
               : '<span class="badge warn">待复习</span>';
             var ndTxt = nd ? ('复习 ' + U.fmtDate(nd)) : '已巩固';
+            var timeTxt = examTimeText(x);
             var meta = examCatBadges(x) + '<span>' + U.fmtDate(x.date, true) + ' 学习</span>' +
+              (timeTxt ? '<span class="badge grey" style="flex-shrink:0">🕐 ' + esc(timeTxt) + '</span>' : '') +
               stBadge + '<span class="badge grey">第 ' + (reviewStage(x) + 1) + '/' + EB_INTERVALS.length + ' 次</span>' +
               '<span>' + ndTxt + '</span>';
             var caret = hasContent ? '<span class="fold-caret">' + (expanded ? '▾' : '▸') + '</span>' : '';
@@ -12402,7 +12682,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
               (hasContent ? ' data-act="rexpand" data-hid="' + x.id + '"' : '') + '>' +
               '<div class="wl-hist-row-main"><div class="row between" style="gap:8px;align-items:center">' +
               '<span class="item-title" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(examCatText(x) || '学习') + '</span>' +
-              '<span class="badge" style="flex-shrink:0">' + num(x.mins) + ' 分钟</span></div>' +
+              '</div>' +
               '<div class="item-meta">' + meta + '</div></div>' + caret + '</div>';
             if (!expanded || !hasContent) return row;
             return row + '<div class="fold-detail">' +
@@ -12467,14 +12747,16 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
               UI.form({ title: '编辑学习计划', values: x, fields: [
                 { k: 'text', label: '计划内容', req: true, full: true }
               ].concat(examCatFields()).concat([{ k: 'due', label: '预计完成日期', type: 'date' }]) })
-                .then(function (v) { if (!v) return; Object.keys(v).forEach(function (k) { x[k] = v[k]; }); Store.save(); App.refresh(); if (redraw) redraw(); });
+                .then(function (v) {
+                  if (!v) return; Object.keys(v).forEach(function (k) { x[k] = v[k]; });
+                  examSyncPlanToRecord(x); Store.save(); App.refresh(); if (redraw) redraw();
+                });
             },
             hdel: function (t, e, redraw) {
               var x = D().exam.plans.filter(function (a) { return a.id === t.dataset.id; })[0];
               if (!x) return;
               UI.del(esc(x.text || '学习计划'), function () {
-                D().exam.plans = D().exam.plans.filter(function (a) { return a.id !== x.id; });
-                Store.save(); App.refresh(); if (redraw) redraw();
+                examDeletePlan(x); Store.save(); App.refresh(); if (redraw) redraw();
               });
             }
           }
@@ -12498,8 +12780,9 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           render: function (x) {
             var expanded = !!recHistExp[x.id];
             var hasContent = !!x.content;
+            var timeTxt = examTimeText(x);
             var meta = examCatBadges(x) + '<span>' + U.fmtDate(x.date, true) + '</span>' +
-              '<span class="badge" style="flex-shrink:0">' + num(x.mins) + ' 分钟</span>';
+              (timeTxt ? '<span class="badge grey" style="flex-shrink:0">🕐 ' + esc(timeTxt) + '</span>' : '');
             var caret = '<span class="fold-caret">' + (expanded ? '▾' : '▸') + '</span>';
             var row = '<div class="wl-hist-row' + (expanded ? ' open' : '') + '" data-act="recexpand" data-hid="' + x.id + '">' +
               '<div class="wl-hist-row-main"><div class="row between" style="gap:8px;align-items:center">' +
@@ -12522,16 +12805,18 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
               if (!x) return;
               UI.form({ title: '编辑学习记录', values: x, fields: [
                 { k: 'date', label: '日期', type: 'date', req: true },
-                { k: 'mins', label: '时长（分钟）', type: 'number', min: 0, req: true }
+                { k: 'start', label: '学习时段', type: 'startendrow', req: true }
               ].concat(examCatFields()).concat([{ k: 'content', label: '学了什么', type: 'textarea', rows: 4 }]) })
-                .then(function (v) { if (!v) return; Object.keys(v).forEach(function (k) { x[k] = v[k]; }); Store.save(); App.refresh(); if (redraw) redraw(); });
+                .then(function (v) {
+                  if (!v) return; Object.keys(v).forEach(function (k) { x[k] = v[k]; });
+                  x.mins = examMins(x); examSyncRecordToPlan(x); Store.save(); App.refresh(); if (redraw) redraw();
+                });
             },
             hdel: function (t, e, redraw) {
               var x = D().exam.records.filter(function (a) { return a.id === t.dataset.id; })[0];
               if (!x) return;
               UI.del(esc(examCatText(x) || '学习记录'), function () {
-                D().exam.records = D().exam.records.filter(function (a) { return a.id !== x.id; });
-                Store.save(); App.refresh(); if (redraw) redraw();
+                examDeleteRecord(x); Store.save(); App.refresh(); if (redraw) redraw();
               });
             }
           }
@@ -12580,8 +12865,8 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
               var it = items().filter(function (a) { return a.x && a.x.id === t.dataset.id; })[0];
               if (!it) return;
               UI.del(esc(it.k === 'plan' ? (it.x.text || '计划') : (examCatText(it.x) || '记录')), function () {
-                if (it.k === 'plan') D().exam.plans = D().exam.plans.filter(function (a) { return a.id !== it.x.id; });
-                else if (it.k === 'record') D().exam.records = D().exam.records.filter(function (a) { return a.id !== it.x.id; });
+                if (it.k === 'plan') examDeletePlan(it.x);
+                else if (it.k === 'record') examDeleteRecord(it.x);
                 Store.save(); App.refresh(); if (redraw) redraw();
               });
             }
@@ -13052,24 +13337,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
   function sortedCharges() { return U.sortBy(ev().charges || [], 'date'); }
   function sortedRefuels() { return U.sortBy(fuel().refuels || [], 'date'); }
 
-  /* 保养状态：里程 + 日期，自动判断是否需关注 */
-  function serviceStatus(cfg, curOdo) {
-    var lines = [], warn = false;
-    if (num(cfg.serviceMile) > 0) {
-      var left = num(cfg.serviceMile) - num(curOdo);
-      if (left <= 0) { warn = true; lines.push('里程已到（' + num(curOdo) + '/' + num(cfg.serviceMile) + 'km），建议保养'); }
-      else lines.push('距保养里程还有 ' + left + ' km（当前 ' + num(curOdo) + ' km）');
-    }
-    if (cfg.serviceDate) {
-      var nd = U.dayDiff(U.today(), cfg.serviceDate);
-      if (nd < 0) { warn = true; lines.push('保养已逾期 ' + (-nd) + ' 天'); }
-      else if (nd <= 30) { warn = true; lines.push('距保养日期还有 ' + nd + ' 天'); }
-      else lines.push('距保养日期还有 ' + nd + ' 天');
-    }
-    if (!lines.length) lines.push('未设置保养提醒');
-    return { warn: warn, text: lines.join('；') };
-  }
-
   function currentOdo(kind) {
     if (kind === 'ev') {
       var cs = sortedCharges();
@@ -13339,6 +13606,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           ev().price = num(v.price) || 0.3353;
           ev().serviceMile = num(v.serviceMile);
           ev().serviceDate = v.serviceDate || '';
+          ev().svcSnooze = ''; // 重新设置保养提醒即取消此前延期
           Store.save(); App.refresh();
         });
       },
@@ -13543,6 +13811,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           if (!v) return;
           fuel().serviceMile = num(v.serviceMile);
           fuel().serviceDate = v.serviceDate || '';
+          fuel().svcSnooze = ''; // 重新设置保养提醒即取消此前延期
           Store.save(); App.refresh();
         });
       },
@@ -13925,8 +14194,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           right: (D().diary.password
               ? '<button class="btn ghost sm tap" data-act="lock">🔓 已加密</button>'
               : '<button class="btn ghost sm tap" data-act="lock">🔒 加密</button>') +
-            '<button class="btn ghost sm tap" data-act="hist">📜 历史日记</button>' +
-            Cats.btn('diaryTags', '日记标签'),
+            '<button class="btn ghost sm tap" data-act="hist">📜 历史日记</button>',
           body: this.controls() + '<div id="dbody" style="margin-top:14px">' +
             (st.view === 'calendar' ? this.calBar() : this.listBody()) + '</div>'
         }) +
@@ -15193,7 +15461,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     { n: '枕套床品', d: 14 }, { n: '空气滤芯', d: 180 }, { n: '净水滤芯', d: 180 }
   ];
 
-  var stockWarnOnly = false; // 只看预警
   var stockShowArchived = false; // 是否显示已归档物品
   var stockExpanded = null;  // 当前展开的物品 id
   var measureExpanded = null; // 当前展开的体重记录 id
@@ -15242,7 +15509,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var expanded = consumExpanded === x.id;
     var caret = '<span class="consum-caret">' + (expanded ? '▾' : '▸') + '</span>';
     var renewBtn = x.archived ? '' : '<button class="link-btn tap" data-act="crenew" data-id="' + x.id + '">🔄 换新</button>';
-    var archiveBtn = '<button class="link-btn tap" data-act="carchive" data-id="' + x.id + '">' + (x.archived ? '🔙 重新启用' : '📥 归档') + '</button>';
+    var archiveBtn = '<button class="link-btn tap" data-act="carchive" data-id="' + x.id + '">' + (x.archived ? '↩ 重新启用' : '📦 归档') + '</button>';
     var archivedBadge = x.archived ? '<span class="badge grey">已归档</span> ' : '';
     /* 主行：始终渲染（折叠/展开都可见），参考 task-row / stock-ov-row 模式 */
     var row = '<div class="consum-row' + (x.archived ? ' archived' : '') + (expanded ? ' open' : '') + '" data-act="citem" data-id="' + x.id + '"><div class="consum-main">' +
@@ -15256,7 +15523,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var meta = '<div class="item-meta"><span>开封 ' + U.fmtDate(open) + '</span><span class="badge grey">周期 ' + cycle + ' 天</span></div>' +
       '<div style="margin:8px 0">' + UI.bar(pct) + '</div>';
 
-    // 历史更换记录：只显示最近 5 次，超 5 次在底部「查看全部 N 条」（与库存使用/购买记录一致）
+    // 历史更换记录：只显示最近 5 次；标题行右侧常显「查看全部 N 条」（预览行无编辑入口，须可进全量列表修改）
     var hist = (x.history || []).slice().reverse(); // history 按时间追加，最近的在末尾
     var HIST_PREVIEW = 5;
     var histHtml = '';
@@ -15264,15 +15531,16 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       var histPreview = hist.slice(0, HIST_PREVIEW).map(function (h) {
         return '<div class="buy-row"><span>' + U.fmtDate(h) + '</span><span>已换新</span><span></span></div>';
       }).join('');
-      var histMoreBtn = hist.length > HIST_PREVIEW ? '<button class="link-btn tap" data-act="chist" data-id="' + x.id + '">查看全部 ' + hist.length + ' 条 ▾</button>' : '';
-      histHtml = '<div class="rec-sec"><strong class="rec-h">历史更换记录（' + hist.length + '）</strong>' +
+      var histMoreBtn = '<button class="link-btn tap" data-act="chist" data-id="' + x.id + '">查看全部 ' + hist.length + ' 条 ▾</button>';
+      histHtml = '<div class="rec-sec"><div class="rec-h-row"><strong class="rec-h">历史更换记录</strong>' + histMoreBtn + '</div>' +
         '<div class="buy-list">' + histPreview + '</div>' +
-        (histMoreBtn ? '<div class="rec-more">' + histMoreBtn + '</div>' : '') +
         '</div>';
     } else {
       histHtml = '<div class="rec-sec"><strong class="rec-h">历史更换记录</strong><div class="small muted">暂无更换记录</div></div>';
     }
-    var detail = '<div class="consum-ops">' + UI.ops(x.id, 'cedit', 'cdel', renewBtn + archiveBtn) + '</div>' +
+    var detail = '<div class="consum-ops">' + renewBtn + archiveBtn +
+      '<button class="link-btn tap" data-act="cedit" data-id="' + x.id + '">✏️ 编辑</button>' +
+      '<button class="link-btn del tap" data-act="cdel" data-id="' + x.id + '">🗑 删除</button></div>' +
       meta + histHtml +
       (x.note ? '<div class="note-text">📝 ' + esc(x.note) + '</div>' : '');
     return row + '<div class="consum-detail">' + detail + '</div>';
@@ -15324,16 +15592,15 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         return 0;
       });
       if (selCats.length) list = list.filter(function (x) { return selCats.indexOf(x.cat || '') >= 0; });
-      if (stockWarnOnly && !stockShowArchived) list = list.filter(isLow);
       var chips = Cats.filterBar('itemCats', { label: '分类', margin: '10px' });
       var toolbar = '<div class="stock-toolbar">' +
         ListPager.sortPills('items:stock', stockSortKeys) +
-        (stockShowArchived ? '' : '<button class="chip tap' + (stockWarnOnly ? ' on danger' : '') + '" data-act="kwarn">' + (stockWarnOnly ? '🔔 仅看预警' : '🔔 只看预警') + '</button>') +
         '</div>';
       var pageRows = all.length ? ListPager.slice('items:stock', list) : [];
       var pagerHtml = list.length ? ListPager.pager('items:stock', list.length) : '';
       var body = chips + toolbar + (all.length ? '<div class="stock-ov">' + pageRows.map(function (x) {
         x = normItem(x);
+        var _bsAll = normBatches(x);
         var pct = pctOf(x);
         var low = isLow(x);
         var unit = x.uname && x.uname !== '%' ? x.uname : '%';
@@ -15341,15 +15608,20 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         var expanded = stockExpanded === x.id;
         var expBadge = stockExpBadge(x);
         var row = '<div class="stock-ov-row' + (low ? ' low' : '') + (x.archived ? ' archived' : '') + (expanded ? ' open' : '') + '" data-act="kexp" data-id="' + x.id + '">' +
-          '<span class="stock-ov-name">' + esc(x.name) + (x.cat ? ' ' + UI.badge(esc(x.cat), UI.catColor(x.cat)) : '') + (x.archived ? ' <span class="badge grey">已归档</span>' : '') + (low && !x.archived ? ' <span class="badge danger">预警</span>' : '') + expBadge + '</span>' +
-          '<span class="stock-ov-bar">' + UI.bar(pct, low) + '</span>' +
-          '<span class="stock-ov-num">' + num(x.left) + ' / ' + num(x.qty) + un + '</span>' +
-          '<span class="stock-ov-caret">' + (expanded ? '▾' : '▸') + '</span>' +
+          '<div class="stock-ov-main">' +
+            '<span class="stock-ov-name"><span class="stock-ov-title">' + esc(x.name) + '</span></span>' +
+            '<span class="stock-ov-meta">' + (x.cat ? UI.badge(esc(x.cat), UI.catColor(x.cat)) : '') + (x.archived ? '<span class="badge grey">已归档</span>' : '') + (low && !x.archived ? '<span class="badge danger">预警</span>' : '') + expBadge + '</span>' +
+            '<span class="stock-ov-bar">' + UI.bar(pct, low) + '</span>' +
+          '</div>' +
+          '<div class="stock-ov-side">' +
+            '<span class="stock-ov-num">' + num(x.left) + ' / ' + num(x.qty) + un + '</span>' +
+            '<span class="stock-ov-caret">' + (expanded ? '▾' : '▸') + '</span>' +
+          '</div>' +
           '</div>';
         if (expanded) {
           var logs = (x.logs || []);
           var buys = (x.buys || []);
-          var bs = normBatches(x);
+          var bs = _bsAll;
           // 批次明细：购入日倒序 + 同日按补充先后倒序（新补充/新开批靠前），标记「最新未用完批次」🆕
           var batchSorted = sortBatches(bs);
           // 「最新」= 按 d 倒序下第一条 left>0 的批次
@@ -15370,45 +15642,44 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
             return '<div class="buy-row">' +
               '<span>' + (b.d ? U.fmtDate(b.d) : '购入') + '</span>' +
               '<span>剩 ' + num(bl) + ' / ' + num(b.qty) + un + (b.exp ? ' · 至 ' + U.fmtDate(b.exp) : ' · 无保质期') + '</span>' +
-              '<span>' + st + '</span></div>';
+              '<span>' + st + '</span>' +
+              '</div>';
           }).join('') + '</div>' : '<div class="small muted">暂无批次</div>';
-          // 使用记录：只显示最近 5 条（按日期倒序），超 5 则在底部「查看全部 N 条」
+          // 使用记录：只显示最近 5 条（按日期倒序）；「查看全部」只要有记录就显示（预览行已无编辑入口，须可进全量列表修改）
           var REC_PREVIEW = 5;
-          var logsDesc = logs.slice().sort(function (a, b) { return (b.d || '') < (a.d || '') ? -1 : 1; });
-          var logsPreview = logsDesc.slice(0, REC_PREVIEW);
-          var useHtml = logs.length ? '<div class="buy-list">' + logsPreview.map(function (l) {
-            return '<div class="buy-row"><span>' + U.fmtDate(l.d) + '</span><span>用 ' + num(l.v) + un + '</span><span></span></div>';
+          var logsIdx = logs.map(function (l, i) { return { l: l, i: i }; }).sort(function (a, b) { return (b.l.d || '') < (a.l.d || '') ? -1 : 1; });
+          var logsPreview = logsIdx.slice(0, REC_PREVIEW);
+          var useHtml = logs.length ? '<div class="buy-list">' + logsPreview.map(function (o) {
+            return '<div class="buy-row"><span>' + U.fmtDate(o.l.d) + '</span><span>用 ' + num(o.l.v) + un + '</span></div>';
           }).join('') + '</div>' : '<div class="small muted">暂无使用记录</div>';
-          var useMoreBtn = logs.length > REC_PREVIEW ? '<button class="link-btn tap" data-act="krecords" data-id="' + x.id + '" data-kind="use">查看全部 ' + logs.length + ' 条 ▾</button>' : '';
-          // 购买补充记录：同样只显示最近 5
-          var buysDesc = buys.slice().sort(function (a, b) { return (b.d || '') < (a.d || '') ? -1 : 1; });
-          var buysPreview = buysDesc.slice(0, REC_PREVIEW);
-          var buyHtml = buys.length ? '<div class="buy-list">' + buysPreview.map(function (b) {
-            return '<div class="buy-row"><span>' + U.fmtDate(b.d) + '</span><span>补充 ' + num(b.qty) + un + '</span><span>' + (num(b.price) ? U.money(b.price) : '—') + '</span></div>';
+          var useMoreBtn = logs.length ? '<button class="link-btn tap" data-act="krecords" data-id="' + x.id + '" data-kind="use">查看全部 ' + logs.length + ' 条 ▾</button>' : '';
+          // 购买补充记录：同样只显示最近 5；「查看全部」只要有记录就显示
+          var buysIdx = buys.map(function (b, i) { return { b: b, i: i }; }).sort(function (a, b) { return (b.b.d || '') < (a.b.d || '') ? -1 : 1; });
+          var buysPreview = buysIdx.slice(0, REC_PREVIEW);
+          var buyHtml = buys.length ? '<div class="buy-list">' + buysPreview.map(function (o) {
+            return '<div class="buy-row"><span>' + U.fmtDate(o.b.d) + '</span><span>补充 ' + num(o.b.qty) + un + '</span><span>' + (num(o.b.price) ? U.money(o.b.price) : '—') + '</span></div>';
           }).join('') + '</div>' : '<div class="small muted">暂无购买补充记录</div>';
-          var buyMoreBtn = buys.length > REC_PREVIEW ? '<button class="link-btn tap" data-act="krecords" data-id="' + x.id + '" data-kind="buy">查看全部 ' + buys.length + ' 条 ▾</button>' : '';
-          // 批次"查看全部"按钮：批次 > 5 时弹出全量 sheet
-          var batchMoreBtn = batchSorted.length > BATCH_PREVIEW ? '<button class="link-btn tap" data-act="krecords" data-id="' + x.id + '" data-kind="batch">查看全部 ' + batchSorted.length + ' 批 ▾</button>' : '';
+          var buyMoreBtn = buys.length ? '<button class="link-btn tap" data-act="krecords" data-id="' + x.id + '" data-kind="buy">查看全部 ' + buys.length + ' 条 ▾</button>' : '';
+          // 批次「查看全部」：只要有批次就显示（点开可修改批次）
+          var batchMoreBtn = batchSorted.length ? '<button class="link-btn tap" data-act="krecords" data-id="' + x.id + '" data-kind="batch">查看全部 ' + batchSorted.length + ' 批 ▾</button>' : '';
           row += '<div class="stock-ov-detail">' +
+            (x.note ? '<div class="stock-note"><div class="note-text">📝 ' + esc(x.note) + '</div></div>' : '') +
             '<div class="stock-ov-ops">' +
               '<button class="link-btn tap" data-act="kuse" data-id="' + x.id + '">📉 记使用</button>' +
-              '<button class="link-btn tap" data-act="ksup" data-id="' + x.id + '">📥 补充</button>' +
+              '<button class="link-btn tap" data-act="ksup" data-id="' + x.id + '">➕ 补充</button>' +
               '<button class="link-btn tap" data-act="kedit" data-id="' + x.id + '">✏️ 编辑</button>' +
-              '<button class="link-btn tap" data-act="knote" data-id="' + x.id + '">📝 备注</button>' +
-              '<button class="link-btn tap" data-act="karchive" data-id="' + x.id + '">' + (x.archived ? '🔙 重新启用' : '📥 归档') + '</button>' +
               '<button class="link-btn del tap" data-act="kdel" data-id="' + x.id + '">🗑 删除</button>' +
             '</div>' +
-            (x.note ? '<div class="stock-note" id="stockNote-' + x.id + '" style="display:none"><div class="note-text">📝 ' + esc(x.note) + '</div></div>' : '') +
-            '<div class="rec-sec"><strong class="rec-h">📦 批次明细（' + batchSorted.length + '）</strong>' + batchHtml + (batchMoreBtn ? '<div class="rec-more">' + batchMoreBtn + '</div>' : '') + '</div>' +
-            '<div class="rec-sec"><strong class="rec-h">使用记录（' + logs.length + '）</strong>' + useHtml + (useMoreBtn ? '<div class="rec-more">' + useMoreBtn + '</div>' : '') + '</div>' +
-            '<div class="rec-sec"><strong class="rec-h">购买补充记录（' + buys.length + '）</strong>' + buyHtml + (buyMoreBtn ? '<div class="rec-more">' + buyMoreBtn + '</div>' : '') + '</div>' +
+            '<div class="rec-sec"><div class="rec-h-row"><strong class="rec-h">📦 批次明细（' + batchSorted.length + '）</strong>' + (batchMoreBtn ? batchMoreBtn : '') + '</div>' + batchHtml + '</div>' +
+            '<div class="rec-sec"><div class="rec-h-row"><strong class="rec-h">使用记录（' + logs.length + '）</strong>' + (useMoreBtn ? useMoreBtn : '') + '</div>' + useHtml + '</div>' +
+            '<div class="rec-sec"><div class="rec-h-row"><strong class="rec-h">购买补充记录（' + buys.length + '）</strong>' + (buyMoreBtn ? buyMoreBtn : '') + '</div>' + buyHtml + '</div>' +
             '</div>';
         }
         return row;
       }).join('') + '</div>' + pagerHtml : UI.empty('还没有物品，先添加一件吧', '📦'));
       var sub = stockShowArchived
         ? ('已归档 ' + archived.length + ' 件')
-        : ('共 ' + active.length + ' 件 · 预警 ' + lowCount + ' 件' + (stockWarnOnly ? ' · 仅预警' : ''));
+        : ('共 ' + active.length + ' 件 · 预警 ' + lowCount + ' 件');
       var archiveBtn = stockShowArchived
         ? '<button class="btn ghost sm tap" data-act="ktoggleArchived">返回物品列表</button>'
         : (archived.length
@@ -15417,7 +15688,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       var headHtml = '<div class="card-head">' +
         '<h3 class="stock-card-title">' + (stockShowArchived ? '📦 已归档物品' : '📋 库存总览') + '</h3>' +
         '<div class="row stock-card-tools">' + archiveBtn +
-          Cats.btn('itemCats', '物品分类') +
           '<button class="btn ghost sm tap" data-act="hist">📜 历史记录</button>' +
         '</div>' +
         '<div class="card-sub">' + esc(sub) + '</div>' +
@@ -15467,7 +15737,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         App.refresh();
         if (was) App.returnToScroll('exp:' + id);
       },
-      kwarn: function () { stockWarnOnly = !stockWarnOnly; stockExpanded = null; ListPager.resetPg('items:stock'); App.refresh(); },
       bitem: function (t) {
         var id = t.dataset.id, was = buyExpanded === id;
         if (!was) App.rememberScroll('exp:' + id);
@@ -15483,19 +15752,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         if (was) App.returnToScroll('exp:' + id);
       },
       ktoggleArchived: function () { stockShowArchived = !stockShowArchived; stockExpanded = null; ListPager.resetPg('items:stock'); App.refresh(); },
-      karchive: function (t) {
-        var x = D().items.stock.filter(function (a) { return a.id === t.dataset.id; })[0];
-        if (!x) return;
-        x = normItem(x);
-        if (!x.archived) {
-          UI.confirm('归档「' + x.name + '」？', '归档后将不再出现在库存列表和首页预警中，可随时在「显示已归档」里重新启用。', '归档', false).then(function (ok) {
-            if (!ok) return;
-            x.archived = true; Store.save(); App.refresh(); U.toast('「' + x.name + '」已归档');
-          });
-        } else {
-          x.archived = false; Store.save(); App.refresh(); U.toast('「' + x.name + '」已重新启用');
-        }
-      },
       krecords: function (t) {
         var x = D().items.stock.filter(function (a) { return a.id === t.dataset.id; })[0];
         if (!x) return;
@@ -15540,6 +15796,17 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           else stockRecDel(x, k, rid, el, draw);
         });
       },
+      /* 展开详情内记录行（使用/购买/批次）的「编辑/删除」小按钮：转发到与记录表一致的逻辑 */
+      krecRow: function (t, e) {
+        var btn = e && e.target ? e.target.closest('[data-rec]') : null;
+        if (!btn) return;
+        var x = D().items.stock.filter(function (a) { return a.id === t.dataset.pid; })[0];
+        if (!x) return;
+        x = normItem(x);
+        var op = btn.getAttribute('data-rec'), rid = btn.getAttribute('data-rid'), k = btn.getAttribute('data-kind');
+        if (op === 'edit') stockRecEdit(x, k, rid, null, null);
+        else stockRecDel(x, k, rid, null, null);
+      },
       kmore: function (t) {
         var x = D().items.stock.filter(function (a) { return a.id === t.dataset.id; })[0];
         if (!x) return;
@@ -15575,8 +15842,21 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         if (!x) return;
         x = normItem(x);
         var mv = { name: x.name, cat: x.cat || '', uname: x.uname, unit: x.unit || '', warnPct: x.warnPct, warnQty: x.warnQty, note: x.note || '' };
-        UI.form({ title: '编辑物品 · ' + x.name, values: mv, fields: stockMetaFields() }).then(function (v) {
-          if (!v) return;
+        UI.form({
+          title: '编辑物品 · ' + x.name, values: mv, fields: stockMetaFields(),
+          danger: true, dangerText: x.archived ? '↩ 启用' : '📦 归档',
+          onDanger: function () {
+            if (!x.archived) {
+              UI.confirm('归档「' + x.name + '」？', '归档后将不再出现在库存列表和首页预警中，可随时在「显示已归档」里重新启用。', '归档', false).then(function (ok) {
+                if (!ok) return;
+                x.archived = true; Store.save(); App.refresh(); U.toast('「' + x.name + '」已归档');
+              });
+            } else {
+              x.archived = false; Store.save(); App.refresh(); U.toast('「' + x.name + '」已重新启用');
+            }
+          }
+        }).then(function (v) {
+          if (!v || v === '__danger__') return;
           Object.keys(v).forEach(function (k) { x[k] = v[k]; });
           Store.save(); App.refresh();
         });
@@ -15612,10 +15892,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         var x = D().items.stock.filter(function (a) { return a.id === t.dataset.id; })[0];
         if (!x) return;
         UI.del(x.name, function () { D().items.stock = D().items.stock.filter(function (a) { return a.id !== x.id; }); Store.save(); App.refresh(); });
-      },
-      knote: function (t) {
-        var el = document.getElementById('stockNote-' + t.dataset.id);
-        if (el) { var on = el.style.display !== 'none'; el.style.display = on ? 'none' : ''; }
       },
       ksup: function (t) {
         var x = D().items.stock.filter(function (a) { return a.id === t.dataset.id; })[0];
@@ -15781,16 +16057,23 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
               return '<div class="item clickable" data-toggle><div class="item-main">' +
                 '<div class="item-title">' + esc(x.name) + (x.cat ? ' ' + UI.badge(esc(x.cat), UI.catColor(x.cat)) : '') + (isLow(x) ? ' <span class="badge danger">预警</span>' : '') + '</div>' +
                 '</div>' +
-                '<div class="item-detail">' + detail + UI.ops(x.id, null, 'hdel') + '</div></div>';
+                '<div class="item-detail">' + detail + UI.ops(x.id, 'hedit', 'hdel') + '</div></div>';
             } else {
               var cdetail = '<div class="item-meta"><span>开封 ' + U.fmtDate(x.open) + '</span><span class="badge grey">周期 ' + num(x.cycle) + ' 天</span></div>';
               return '<div class="item clickable" data-toggle><div class="item-main">' +
                 '<div class="item-title">🔔 ' + esc(x.name) + '</div>' +
                 '</div>' +
-                '<div class="item-detail">' + cdetail + UI.ops(x.id, null, 'hdel') + '</div></div>';
+                '<div class="item-detail">' + cdetail + UI.ops(x.id, 'hedit', 'hdel') + '</div></div>';
             }
           },
           acts: {
+            hedit: function (t) {
+              var id = t.dataset.id;
+              var st = D().items.stock.filter(function (a) { return a.id === id; })[0];
+              if (st) { items.acts.kedit({ dataset: { id: id } }); return; }
+              var co = D().items.consum.filter(function (a) { return a.id === id; })[0];
+              if (co) { items.acts.cedit({ dataset: { id: id } }); return; }
+            },
             hdel: function (t, e, redraw) {
               var id = t.dataset.id;
               var st = D().items.stock.filter(function (a) { return a.id === id; })[0];
@@ -15892,13 +16175,13 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     if (d <= 30) return { cls: 'warn', t: '临期 ' + d + ' 天' };
     return { cls: 'grey', t: '至 ' + U.fmtDate(exp) };
   }
-  // 整件物品最近到期状态的徽标 HTML（含无批次/无保质期则不输出）
+  // 整件物品有效期徽标：取最早未用完批次的保质期，始终显示「⏳ 至 日期」；颜色按紧急度（过期/≤7天 danger、≤30天 warn、其余 grey）
   function stockExpBadge(x) {
     var e = earliestExp(x);
     if (!e) return '';
     var L = expLabel(e);
-    if (!L) return '';
-    return ' <span class="badge ' + L.cls + '" title="最早到期批次 ' + U.fmtDate(e) + '">⏳ ' + L.t + '</span>';
+    var cls = L ? L.cls : 'grey';
+    return ' <span class="badge ' + cls + '" title="最早未用完批次 ' + U.fmtDate(e) + '">⏳ 至 ' + U.fmtDate(e) + '</span>';
   }
   // 记一次使用：按保质期升序逐批扣减（FIFO），返回本次各批扣减明细[{b,used}]
   function fifoUse(x, amount) {
@@ -15959,10 +16242,10 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     }
     var t = stockTotals(x); x.qty = t.qty; x.left = t.left;
   }
-  // 记录行操作按钮 HTML（✎ 编辑 / 🗑 删除），data-kind 区分 use/buy/batch/hist
+  // 记录行操作按钮 HTML（✏️ 编辑 / 🗑 删除，emoji+文字，与打卡列表统一风格），data-kind 区分 use/buy/batch/hist
   function recActsHtml(kind, rid) {
-    return '<button class="ic-btn tap" data-rec="edit" data-rid="' + rid + '" data-kind="' + kind + '" title="编辑">✎</button>' +
-      '<button class="ic-btn del tap" data-rec="del" data-rid="' + rid + '" data-kind="' + kind + '" title="删除">🗑</button>';
+    return '<button class="link-btn tap" data-rec="edit" data-rid="' + rid + '" data-kind="' + kind + '">✏️ 编辑</button>' +
+      '<button class="link-btn del tap" data-rec="del" data-rid="' + rid + '" data-kind="' + kind + '">🗑 删除</button>';
   }
   function refreshRows(el, draw) { var c = el.querySelector('.rec-rows'); if (c) c.innerHTML = draw(); }
   // 编辑单条记录：使用(d,v) / 购买(d,qty,price) / 批次(d,qty,left,exp,price)
@@ -16072,7 +16355,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       { k: 'unit', label: '规格（选填）', ph: '如 500ml / 3 支', full: true },
       { k: 'warnPct', label: '库存预警 · 低于该百分比时提醒', type: 'number', min: 0, max: 100, hint: '如填 20 → 低于 20% 触发首页预警；留空不按百分比' },
       { k: 'warnQty', label: '库存预警 · 低于该数量时提醒', type: 'number', min: 0, hint: '如填 3 → 低于 3 个触发首页预警；留空不按数量' },
-      { k: 'note', label: '备注', type: 'textarea', rows: 2, hint: '补充数量与保质期请用「📥 补充」/ 消耗请用「📉 记使用」' }
+      { k: 'note', label: '备注', type: 'textarea', rows: 2, hint: '补充数量与保质期请用「➕ 补充」/ 消耗请用「📉 记使用」' }
     ];
   }
   function buyFields() {
@@ -17391,7 +17674,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         ['最近一个', soon.length ? soon[0].name : '—'], ['还有', soon.length ? U.dayDiff(U.today(), nextDate(soon[0])) + ' 天' : '—']]) +
         UI.card({
           title: '纪念日列表',
-          right: Cats.btn('annivTypes', '分类管理', '🗂 分类管理'),
           body: Cats.filterBar('annivTypes', { label: '类型' }) +
             '<input class="input" id="anSearch" placeholder="🔍 搜索名称 / 类型 / 备注" value="' + esc(anQ) + '" style="margin-bottom:14px">' +
             '<div id="anList">' + this.items(anQ) + '</div>'
@@ -17471,7 +17753,6 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         ['净往来', money(back - out), true, U.moneyFull(back - out)]]) +
         UI.card({
           title: '往来明细',
-          right: Cats.btn('socialCats', '分类管理', '🗂 分类管理'),
           body: Cats.filterBar('socialCats', { label: '人际' }) +
             '<input class="input" id="soSearch" placeholder="🔍 搜索对方姓名 / 关系 / 事由 / 备注" value="' + esc(soQ) + '" style="margin-bottom:14px">' +
             '<div id="soList">' + this.items(soQ) + '</div>'
@@ -17581,7 +17862,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           body: UI.bar(pct) + '<div class="small muted" style="margin-top:8px">已完成 ' + pct.toFixed(0) + '%，继续加油</div>'
         }) +
         UI.card({
-          title: '愿望列表', right: Cats.btn('wishCats', '愿望分类'),
+          title: '愿望列表',
           body: '<div class="row" style="flex-direction:column;align-items:flex-start;gap:12px">' +
             UI.pills([{ k: 'all', t: '全部' }, { k: 'todo', t: '待实现' }, { k: 'done', t: '已实现' }], f, 'f') +
             Cats.filterBar('wishCats', cat, { label: '分类' }) +
@@ -17660,7 +17941,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     if (!expanded) return row;
     return row + '<div class="wish-detail">' +
       '<div class="wish-ops">' +
-        '<button class="link-btn tap" data-act="toggle" data-id="' + x.id + '">' + (x.done ? '↺ 标为未实现' : '✓ 标记已实现') + '</button>' +
+        '<button class="link-btn tap" data-act="toggle" data-id="' + x.id + '">' + (x.done ? '↩ 标为未实现' : '🎉 标记已实现') + '</button>' +
         '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
         '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>' +
       '</div>' +
@@ -18107,7 +18388,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         /* 学习 */
         (d.exam.records || []).forEach(function (x) {
           push(x.date, '学习', '📚', x.content || x.contentCat || '学习记录',
-            [x.subject, x.contentCat, x.mins ? num(x.mins) + ' 分钟' : ''].filter(Boolean).join(' · '));
+            [x.subject, x.contentCat, U.timeRangeText(x.start, x.end, x.mins)].filter(Boolean).join(' · '));
         });
         (d.exam.plans || []).forEach(function (x) {
           push(x.due, '学习', '🗓', x.text || '学习计划', [x.subject, x.done ? '已完成' : '计划'].filter(Boolean).join(' · '));
@@ -18542,7 +18823,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     });
   }
   function isHabitDone(id) { var L = D().checkin.log[U.today()]; return !!(L && L[id]); }
-  /* 车辆保养提醒：读取电车/油车配置，按里程或日期判断是否需关注（与车辆模块 serviceStatus 口径一致） */
+  /* 车辆保养提醒：读取电车/油车配置，按里程或日期判断是否需关注（口径与车辆模块设置一致） */
   function vehicleSvcItems(t) {
     var out = [];
     var v = D().vehicles || {};
@@ -18551,22 +18832,27 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       (list || []).forEach(function (c) { var n = num(c[key]); if (n > m) m = n; });
       return m;
     }
-    function svc(cfg, list, key, label) {
+    function svc(cfg, list, key, label, vehKey) {
       if (!cfg) return;
-      var lines = [], warn = false;
+      /* 已延期（延期提醒中）：到期前不再提醒 */
+      if (cfg.svcSnooze && t < cfg.svcSnooze) return;
+      var lines = [], warn = false, over = false;
       if (num(cfg.serviceMile) > 0) {
         var left = num(cfg.serviceMile) - curOdo(list, key);
-        if (left <= 0) { warn = true; lines.push('里程已到，建议保养'); }
+        if (left <= 0) { warn = true; over = true; lines.push('里程已到，建议保养'); }
       }
       if (cfg.serviceDate) {
         var nd = U.dayDiff(t, cfg.serviceDate);
-        if (nd < 0) { warn = true; lines.push('保养已逾期 ' + (-nd) + ' 天'); }
+        if (nd < 0) { warn = true; over = true; lines.push('保养已逾期 ' + (-nd) + ' 天'); }
         else if (nd <= 30) { warn = true; lines.push('距保养日期 ' + nd + ' 天'); }
       }
-      if (warn) out.push({ kind: '保养', name: label + '：' + lines.join('；'), go: 'vehicle', warn: true });
+      if (warn) out.push({
+        kind: '保养', name: label + '：' + lines.join('；'), go: 'vehicle', warn: true,
+        def: over ? { src: 'vehicle', key: vehKey } : null
+      });
     }
-    svc(v.ev, (v.ev && v.ev.charges) || [], 'odoBefore', '电车');
-    svc(v.fuel, (v.fuel && v.fuel.refuels) || [], 'odo', '油车');
+    svc(v.ev, (v.ev && v.ev.charges) || [], 'odoBefore', '电车', 'ev');
+    svc(v.fuel, (v.fuel && v.fuel.refuels) || [], 'odo', '油车', 'fuel');
     return out;
   }
   function jiweiItems(t) {
@@ -18579,26 +18865,26 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       (x.todos || []).forEach(function (td) {
         if (td.done || !td.due) return;
         var n = left(td.due);
-        if (n < 0) out.push({ kind: '办案待办逾期', name: nm + '｜' + td.t, go: 'jiwei', tk: 'main', tv: 'case', warn: true });
+        if (n < 0) out.push({ kind: '办案待办逾期', name: nm + '｜' + td.t, go: 'jiwei', tk: 'main', tv: 'case', warn: true, def: { src: 'caseTodo', id: x.id, tid: td.id } });
         else if (n <= 3) out.push({ kind: '办案待办到期', name: nm + '｜' + td.t, go: 'jiwei', tk: 'main', tv: 'case', warn: n === 0 });
       });
     });
     (jw.submits || []).forEach(function (x) {
       if (x.status !== '待报送' || !x.dueDate) return;
       var n = left(x.dueDate);
-      if (n < 0) out.push({ kind: '报送逾期', name: x.title, go: 'jiwei', tk: 'main', tv: 'submit', warn: true });
+      if (n < 0) out.push({ kind: '报送逾期', name: x.title, go: 'jiwei', tk: 'main', tv: 'submit', warn: true, def: { src: 'submit', id: x.id } });
       else if (n <= 3) out.push({ kind: '今日待报', name: x.title, go: 'jiwei', tk: 'main', tv: 'submit', warn: n === 0 });
     });
     (jw.inspects || []).forEach(function (x) {
       /* 与纪检监察模块「今天要处理」卡片保持一致：检查按计划日期、整改含临期 */
       if (x.status !== '已完成' && x.planDate) {
         var n = left(x.planDate);
-        if (n < 0) out.push({ kind: '检查逾期', name: x.title, go: 'jiwei', tk: 'main', tv: 'inspect', warn: true });
+        if (n < 0) out.push({ kind: '检查逾期', name: x.title, go: 'jiwei', tk: 'main', tv: 'inspect', warn: true, def: { src: 'inspect', id: x.id } });
         else if (n <= 2) out.push({ kind: '检查临近', name: x.title, go: 'jiwei', tk: 'main', tv: 'inspect', warn: n === 0 });
       }
       if ((x.rectifyStatus === '待整改' || x.rectifyStatus === '整改中') && x.rectifyDue) {
         var m = left(x.rectifyDue);
-        if (m < 0) out.push({ kind: '整改逾期', name: x.title + '（整改）', go: 'jiwei', tk: 'main', tv: 'inspect', warn: true });
+        if (m < 0) out.push({ kind: '整改逾期', name: x.title + '（整改）', go: 'jiwei', tk: 'main', tv: 'inspect', warn: true, def: { src: 'rectify', id: x.id } });
         else if (m <= 3) out.push({ kind: '整改临期', name: x.title + '（整改）', go: 'jiwei', tk: 'main', tv: 'inspect', warn: m === 0 });
       }
     });
@@ -18773,7 +19059,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       (D().tasks || []).forEach(function (x) {
         if (x.caseTodoId) return; // 案件待办已同步到纪检监察，避免在首页重复出现
         if (x.status !== 'done' && x.due && U.dayDiff(t, x.due) < 0)
-          items.push({ kind: '逾期', name: x.title, go: 'tasks', warn: true });
+          items.push({ kind: '逾期', name: x.title, go: 'tasks', warn: true, def: { src: 'task', id: x.id } });
       });
       (D().tasks || []).filter(function (x) {
         if (x.caseTodoId) return false;
@@ -18786,16 +19072,46 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       });
       vehicleSvcItems(t).forEach(function (it) { items.push(it); });
       jiweiItems(t).forEach(function (it) { items.push(it); });
+      /* 今日日程：日程提醒模块中当天（含重复生成的）日程 */
+      (D().schedules || []).forEach(function (s) {
+        if (!s || s.date !== t) return;
+        var tm = s.allDay ? '全天' : (s.time || '');
+        items.push({ kind: '日程', name: (s.title || '日程') + (tm ? ' ' + tm : ''), go: 'schedule' });
+      });
+      /* 今日纪念日：当天到期的纪念日（支持农历/每年重复） */
+      (D().anniv || []).forEach(function (x) {
+        if (!x || U.dayDiff(t, nextDate(x)) !== 0) return;
+        items.push({ kind: '纪念日', name: x.name + ' 🎉', go: 'anniv' });
+      });
+      /* 耗材更换：已到期标红提醒；近 3 天内到期温和提示（口径与物品管理「更换提醒」一致） */
+      ((D().items && D().items.consum) || []).forEach(function (x) {
+        if (!x || x.archived) return;
+        var d = consumDue(x);
+        var nm = x.name || '耗材';
+        if (d <= 0) items.push({ kind: '耗材到期', name: nm + '（已到期 ' + Math.abs(d) + ' 天）', go: 'items', tk: 'main', tv: 'consum', warn: true });
+        else if (d <= 3) items.push({ kind: '耗材临期', name: nm + '（剩 ' + d + ' 天）', go: 'items', tk: 'main', tv: 'consum' });
+      });
       if (!items.length)
         return UI.card({ title: '✅ 今天要处理', body: '<div class="small muted">太棒了，没有逾期或待办事项 🎉</div>' });
       var html = items.map(function (it) {
         var jump = it.tv
           ? ' data-act="goStat" data-go="' + it.go + '" data-tk="' + (it.tk || 'main') + '" data-tv="' + it.tv + '"'
           : ' data-act="goModule" data-id="' + it.go + '"';
-        return '<div class="tf-row' + (it.warn ? ' warn' : '') + '">' +
+        /* 逾期条目支持「延期」：可延 1/2/3 天或一周 */
+        var deferBtn = '';
+        if (it.def) {
+          var d = it.def;
+          deferBtn = '<button class="tf-go tf-delay btn sm tap" data-act="todayDefer"' +
+            ' data-src="' + d.src + '" data-id="' + d.id + '"' +
+            (d.tid ? ' data-tid="' + d.tid + '"' : '') +
+            (d.key ? ' data-key="' + d.key + '"' : '') +
+            ' data-title="' + esc(it.name) + '">⏳ 延期</button>';
+        }
+        /* 点击整行跳转（替代原「去处理」胶囊）：跳转属性挂在行上；行内有延期按钮时 closest 自按钮命中，不会误触发跳转 */
+        return '<div class="tf-row' + (it.warn ? ' warn' : '') + '"' + jump + '>' +
           '<span class="tf-tag' + (it.warn ? ' warn' : '') + '">' + esc(it.kind) + '</span>' +
           '<span class="tf-name">' + esc(it.name) + '</span>' +
-          '<button class="tf-go btn sm tap"' + jump + '>去处理</button>' +
+          (deferBtn ? '<span class="tf-ops">' + deferBtn + '</span>' : '') +
           '</div>';
       }).join('');
       return UI.card({ title: '🔥 今天要处理', body: html });
@@ -19133,6 +19449,60 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     acts: {
       // qfab 已取消：保留 placeholder，便于未来需要时恢复
       toggleMore: function () { home._showAll = !home._showAll; App.refresh(); },
+      // 「今天要处理」逾期条目 → 延期：可选择 1/2/3 天或一周（自今天起算）
+      todayDefer: function (t) {
+        var src = t.dataset.src, id = t.dataset.id, tid = t.dataset.tid, key = t.dataset.key;
+        var name = t.dataset.title || '';
+        var OPTS = [
+          { n: 1, t: '延期 1 天' },
+          { n: 2, t: '延期 2 天' },
+          { n: 3, t: '延期 3 天' },
+          { n: 7, t: '延期一周（7 天）' }
+        ];
+        var body = '<p class="small muted" style="margin:0 0 12px;line-height:1.8">「' + esc(name) + '」' +
+          (src === 'vehicle' ? '保养提醒已触发，' : '已逾期，') + '选择延期时长（自今天起算）：</p>' +
+          '<div class="list">' + OPTS.map(function (o) {
+            return '<button type="button" class="opt-row tap defer-opt" data-n="' + o.n + '">' +
+              '<span class="oi">⏳</span>' +
+              '<span class="grow"><strong>' + o.t + '</strong></span>' +
+              '<span class="badge grey">' + U.fmtDate(U.shiftDay(U.today(), o.n)) + ' 到期</span>' +
+              '</button>';
+          }).join('') + '</div>';
+        var el = UI.sheet('延期处理', body, '<button class="btn ghost tap" data-x>取消</button>');
+        el.addEventListener('click', function (e) {
+          var b = e.target.closest('.defer-opt'); if (!b) return;
+          e.stopPropagation();
+          el.remove(); UI.unlock();
+          var days = num(b.dataset.n);
+          var nd = U.shiftDay(U.today(), days);
+          var ok = false;
+          if (src === 'task') {
+            (D().tasks || []).forEach(function (x) { if (x.id === id && x.status !== 'done') { x.due = nd; ok = true; } });
+          } else if (src === 'caseTodo') {
+            var jw = D().jiwei || {};
+            (jw.cases || []).forEach(function (x) {
+              if (x.id !== id) return;
+              (x.todos || []).forEach(function (td) { if (td.id === tid && !td.done) { td.due = nd; ok = true; } });
+              /* 同步由该案件待办生成的关联任务待办 */
+              (D().tasks || []).forEach(function (tx) { if (tx.caseTodoId === tid && tx.status !== 'done') tx.due = nd; });
+            });
+          } else if (src === 'submit') {
+            (((D().jiwei || {}).submits) || []).forEach(function (x) { if (x.id === id) { x.dueDate = nd; ok = true; } });
+          } else if (src === 'inspect') {
+            (((D().jiwei || {}).inspects) || []).forEach(function (x) { if (x.id === id) { x.planDate = nd; ok = true; } });
+          } else if (src === 'rectify') {
+            (((D().jiwei || {}).inspects) || []).forEach(function (x) { if (x.id === id) { x.rectifyDue = nd; ok = true; } });
+          } else if (src === 'vehicle') {
+            var vv = D().vehicles || {};
+            var cfg = key === 'fuel' ? vv.fuel : vv.ev;
+            if (cfg) { cfg.svcSnooze = nd; ok = true; }
+          }
+          if (!ok) { U.toast('该事项不存在或已处理'); return; }
+          Store.save(); App.refresh();
+          U.toast('⏳ ' + (src === 'vehicle' ? '保养提醒已延期至 ' + U.fmtDate(nd)
+            : '已延期「' + name + '」至 ' + U.fmtDate(nd) + ' 到期'));
+        });
+      },
       // 快捷记录：根据 data-mod / data-mact 跳到对应模块的对应动作
       qnew: function (t) {
         var m = App.modules[t.dataset.mod];
@@ -19609,20 +19979,23 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     }
     return h + '</div>';
   }
-  /* 单条已办记录卡片（主列表 / 查看全部弹窗共用） */
+  /* 单条已办记录卡片（主列表 / 查看全部弹窗共用）
+     布局：办理内容作标题 → 元信息行（时间段一句话 + 分类胶囊 + 来源），
+     时间段用 U.timeRangeText 合并显示「开始 – 结束（时长）」，一眼看出哪个时间段做了什么 */
   function renderJWLogCard(x, l) {
     var isClose = l.t === '办结';
+    var timeTxt = U.timeRangeText(l.start, l.end);
     return '<div class="jw-tl-item' + (isClose ? ' close' : '') + '">' +
       '<div class="jw-tl-rail"><span class="jw-tl-dot' + (isClose ? ' close' : '') + '"></span><span class="jw-tl-line"></span></div>' +
       '<div class="jw-tl-body">' +
         '<div class="jw-tl-card tap" data-act="cLogEdit" data-id="' + x.id + '" data-lid="' + l.id + '">' +
+          '<div class="jw-tl-text' + (isClose ? ' jw-log-t-close' : '') + '">' + esc(l.t) + '</div>' +
           '<div class="jw-tl-head">' +
-            ((l.start || l.end) ? '<span class="badge grey">🕐 ' + esc(l.start || '?') + (l.end && l.end !== l.start ? '–' + esc(l.end) : '') + '</span>' : '') +
+            (timeTxt ? '<span class="badge grey">🕐 ' + esc(timeTxt) + '</span>' : '') +
             (l.cat ? '<span class="badge cream">' + esc(l.cat) + '</span>' : '') +
             (l.src === 'worklog' ? '<span class="badge info jw-tl-src">工作留痕</span>' : '') +
             (l.src === 'task' ? '<span class="badge info jw-tl-src">任务待办</span>' : '') +
           '</div>' +
-          '<div class="jw-tl-text' + (isClose ? ' jw-log-t-close' : '') + '">' + esc(l.t) + '</div>' +
         '</div>' +
       '</div></div>';
   }
@@ -19940,6 +20313,14 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       }
       var html = items.slice(0, 10).map(function (it) {
         var btn;
+        /* 逾期条目支持「延期」：可延 1/2/3 天或一周（影响期届满不可延期） */
+        var isOv = it.n < 0 && /逾期$/.test(it.kind);
+        var dsrc = it.tid ? 'caseTodo' : (it.send ? 'submit' : (it.kind === '整改逾期' ? 'rectify' : 'inspect'));
+        var deferBtn = isOv
+          ? '<button class="tf-go tf-delay btn sm tap" data-act="jwDefer" data-src="' + dsrc + '"' +
+            ' data-id="' + it.id + '"' + (it.tid ? ' data-tid="' + it.tid + '"' : '') +
+            ' data-title="' + esc(it.name) + '">⏳ 延期</button>'
+          : '';
         if (it.tid) {
           btn = '<button class="tf-go btn sm tap" data-act="cTodoDoneToday" data-id="' + it.id + '" data-tid="' + it.tid + '">完成待办</button>';
         } else if (it.send) {
@@ -19949,7 +20330,8 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         }
         return '<div class="tf-row' + (it.warn ? ' warn' : '') + '">' +
           '<span class="tf-tag' + (it.warn ? ' warn' : '') + '">' + esc(it.kind) + '</span>' +
-          '<span class="tf-name">' + esc(it.name) + '</span>' + btn +
+          '<span class="tf-name">' + esc(it.name) + '</span>' +
+          '<span class="tf-ops">' + deferBtn + btn + '</span>' +
           '</div>';
       }).join('');
       return UI.card({
@@ -20010,7 +20392,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     caseView: function () {
       return UI.card({
         title: '📁 问题线索台账',
-        right: '<div style="display:flex;align-items:center;gap:8px">' + Cats.btn('jwSources', '线索来源', '🗂 来源管理') + TF.btn('jiwei:case', { icon: '🗓' }) + '</div>',
+        right: '<div style="display:flex;align-items:center;gap:8px">' + TF.btn('jiwei:case', { icon: '🗓' }) + '</div>',
         body: Cats.filterBar('jwSources', { label: '来源' }) +
           '<div class="row cat-filter-row" style="gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 8px">' +
             '<span class="small muted">状态</span>' +
@@ -20053,7 +20435,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     inspectView: function () {
       return UI.card({
         title: '🔍 监督检查任务',
-        right: '<div style="display:flex;align-items:center;gap:8px">' + Cats.btn('jwInspectTypes', '检查类型', '🗂 类型管理') + TF.btn('jiwei:inspect', { icon: '🗓' }) + '</div>',
+        right: '<div style="display:flex;align-items:center;gap:8px">' + TF.btn('jiwei:inspect', { icon: '🗓' }) + '</div>',
         body: Cats.filterBar('jwInspectTypes', { label: '类型' }) +
           '<input class="input" id="jwQInspect" placeholder="🔍 搜索事项 / 对象 / 备注" value="' + esc(jwQ.inspect) + '" style="margin-bottom:14px">' +
           '<div id="jwListInspect">' + this.inspectList() + '</div>'
@@ -20085,7 +20467,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     submitView: function () {
       return UI.card({
         title: '📤 材料报送清单',
-        right: '<div style="display:flex;align-items:center;gap:8px">' + Cats.btn('jwSubmitWays', '报送方式', '🗂 方式管理') + TF.btn('jiwei:submit', { icon: '🗓' }) + '</div>',
+        right: '<div style="display:flex;align-items:center;gap:8px">' + TF.btn('jiwei:submit', { icon: '🗓' }) + '</div>',
         body: Cats.filterBar('jwSubmitWays', { label: '方式' }) +
           '<input class="input" id="jwQSubmit" placeholder="🔍 搜索材料 / 报送对象 / 备注" value="' + esc(jwQ.submit) + '" style="margin-bottom:14px">' +
           '<div id="jwListSubmit">' + this.submitList() + '</div>'
@@ -20282,10 +20664,10 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           desc: srcName ? '本条由「' + srcName + '」同步生成：在此编辑会同步回源头，删除会连同源头一起删除' : '',
           values: { d: l.d || U.today(), start: l.start || '', end: l.end || '', cat: l.cat || '', t: l.t || '' },
           fields: [
+            { k: 't', label: '办理内容', type: 'textarea', full: true, rows: 3, req: true },
             { k: 'd', label: '办理日期', type: 'date', req: true, def: U.today() },
             { k: 'start', label: '起止时间', type: 'startendrow' },
-            { k: 'cat', label: '工作分类', type: 'select', options: wCatOpts() },
-            { k: 't', label: '办理内容', type: 'textarea', full: true, rows: 3, req: true }
+            { k: 'cat', label: '工作分类', type: 'select', options: wCatOpts() }
           ],
           onDanger: function () {
             var imp = (window.JWLink && window.JWLink.impactText) ? window.JWLink.impactText('log', l) : [];
@@ -20497,10 +20879,10 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           title: '新增工作内容', okText: '保存',
           values: { d: U.today(), addTodo: false, todoDue: '' },
           fields: [
+            { k: 't', label: '工作内容', type: 'textarea', full: true, rows: 4, req: true },
             { k: 'd', label: '日期', type: 'date', req: true, def: U.today() },
             { k: 'start', label: '起止时间', type: 'startendrow' },
             { k: 'cat', label: '工作分类', type: 'select', options: wCatOpts(), def: '' },
-            { k: 't', label: '工作内容', type: 'textarea', full: true, rows: 4, req: true },
             { k: 'addTodo', label: '同时创建待办', type: 'checkbox', def: false },
             { k: 'todoDue', label: '待办期限', type: 'date', when: { key: 'addTodo', val: 'true' } }
           ]
@@ -20662,6 +21044,50 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       },
       cTodoDone: function (t) { doneTodo(t.dataset.id, t.dataset.tid); },
       cTodoDoneToday: function (t) { doneTodo(t.dataset.id, t.dataset.tid); },
+      // 「今天要处理」逾期条目 → 延期：可选择 1/2/3 天或一周（自今天起算）
+      jwDefer: function (t) {
+        var src = t.dataset.src, id = t.dataset.id, tid = t.dataset.tid;
+        var name = t.dataset.title || '';
+        var OPTS = [
+          { n: 1, t: '延期 1 天' },
+          { n: 2, t: '延期 2 天' },
+          { n: 3, t: '延期 3 天' },
+          { n: 7, t: '延期一周（7 天）' }
+        ];
+        var body = '<p class="small muted" style="margin:0 0 12px;line-height:1.8">「' + esc(name) + '」已逾期，选择延期时长（自今天起算）：</p>' +
+          '<div class="list">' + OPTS.map(function (o) {
+            return '<button type="button" class="opt-row tap defer-opt" data-n="' + o.n + '">' +
+              '<span class="oi">⏳</span>' +
+              '<span class="grow"><strong>' + o.t + '</strong></span>' +
+              '<span class="badge grey">' + U.fmtDate(U.shiftDay(U.today(), o.n)) + ' 到期</span>' +
+              '</button>';
+          }).join('') + '</div>';
+        var el = UI.sheet('延期处理', body, '<button class="btn ghost tap" data-x>取消</button>');
+        el.addEventListener('click', function (e) {
+          var b = e.target.closest('.defer-opt'); if (!b) return;
+          e.stopPropagation();
+          el.remove(); UI.unlock();
+          var nd = U.shiftDay(U.today(), num(b.dataset.n));
+          var ok = false, jd = J();
+          if (src === 'caseTodo') {
+            (jd.cases || []).forEach(function (x) {
+              if (x.id !== id) return;
+              (x.todos || []).forEach(function (td) { if (td.id === tid && !td.done) { td.due = nd; ok = true; } });
+              /* 同步由该案件待办生成的关联任务待办 */
+              (D().tasks || []).forEach(function (tx) { if (tx.caseTodoId === tid && tx.status !== 'done') tx.due = nd; });
+            });
+          } else if (src === 'submit') {
+            (jd.submits || []).forEach(function (x) { if (x.id === id) { x.dueDate = nd; ok = true; } });
+          } else if (src === 'inspect') {
+            (jd.inspects || []).forEach(function (x) { if (x.id === id) { x.planDate = nd; ok = true; } });
+          } else if (src === 'rectify') {
+            (jd.inspects || []).forEach(function (x) { if (x.id === id) { x.rectifyDue = nd; ok = true; } });
+          }
+          if (!ok) { U.toast('该事项不存在或已处理'); return; }
+          Store.save(); App.refresh();
+          U.toast('⏳ 已延期「' + name + '」至 ' + U.fmtDate(nd) + ' 到期');
+        });
+      },
       cTodoDel: function (t) {
         var x = findCase(t.dataset.id); if (!x) return;
         var td = (x.todos || []).filter(function (o) { return o.id === t.dataset.tid; })[0];
