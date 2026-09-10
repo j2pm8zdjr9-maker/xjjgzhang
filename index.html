@@ -5124,6 +5124,37 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
 .charge-meta,.refuel-meta { row-gap:5px !important; }
 </style>
 <style id="exam-filter-spacing">.exam-filter-card > .exam-filter { padding-bottom:12px; }</style>
+<style id="worklog-mobile-readable">
+#view .worklog-timeline .tl-item { gap:7px; padding-bottom:14px; }
+#view .worklog-timeline .tl-rail { flex:0 0 10px; width:10px; padding-top:6px; align-items:center; }
+#view .worklog-timeline .tl-dot { width:7px;height:7px;flex-basis:7px;align-self:center;margin:0; }
+#view .worklog-timeline .tl-line { align-self:center;margin:5px 0 0; }
+#view .worklog-timeline .tl-item:last-child .tl-line { background:transparent; }
+#view .worklog-timeline .wl-time-range { font-size:12px;line-height:1.6;color:var(--brown-2);font-variant-numeric:tabular-nums;margin-bottom:6px;white-space:normal; }
+#view .worklog-timeline .item-main { display:block !important; }
+#view .worklog-timeline .wl-heading { display:flex;flex-wrap:wrap;align-items:baseline;gap:5px 7px;padding-right:12px; }
+#view .worklog-timeline .item-title { flex:0 1 auto;white-space:normal !important;overflow:visible !important;text-overflow:clip !important;overflow-wrap:anywhere;line-height:1.6; }
+#view .worklog-timeline .wl-heading>.badge { flex:none;white-space:nowrap !important; }
+#view .worklog-timeline .wl-classification { display:flex;flex-wrap:wrap;align-items:center;gap:5px 6px;margin-top:7px; }
+#view .worklog-timeline .wl-classification>.badge { flex:0 0 auto; }
+#view .worklog-timeline .wl-case-line { margin-top:7px;padding-top:7px;border-top:1px solid var(--line); }
+#view .worklog-timeline .wl-case-line>.badge { display:block;white-space:normal !important;overflow:visible !important;text-overflow:clip !important;overflow-wrap:anywhere;border-radius:8px;padding:5px 8px;line-height:1.6; }
+</style>
+<style id="cal-day-detail-readable">
+/* 日历「当天详情」弹窗：次要信息胶囊完整显示
+   背景：全局 .item-meta 为了列表紧凑用了 nowrap + overflow:hidden + ellipsis，
+   导致弹窗里「🕐 13:54–14:59」「🧩 案件名」这类长胶囊被压缩截断（显示不全）。
+   详情弹窗是逐条查看的场景，应当看全，故此处单独放开换行，不影响列表页。 */
+.cal-day-sheet .item .item-meta { flex-wrap:wrap !important; overflow:visible !important; row-gap:5px !important; }
+.cal-day-sheet .item .item-meta > * {
+  flex:0 0 auto !important; min-width:0 !important; max-width:100% !important;
+  white-space:normal !important; overflow:visible !important; text-overflow:clip !important;
+  overflow-wrap:anywhere; word-break:break-word;
+}
+.cal-day-sheet .item .item-meta > .badge { white-space:normal !important; overflow:visible !important; text-overflow:clip !important; height:auto !important; }
+/* 标题同理：详情弹窗里不再单行截断 */
+.cal-day-sheet .item .item-title { white-space:normal !important; overflow:visible !important; text-overflow:clip !important; overflow-wrap:anywhere; }
+</style>
 </head>
 <body data-page-node-id="k17xPH9tcBxJoIx0pey0qQ">
 
@@ -9084,6 +9115,9 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       if (cfg && cfg.day) {
         var info = cfg.day(t.dataset.d);
         var sheet = UI.sheet(info.title, info.body, '<button class="btn ghost tap" data-x>关闭</button>');
+        /* 详情弹窗是「看全」场景，与列表追求紧凑不同：标记后由 cal-day-detail CSS
+           放开「单行省略」，让时间 / 时长 / 案件 / 来源等胶囊完整换行显示，不再被压扁截断 */
+        sheet.classList.add('cal-day-sheet');
         sheet.dataset.mod = mod;
         sheet.addEventListener('click', function (e) {
           var tog = e.target.closest('.item.clickable');
@@ -10740,17 +10774,21 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
               .sort(function (a, b) { return (b.start || '').localeCompare(a.start || ''); });
             if (!arr.length) return { title: U.fmtDate(date, true) + ' · 工作留痕', body: UI.empty('这一天没有工作记录', '📝') };
             var body = '<div class="list">' + arr.map(function (x) {
+              /* 标题 = 工作内容，分类降级为胶囊（与列表页 / 历史记录弹窗口径一致）；
+                 分类紧邻来源徽章同排，便于「这条属于哪类 + 是否自动生成」一眼看出 */
               var meta =
+                (x.cat ? '<span class="badge">' + esc(x.cat) + '</span>' : '') +
+                wTaskBadge(x) +
                 (x.start ? '<span class="badge grey">🕐 ' + esc(x.start) + (x.end && x.end !== x.start ? '–' + esc(x.end) : '') + '</span>' : '') +
                 (num(x.mins) ? '<span class="badge grey">⏱ ' + hm(x.mins) + '</span>' : '') +
-                wCaseBadge(x) + wTaskBadge(x);
+                wCaseBadge(x);
               return '<div class="item clickable" data-toggle data-id="' + x.id + '">' +
                 '<div class="item-main">' +
-                '<div class="item-title">' + (x.cat ? esc(x.cat) : '（未分类）') + '</div>' +
+                '<div class="item-title">' + esc(x.content || x.cat || '工作记录') + '</div>' +
                 '<div class="item-meta">' + meta + '</div>' +
                 '<span class="caret">▸</span></div>' +
                 '<div class="item-detail">' +
-                '<div class="item-note">' + esc(x.content || '（无备注）') + '</div>' +
+                (x.note ? '<div class="item-note">📝 ' + esc(x.note) + '</div>' : '<div class="small muted">（无备注）</div>') +
                 '<div class="item-detail-ops">' +
                 '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
                 '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>' +
@@ -10889,21 +10927,21 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       if (!arr.length) return UI.empty('今天还没有工作记录', '📝');
       var dayMin = arr.reduce(function (s, a) { return s + num(a.mins); }, 0);
       var pageRows = ListPager.slice('worklog:list', arr);
-      var html = '<div class="timeline"><div class="tl-day">当天工作内容 · ' + hm(dayMin) + '</div>';
+      var html = '<div class="timeline worklog-timeline"><div class="tl-day">当天工作内容 · ' + hm(dayMin) + '</div>';
       html += pageRows.map(function (x) {
         /* 时间段一句话：16:07 – 16:08（1分），开始/时长/范围一眼可读 */
         var timeTxt = U.timeRangeText(x.start, x.end, x.mins);
-        var meta =
-          (x.cat ? '<span class="badge">' + esc(x.cat) + '</span>' : '') +
-          (timeTxt ? '<span class="badge grey">🕐 ' + esc(timeTxt) + '</span>' : '') +
-          wCaseBadge(x) + wTaskBadge(x);
+        var caseHtml = wCaseBadge(x);
+        var meta = x.cat ? '<span class="badge">' + esc(x.cat) + '</span>' : '';
+        /* 「分类」与「来自任务 / 来自待办」等来源胶囊同排显示：来源徽章从标题行移到分类行 */
+        var classRow = meta + wTaskBadge(x);
         return '<div class="tl-item">' +
-          '<div class="tl-rail"><span class="tl-time">' + (x.start || '·') + '</span><span class="tl-dot"></span><span class="tl-line"></span></div>' +
-          '<div class="tl-body">' +
+          '<div class="tl-rail" aria-hidden="true"><span class="tl-dot"></span><span class="tl-line"></span></div>' +
+          '<div class="tl-body"><div class="wl-time-range">' + esc(timeTxt || '时间未填写') + '</div>' +
           '<div class="item clickable" data-toggle data-id="' + x.id + '">' +
           '<div class="item-main">' +
-          '<div class="item-title">' + esc(x.content || '（无内容）') + '</div>' +
-          '<div class="item-meta">' + meta + '</div>' +
+          '<div class="wl-heading"><div class="item-title">' + esc(x.content || x.cat || '工作记录') + '</div></div>' +
+          (classRow ? '<div class="wl-classification">' + classRow + '</div>' : '') + (caseHtml ? '<div class="wl-case-line">' + caseHtml + '</div>' : '') +
           '<span class="caret">▸</span></div>' +
           '<div class="item-detail">' +
           (x.note ? '<div class="item-note">📝 ' + esc(x.note) + '</div>' : '') +
@@ -20027,15 +20065,13 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         .filter(function(id){ return id !== 'home' && id !== 'checkin' && id !== 'settings' && App.modules[id]; });
       if (App.modules.checkin) ordered.unshift('checkin');
       if (App.modules.settings) ordered.push('settings');
-      var SHOW = 12;
-      var cells = ordered.map(function (id, i) {
+      var cells = ordered.map(function (id) {
         var m = App.modules[id];
-        return '<button class="nav-card tap' + (i >= SHOW ? ' hide-more' : '') + '" data-act="goModule" data-id="' + id + '">' +
+        return '<button class="nav-card tap" data-act="goModule" data-id="' + id + '">' +
           '<span class="nc-ico">' + m.icon + '</span><span class="nc-name">' + esc(m.name) + '</span></button>';
       }).join('');
-      var more = ordered.length > SHOW ?
-        '<button class="nav-more link-btn tap small" data-act="toggleMore">' + (home._showAll ? '收起' : '展开全部 ' + ordered.length + ' 个模块') + '</button>' : '';
-      return UI.card({ title: '🧭 全部模块', body: '<div class="nav-grid' + (home._showAll ? ' show-all' : '') + '" id="navGrid">' + cells + '</div>' + more });
+      return UI.card({ title: '🧭 全部模块', body: '<div class="nav-grid" id="navGrid">' + cells + '</div>' });
+
     },
 
     /* ---------- 今天要处理（置顶，逾期标红 + 一键处理） ---------- */
