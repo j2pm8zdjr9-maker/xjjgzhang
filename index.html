@@ -5085,6 +5085,22 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
 :root:root details.item-fold[open] { background:var(--st-sel); border:1px solid var(--st-bd-sel); border-radius:var(--r); }
 :root:root details.item-fold[open] > .item { background:transparent !important; }
 </style>
+<style id="seamless-expanded-cards">
+/* The list gap, not the detail border, caused the white seam. Use spacing
+   between complete records while leaving each expanded pair touching. */
+:root :is(#view,#modalRoot) :has(> :is(.item,.task-row,.task-tl-item,.wl-hist-row,.measure-row,.media-row,.social-row,.family-row,.cat-rec-row,.wish-row,.stock-ov-row,.buy-item-row,.consum-row,.charge-row,.refuel-row,.cat-cap).open + :is(.fold-detail,.task-detail,.task-tl-detail,.media-detail,.social-detail,.family-detail,.cat-rec-detail,.wish-detail,.measure-detail,.buy-item-detail,.consum-detail,.stock-ov-detail,.charge-detail,.refuel-detail,.cat-detail)) { row-gap:0 !important; }
+:root :is(#view,#modalRoot) :has(> :is(.item,.task-row,.task-tl-item,.wl-hist-row,.measure-row,.media-row,.social-row,.family-row,.cat-rec-row,.wish-row,.stock-ov-row,.buy-item-row,.consum-row,.charge-row,.refuel-row,.cat-cap).open + :is(.fold-detail,.task-detail,.task-tl-detail,.media-detail,.social-detail,.family-detail,.cat-rec-detail,.wish-detail,.measure-detail,.buy-item-detail,.consum-detail,.stock-ov-detail,.charge-detail,.refuel-detail,.cat-detail)) > * { margin-bottom:5px !important; }
+:root :is(#view,#modalRoot) :has(> :is(.item,.task-row,.task-tl-item,.wl-hist-row,.measure-row,.media-row,.social-row,.family-row,.cat-rec-row,.wish-row,.stock-ov-row,.buy-item-row,.consum-row,.charge-row,.refuel-row,.cat-cap).open + :is(.fold-detail,.task-detail,.task-tl-detail,.media-detail,.social-detail,.family-detail,.cat-rec-detail,.wish-detail,.measure-detail,.buy-item-detail,.consum-detail,.stock-ov-detail,.charge-detail,.refuel-detail,.cat-detail)) > :last-child { margin-bottom:0 !important; }
+:root :is(#view,#modalRoot) :has(> :is(.item,.task-row,.task-tl-item,.wl-hist-row,.measure-row,.media-row,.social-row,.family-row,.cat-rec-row,.wish-row,.stock-ov-row,.buy-item-row,.consum-row,.charge-row,.refuel-row,.cat-cap).open + :is(.fold-detail,.task-detail,.task-tl-detail,.media-detail,.social-detail,.family-detail,.cat-rec-detail,.wish-detail,.measure-detail,.buy-item-detail,.consum-detail,.stock-ov-detail,.charge-detail,.refuel-detail,.cat-detail)) > :is(.item,.task-row,.task-tl-item,.wl-hist-row,.measure-row,.media-row,.social-row,.family-row,.cat-rec-row,.wish-row,.stock-ov-row,.buy-item-row,.consum-row,.charge-row,.refuel-row,.cat-cap).open:has(+ :is(.fold-detail,.task-detail,.task-tl-detail,.media-detail,.social-detail,.family-detail,.cat-rec-detail,.wish-detail,.measure-detail,.buy-item-detail,.consum-detail,.stock-ov-detail,.charge-detail,.refuel-detail,.cat-detail)) { margin-bottom:0 !important; }
+:root:root :is(.item,.task-row,.task-tl-item,.wl-hist-row,.measure-row,.media-row,.social-row,.family-row,.cat-rec-row,.wish-row,.stock-ov-row,.buy-item-row,.consum-row,.charge-row,.refuel-row,.cat-cap).open:has(+ :is(.fold-detail,.task-detail,.task-tl-detail,.media-detail,.social-detail,.family-detail,.cat-rec-detail,.wish-detail,.measure-detail,.buy-item-detail,.consum-detail,.stock-ov-detail,.charge-detail,.refuel-detail,.cat-detail)) {
+ margin-bottom:0 !important; border-bottom-width:0 !important; box-shadow:none !important;
+ border-top-left-radius:var(--r) !important; border-top-right-radius:var(--r) !important;
+}
+:root:root :is(.item,.task-row,.task-tl-item,.wl-hist-row,.measure-row,.media-row,.social-row,.family-row,.cat-rec-row,.wish-row,.stock-ov-row,.buy-item-row,.consum-row,.charge-row,.refuel-row,.cat-cap).open + :is(.fold-detail,.task-detail,.task-tl-detail,.media-detail,.social-detail,.family-detail,.cat-rec-detail,.wish-detail,.measure-detail,.buy-item-detail,.consum-detail,.stock-ov-detail,.charge-detail,.refuel-detail,.cat-detail) {
+ margin-top:0 !important; border-top-width:0 !important; box-shadow:none !important;
+ border-bottom-left-radius:var(--r) !important; border-bottom-right-radius:var(--r) !important;
+}
+</style>
 </head>
 <body data-page-node-id="k17xPH9tcBxJoIx0pey0qQ">
 
