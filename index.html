@@ -5101,6 +5101,29 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
  border-bottom-left-radius:var(--r) !important; border-bottom-right-radius:var(--r) !important;
 }
 </style>
+<style id="record-metadata-pills">
+/* Informational record metadata is separate from selectable filter controls. */
+:root { --meta-neutral:color-mix(in srgb,var(--card) 88%,var(--brown)); }
+:is(#view,#modalRoot) :is(.item-meta,.task-row-meta,.task-tl-meta,.media-row-meta,.social-row-meta,.family-row-meta,.wish-row-meta,.buy-item-meta,.consum-meta,.charge-meta,.refuel-meta) > span:not(.item-chev):not(.note-text):not(.note-inline):not(.item-note):not(.muted) {
+ display:inline-flex;align-items:center;gap:3px;max-width:100%;padding:2px 7px;border:1px solid var(--line-2);border-radius:999px;font-size:11px;line-height:1.5;vertical-align:middle;box-sizing:border-box;
+}
+:is(#view,#modalRoot) :is(.item-meta,.task-row-meta,.task-tl-meta,.media-row-meta,.social-row-meta,.family-row-meta,.wish-row-meta,.buy-item-meta,.consum-meta,.charge-meta,.refuel-meta) > span:not(.item-chev):not(.note-text):not(.note-inline):not(.item-note):not(.muted):not(.badge) { background:var(--meta-neutral);color:var(--brown-2); }
+:is(#view,#modalRoot) .badge { border:1px solid var(--line-2) !important; }
+:is(#view,#modalRoot) .badge:not(.warn):not(.danger):not(.grey):not(.info):not(.cream):not(.purple):not(.fresh):not(.green):not(.exam-cat-badge) {
+ background:color-mix(in srgb,var(--card) 84%,var(--olive)) !important; color:var(--brown) !important;
+}
+:is(#view,#modalRoot) .badge.meta-location { --meta-role:#4e9f98; }
+:is(#view,#modalRoot) .badge.meta-energy { --meta-role:#749b59; }
+:is(#view,#modalRoot) .badge.meta-distance { --meta-role:var(--olive); }
+:is(#view,#modalRoot) .badge.meta-money { --meta-role:#bf9855; }
+:is(#view,#modalRoot) .badge:is(.meta-location,.meta-energy,.meta-distance,.meta-money):not(.warn):not(.danger):not(.grey):not(.info):not(.cream):not(.purple):not(.fresh):not(.green):not(.exam-cat-badge) {
+ background:color-mix(in srgb,var(--card) 72%,var(--meta-role)) !important;
+ color:var(--brown) !important;border-color:color-mix(in srgb,var(--card) 35%,var(--meta-role)) !important;font-weight:550;
+}
+:is(#view,#modalRoot) .badge.green { background:color-mix(in srgb,var(--card) 75%,#4e9f78) !important;color:var(--brown) !important;border-color:#4e9f78 !important; }
+.charge-meta,.refuel-meta { row-gap:5px !important; }
+</style>
+<style id="exam-filter-spacing">.exam-filter-card > .exam-filter { padding-bottom:12px; }</style>
 </head>
 <body data-page-node-id="k17xPH9tcBxJoIx0pey0qQ">
 
@@ -13895,7 +13918,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
   }
   function evPlaceSet() { var s = App.tab('vehicle', 'evPlaces', ''); return s ? String(s).split(',') : []; }
   function placeMatch(c) { return placeMatchSet(c, evPlaceSet()); }
-  function placeBadge(c) { return c.place ? UI.badge(esc(c.place), UI.catColor(c.place)) : ''; }
+  function placeBadge(c) { return c.place ? '<span class="badge meta-location">' + esc(c.place) + '</span>' : ''; }
   /* 充电地点多选筛选条（可任选一类或两类）
      setArr: 当前选中的地点数组；当不传入时读取主列表的状态（App.tab） */
   function evPlaceFilterBar(setArr) {
@@ -13947,10 +13970,10 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       '<div class="charge-main">' +
         '<div class="row between"><span class="item-title">' + U.fmtDate(c.date) + '</span>' +
         '<span class="row" style="gap:6px;align-items:center;flex-shrink:0">' +
-        (dv.free ? '<span class="badge green">免费</span>' : (pending ? '<span class="badge warn">待抄表</span>' : '<span class="badge">' + U.money(dv.fee) + '</span>')) + '</span></div>' +
+        (dv.free ? '<span class="badge green">免费</span>' : (pending ? '<span class="badge warn">待抄表</span>' : '<span class="badge meta-money">' + U.money(dv.fee) + '</span>')) + '</span></div>' +
         '<span class="charge-meta">' + placeBadge(c) + '<span class="badge grey">' + num(c.fromPct) + '% → ' + num(c.toPct) + '%</span>' +
-        '<span>充入 ' + dv.charged.toFixed(2) + ' 度</span>' +
-        (km != null ? '<span>' + km + ' km</span>' : '') + '</span>' +
+        '<span class="badge meta-energy">充入 ' + dv.charged.toFixed(2) + ' 度</span>' +
+        (km != null ? '<span class="badge meta-distance">行驶 ' + km + ' km</span>' : '') + '</span>' +
       '</div>' + caret + '</div>';
     if (!open) return row;
     var detailInner;
@@ -14030,10 +14053,10 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       '<div class="refuel-main">' +
         '<div class="row between"><span class="item-title">' + U.fmtDate(c.date) + '</span>' +
         '<span class="row" style="gap:6px;align-items:center;flex-shrink:0">' +
-        '<span class="badge">' + U.money(num(c.cost)) + '</span></span></div>' +
+        '<span class="badge meta-money">' + U.money(num(c.cost)) + '</span></span></div>' +
         '<span class="refuel-meta"><span class="badge grey">' + num(c.liters).toFixed(2) + ' 升</span>' +
-        '<span>' + U.money(num(c.price)) + ' /升</span>' +
-        (km != null ? '<span>' + km + ' km</span>' : '') + '</span>' +
+        '<span class="badge meta-money">' + U.money(num(c.price)) + ' /升</span>' +
+        (km != null ? '<span class="badge meta-distance">行驶 ' + km + ' km</span>' : '') + '</span>' +
       '</div>' + caret + '</div>';
     if (!open) return row;
     return row + '<div class="refuel-detail">' +
@@ -14256,8 +14279,8 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         (d.estCap > 0 ? '<span class="badge ' + sohHealthClass(h) + '">推算健康 ' + h.toFixed(0) + '%</span>' : '<span class="badge grey">推算中</span>') + '</span></div>' +
         '<span class="charge-meta">' +
           '<span class="badge grey">' + num(r.fromPct) + '% → ' + num(r.toPct) + '%</span>' +
-          '<span>里程 ' + num(r.km) + ' km</span>' +
-          '<span>耗电 ' + d.energy.toFixed(1) + ' 度</span>' +
+          '<span class="badge meta-distance">里程 ' + num(r.km) + ' km</span>' +
+          '<span class="badge meta-energy">耗电 ' + d.energy.toFixed(1) + ' 度</span>' +
         '</span>' +
       '</div>' + caret + '</div>';
     if (!open) return row;
