@@ -5063,6 +5063,28 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
 .fin-chart-help{font-size:11px;color:var(--brown-2);margin:8px 0 12px;}.fin-data{border-top:1px solid var(--line);}.fin-data summary{padding:12px 0;font-size:12px;color:var(--brown-2);cursor:pointer;min-height:44px;}.fin-data table{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap;}.fin-data th,.fin-data td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums;}.fin-data th:first-child{text-align:left;}.fin-expand{width:100%;margin-top:10px;}.fin-empty{font-size:13px;text-align:center;color:var(--brown-2);padding:14px;}
 .card:has(.fin-mobile-chart)>.card-head{flex-wrap:wrap;gap:10px;}.card:has(.fin-mobile-chart)>.card-head .pills{flex-wrap:nowrap;gap:5px;}
 </style>
+<style id="charge-expanded-tint">
+.charge-row.open[data-act="evexp"], .charge-row.open[data-act="evexp"]:hover,
+.charge-row.open[data-act="evexp"] + .charge-detail {
+ background:var(--st-sel) !important; border-color:var(--st-bd-sel) !important;
+}
+.charge-row.open[data-act="evexp"] { border-bottom-color:transparent !important; }
+.charge-row.open[data-act="evexp"] + .charge-detail { border-top:0 !important; }
+</style>
+<style id="unified-expanded-surfaces">
+/* Join the separate summary/detail panels with one opaque, theme-aware tint. */
+:root:root :is(.item,.task-row,.task-tl-item,.wl-hist-row,.measure-row,.media-row,.social-row,.family-row,.cat-rec-row,.wish-row,.stock-ov-row,.buy-item-row,.consum-row,.charge-row,.refuel-row,.cat-cap).open, :root:root :is(.item,.task-row,.task-tl-item,.wl-hist-row,.measure-row,.media-row,.social-row,.family-row,.cat-rec-row,.wish-row,.stock-ov-row,.buy-item-row,.consum-row,.charge-row,.refuel-row,.cat-cap).open:hover,
+:root:root :is(.item,.task-row,.task-tl-item,.wl-hist-row,.measure-row,.media-row,.social-row,.family-row,.cat-rec-row,.wish-row,.stock-ov-row,.buy-item-row,.consum-row,.charge-row,.refuel-row,.cat-cap).open + :is(.fold-detail,.task-detail,.task-tl-detail,.media-detail,.social-detail,.family-detail,.cat-rec-detail,.wish-detail,.measure-detail,.buy-item-detail,.consum-detail,.stock-ov-detail,.charge-detail,.refuel-detail,.cat-detail), :root:root :is(.item,.task-row,.task-tl-item,.wl-hist-row,.measure-row,.media-row,.social-row,.family-row,.cat-rec-row,.wish-row,.stock-ov-row,.buy-item-row,.consum-row,.charge-row,.refuel-row,.cat-cap).open > :is(.fold-detail,.task-detail,.task-tl-detail,.media-detail,.social-detail,.family-detail,.cat-rec-detail,.wish-detail,.measure-detail,.buy-item-detail,.consum-detail,.stock-ov-detail,.charge-detail,.refuel-detail,.cat-detail) {
+ background:var(--st-sel) !important;
+ border-color:var(--st-bd-sel) !important;
+}
+:root:root :is(.item,.task-row,.task-tl-item,.wl-hist-row,.measure-row,.media-row,.social-row,.family-row,.cat-rec-row,.wish-row,.stock-ov-row,.buy-item-row,.consum-row,.charge-row,.refuel-row,.cat-cap).open:has(+ :is(.fold-detail,.task-detail,.task-tl-detail,.media-detail,.social-detail,.family-detail,.cat-rec-detail,.wish-detail,.measure-detail,.buy-item-detail,.consum-detail,.stock-ov-detail,.charge-detail,.refuel-detail,.cat-detail)) { border-bottom-color:transparent !important; border-bottom-left-radius:0 !important; border-bottom-right-radius:0 !important; }
+:root:root :is(.item,.task-row,.task-tl-item,.wl-hist-row,.measure-row,.media-row,.social-row,.family-row,.cat-rec-row,.wish-row,.stock-ov-row,.buy-item-row,.consum-row,.charge-row,.refuel-row,.cat-cap).open + :is(.fold-detail,.task-detail,.task-tl-detail,.media-detail,.social-detail,.family-detail,.cat-rec-detail,.wish-detail,.measure-detail,.buy-item-detail,.consum-detail,.stock-ov-detail,.charge-detail,.refuel-detail,.cat-detail) { border-top:0 !important; border-top-left-radius:0 !important; border-top-right-radius:0 !important; }
+:root:root .item.open .item-detail, :root:root .item.open .item-detail-ops { background:transparent !important; }
+/* Native disclosure rows also receive the same expanded surface. */
+:root:root details.item-fold[open] { background:var(--st-sel); border:1px solid var(--st-bd-sel); border-radius:var(--r); }
+:root:root details.item-fold[open] > .item { background:transparent !important; }
+</style>
 </head>
 <body data-page-node-id="k17xPH9tcBxJoIx0pey0qQ">
 
@@ -19959,22 +19981,13 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
 
     mount: function () {},
 
-    /* ---------- 模块快速导航：一览全部模块，点击直达（按最近使用自动排序） ---------- */
+    /* ---------- 模块快速导航：与左侧导航顺序一致，点击直达 ---------- */
     modulesNav: function () {
-      var PRIORITY = ['checkin', 'tasks', 'finance', 'body', 'media', 'worklog', 'jiwei', 'schedule', 'items', 'diary', 'exam', 'vehicles', 'anniv', 'social', 'wish', 'baby', 'family', 'cat', 'settings'];
-      var all = (App.order || []).filter(function (id) { return id !== 'home' && App.modules[id]; });
-      // 按最近使用排序：recent 里越靠前越优先；未在 recent 中的按 PRIORITY 排
-      var recent = Store.data.ui.recent || [];
-      var visited = [], unvisited = [];
-      all.forEach(function (id) { if (recent.indexOf(id) >= 0) visited.push(id); else unvisited.push(id); });
-      // visited 按 recent 顺序排列
-      var byRecent = [];
-      recent.forEach(function (id) { if (visited.indexOf(id) >= 0) byRecent.push(id); });
-      // unvisited 按 PRIORITY 排列
-      var byPri = [], rest = [];
-      PRIORITY.forEach(function (id) { if (unvisited.indexOf(id) >= 0) byPri.push(id); });
-      unvisited.forEach(function (id) { if (byPri.indexOf(id) < 0) rest.push(id); });
-      var ordered = byRecent.concat(byPri).concat(rest);
+      // Read the rendered sidebar's fixed ordering; never reorder by visit history.
+      var ordered = Array.prototype.map.call(document.querySelectorAll('#nav .nav-item'), function(el){ return el.dataset.id; })
+        .filter(function(id){ return id !== 'home' && id !== 'checkin' && id !== 'settings' && App.modules[id]; });
+      if (App.modules.checkin) ordered.unshift('checkin');
+      if (App.modules.settings) ordered.push('settings');
       var SHOW = 12;
       var cells = ordered.map(function (id, i) {
         var m = App.modules[id];
