@@ -392,8 +392,9 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 /* 一键置顶悬浮按钮（位置会被 JS 在 standalone 模式时叠加 safe-area-inset-bottom，见 .top-fab 适配代码） */
 .top-fab{
   position:fixed;
-  right:calc(27px + env(safe-area-inset-right));
-  bottom:10px;
+  /* + 按钮贴底后，回顶按钮移到它左侧同一水平线，避免两按钮重叠 */
+  right:calc(80px + env(safe-area-inset-right));
+  bottom:calc(20px + env(safe-area-inset-bottom));
   width:32px; height:32px; border-radius:50%; border:0;
   background:var(--olive); color:#fff; display:flex; align-items:center; justify-content:center;
   box-shadow:0 2px 8px rgba(62,125,38,.26); z-index:61;
@@ -408,10 +409,11 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 
 .view{
   flex:1; width:100%; max-width:1040px; margin:0 auto;
-  /* 220px 覆盖 FAB 占距底约 200px(bottom:150+高50) + 视觉气口，避免最后内容被悬浮按钮遮挡 */
-  padding:18px 18px calc(180px + env(safe-area-inset-bottom));
-  padding-left:calc(18px + env(safe-area-inset-left));
-  padding-right:calc(18px + env(safe-area-inset-right));
+  /* 底部留白跟随「+」按钮真实位置（--fab-clr 由 JS 写入，按钮贴底时约 36px），
+     不再固定预留 180px 造成每页底部大片空白；左右留白走 --gap-view 随有效宽度切换 */
+  padding:14px var(--gap-view, 16px) var(--fab-clr, 40px);
+  padding-left:calc(var(--gap-view, 16px) + env(safe-area-inset-left));
+  padding-right:calc(var(--gap-view, 16px) + env(safe-area-inset-right));
   display:flex; flex-direction:column; gap:var(--gap);
   animation:fadeUp .3s var(--ease);
 }
@@ -435,7 +437,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 
 .card{
   background:var(--card); border:1px solid var(--line);
-  border-radius:var(--r); padding:16px; box-shadow:var(--shadow);
+  border-radius:var(--r); padding:var(--gap-card, 16px); box-shadow:var(--shadow);
 }
 .card.pad-s{ padding:13px; }
 .card-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; flex-wrap:wrap; }
@@ -554,7 +556,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
    防止财务/记账等核心导航在小屏意外换行。 */
 .qgrid{ display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-bottom:10px; }
 .qcard{ display:flex; flex-direction:column; align-items:center; gap:3px;
-  padding:9px 3px; border:1px solid var(--line); border-radius:12px;
+  padding:var(--qcard-pad-y, 9px) 3px; border:1px solid var(--line); border-radius:12px;
   background:var(--card); cursor:pointer; text-align:center; min-width:0;
   transition:background .15s, border-color .15s, box-shadow .15s; }
 .qcard:active,.qcard:hover{ background:var(--card-hov); }
@@ -836,7 +838,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 
 .item{
   display:flex; align-items:flex-start; gap:10px;
-  padding:8px 12px; border:1px solid var(--line); border-radius:var(--r);
+  padding:8px var(--row-pad-x, 12px); border:1px solid var(--line); border-radius:var(--r);
   background:var(--card); transition:background-color var(--t), border-color var(--t), box-shadow var(--t);
 }
 .item:hover{ border-color:var(--olive-24); background:var(--card-hov); }
@@ -901,6 +903,15 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 }
 .item.hist-row .hist-ops .link-btn,
 .item.hist-row .item-ops .link-btn{ font-size:13.5px; padding:5px 8px; }
+/* 折叠历史的展开操作行：按钮等分整行宽度（不再靠右挤压截断），如打卡历史记录 */
+.item.hist-row .item-detail > .item-ops.hist-ops-even{ flex-wrap:nowrap; gap:8px; justify-content:stretch; }
+.item.hist-row .item-detail > .item-ops.hist-ops-even .link-btn{
+  flex:1 1 0; min-width:0;
+  display:inline-flex; align-items:center; justify-content:center;
+  text-align:center; white-space:nowrap; padding:7px 4px;
+  background:var(--olive-05); border:1px solid var(--line-2); border-radius:999px;
+}
+.item.hist-row .item-detail > .item-ops.hist-ops-even .link-btn:active{ background:var(--olive-10); }
 
 /* 通用展开/折叠：标题+标签在一行；点整行展开看备注与操作。
    已去掉所有 caret 小箭头（不影响点击折叠，点击范围仍为整行） */
@@ -1032,7 +1043,7 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 .ui-switch input:focus-visible ~ .track{ outline:2px solid var(--olive-soft); outline-offset:2px; }
 
 /* 网格统计 */
-.stat-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; }
+.stat-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:var(--stat-gap, 10px); }
 .stat-grid.cols-1{ grid-template-columns:1fr; }
 .stat-grid.cols-2{ grid-template-columns:repeat(2,1fr); }
 .stat-grid.cols-3{ grid-template-columns:repeat(3,1fr); }
@@ -1052,8 +1063,9 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 /* 跨两列的大数值面板：数值完整显示，不缩写 */
 .stat-grid.cols-2 .stat.col-2 .v,
 .stat-grid.cols-2 .stat .v{ white-space:normal; word-break:break-word; text-overflow:clip; }
-.stat.accent{ background:var(--olive-10); border-color:var(--olive-24); }
-.stat.accent .v{ color:var(--olive-darker); }
+/* accent「重点指标」高亮已全局统一中和：历史上 accent 格用橄榄色底+描边+变色数值，
+   与同排其他统计格外观不一（用户反馈像显示错误），现已全部中和为普通格外观。
+   UI.stat 的 accent 参数保留兼容既有调用，不再产生视觉差异。 */
 /* 车辆·充电统计：3×3 网格（同行三列同高，窄列内自动换行，长字段不再溢出/不齐） */
 .ev-stats-cols{ display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,auto); gap:10px; }
 .ev-stats-cols > .stat{ width:100%; justify-content:center; min-height:64px; }
@@ -1280,10 +1292,6 @@ body.top-fixed .main{ padding-top:var(--topbar-h, 62px); }
 /* 筛选区分组布局：每组独占一行，标签定宽对齐 */
 .mf-bar{ display:flex; flex-direction:column; gap:10px; }
 .mf-row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; min-width:0; }
-.mf-lbl{
-  flex:0 0 34px; width:34px; font-size:12px; font-weight:600; color:var(--brown-3);
-  letter-spacing:.08em; user-select:none;
-}
 /* 封面墙网格：自动填充列数，宽屏最多 5 列；手机（≤480px）固定 3 列——配合每页 3/6/9/12/18 的分页选项整行排满不留空位 */
 .media-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(148px, 1fr)); gap:14px; }
 @media (max-width: 480px){
@@ -1694,9 +1702,9 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   .topbar h1{ font-size:15.5px; }
   .home-pill{ margin-right:2px; }   /* 移动端贴近右边缘 */
   .view{
-    padding:13px 14px calc(40px + env(safe-area-inset-bottom));
-    padding-left:calc(14px + env(safe-area-inset-left));
-    padding-right:calc(14px + env(safe-area-inset-right));
+    padding:13px var(--gap-view, 12px) var(--fab-clr, 40px);
+    padding-left:calc(var(--gap-view, 12px) + env(safe-area-inset-left));
+    padding-right:calc(var(--gap-view, 12px) + env(safe-area-inset-right));
   }
   .card{ padding:14px 13px; border-radius:15px; }
   /* 弹窗左右内嵌 iOS PWA 横屏/灵动岛侧安全区，
@@ -2370,10 +2378,10 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 /* 移动端始终显示操作按钮 */
 @media (max-width:768px){
   .sch-item-ops{ opacity:1; flex-direction:row; gap:6px; align-items:center; }
-  /* 移动端 FAB 缩小（46×46 仍≥iOS 44 touch target）+ 略下移，配合 .view padding-bottom 220px 避开；
-     right 叠加 env(safe-area-inset-right) 避免 iOS 横屏/灵动岛遮挡 */
+  /* 移动端 FAB 缩小（46×46 仍≥iOS 44 touch target）；位置与桌面一致贴底，
+     页面底部留白由 --fab-clr 动态跟随，不再靠下移避开固定预留区 */
   .fab, .sch-fab{
-    width:46px; height:46px; font-size:22px; bottom:140px;
+    width:46px; height:46px; font-size:22px; bottom:calc(20px + env(safe-area-inset-bottom));
     right:calc(14px + env(safe-area-inset-right));
   }
 }
@@ -2395,11 +2403,12 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 :root[data-theme="dark"] .sch-note-body{ background:rgba(255,255,255,.05); }
 :root[data-theme="dark"] .sch-item-ops-inline{ border-color:rgba(255,255,255,.08); }
 
-/* FAB 快捷添加按钮 —— 悬浮 fixed 右下角（bottom:150px + 自身 50px ≈ 占距底 200px）；
-   .view 配 padding-bottom:calc(220px + safe-area) 避免遮挡最后内容；
-   移动端（≤768px）缩小到 46px 并下移至 140px（占距底约 186px，仍在 220px 留白内） */
+/* FAB 快捷添加按钮 —— 悬浮 fixed 右下角，默认贴底拇指区（bottom:20px + 安全区）。
+   页面底部留白不再固定预留 180px，而是由 JS 量出按钮真实下边缘写入 --fab-clr 动态跟随
+   （见 syncFabClearance）：按钮贴底时只留约 36px 气口，用户把它拖高时留白自动变大。
+   拖动落点与 --font-scale 的换算在 placeFab / persist 内处理。 */
 .fab, .sch-fab{
-  position:fixed; right:calc(18px + env(safe-area-inset-right)); bottom:150px; z-index:60;
+  position:fixed; right:calc(18px + env(safe-area-inset-right)); bottom:calc(20px + env(safe-area-inset-bottom)); z-index:60;
   width:50px; height:50px; border-radius:50%;
   background:linear-gradient(135deg,#3B82F6,#2563EB);
   color:#fff; border:none; font-size:26px; font-weight:300;
@@ -2664,10 +2673,14 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     :root:not([data-theme="light"]) .tf-row.warn{ border-color:rgba(248,113,113,.6); background:rgba(220,38,38,.22); }
     :root:not([data-theme="light"]) .tf-tag.warn{ color:#fff; background:#E5484D; border-color:#E5484D; }
     :root:not([data-theme="light"]) .tf-row.warn .tf-name{ color:#FECACA; }
+    :root:not([data-theme="light"]) .tf-row.warn .tf-delay{ color:#FECACA; border-color:rgba(254,202,202,.45); background:rgba(255,255,255,.12); }
+    :root:not([data-theme="light"]) .tf-row.warn .tf-delay:hover{ background:rgba(255,255,255,.20); }
   }
   :root[data-theme="dark"] .tf-row.warn{ border-color:rgba(248,113,113,.6); background:rgba(220,38,38,.22); }
   :root[data-theme="dark"] .tf-tag.warn{ color:#fff; background:#E5484D; border-color:#E5484D; }
   :root[data-theme="dark"] .tf-row.warn .tf-name{ color:#FECACA; }
+  :root[data-theme="dark"] .tf-row.warn .tf-delay{ color:#FECACA; border-color:rgba(254,202,202,.45); background:rgba(255,255,255,.12); }
+  :root[data-theme="dark"] .tf-row.warn .tf-delay:hover{ background:rgba(255,255,255,.20); }
 
   /* ========== iOS PWA 手机端专项优化 ========== */
   @media (max-width: 600px) {
@@ -2692,7 +2705,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 
     /* 4. 卡片间距与内边距微调 —— 更紧凑但不拥挤 */
     .card { padding: 14px 13px; margin-bottom: 12px; border-radius: 15px; }
-    .view { padding-bottom: calc(50px + env(safe-area-inset-bottom)); }
+    .view { padding-bottom: var(--fab-clr, 50px); }
 
     /* 5. 列表/表单项最小高度，方便点按 */
     .field, .list-item { min-height: 48px; }
@@ -2967,11 +2980,11 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   /* ============ 全局自适应：按设备自动调整间距（字体由 JS 按设备写入 --font-scale） ============ */
   /* 与上方各模块媒体查询使用不同断点，且位于样式表末尾、源码顺序靠后，互不冲突。 */
   @media (min-width: 1025px){
-    :root{ --gap: 22px; }
+    :root{ --gap: 22px; --gap-view: 28px; }
     .view{
-      padding: 22px 28px calc(180px + env(safe-area-inset-bottom));
-      padding-left: calc(28px + env(safe-area-inset-left));
-      padding-right: calc(28px + env(safe-area-inset-right));
+      padding: 22px var(--gap-view) var(--fab-clr, 40px);
+      padding-left: calc(var(--gap-view) + env(safe-area-inset-left));
+      padding-right: calc(var(--gap-view) + env(safe-area-inset-right));
     }
     .card{ padding: 18px; }
   }
@@ -3064,8 +3077,17 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   :root[data-theme="dark"] .as-moderate{ color:#FCD34D; background:rgba(245,158,11,.22); }
   :root[data-theme="dark"] .as-severe{ color:#FCA5A5; background:rgba(217,52,38,.18); }
   :root[data-theme="dark"] .baby-avatar{ background:rgba(255,255,255,.10); }
+  /* 宝宝档案卡 / 日记未加密提示条 / 打卡日历「断」标记：硬编码浅色 → 深色卡 + 半透明色底 */
+  :root[data-theme="dark"] .baby-profile{ background:linear-gradient(135deg,var(--card),var(--cream)); border-color:var(--line-2); }
+  :root[data-theme="dark"] .di-protect.di-unset{ background:rgba(224,168,92,.14); border-color:rgba(224,168,92,.38); color:#F0C888; }
+  :root[data-theme="dark"] .chk-cal .cal-count.broken-dot{ color:#FFB4A8; background:rgba(217,52,38,.30); }
   /* 纪检监察时间轴待办圆点：白底 → 卡片底 */
   :root[data-theme="dark"] .jw-tl-dot.todo{ background:var(--card); }
+  /* 纪检监察白底基础态（此前仅覆盖 hover/od 状态）+ 宠物详情展开区（--card-bg 未定义走 #fff 兜底） */
+  :root[data-theme="dark"] .jw-tk{ background:var(--card); }
+  :root[data-theme="dark"] .jw-sort-btn{ background:var(--card); }
+  :root[data-theme="dark"] .jw-tl-main{ background:var(--card); }
+  :root[data-theme="dark"] .cat-detail{ background:var(--card); }
   /* —— auto 模式（跟随系统深色）同样处理 —— */
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]) .badge.warn{ background:var(--badge-warn-bg); color:var(--badge-warn-fg); }
@@ -3083,7 +3105,14 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
     :root:not([data-theme="light"]) .as-moderate{ color:#FCD34D; background:rgba(245,158,11,.22); }
     :root:not([data-theme="light"]) .as-severe{ color:#FCA5A5; background:rgba(217,52,38,.18); }
     :root:not([data-theme="light"]) .baby-avatar{ background:rgba(255,255,255,.10); }
+    :root:not([data-theme="light"]) .baby-profile{ background:linear-gradient(135deg,var(--card),var(--cream)); border-color:var(--line-2); }
+    :root:not([data-theme="light"]) .di-protect.di-unset{ background:rgba(224,168,92,.14); border-color:rgba(224,168,92,.38); color:#F0C888; }
+    :root:not([data-theme="light"]) .chk-cal .cal-count.broken-dot{ color:#FFB4A8; background:rgba(217,52,38,.30); }
     :root:not([data-theme="light"]) .jw-tl-dot.todo{ background:var(--card); }
+    :root:not([data-theme="light"]) .jw-tk{ background:var(--card); }
+    :root:not([data-theme="light"]) .jw-sort-btn{ background:var(--card); }
+    :root:not([data-theme="light"]) .jw-tl-main{ background:var(--card); }
+    :root:not([data-theme="light"]) .cat-detail{ background:var(--card); }
   }
 </style>
 <!-- ============ 治愈系 · 单一样式覆盖 v2 ============
@@ -3093,55 +3122,58 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
      删除 id 为 healing-reskin 的 style 块与 id 为 healing-reskin-js 的 script 块即可还原。 -->
 <style id="healing-reskin">
 :root{
-  /* 燕麦灰蓝中性面 + 长春花蓝（periwinkle）主色，单一治愈风格 */
-  --bg:#6E8494 !important;
-  --card:#FFFFFF !important;
-  --cream:#DDE4E9 !important;
-  --cream-soft:#EEF2F5 !important;
-  --brown:#1F2A35 !important;
-  --brown-2:#4A5868 !important;
-  --brown-3:#7E8C9A !important;
-  --brown-4:#B4BCC4 !important;
-  --line:rgba(31,42,53,.10) !important;
-  --line-2:rgba(31,42,53,.18) !important;
-  --olive:#7FA0E4 !important;
-  --olive-soft:#A6BEEA !important;
-  --olive-deep:#5E84CC !important;
-  --olive-darker:#466BB0 !important;
-  --olive-05:rgba(127,160,228,.05) !important;
-  --olive-10:rgba(127,160,228,.10) !important;
-  --olive-16:rgba(127,160,228,.16) !important;
-  --olive-24:rgba(127,160,228,.26) !important;
-  --olive-open:rgba(127,160,228,.18) !important;
-  --on:#FFFFFF !important;
-  --warn:#D4A24A !important;
-  --danger:#D8786A !important;
-  --info:#7FA0E4 !important;
-  --r-s:14px !important;
-  --r:20px !important;
-  --r-l:28px !important;
-  --shadow:0 1px 2px rgba(31,42,53,.06), 0 10px 30px rgba(127,160,228,.12) !important;
-  --shadow-up:0 -10px 34px rgba(31,42,53,.08) !important;
+  /* 燕麦灰蓝中性面 + 长春花蓝（periwinkle）主色，单一治愈风格。
+     注意：不 !important，让 data-theme="dark" / prefers-color-scheme:dark
+     的更高优先级规则能正常覆盖为深色变量。 */
+  --bg:#6E8494;
+  --card:#FFFFFF;
+  --cream:#DDE4E9;
+  --cream-soft:#EEF2F5;
+  --brown:#1F2A35;
+  --brown-2:#4A5868;
+  --brown-3:#7E8C9A;
+  --brown-4:#B4BCC4;
+  --line:rgba(31,42,53,.10);
+  --line-2:rgba(31,42,53,.18);
+  --olive:#7FA0E4;
+  --olive-soft:#A6BEEA;
+  --olive-deep:#5E84CC;
+  --olive-darker:#466BB0;
+  --olive-05:rgba(127,160,228,.05);
+  --olive-10:rgba(127,160,228,.10);
+  --olive-16:rgba(127,160,228,.16);
+  --olive-24:rgba(127,160,228,.26);
+  --olive-open:rgba(127,160,228,.18);
+  --on:#FFFFFF;
+  --warn:#D4A24A;
+  --danger:#D8786A;
+  --info:#7FA0E4;
+  --r-s:14px;
+  --r:20px;
+  --r-l:28px;
+  --shadow:0 1px 2px rgba(31,42,53,.06), 0 10px 30px rgba(127,160,228,.12);
+  --shadow-up:0 -10px 34px rgba(31,42,53,.08);
 }
 
 /* 圆角软化 */
 .card{ border-radius:var(--r-l); }
 .qcard{ border-radius:16px; }
 /* 选中态 qcard：用不透明实底，避免半透明(var(--olive-05))透出波点背景导致发灰蒙糊 */
-.qcard.on{ background:#EAF0FB !important; box-shadow:0 3px 10px var(--olive-24) !important; }
+.qcard.on{ background:var(--olive-10) !important; box-shadow:0 3px 10px var(--olive-24) !important; }
 .qcard.on .qt{ color:var(--olive-deep) !important; }
-.qcard:hover, .qcard:active{ background:#EEF3FC !important; }
+.qcard:hover, .qcard:active{ background:var(--olive-05) !important; }
 /* 统计小卡片：accent 高亮态(半透明淡蓝透出底图发糊→标签看不清)。改不透明实底 + 整体加深标签字色 */
-.stat{ background:#EEF2F5 !important; }
+.stat{ background:var(--cream-soft) !important; }
 .stat .k{ color:var(--brown-2) !important; font-weight:600; }
-.stat.accent{ background:#E9EFFB !important; border-color:var(--olive-24) !important; }
-.stat.accent .v{ color:var(--olive-darker) !important; }
+/* accent 高亮已全局中和（同上方说明）：accent 格与普通格完全同款，全站统计卡外观统一 */
+.stat.accent{ background:var(--cream-soft) !important; border-color:var(--line) !important; }
+.stat.accent .v{ color:inherit !important; font-weight:700; }
 .tf-row{ border-radius:14px; }
 .tabs{ border-radius:999px; padding:4px; }
 .tab{ border-radius:999px; }
 .pill{ border-radius:999px; }
 /* 分类筛选条行首的「🗂 分类：」管理胶囊：深色底白字，与未选（白底灰边）/选中（橄榄色实底）胶囊明显区分，点击打开分类管理 */
-.pill.cat-mng, .pill.sort-lbl{ background:var(--brown-2); border-color:var(--brown-2); color:var(--card); font-size:12px; padding:5px 10px; border-radius:999px; }
+.pill.cat-mng, .pill.sort-lbl{ background:var(--brown-2) !important; border-color:var(--brown-2) !important; color:var(--card) !important; font-size:12px; padding:5px 10px; border-radius:999px; }
 .pill.cat-mng:active{ background:var(--brown); border-color:var(--brown); }
 .pill.sort-lbl{ cursor:default; font-weight:600; }
 .pill.sort-lbl:hover{ background:var(--brown-2); border-color:var(--brown-2); color:var(--card); }
@@ -3154,52 +3186,52 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
    节点字过小，整块配色发花、层级不清。
    优化思路：展开态用不透明柔和浅蓝实底，badge 默认态改实色，信息表格改
    「值主色+label次强调色」的清晰分组，阶段条节点明确状态。 */
-/* 整卡展开态：不透明柔蓝实底，去波点干扰 */
-.item.open{ background:#EFF4FC !important; border-color:#D6E2F5 !important; }
+/* 整卡展开态：用变量替代硬编码浅色，深色模式自动适配 */
+.item.open{ background:var(--olive-10) !important; border-color:var(--olive-24) !important; }
 /* hover 态去透明化：原 .item:hover 用 var(--olive-05)(rgba(127,160,228,.05) 半透明)，
    叠磨砂蓝灰底(#6E8494)+波点透出 → 整条卡片 hover 时发灰发糊(如日程'全部'视图"办公室值班"卡)。
-   改成与 .item.open 同款不透明浅蓝实底 + 深色描边，保留 hover 反馈但不透底糊。 */
-.item:hover{ background:#EEF3FC !important; border-color:#CBD9F0 !important; }
-.item:active{ background:#E4EDF9 !important; }
-/* 高亮行(.item.hl，搜索/选中命中)同理：原 var(--olive-05) 半透明透底发糊，改不透明实底。 */
-.item.hl{ background:#E4EDF9 !important; border-color:var(--olive-soft) !important; }
-/* 「办理中」等默认 badge：不透明浅蓝实底 + 深蓝字（可读清晰，与背景分离） */
-.badge{ background:#E3ECF9 !important; color:#3A6BBF !important; }
-.badge.warn{ background:#FBF0DC !important; color:#9A6B1E !important; }
-.badge.danger{ background:#FBE4E0 !important; color:#A23E32 !important; }
-.badge.grey{ background:#E4E9EE !important; color:#586878 !important; }
-.badge.info{ background:#E2ECF8 !important; color:#2B6CA8 !important; }
-.badge.cream{ background:#F3EAD3 !important; color:#7A5C18 !important; }
-.badge.purple{ background:#ECE7F7 !important; color:#4A3A8A !important; }
+   改成与 .item.open 同款实底 + 描边，保留 hover 反馈但不透底糊。 */
+.item:hover{ background:var(--olive-10) !important; border-color:var(--olive-24) !important; }
+.item:active{ background:var(--olive-16) !important; }
+/* 高亮行(.item.hl，搜索/选中命中)同理：用变量替代硬编码浅色。 */
+.item.hl{ background:var(--olive-10) !important; border-color:var(--olive-soft) !important; }
+/* 「办理中」等默认 badge：用变量替代硬编码浅色，使深色模式下自动适配 */
+.badge{ background:var(--olive-10) !important; color:var(--olive-deep) !important; }
+.badge.warn{ background:var(--badge-warn-bg) !important; color:var(--badge-warn-fg) !important; }
+.badge.danger{ background:var(--badge-danger-bg) !important; color:var(--badge-danger-fg) !important; }
+.badge.grey{ background:var(--badge-grey-bg) !important; color:var(--badge-grey-fg) !important; }
+.badge.info{ background:var(--badge-info-bg) !important; color:var(--badge-info-fg) !important; }
+.badge.cream{ background:var(--badge-cream-bg) !important; color:var(--badge-cream-fg) !important; }
+.badge.purple{ background:var(--badge-purple-bg) !important; color:var(--badge-purple-fg) !important; }
 /* 案件标题：层级主次分明 */
 .jw-case-head{ margin-bottom:4px; }
 .jw-case-title{ font-size:15.5px !important; font-weight:650 !important; line-height:1.35 !important; color:var(--brown) !important; }
 .jw-case-meta{ margin-top:5px !important; gap:6px !important; }
-/* 信息表格：label 用次强调色 + 加大，值用主色，浅实线分隔更清晰 */
-.jw-info-grid{ background:#F3F7FD !important; border:1px solid #DCE6F4 !important; border-radius:12px !important; padding:4px 12px !important; margin-top:10px !important; }
-.jw-info-cell{ padding:8px 0 !important; border-bottom:1px solid #E7EEF7 !important; }
+/* 信息表格：label 用次强调色 + 加大，值用主色，实线分隔更清晰；深色模式用变量自动适配 */
+.jw-info-grid{ background:var(--olive-10) !important; border:1px solid var(--olive-24) !important; border-radius:12px !important; padding:4px 12px !important; margin-top:10px !important; }
+.jw-info-cell{ padding:8px 0 !important; border-bottom:1px solid var(--line-2) !important; }
 .jw-info-k{ flex:0 0 88px !important; font-size:12.5px !important; color:var(--brown-2) !important; font-weight:550 !important; }
 .jw-info-v{ font-size:13px !important; color:var(--brown) !important; font-weight:500 !important; line-height:1.5 !important; }
-/* 阶段流程条：与问题信息/待办/已办统一为同款柔蓝底 #F3F7FD */
-.jw-stage-bar{ background:#F3F7FD !important; border:1px solid #DCE6F4 !important; border-radius:12px !important; padding:12px !important; margin:10px 0 2px !important; }
-/* 办理进度两块（待办/已办）各自独立成框：与阶段条同款柔蓝圆角框，把两块清楚区分开 */
-.jw-section-box{ background:#F3F7FD !important; border:1px solid #DCE6F4 !important; border-radius:12px !important; padding:10px 12px 12px !important; margin:10px 0 2px !important; }
+/* 阶段流程条：与问题信息/待办/已办统一为同款柔蓝底 */
+.jw-stage-bar{ background:var(--olive-10) !important; border:1px solid var(--olive-24) !important; border-radius:12px !important; padding:12px !important; margin:10px 0 2px !important; }
+/* 办理进度两块（待办/已办）各自独立成框：与阶段条同款圆角框，把两块清楚区分开 */
+.jw-section-box{ background:var(--olive-10) !important; border:1px solid var(--olive-24) !important; border-radius:12px !important; padding:10px 12px 12px !important; margin:10px 0 2px !important; }
 .jw-section-box + .jw-section-box{ margin-top:12px !important; }
 .jw-section-box .jw-tl-group{ margin-top:0 !important; padding-left:0 !important; }
-.jw-stage-dot{ background:#fff !important; border:2px solid #CBD8EA !important; color:var(--brown-3) !important; }
+.jw-stage-dot{ background:var(--card) !important; border:2px solid var(--olive-24) !important; color:var(--brown-3) !important; }
 .jw-stage-dot.done, .jw-stage-dot.active{ background:linear-gradient(135deg,var(--olive-soft),var(--olive)) !important; border-color:transparent !important; color:#fff !important; box-shadow:0 3px 8px var(--olive-24); }
 .jw-stage-name{ font-size:11px !important; color:var(--brown-2) !important; font-weight:550 !important; }
 .jw-stage-date{ font-size:10px !important; color:var(--brown-3) !important; }
-.jw-stage-sep{ background:#CBD8EA !important; }
+.jw-stage-sep{ background:var(--olive-24) !important; }
 .jw-stage-sep.done{ background:var(--olive) !important; }
 
-/* 办理进度时间轴：待办/已办卡片底色统一（都坐落在柔蓝整卡 #EFF4FC 上）。
-   原已办卡片 .jw-tl-card 是纯白 #fff，与待办 .jw-tl-main(淡蓝) 和整卡底不协调，
-   统一成同款柔蓝实底 + 淡色描边，层次一致。 */
-.jw-tl-main, .jw-tl-todo .jw-tl-main{ background:#F3F7FD !important; border-color:#DCE6F4 !important; }
-.jw-tl-card{ background:#F3F7FD !important; border:1px solid #DCE6F4 !important; border-radius:8px !important; }
-.jw-tl-card:hover{ border-color:var(--olive) !important; background:#E9F0FA !important; }
-.jw-sort-btn{ background:#fff !important; border-color:#DCE3EC !important; color:var(--brown-2) !important; }
+/* 办理进度时间轴：待办/已办卡片底色统一（都坐落在柔蓝整卡上）。
+   原已办卡片 .jw-tl-card 是纯白，与待办 .jw-tl-main(淡蓝) 和整卡底不协调，
+   统一成同款实底 + 描边，层次一致；深色模式用变量自动适配。 */
+.jw-tl-main, .jw-tl-todo .jw-tl-main{ background:var(--olive-10) !important; border-color:var(--olive-24) !important; }
+.jw-tl-card{ background:var(--olive-10) !important; border:1px solid var(--olive-24) !important; border-radius:8px !important; }
+.jw-tl-card:hover{ border-color:var(--olive) !important; background:var(--olive-16) !important; }
+.jw-sort-btn{ background:var(--card) !important; border-color:var(--line-2) !important; color:var(--brown-2) !important; }
 .jw-sort-btn:hover{ border-color:var(--olive) !important; color:var(--olive-darker) !important; background:#E9EFFA !important; }
 .jw-tl-date-hd{ margin-top:4px; }
 .jw-tl-date-text{ font-size:14px !important; font-weight:650 !important; }
@@ -3521,6 +3553,11 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
   margin-left:0 !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   font-size:13px; padding:4px 10px; border-radius:999px !important;
 }
+/* 材料报送等模块用 .btn.ghost/.btn.danger 而非 .link-btn，同样要等分铺满 */
+.item-ops-row .btn{
+  flex:1 1 0 !important; min-width:0 !important; justify-content:center !important;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
 /* .del 在等分组中不再右移，保持与其他胶囊一致 */
 .fold-ops .link-btn.del, .buy-item-ops .link-btn.del, .consum-ops .link-btn.del,
 .task-ops-row .link-btn.del, .media-ops-row .link-btn.del, .social-ops-row .link-btn.del,
@@ -3757,6 +3794,584 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
   .modal-mask, .modal{ animation-duration:.001s !important; }
   .modal-mask.closing, .modal-mask.closing .modal{ animation-duration:.001s !important; }
 }
+
+/* ==================== 深色模式覆盖：疗愈主题硬编码浅色在 dark 模式下的适配 ====================
+   healing-reskin 内大量硬编码浅色（#EAF0FB、#EEF2F5 等）在深色模式下会刺眼/看不清。
+   这里用更高特异性的选择器覆盖为深色变量或半透明浅色，保持可读。 */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .topbar{
+    background:rgba(18,24,22,.72) !important;
+    border-bottom-color:rgba(255,255,255,.08);
+  }
+  :root:not([data-theme="light"]) .sidebar{
+    background:rgba(26,34,31,.92) !important;
+  }
+  :root:not([data-theme="light"]) .pill,
+  :root:not([data-theme="light"]) .btn.ghost,
+  :root:not([data-theme="light"]) .tf-btn,
+  :root:not([data-theme="light"]) .tf-btn-empty{
+    background:rgba(255,255,255,.08) !important;
+    border-color:rgba(255,255,255,.12) !important;
+    color:var(--brown-2) !important;
+  }
+  :root:not([data-theme="light"]) .pill:hover,
+  :root:not([data-theme="light"]) .btn.ghost:hover,
+  :root:not([data-theme="light"]) .tf-btn:hover{
+    background:rgba(255,255,255,.14) !important;
+    border-color:rgba(255,255,255,.18) !important;
+    color:var(--brown) !important;
+  }
+  /* 深底选中态：原 .pill 透明浅底与 .pill.on 同色，导致「选中」不可见 → 用主色渐变+白字明确高亮。
+     优先级 (.pill.on 0,3,0) 与上方 .pill 暗色规则(0,3,0) 相同，靠后置源码胜出；全站筛选药丸(分类/科目/状态等)统一生效。 */
+  :root:not([data-theme="light"]) .pill.on,
+  :root:not([data-theme="light"]) .pill.on:hover{
+    background:linear-gradient(135deg,var(--olive-soft),var(--olive)) !important;
+    border-color:transparent !important;
+    color:#fff !important;
+    box-shadow:0 5px 14px var(--olive-24) !important;
+  }
+  /* 筛选条标题胶囊（🗂 分类：/排序：）深底：用深灰棕实心胶囊+浅字，避免与未选透明药丸/选中渐变药丸撞色 */
+  :root:not([data-theme="light"]) .pill.cat-mng,
+  :root:not([data-theme="light"]) .pill.sort-lbl{
+    background:var(--brown-4) !important; border-color:var(--brown-4) !important; color:var(--brown) !important;
+  }
+  :root:not([data-theme="light"]) .pill.cat-mng:hover,
+  :root:not([data-theme="light"]) .pill.sort-lbl:hover{
+    background:var(--brown-3) !important; border-color:var(--brown-3) !important; color:var(--brown) !important;
+  }
+  :root:not([data-theme="light"]) .pill.cat-mng:active{
+    background:var(--brown-4) !important; border-color:var(--brown-4) !important;
+  }
+  :root:not([data-theme="light"]) .jw-sort-btn:hover{
+    background:rgba(255,255,255,.12) !important;
+  }
+  :root:not([data-theme="light"]) .sch-cell.today{
+    background:rgba(59,130,246,.22) !important;
+    border-color:#3B82F6 !important;
+    color:#93C5FD !important;
+  }
+  :root:not([data-theme="light"]) .sch-cell.today .sch-num,
+  :root:not([data-theme="light"]) .sch-cell.today .sch-lunar{
+    color:#93C5FD !important;
+  }
+  :root:not([data-theme="light"]) .sch-cell.sel:not(.today){
+    background:rgba(139,92,246,.18) !important;
+    border-color:#8B5CF6 !important;
+    color:#C4B5FD !important;
+  }
+  :root:not([data-theme="light"]) .sch-cell.sel:not(.today) .sch-num,
+  :root:not([data-theme="light"]) .sch-cell.sel:not(.today) .sch-lunar{
+    color:#C4B5FD !important;
+  }
+  :root:not([data-theme="light"]) .tl-line{
+    background:rgba(255,255,255,.16) !important;
+  }
+  :root:not([data-theme="light"]) .badge.exam-cat-badge{
+    background:rgba(127,160,228,.22) !important;
+    color:#A6BEEA !important;
+  }
+  :root:not([data-theme="light"]) .badge.grey.exam-cat-badge{
+    background:rgba(255,255,255,.12) !important;
+    color:var(--brown-2) !important;
+  }
+
+  /* 详情/操作行胶囊按钮：原白底 rgba(255,255,255,.82) 在深底上刺眼且浅字看不清 → 半透明浅卡+浅字 */
+  :root:not([data-theme="light"]) .fold-ops .link-btn,
+  :root:not([data-theme="light"]) .buy-item-ops .link-btn,
+  :root:not([data-theme="light"]) .consum-ops .link-btn,
+  :root:not([data-theme="light"]) .task-ops-row .link-btn,
+  :root:not([data-theme="light"]) .media-ops-row .link-btn,
+  :root:not([data-theme="light"]) .social-ops-row .link-btn,
+  :root:not([data-theme="light"]) .family-ops-row .link-btn,
+  :root:not([data-theme="light"]) .measure-ops-row .link-btn,
+  :root:not([data-theme="light"]) .charge-ops .link-btn,
+  :root:not([data-theme="light"]) .refuel-ops .link-btn,
+  :root:not([data-theme="light"]) .item-detail-ops .link-btn,
+  :root:not([data-theme="light"]) .wl-acts .link-btn,
+  :root:not([data-theme="light"]) .item-ops-row .link-btn,
+  :root:not([data-theme="light"]) .item-detail>.item-ops .link-btn,
+  :root:not([data-theme="light"]) .ev-ops .link-btn,
+  :root:not([data-theme="light"]) .encourage-ops .link-btn,
+  :root:not([data-theme="light"]) .hist-ops .link-btn,
+  :root:not([data-theme="light"]) .stock-ov-ops .link-btn,
+  :root:not([data-theme="light"]) .wish-ops .link-btn,
+  :root:not([data-theme="light"]) .cat-detail-ops .link-btn,
+  :root:not([data-theme="light"]) .cat-rec-ops .link-btn{
+    background:rgba(255,255,255,.08) !important;
+    border-color:rgba(255,255,255,.12) !important;
+    color:var(--brown-2) !important;
+  }
+  /* ghost 次级按钮 active 态：原浅灰 #E0E7F0 在深底上刺眼 → 深色高亮 */
+  :root:not([data-theme="light"]) .btn.ghost:active{ background:rgba(255,255,255,.16) !important; }
+  /* 首页问候卡 / 设置弹窗 / 品牌预览：转深色卡 + 浅字，避免深底上突兀白卡 */
+  :root:not([data-theme="light"]) .heal-greet{
+    background:var(--card) !important; border-color:var(--line-2) !important; color:var(--brown) !important;
+  }
+  :root:not([data-theme="light"]) .heal-greet-l1{ color:var(--brown) !important; }
+  :root:not([data-theme="light"]) .heal-greet-l1 b{ color:var(--olive-darker) !important; }
+  :root:not([data-theme="light"]) .heal-greet-l2{ color:var(--brown-3) !important; }
+  :root:not([data-theme="light"]) .heal-sheet{ background:var(--card) !important; }
+  :root:not([data-theme="light"]) .bs-preview{
+    background:var(--olive-10) !important; border-color:var(--olive-24) !important;
+  }
+}
+:root[data-theme="dark"] .topbar{
+  background:rgba(18,24,22,.72) !important;
+  border-bottom-color:rgba(255,255,255,.08);
+}
+:root[data-theme="dark"] .sidebar{
+  background:rgba(26,34,31,.92) !important;
+}
+:root[data-theme="dark"] .pill,
+:root[data-theme="dark"] .btn.ghost,
+:root[data-theme="dark"] .tf-btn,
+:root[data-theme="dark"] .tf-btn-empty{
+  background:rgba(255,255,255,.08) !important;
+  border-color:rgba(255,255,255,.12) !important;
+  color:var(--brown-2) !important;
+}
+:root[data-theme="dark"] .pill:hover,
+:root[data-theme="dark"] .btn.ghost:hover,
+:root[data-theme="dark"] .tf-btn:hover{
+  background:rgba(255,255,255,.14) !important;
+  border-color:rgba(255,255,255,.18) !important;
+  color:var(--brown) !important;
+}
+/* 深底选中态（强制深色，同上方 .pill 暗色规则优先级，靠后置源码胜出）：主色渐变+白字明确高亮 */
+:root[data-theme="dark"] .pill.on,
+:root[data-theme="dark"] .pill.on:hover{
+  background:linear-gradient(135deg,var(--olive-soft),var(--olive)) !important;
+  border-color:transparent !important;
+  color:#fff !important;
+  box-shadow:0 5px 14px var(--olive-24) !important;
+}
+/* 筛选条标题胶囊（🗂 分类：/排序：）强制深底：深灰棕实心+浅字 */
+:root[data-theme="dark"] .pill.cat-mng,
+:root[data-theme="dark"] .pill.sort-lbl{
+  background:var(--brown-4) !important; border-color:var(--brown-4) !important; color:var(--brown) !important;
+}
+:root[data-theme="dark"] .pill.cat-mng:hover,
+:root[data-theme="dark"] .pill.sort-lbl:hover{
+  background:var(--brown-3) !important; border-color:var(--brown-3) !important; color:var(--brown) !important;
+}
+:root[data-theme="dark"] .pill.cat-mng:active{
+  background:var(--brown-4) !important; border-color:var(--brown-4) !important;
+}
+:root[data-theme="dark"] .jw-sort-btn:hover{
+  background:rgba(255,255,255,.12) !important;
+}
+:root[data-theme="dark"] .sch-cell.today{
+  background:rgba(59,130,246,.22) !important;
+  border-color:#3B82F6 !important;
+  color:#93C5FD !important;
+}
+:root[data-theme="dark"] .sch-cell.today .sch-num,
+:root[data-theme="dark"] .sch-cell.today .sch-lunar{
+  color:#93C5FD !important;
+}
+:root[data-theme="dark"] .sch-cell.sel:not(.today){
+  background:rgba(139,92,246,.18) !important;
+  border-color:#8B5CF6 !important;
+  color:#C4B5FD !important;
+}
+:root[data-theme="dark"] .sch-cell.sel:not(.today) .sch-num,
+:root[data-theme="dark"] .sch-cell.sel:not(.today) .sch-lunar{
+  color:#C4B5FD !important;
+}
+:root[data-theme="dark"] .tl-line{
+  background:rgba(255,255,255,.16) !important;
+}
+:root[data-theme="dark"] .badge.exam-cat-badge{
+  background:rgba(127,160,228,.22) !important;
+  color:#A6BEEA !important;
+}
+:root[data-theme="dark"] .badge.grey.exam-cat-badge{
+  background:rgba(255,255,255,.12) !important;
+  color:var(--brown-2) !important;
+}
+
+/* 详情/操作行胶囊按钮：原白底 rgba(255,255,255,.82) 在深底上刺眼且浅字看不清 → 半透明浅卡+浅字 */
+:root[data-theme="dark"] .fold-ops .link-btn,
+:root[data-theme="dark"] .buy-item-ops .link-btn,
+:root[data-theme="dark"] .consum-ops .link-btn,
+:root[data-theme="dark"] .task-ops-row .link-btn,
+:root[data-theme="dark"] .media-ops-row .link-btn,
+:root[data-theme="dark"] .social-ops-row .link-btn,
+:root[data-theme="dark"] .family-ops-row .link-btn,
+:root[data-theme="dark"] .measure-ops-row .link-btn,
+:root[data-theme="dark"] .charge-ops .link-btn,
+:root[data-theme="dark"] .refuel-ops .link-btn,
+:root[data-theme="dark"] .item-detail-ops .link-btn,
+:root[data-theme="dark"] .wl-acts .link-btn,
+:root[data-theme="dark"] .item-ops-row .link-btn,
+:root[data-theme="dark"] .item-detail>.item-ops .link-btn,
+:root[data-theme="dark"] .ev-ops .link-btn,
+:root[data-theme="dark"] .encourage-ops .link-btn,
+:root[data-theme="dark"] .hist-ops .link-btn,
+:root[data-theme="dark"] .stock-ov-ops .link-btn,
+:root[data-theme="dark"] .wish-ops .link-btn,
+:root[data-theme="dark"] .cat-detail-ops .link-btn,
+:root[data-theme="dark"] .cat-rec-ops .link-btn{
+  background:rgba(255,255,255,.08) !important;
+  border-color:rgba(255,255,255,.12) !important;
+  color:var(--brown-2) !important;
+}
+/* ghost 次级按钮 active 态：原浅灰 #E0E7F0 在深底上刺眼 → 深色高亮 */
+:root[data-theme="dark"] .btn.ghost:active{ background:rgba(255,255,255,.16) !important; }
+/* 首页问候卡 / 设置弹窗 / 品牌预览：转深色卡 + 浅字，避免深底上突兀白卡 */
+:root[data-theme="dark"] .heal-greet{
+  background:var(--card) !important; border-color:var(--line-2) !important; color:var(--brown) !important;
+}
+:root[data-theme="dark"] .heal-greet-l1{ color:var(--brown) !important; }
+:root[data-theme="dark"] .heal-greet-l1 b{ color:var(--olive-darker) !important; }
+:root[data-theme="dark"] .heal-greet-l2{ color:var(--brown-3) !important; }
+:root[data-theme="dark"] .heal-sheet{ background:var(--card) !important; }
+:root[data-theme="dark"] .bs-preview{
+  background:var(--olive-10) !important; border-color:var(--olive-24) !important;
+}
+
+/* ============ 纪检监察(jw)模块 & 疫苗(vax)：深底上把白底元素转深色卡，避免浅字叠白底看不清 ============ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .vax-pending{ background:rgba(245,158,11,.16) !important; }
+  :root:not([data-theme="light"]) .jw-qb{ background:var(--card) !important; border-color:var(--line-2) !important; color:var(--brown-2) !important; }
+  :root:not([data-theme="light"]) .jw-qb:hover{ border-color:var(--olive) !important; color:var(--olive-darker) !important; background:var(--olive-10) !important; }
+  :root:not([data-theme="light"]) .jw-stage-dot:not(.done):not(.active){ background:var(--card) !important; border-color:var(--line-2) !important; color:var(--brown-3) !important; }
+  :root:not([data-theme="light"]) .jw-edit-btn{ background:var(--card) !important; border-color:var(--line-2) !important; color:var(--brown-2) !important; }
+  :root:not([data-theme="light"]) .jw-edit-btn:hover{ background:var(--olive-10) !important; border-color:var(--olive-soft) !important; color:var(--olive-darker) !important; }
+  :root:not([data-theme="light"]) .jw-action-btn{ background:var(--card) !important; border-color:var(--line-2) !important; color:var(--brown-2) !important; }
+  :root:not([data-theme="light"]) .jw-action-btn:hover{ background:var(--olive-10) !important; border-color:var(--olive) !important; color:var(--olive-darker) !important; }
+  :root:not([data-theme="light"]) .jw-action-btn:active{ background:var(--olive-16) !important; }
+  :root:not([data-theme="light"]) .jw-action-btn.primary{ background:var(--olive-10) !important; border-color:var(--olive) !important; color:var(--olive-deep) !important; }
+  :root:not([data-theme="light"]) .jw-action-btn.primary:hover{ background:var(--olive-16) !important; }
+  /* 材料报送操作行 .btn.danger 删除按钮：深底上给半透明红底+浅红字，避免只留红边看不清 */
+  :root:not([data-theme="light"]) .item-ops-row .btn.danger{ background:rgba(224,122,106,.16) !important; border-color:rgba(224,122,106,.32) !important; color:#F0A090 !important; }
+  :root:not([data-theme="light"]) .item-ops-row .btn.danger:hover{ background:rgba(224,122,106,.24) !important; border-color:rgba(224,122,106,.40) !important; }
+}
+:root[data-theme="dark"] .vax-pending{ background:rgba(245,158,11,.16) !important; }
+:root[data-theme="dark"] .item-ops-row .btn.danger{ background:rgba(224,122,106,.16) !important; border-color:rgba(224,122,106,.32) !important; color:#F0A090 !important; }
+:root[data-theme="dark"] .item-ops-row .btn.danger:hover{ background:rgba(224,122,106,.24) !important; border-color:rgba(224,122,106,.40) !important; }
+:root[data-theme="dark"] .jw-qb{ background:var(--card) !important; border-color:var(--line-2) !important; color:var(--brown-2) !important; }
+:root[data-theme="dark"] .jw-qb:hover{ border-color:var(--olive) !important; color:var(--olive-darker) !important; background:var(--olive-10) !important; }
+:root[data-theme="dark"] .jw-stage-dot:not(.done):not(.active){ background:var(--card) !important; border-color:var(--line-2) !important; color:var(--brown-3) !important; }
+:root[data-theme="dark"] .jw-edit-btn{ background:var(--card) !important; border-color:var(--line-2) !important; color:var(--brown-2) !important; }
+:root[data-theme="dark"] .jw-edit-btn:hover{ background:var(--olive-10) !important; border-color:var(--olive-soft) !important; color:var(--olive-darker) !important; }
+:root[data-theme="dark"] .jw-action-btn{ background:var(--card) !important; border-color:var(--line-2) !important; color:var(--brown-2) !important; }
+:root[data-theme="dark"] .jw-action-btn:hover{ background:var(--olive-10) !important; border-color:var(--olive) !important; color:var(--olive-darker) !important; }
+:root[data-theme="dark"] .jw-action-btn:active{ background:var(--olive-16) !important; }
+:root[data-theme="dark"] .jw-action-btn.primary{ background:var(--olive-10) !important; border-color:var(--olive) !important; color:var(--olive-deep) !important; }
+:root[data-theme="dark"] .jw-action-btn.primary:hover{ background:var(--olive-16) !important; }
+
+/* ============ 历史记录统一显示规范（舒适档 · 全站唯一标准） ============
+   背景：此前多轮「压高度」把字号压到 10.5~11.5px、行内边距压到 4px，历史记录了又小又挤；
+   同时 .badge 的 white-space:nowrap 把长备注（如「2026.7.13:任小高-赵修权、张俊生-四带一自…」）
+   从右边缘裁掉半截。本块改为「一处 token、全站统一」：字号 / 行高 / 内边距 / 控件高度
+   一律引用下面 :root 的变量，长文本允许换行完整显示。
+   覆盖范围：通用历史弹窗 [id^="histSheet-"] + 打卡历史 #histSheet + 历史日记 #diaryHistSheet
+   + 收支流水历史 #finHistSheet + 模块内历史行（.wl-hist-row / .measure-row）。
+   以后整体调档只改 :root 变量，不要再往别处追加零散的历史字号规则。 */
+:root{
+  /* —— 字号 —— */
+  --hist-fs-title:15px;     /* 行标题 */
+  --hist-fs-meta:13px;      /* 次要信息行 / 徽章 / 搜索框 / 筛选按钮 */
+  --hist-fs-note:13.5px;    /* 展开后的备注正文 */
+  --hist-fs-small:12.5px;   /* 灰色小字 / 行内日期 */
+  --hist-fs-ops:13px;       /* 展开区操作按钮 */
+  --hist-fs-stat-k:12.5px;  /* 汇总区标签 */
+  --hist-fs-stat-v:17px;    /* 汇总区数值 */
+  /* —— 行高与垂直尺寸（密度优先：字号不动，纵向收紧） —— */
+  --hist-lh:1.35;           /* 统一行高 */
+  --hist-row-pad:6px 10px;  /* 每行内边距 */
+  --hist-row-gap:5px;       /* 行与行之间 */
+  --hist-line-gap:4px;      /* 行内标题与信息行之间 */
+  --hist-detail-gap:6px;    /* 展开区与主行之间 */
+  --hist-badge-h:22px;      /* 徽章最小高度 */
+  --hist-ctl-h:36px;        /* 搜索框高度 */
+  --hist-tf-h:32px;         /* 时间筛选按钮高度 */
+  --hist-top-gap:6px;       /* 弹窗顶部：筛选 / 搜索 / 列表之间 */
+}
+/* 列表容器与行的统一节奏（C = 四个历史弹窗容器） */
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .list,
+.hist-list{ gap:var(--hist-row-gap) !important; }
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .list > *,
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .item,
+.hist-list > *{ padding:var(--hist-row-pad) !important; }
+/* 模块内历史行（影剧书/备考记录列表、身体管理测量记录）同样节奏 */
+.wl-hist-row, .measure-row{ padding:var(--hist-row-pad) !important; }
+/* 行内各信息行之间的间距 */
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .item-main,
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .task-row-main,
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .media-row-main,
+.hist-list > .item .item-main,
+.hist-list > .wl-hist-row .wl-hist-row-main,
+.wl-hist-row .wl-hist-row-main,
+.measure-row .measure-row-main{ gap:var(--hist-line-gap) !important; }
+/* 标题：15px / 行高 1.45，允许换行 */
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .item-title,
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .media-row-title,
+.hist-list .item-title,
+.wl-hist-row .item-title,
+.measure-row .item-title{
+  font-size:var(--hist-fs-title) !important; line-height:var(--hist-lh) !important;
+  white-space:normal !important; overflow:visible !important; text-overflow:clip !important;
+  word-break:break-word; overflow-wrap:anywhere;
+}
+/* 次要信息行（时间 / 分类 / 参与人 / 日期）：13px / 行高 1.45，整行可换行 */
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .item-meta,
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .task-row-meta,
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .media-row-meta,
+.hist-list .item-meta,
+.wl-hist-row .item-meta,
+.measure-row .item-meta{
+  font-size:var(--hist-fs-meta) !important; line-height:var(--hist-lh) !important;
+  gap:6px !important; flex-wrap:wrap !important; align-items:center;
+}
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .item-meta > span,
+.hist-list .item-meta > span,
+.wl-hist-row .item-meta > span,
+.measure-row .item-meta > span{ white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important; max-width:100% !important; }
+/* 徽章：13px、单行省略（长案件名等撑出第二行是最主要的高度浪费） */
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .badge,
+.hist-list .badge,
+.wl-hist-row .badge,
+.measure-row .badge{
+  height:auto !important; min-height:var(--hist-badge-h) !important;
+  line-height:1.35 !important; padding:2px 9px !important;
+  font-size:var(--hist-fs-meta) !important;
+  white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important;
+  max-width:100% !important;
+}
+/* 灰色小字 / 行内日期：12.5px */
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .small.muted,
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .hist-date,
+.hist-list .small.muted,
+.wl-hist-row .small.muted{
+  font-size:var(--hist-fs-small) !important; line-height:var(--hist-lh) !important;
+  margin-top:2px !important;
+}
+/* 展开区与主行之间：统一 8px */
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .item-detail,
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .task-detail,
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .fold-detail,
+.hist-list .item-detail,
+.hist-list .task-detail,
+.hist-list .fold-detail{
+  margin-top:var(--hist-detail-gap) !important; padding-top:var(--hist-detail-gap) !important;
+}
+/* 操作行与操作按钮 */
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .hist-ops,
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .fold-ops,
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .item-ops-row,
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .wl-acts,
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .item-detail > .item-ops,
+.hist-list .hist-ops,
+.hist-list .fold-ops,
+.hist-list .item-ops-row,
+.hist-list .wl-acts,
+.hist-list .task-ops-row,
+.hist-list .item-detail > .item-ops{ margin-top:6px !important; padding-top:0 !important; }
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .item-ops .link-btn,
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .item-detail .link-btn,
+.hist-list .link-btn{ font-size:var(--hist-fs-ops) !important; padding:6px 10px !important; }
+/* 打卡任务等分操作行：按钮等宽，横向内边距收一点避免四个按钮挤爆 */
+:is(#histSheet, [id^="histSheet-"]) .item-ops.hist-ops-even .link-btn{ padding:6px 4px !important; }
+/* 备注正文：13.5px / 行高 1.45 */
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .item-note,
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .note-text,
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .item-note-line,
+.hist-list .item-detail .item-note{
+  margin-top:6px !important; padding:6px 10px !important;
+  font-size:var(--hist-fs-note) !important; line-height:var(--hist-lh) !important;
+}
+/* 顶部控件：搜索框 38px / 13px，时间筛选按钮 34px / 13px */
+.hist-search,
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .input{
+  padding:8px 12px !important; min-height:var(--hist-ctl-h) !important;
+  margin-bottom:0 !important; font-size:var(--hist-fs-meta) !important;
+}
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .tf-btn{
+  padding:6px 12px !important; min-height:var(--hist-tf-h) !important;
+  font-size:var(--hist-fs-meta) !important;
+}
+/* 筛选 / 排序药丸 */
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .pills{ gap:6px !important; margin:0 !important; }
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .pill{
+  padding:5px 11px !important; font-size:var(--hist-fs-small) !important;
+}
+/* 汇总区 */
+[id^="histSum-"]{ padding:10px 12px !important; }
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .stat{ padding:8px 6px !important; gap:4px !important; }
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .stat .k{ font-size:var(--hist-fs-stat-k) !important; }
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .stat .v{ font-size:var(--hist-fs-stat-v) !important; }
+/* 收支流水历史的日期分组头 */
+#finHistSheet .flow-date-text{ font-size:var(--hist-fs-title) !important; }
+#finHistSheet .flow-date-sum{ font-size:var(--hist-fs-meta) !important; }
+/* 弹窗顶部节奏：.modal-body 是 flex column 且 gap:14px，模板又在各块之间插了
+   <div style="height:4~6px"> 占位，叠加后每段 ≈ 32px。统一收到 --hist-top-gap 并隐藏占位 div。 */
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .modal-body{ gap:var(--hist-top-gap) !important; }
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .modal-body > div[style*="height:"],
+:is(#histSheet, [id^="histSheet-"], #diaryHistSheet, #finHistSheet) .modal-body > div[style*="height :"]{ display:none !important; }
+
+/* ============ 交互状态统一规范（悬停 / 选中 / 展开 / 危险） ============
+   排查结论，三处互相打架导致「点选中、鼠标放上去」都突兀：
+   ① 后段用 !important 写了通用 :hover（.qcard:hover、.pill:hover、.btn.ghost:hover、.tf-btn:hover），
+      与 .X.on:hover 权重相同但位置更靠后 → 鼠标放到「已选中项」上时，它反而退回未选中的浅底深字，
+      看起来像被取消选中（纪检监察四宫格、分类筛选药丸最明显）。
+   ② 选中/悬停底色大量使用 rgba（--olive-05/10/16/open）。卡片浮在波点背景上时被击穿：
+      选中卡发灰蒙糊、11.5px 标签几乎看不清（「案件办理」那一格就是这处）。
+   ③ hover 用渐变（.btn.primary:hover、.nav-item.on:hover、.sch-vtab.on）。background-image 不参与
+      transition，指针一进整块瞬变；且白字压在浅紫蓝 #7FA0E4 上对比度只有 2.6:1。
+   统一做法：状态色一律不透明（color-mix 到 --card），按「静止 < 悬停 < 选中 < 选中+悬停」单调加深；
+   实心选中统一用更深的 --st-solid 保证反白文字可读；渐变换成可过渡的实色。 */
+:root{
+  --st-hov: color-mix(in srgb, var(--olive) 7%, var(--card));       /* 悬停：比静止深一点 */
+  --st-sel: color-mix(in srgb, var(--olive) 14%, var(--card));      /* 浅底选中 */
+  --st-sel-hov: color-mix(in srgb, var(--olive) 20%, var(--card));  /* 选中后再悬停：继续加深，绝不退回 */
+  --st-bd-hov: color-mix(in srgb, var(--olive) 26%, var(--card));
+  --st-bd-sel: color-mix(in srgb, var(--olive) 45%, var(--card));
+  --st-solid: var(--olive-darker);                                   /* 实心选中 / 主按钮底色 */
+  --st-solid-hov: color-mix(in srgb, var(--olive-darker) 86%, #0E141A);
+  --st-fg-sel: var(--olive-darker);                                   /* 浅底选中态文字 */
+}
+/* ① 模块四宫格入口（纪检监察 / 财务记账 / 车辆等）——静止态沿用组件自身不透明 --card 底色 */
+.qcard:hover, .qcard:active, .baby-qcard:hover, .baby-qcard:active{
+  background:var(--st-hov) !important; border-color:var(--st-bd-hov) !important;
+}
+.qcard.on, .qcard.on:hover, .qcard.on:active{
+  background:var(--st-sel) !important; border-color:var(--st-bd-sel) !important;
+}
+.qcard.on:hover, .qcard.on:active{ background:var(--st-sel-hov) !important; }
+.qcard.on .qt{ color:var(--st-fg-sel) !important; }
+.qcard.on .qs{ color:var(--st-fg-sel) !important; opacity:.82; }
+/* ② 实心选中族（药丸 / 标签 / 筹码 / 勾选 / 侧栏导航 / 主按钮）：任何指针状态都保持实心反白 */
+:is(.pill,.tab,.chip,.check,.nav-item).on, .btn.primary{
+  background:var(--st-solid) !important; border-color:var(--st-solid) !important; color:var(--on) !important;
+}
+:is(.pill,.tab,.chip,.check,.nav-item).on:hover, :is(.pill,.tab,.chip,.check,.nav-item).on:active,
+.btn.primary:hover, .btn.primary:active{
+  background:var(--st-solid-hov) !important; border-color:var(--st-solid-hov) !important; color:var(--on) !important;
+}
+.chip.on.danger, .chip.on.danger:hover{ background:var(--danger) !important; border-color:var(--danger) !important; color:#fff !important; }
+/* ③ 日程视图切换：去渐变，改可过渡实色 */
+.sch-vtab{ background:transparent !important; }
+.sch-vtab:hover{ background:var(--st-hov) !important; }
+.sch-vtab.on, .sch-vtab.on:hover, .sch-vtab.on:active{ background:var(--st-solid) !important; color:var(--on) !important; }
+.sch-vtab.on:hover, .sch-vtab.on:active{ background:var(--st-solid-hov) !important; }
+/* ④ 展开态行（历史 / 任务 / 各类记录）：不透明浅底，悬停不再退回静止色。
+   例外：.hl 高亮 / .alert 预警 / .pinned 置顶 / .pending 待处理 保留各自语义底色 */
+:is(.item,.task-row,.wl-hist-row,.measure-row,.media-row,.social-row,.family-row,.cat-rec-row,.wish-row,.stock-ov-row,.buy-item-row,.consum-row,.charge-row,.refuel-row,.cat-cap):not(.hl):not(.alert):not(.pinned):not(.pending):not(.open):hover{
+  background:var(--st-hov) !important; border-color:var(--st-bd-hov) !important;
+}
+:is(.item,.task-row,.wl-hist-row,.measure-row,.media-row,.social-row,.family-row,.cat-rec-row,.wish-row,.stock-ov-row,.buy-item-row,.consum-row,.charge-row,.refuel-row,.cat-cap).open,
+:is(.item,.task-row,.wl-hist-row,.measure-row,.media-row,.social-row,.family-row,.cat-rec-row,.wish-row,.stock-ov-row,.buy-item-row,.consum-row,.charge-row,.refuel-row,.cat-cap).open:hover{
+  background:var(--st-sel) !important; border-color:var(--st-bd-sel) !important;
+}
+:is(.item,.task-row,.wl-hist-row,.measure-row,.media-row,.social-row,.family-row,.cat-rec-row,.wish-row,.stock-ov-row,.buy-item-row,.consum-row,.charge-row,.refuel-row,.cat-cap).open:hover{ background:var(--st-sel-hov) !important; }
+/* ④b 语义强调底色：保持色相，但换成不透明（原来 rgba 浮在波点上会发灰）。置顶行的渐变强调不动。 */
+.item.hl{ background:var(--st-sel) !important; border-color:var(--st-bd-sel) !important; }
+.item.hl:hover{ background:var(--st-sel-hov) !important; border-color:var(--st-bd-sel) !important; }
+.item.alert, .charge-row.pending{
+  background:color-mix(in srgb, #C9803A 10%, var(--card)) !important;
+  border-color:color-mix(in srgb, #C9803A 38%, var(--card)) !important;
+}
+.item.alert:hover, .charge-row.pending:hover{ background:color-mix(in srgb, #C9803A 16%, var(--card)) !important; }
+/* ⑤ 浅底选中族（分类勾选 / 搜索命中 / 心情色调筹码 / 表单选项行）：不透明 + 更深文字 */
+:is(.cat-pick-item,.tone-chip,.bs-tone,.search-res,.opt-row).on{
+  background:var(--st-sel) !important; border-color:var(--st-bd-sel) !important; color:var(--st-fg-sel) !important;
+}
+:is(.cat-pick-item,.tone-chip,.bs-tone,.search-res,.opt-row).on:hover{ background:var(--st-sel-hov) !important; }
+/* ⑥ 危险 / 删除：悬停不得被通用 :hover 改成深灰（原 .tap:hover{color:var(--brown)} 的副作用）。
+   文字用加深后的红：--danger(#D8786A) 压在浅红底上只有 2.8:1，混深红后到 5:1 以上。 */
+.link-btn.del:hover, .link-btn.del:active{
+  color:color-mix(in srgb, var(--danger) 62%, #2A0D0A) !important;
+  background:color-mix(in srgb, var(--danger) 10%, var(--card)) !important;
+}
+.btn.danger:hover, .btn.danger:active{
+  color:color-mix(in srgb, var(--danger) 62%, #2A0D0A) !important;
+  background:color-mix(in srgb, var(--danger) 12%, var(--card)) !important;
+  border-color:color-mix(in srgb, var(--danger) 40%, var(--card)) !important;
+}
+/* ⑦ 卡片式悬停统一为不透明可过渡底色（原先是 rgba，浮在波点上会发灰） */
+:is(.jw-tl-card,.jw-qb,.jw-edit-btn,.jw-action-btn,.qbtn,.ov,.home-pill,.tf-btn,.btn.ghost):hover{
+  background:var(--st-hov) !important; border-color:var(--st-bd-hov) !important;
+}
+:is(.jw-qb,.jw-edit-btn,.jw-action-btn,.qbtn,.ov):hover{ color:var(--st-fg-sel) !important; }
+
+/* ============ 全局排版与密度统一（iPhone 15 Pro Max 430×932 实测校准） ============
+   逐模块体检结论（430×932 真机视口，20 个模块）：
+   ① 字号下限失控：全站 109 处文字 < 11px（.stat .k 10、.qcard .qs 10.5、.cal-count 9、.sch-lunar 9.5、
+      .stat .v .pn 9.7、.tf-btn-caret 10、.body-card-s 9.5），且 10/10.5/11/11.5/12 混用无标准。
+   ② ≤900px 的窄屏规则把统计数值压到 13.5px、标签压到 10px —— 手机上最该看清的关键数据反而最小。
+   ③ 换行造成的空白 20 处：长徽章 / 长 meta（纪检监察案件名、设置页来源、车辆统计值）各撑出第二行。
+   ④ 大块空白：空态卡上下内边距 80px、日程空态 56px、卡片 16px、页面左右 18px、翻页条上边距 14px、
+      四宫格下边距 10px、日历头 14px。
+   ⑤ 断点空档：430px 落在 420 与 600 之间，为更窄屏写的收紧规则在 15PM 上完全不生效。
+   统一规范：六档字号 + 11px 硬下限；次要信息一律单行省略、标题最多两行；纵向留白按 ④ 收紧。 */
+:root{
+  --fs-title:15px;    /* 行标题 / 卡片标题 */
+  --fs-body:13.5px;   /* 正文 / 输入 */
+  --fs-meta:13px;     /* 次要信息 / 徽章 / 按钮 */
+  --fs-sub:12px;      /* 三级说明 */
+  --fs-micro:11px;    /* 全站最小字号（硬下限，低于此一律抬到此处） */
+}
+/* 窄屏密度 token：宽屏不定义（用各规则里的 fallback），只在窄屏下调。
+   两个触发条件必须同时给：@media 只看视口宽度，而手机 html zoom 1.15 时 430px 视口
+   实际只有 ~374px 布局宽度，媒体查询看不到，所以还要 :root.eff-xs（由 JS 按有效宽度打标）。 */
+@media (max-width:440px){
+  :root{ --gap-view:12px; --gap-card:12px; --row-pad-x:10px; --qcard-pad-y:7px; --stat-gap:5px; }
+}
+:root.eff-xs{ --gap-view:12px; --gap-card:12px; --row-pad-x:10px; --qcard-pad-y:7px; --stat-gap:5px; }
+/* 翻页条：窄屏下把按钮内边距与字号收一档，避免「1/1 · 2 条」被省略号截断 */
+@media (max-width:440px){
+  .pg-bar{ font-size:12px !important; }
+  .pg-bar .pg-btn{ padding:.4em .5em !important; }
+  .pg-bar .pg-size{ gap:.15em !important; }
+}
+:root.eff-xs .pg-bar{ font-size:12px !important; }
+:root.eff-xs .pg-bar .pg-btn{ padding:.4em .5em !important; }
+:root.eff-xs .pg-bar .pg-size{ gap:.15em !important; }
+/* ① 微字号统一抬到 11px 下限 */
+:is(.stat .k, .stat .v .pn, .qcard .qs, .body-card .body-card-s, .chk-cal .cal-count,
+     .sch-lunar, .tf-btn-caret, .item-chev, .note-flag, .fold-caret, .cal-cell .cc-s){
+  font-size:var(--fs-micro) !important;
+}
+.tf-btn-caret{ line-height:1 !important; }
+/* ② 关键数据优先可读：统计数值 13.5 → 15，标签保持 11px，整块高度几乎不变 */
+.stat .v{ font-size:15px !important; letter-spacing:0 !important; }
+.stat{ padding:7px 4px !important; }
+/* ③ 次要信息单行省略（消灭换行造成的空白）；标题允许两行后截断 */
+:is(.item-meta,.task-row-meta,.media-row-meta,.social-row-meta,.family-row-meta,.wl-hist-row .item-meta,.measure-row .item-meta){
+  flex-wrap:nowrap !important; overflow:hidden !important;
+}
+:is(.item-meta,.task-row-meta,.media-row-meta,.social-row-meta,.family-row-meta,.wl-hist-row .item-meta,.measure-row .item-meta) > *{
+  white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important;
+  max-width:100% !important; flex:0 1 auto !important; min-width:0 !important;
+}
+.badge, .pill{ white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important; max-width:100% !important; }
+/* 标题：单行截断（用户要求：消灭换行造成的高度浪费）；
+   展开后的备注正文不在此列，点开就是要看全文 */
+:is(.item-title,.media-row-title,.stock-ov-name){
+  white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important;
+  max-width:100% !important;
+}
+:is(.sch-note-body,.item-note,.note-text,.item-note-line){
+  white-space:pre-wrap !important; word-break:break-word; overflow-wrap:anywhere;
+}
+/* ④ 大块空白收紧（注意：只针对空态组件 div.empty；日历格 .cal-cell.empty / .sch-cell.empty
+      同名但含义不同，必须排除，否则会把日历撑高） */
+div.empty{ padding:22px 14px !important; gap:4px !important; }
+div.empty .e-ico{ font-size:24px !important; width:44px !important; height:44px !important; margin-bottom:2px !important; }
+div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
+.sch-empty{ padding:16px 12px 8px !important; }
+.pg-bar{ margin-top:8px !important; margin-bottom:4px !important; }
+.qgrid{ margin-bottom:8px !important; }
+.cal-card-head{ margin-bottom:10px !important; gap:6px !important; }
+.card-head{ margin-bottom:8px !important; gap:8px !important; }
+.section-gap{ gap:8px !important; }
+.stock-toolbar{ margin-bottom:8px !important; }
+/* ⑤ 窄屏专项：不再重复写组件规则，全部由上面的 --gap-view / --gap-card / --row-pad-x /
+   --qcard-pad-y / --stat-gap 驱动（基础规则读这些变量），媒体查询与 :root.eff-xs 共用同一份定义。 */
+/* ⑥ 点击区说明：勾选框保持 24px 视觉尺寸。不用 ::before 外扩命中区——负 inset 的伪元素会
+   把 #view 的可滚动区域撑大（实测 70~125px 底部空滚）；列表行本身整行可点，勾选框是次级目标。 */
 </style>
 <script id="healing-reskin-js">
 (function(){
@@ -3948,9 +4563,18 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
 
   // 应用主题
   var _themeFirstApply = true;
+  function isDarkMode(){
+    var de=document.documentElement;
+    if (de.getAttribute('data-theme')==='dark') return true;
+    if (de.getAttribute('data-theme')==='light') return false;
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
   function applyTheme(t){
     var root=document.documentElement, body=document.body;
-    var bg=t.bgColor, ac=t.accentColor;
+    var dark=isDarkMode();
+    /* 深色模式：用疗愈背景色的深色系变体，让卡片/文字随 CSS 深色变量正常翻转 */
+    var bg=dark ? shade(t.bgColor,-0.55) : t.bgColor;
+    var ac=dark ? shade(t.accentColor,-0.22) : t.accentColor;
     var s=function(k,v){ root.style.setProperty(k,v,'important'); };
 
     /* 交叉淡入：先快照「旧背景」，应用新主题后用一张旧背景遮罩淡出，
@@ -3978,8 +4602,9 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     s('--olive-24', alpha(ac,.26));
     s('--olive-open', alpha(ac,.18));
     s('--info', ac);
+    var dotAlpha = dark ? '.14' : '.26';
     var bgImage = (t.bgMode==='dots')
-      ? "radial-gradient(circle, rgba(255,255,255,.26) 1.2px, transparent 1.6px), linear-gradient(165deg, "+shade(bg,0.08)+" 0%, "+bg+" 55%, "+shade(bg,-0.08)+" 100%)"
+      ? "radial-gradient(circle, rgba(255,255,"+dotAlpha+") 1.2px, transparent 1.6px), linear-gradient(165deg, "+shade(bg,0.08)+" 0%, "+bg+" 55%, "+shade(bg,-0.08)+" 100%)"
       : "linear-gradient(165deg, "+shade(bg,0.08)+" 0%, "+bg+" 55%, "+shade(bg,-0.08)+" 100%)";
     var bgSize = (t.bgMode==='dots') ? "14px 14px, 100% 100%" : "100% 100%";
     body.style.setProperty('background-image', bgImage, 'important');
@@ -3988,6 +4613,9 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     body.style.setProperty('background-repeat', (t.bgMode==='dots' ? 'repeat, no-repeat' : 'no-repeat'), 'important');
     body.style.setProperty('background-color', bg, 'important');
     body.style.setProperty('background-attachment', 'fixed', 'important');
+
+    /* 同步浏览器地址栏/顶栏主题色，让手机浏览器 UI 与当前实际背景一致 */
+    try { if (window.setThemeColor) window.setThemeColor(); } catch(e){}
 
     /* 交叉淡入遮罩：旧背景快照，铺满视口但位于内容之下（z-index:-1），淡出露出新主题 */
     if (oldImage && oldImage !== 'none') {
@@ -4214,6 +4842,16 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     setupCompletionHooks(d);
     // 暴露 openTheme 给原生面板的"主题外观"按钮用
     window.openTheme = openTheme;
+    // 监听系统/用户切换深浅模式，自动重新应用疗愈主题背景
+    if (window.matchMedia) {
+      var mql = window.matchMedia('(prefers-color-scheme: dark)');
+      if (mql.addEventListener) mql.addEventListener('change', function(){ applyTheme(d.theme); });
+      else if (mql.addListener) mql.addListener(function(){ applyTheme(d.theme); });
+    }
+    var themeObserver = new MutationObserver(function(muts){
+      for (var i=0;i<muts.length;i++) if (muts[i].attributeName === 'data-theme') { applyTheme(d.theme); break; }
+    });
+    themeObserver.observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
     function bind(){
       // 不再拦截品牌区点击 —— 让原生的「把它变成你的工作台」面板正常弹出。
       // 原生面板里的"主题色"已被替换为"主题外观"按钮（点开后调 window.openTheme）
@@ -4225,6 +4863,59 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
   else init();
 })();
 </script>
+
+<style id="iphone-comfort-20260910">
+/* Touch layout: keep the existing zoom preference and convert physical insets. */
+@media (max-width: 960px) and (pointer: coarse) {
+  html { scrollbar-gutter:auto; }
+  :root { --touch-size: max(38px, calc(44px / var(--font-scale, 1))); }
+  .icon-btn, .x-btn, .top-fab { width:var(--touch-size); height:var(--touch-size); min-width:var(--touch-size); flex-shrink:0; }
+  .btn.sm, .pill, .chip, .tab, .tf-btn, .nav-item, .home-pill, .jw-qb { min-height:var(--touch-size); }
+  .topbar { gap:8px; padding-top:calc(8px + env(safe-area-inset-top) / var(--font-scale, 1)); }
+  .topbar-right { gap:6px; }
+  .view { padding-bottom:max(var(--fab-clr, 80px), calc(80px + env(safe-area-inset-bottom) / var(--font-scale, 1))); }
+  input:not([type=checkbox]):not([type=radio]):not([type=range]), select, textarea { font-size:16px !important; max-width:100%; min-width:0; }
+  textarea { scroll-margin-block:24px; }
+  .modal-mask {
+    top:var(--visual-top, 0px); bottom:auto;
+    height:var(--dvh-real); min-height:0;
+    padding:calc(8px + env(safe-area-inset-top) / var(--font-scale, 1))
+      calc(env(safe-area-inset-right) / var(--font-scale, 1)) 0
+      calc(env(safe-area-inset-left) / var(--font-scale, 1));
+    align-items:flex-end; overflow:hidden;
+  }
+  .modal-mask .modal { max-height:100%; min-height:0; overflow:hidden; width:100%; border-radius:22px 22px 0 0; }
+  .modal-head { padding:12px 16px !important; position:relative; }
+  .modal-body { padding:10px 16px 18px !important; min-height:0; overflow-y:auto; overscroll-behavior:contain; flex:1 1 auto; }
+  .modal-foot { position:relative; padding:12px 16px calc(12px + env(safe-area-inset-bottom) / var(--font-scale, 1)) !important; }
+  .modal-foot .btn { min-height:44px; }
+  .keyboard-open .modal-foot { padding-bottom:10px !important; }
+  .keyboard-open .fab, .keyboard-open .sch-fab, .keyboard-open .top-fab { visibility:hidden; pointer-events:none; }
+  .item-note, .note-text, .study-content, .jw-v { -webkit-user-select:text; user-select:text; -webkit-touch-callout:default; overflow-wrap:anywhere; }
+  .field-r, .item-main { min-width:0; }
+  .jw-table { display:block; overflow-x:auto; max-width:100%; }
+}
+@media (min-width:901px) and (max-width:960px) and (pointer:coarse) {
+  :root { --sidebar-w:min(268px, calc(var(--vw-real) * .78)); }
+  .sidebar { position:fixed; height:var(--dvh-real); transform:translateX(-102%); }
+  body.nav-open .sidebar { transform:none; }
+  body.nav-open .scrim { opacity:1; pointer-events:auto; }
+  .main { margin-left:0; }
+  #menuBtn { display:grid; }
+  body.top-fixed .topbar { left:0; }
+  .topbar, .view { padding-left:calc(14px + env(safe-area-inset-left) / var(--font-scale, 1)); padding-right:calc(14px + env(safe-area-inset-right) / var(--font-scale, 1)); }
+}
+@media (prefers-reduced-motion:reduce) {
+  *, *::before, *::after { scroll-behavior:auto !important; animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+}
+</style>
+
+<style id="home-today-uniform">
+/* Scoped to the homepage: equal rows with and without a defer action. */
+.tf-row.home-today-row { min-height:46px; padding:3px 10px; }
+.home-today-row .tf-ops { flex-wrap:nowrap; }
+.home-today-row .tf-delay.btn.sm { height:38px; min-height:38px; padding:4px 12px; line-height:1.4; }
+</style>
 </head>
 <body data-page-node-id="k17xPH9tcBxJoIx0pey0qQ">
 
@@ -4540,10 +5231,15 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         this.ok = false; this.data = defaults();
         console.warn('本地存储读取失败', e);
       }
-      // 字体基线升级：历史默认 1.0 → 1.15（仅一次性，不覆盖用户后续手动调整）
+      // 字体基线升级：历史默认 1.0 → 1.15（仅一次性）。
+      // 修复「变回来」：若用户已手动调过 fontScale（任意值），一律保留用户值，绝不再强制 1.15；
+      // 仅在从未设置过（undefined/null/''）时才写入 1.15 默认。
       try {
         if (!this.data.settings._fsMigrated) {
-          this.data.settings.fontScale = 1.15;
+          var _fs0 = this.data.settings.fontScale;
+          if (_fs0 === undefined || _fs0 === null || _fs0 === '') {
+            this.data.settings.fontScale = 1.15;
+          }
           this.data.settings._fsMigrated = true;
           localStorage.setItem(KEY, JSON.stringify(this.data));
         }
@@ -5373,10 +6069,34 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
        拖动时纵向任意、横向自动吸附到离指针更近的一边（left/right），落点只存「边 + 距顶」到 localStorage。 */
   var FAB_MARGIN = 18;
   var FAB_TOP_SAFE = 70;     /* 顶部留白：防止拖到顶栏（sticky ~60px）下方被遮挡 */
-  var FAB_BOTTOM_SAFE = 180;   /* 底部留白：防止按钮沉到屏幕底端鼠标/手指够不到 */
+  var FAB_BOTTOM_SAFE = 24;  /* 底部留白：原来 180 是为了配合 .view 固定预留 180px；
+                                现在改为「按钮贴底 + 页面留白跟随按钮真实位置」，见 syncFabClearance() */
+
+  /* 底部留白跟随「+」按钮的实际位置：内容要让开的是按钮的顶边（不是按钮下方的缝），
+     所以用 innerHeight - r.top；再除以全局缩放换算成作者像素，加 12px 气口。
+     --fab-clr 已含安全区（按钮本身就贴在 safe-area 之上），.view 不再叠加 env()。 */
+  function syncFabClearance() {
+    var root = document.documentElement;
+    var z = parseFloat(getComputedStyle(root).getPropertyValue('--font-scale')) || 1;
+    var f = document.querySelector('.fab, .sch-fab');
+    var clr = 40;
+    if (f) {
+      var r = f.getBoundingClientRect();
+      if (r.height > 0) clr = (window.innerHeight - r.top) / z + 18;
+    }
+    root.style.setProperty('--fab-clr', Math.max(24, Math.min(420, Math.round(clr))) + 'px');
+  }
+  window.syncFabClearance = syncFabClearance;
+  function _fabZoom() {
+    return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--font-scale')) || 1;
+  }
   function placeFab(el, side, top) {
     var h = el.offsetHeight || 50;
-    top = Math.max(FAB_TOP_SAFE, Math.min(innerHeight - h - FAB_BOTTOM_SAFE, top));
+    var z = _fabZoom();
+    /* top / height 是作者像素，innerHeight 是视口像素：夹取时统一换算，
+       否则 zoom>1 时按钮会比安全线更低，压到 iOS Home 指示条上 */
+    var maxTop = (innerHeight - (h * z) - FAB_BOTTOM_SAFE) / z;
+    top = Math.max(FAB_TOP_SAFE, Math.min(maxTop, top));
     if (side === 'left') { el.style.left = FAB_MARGIN + 'px'; el.style.right = 'auto'; }
     else { el.style.right = FAB_MARGIN + 'px'; el.style.left = 'auto'; }
     el.style.top = top + 'px'; el.style.bottom = 'auto';
@@ -5397,7 +6117,9 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     function persist() {
       var r = el.getBoundingClientRect();
       var side = (r.left + r.width / 2 < innerWidth / 2) ? 'left' : 'right';
-      try { localStorage.setItem(key, JSON.stringify({ side: side, top: r.top })); } catch (e) {}
+      /* r.top 是视口像素，style.top 是作者像素：不换算的话 zoom>1 时每次刷新都会继续下漂 */
+      try { localStorage.setItem(key, JSON.stringify({ side: side, top: r.top / _fabZoom() })); } catch (e) {}
+      syncFabClearance();
     }
     restore();
 
@@ -5460,12 +6182,22 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
 
   /* 自动为新增按钮绑定拖动；模块切换重建 .fab 也能自动接管（回顶按钮不绑定） */
   function setupDraggableFabs() {
+    /* 一次性迁移：旧落点是在「底部安全 180px」下夹出来的高位，会让页面继续留 180px 空白。
+       清掉一次，让按钮采用新的贴底默认位置；此后用户拖动照常记忆。 */
+    try {
+      if (!localStorage.getItem('wb:fab:low1')) {
+        localStorage.removeItem('wb:fab:pos');
+        localStorage.setItem('wb:fab:low1', '1');
+      }
+    } catch (e) {}
     document.querySelectorAll('.fab, .sch-fab').forEach(function (el) { enableDrag(el); });
+    syncFabClearance();
     var ob = new MutationObserver(function () {
       if (ob._p) return; ob._p = true;
       requestAnimationFrame(function () {
         ob._p = false;
         document.querySelectorAll('.fab, .sch-fab').forEach(function (el) { enableDrag(el); });
+        syncFabClearance();
       });
     });
     ob.observe(document.body, { childList: true, subtree: true });
@@ -5476,9 +6208,11 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
           var r = el.getBoundingClientRect();
           var side = (r.left + r.width / 2 < innerWidth / 2) ? 'left' : 'right';
           var h = el.offsetHeight;
-          placeFab(el, side, Math.max(FAB_TOP_SAFE, Math.min(innerHeight - h - FAB_BOTTOM_SAFE, parseFloat(el.style.top) || 0)));
+          var z = _fabZoom();
+          placeFab(el, side, Math.max(FAB_TOP_SAFE, Math.min((innerHeight - h * z - FAB_BOTTOM_SAFE) / z, parseFloat(el.style.top) || 0)));
         }
       });
+      syncFabClearance();
     });
   }
 
@@ -5495,7 +6229,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     /* 回顶按钮：右下角固定（CSS 已设 bottom:10px），PWA 模式加安全区 */
     var standalone = (window.navigator && window.navigator.standalone === true) ||
       (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
-    btn.style.bottom = standalone ? 'calc(10px + env(safe-area-inset-bottom))' : '10px';
+    btn.style.bottom = 'calc(20px + env(safe-area-inset-bottom))';
 
     var TH = 180;
     /* 取当前滚动偏移量（兼容 window / 各级容器） */
@@ -5751,10 +6485,18 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var sh = Math.max(200, Math.round((Math.max(vvH, ih) / _fs) * 1000) / 1000);
     var w = Math.max(240, Math.round((vvW / _fs) * 1000) / 1000);
     var root = document.documentElement;
+    root.style.setProperty('--visual-top', ((vv ? vv.offsetTop : 0) / _fs) + 'px');
+    var editing = document.activeElement && (document.activeElement.matches('input, textarea') || document.activeElement.isContentEditable);
+    root.classList.toggle('keyboard-open', !!editing && ih - vvH > 120 && (!vv || vv.scale < 1.05));
     root.style.setProperty('--app-vh-px', h + 'px');
     root.style.setProperty('--app-dvh-px', h + 'px');
     root.style.setProperty('--app-svh-px', sh + 'px');
     root.style.setProperty('--app-vw-px', w + 'px');
+    /* 有效布局宽度 = 视口宽 ÷ 全局缩放。手机默认 zoom 1.15 时，430px 视口实际只有约 374px 布局宽度，
+       而 @media 仍按 430px 判断 → 为窄屏写的收紧规则永不生效，内容被挤成一堆换行。
+       这里按「真实布局宽度」打标，CSS 用 :root.eff-xs 补上这一档。 */
+    root.classList.toggle('eff-xs', w <= 400);
+    root.style.setProperty('--eff-w-px', w + 'px');
   }
   function _scheduleVh() {
     if (_vhRaf) return;
@@ -6918,7 +7660,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
 
   function label(modId) {
     var s = state(modId);
-    if (s.span === 'all') return (modId === 'schedule:all') ? '全部日程' : '全部时间';
+    if (s.span === 'all') return '全部时间';
     if (s.span === 'today') return '今天';
     if (s.span === 'future') return '未来';
     if (s.span === '10d') return '近10天';
@@ -6932,7 +7674,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
 
   function rangeText(modId) {
     var s = state(modId);
-    if (!s.from && !s.to) return (modId === 'schedule:all') ? '全部日程' : '全部时间';
+    if (!s.from && !s.to) return '全部时间';
     var from = s.from || '—', to = s.to || '—';
     return from + ' ~ ' + to + (s.from && s.to ? ' · 共 ' + days(modId) + ' 天' : '');
   }
@@ -7059,7 +7801,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       if (preview) {
         var bad = draft.from && draft.to && draft.from > draft.to;
         preview.className = 'tf-preview' + (bad ? ' bad' : '');
-        var emptyTxt = (modId === 'schedule:all') ? '全部日程' : '全部时间';
+        var emptyTxt = '全部时间';
         var prevFrom = draft.from, prevTo = draft.to;
         var prevLbl = (!prevFrom && !prevTo) ? emptyTxt : rangeLabel(prevFrom, prevTo);
         var prevRaw = (!prevFrom && !prevTo) ? emptyTxt : rangeTextRaw(prevFrom, prevTo);
@@ -7091,13 +7833,23 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       var cal = activePicker.el.querySelector('[data-tf-cal]');
       if (cal) cal.hidden = false;
       refreshUI();
+      liveApply();
+    }
+
+    /* 即时生效：选预设/点日期时立即把草稿应用到真实筛选并刷新背后列表，
+       弹窗保持打开——用户在弹窗内就能完成筛选，不必退出后才能看到结果 */
+    function liveApply() {
+      setRange(modId, draft.from, draft.to, { silent: true });
+      if (opt.onChange) opt.onChange();
     }
 
     function submit(clear) {
       if (clear) {
-        closePicker();
+        // 清除：即时恢复「全部」，弹窗保持打开，便于继续调整
         applySpan(modId, 'all', { silent: true });
+        draft.span = 'all'; draft.from = ''; draft.to = '';
         if (opt.onChange) opt.onChange();
+        refreshUI();
         return;
       }
       var f = draft.from, t = draft.to;
@@ -7129,8 +7881,8 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       '</div>' +
       '<div class="tf-cal-wrap" data-tf-cal hidden>' + buildCal(calY, calM) + '</div>' +
       '</div>' +
-      '<div class="tf-preview"><b>' + U.esc((!draft.from && !draft.to) ? ((modId === 'schedule:all') ? '全部日程' : '全部时间') : rangeLabel(draft.from, draft.to)) + '</b>' +
-      '<span class="small muted">' + U.esc((!draft.from && !draft.to) ? ((modId === 'schedule:all') ? '全部日程' : '全部时间') : rangeTextRaw(draft.from, draft.to)) + '</span></div>' +
+      '<div class="tf-preview"><b>' + U.esc((!draft.from && !draft.to) ? '全部时间' : rangeLabel(draft.from, draft.to)) + '</b>' +
+      '<span class="small muted">' + U.esc((!draft.from && !draft.to) ? '全部时间' : rangeTextRaw(draft.from, draft.to)) + '</span></div>' +
       '</div>' +
       '<div class="modal-foot">' +
       '<button class="btn ghost tap" data-tfclear>清除</button>' +
@@ -7174,6 +7926,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         }
         draft.span = 'custom';
         refreshUI();
+        liveApply();
         return;
       }
       var ok = e.target.closest('[data-tfok]');
@@ -7296,7 +8049,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         var arrow = on ? (dir === 'desc' ? ' ↓' : ' ↑') : '';
         return '<button class="pill tap' + (on ? ' on' : '') + '" data-act="histSort" data-k="' + sk.k + '">' + sk.t + arrow + '</button>';
       }).join('') + '</div>';
-      return '<div style="height:6px"></div><div class="hist-sort">' + pills + '</div>';
+      return '<div style="height:4px"></div><div class="hist-sort">' + pills + '</div>';
     }
 
     function compute() {
@@ -7315,13 +8068,13 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var el = UI.sheet(
       cfg.title || '历史记录',
       '<div id="histTf-' + modId + '">' + TF.btn(modId) + '</div>' +
-      (cfg.search === false ? '' : '<div style="height:8px"></div><input class="input hist-search" id="histQ-' + modId + '" placeholder="' + esc(cfg.searchPh || '🔍 搜索…') + '" value="' + esc(getQ(modId)) + '">') +
-      (cfg.extraBar ? '<div style="height:6px"></div><div id="histExtra-' + modId + '">' + renderExtra() + '</div>' : '') +
-      (cfg.extraBar2 ? '<div style="height:6px"></div><div id="histExtra2-' + modId + '">' + renderExtra2() + '</div>' : '') +
-      (cfg.extraBar3 ? '<div style="height:6px"></div><div id="histExtra3-' + modId + '">' + renderExtra3() + '</div>' : '') +
+      (cfg.search === false ? '' : '<div style="height:5px"></div><input class="input hist-search" id="histQ-' + modId + '" placeholder="' + esc(cfg.searchPh || '🔍 搜索…') + '" value="' + esc(getQ(modId)) + '">') +
+      (cfg.extraBar ? '<div style="height:4px"></div><div id="histExtra-' + modId + '">' + renderExtra() + '</div>' : '') +
+      (cfg.extraBar2 ? '<div style="height:4px"></div><div id="histExtra2-' + modId + '">' + renderExtra2() + '</div>' : '') +
+      (cfg.extraBar3 ? '<div style="height:4px"></div><div id="histExtra3-' + modId + '">' + renderExtra3() + '</div>' : '') +
       '<div id="histSort-' + modId + '">' + renderSort() + '</div>' +
-      (cfg.summary ? '<div id="histSum-' + modId + '" style="margin-top:8px"></div>' : '') +
-      '<div style="height:8px"></div>' +
+      (cfg.summary ? '<div id="histSum-' + modId + '" style="margin-top:5px"></div>' : '') +
+      '<div style="height:5px"></div>' +
       '<div id="histList-' + modId + '"></div>' +
       (cfg.pager ? '<div id="histPager-' + modId + '"></div>' : ''),
       '<button class="btn ghost tap" data-x>关闭</button>'
@@ -7510,7 +8263,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     if (rest.length) {
       html += '<button class="pill tap" data-act="histCatPick" data-bar="' + bar + '" data-ns="' + ns + '" data-cur="' + esc(cur || '') + '">更多 ▾</button>';
     }
-    return '<div class="row" style="gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 4px"><span class="small muted">' + esc(label) + '</span>' + html + '</div>';
+    return '<div class="row" style="gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 4px"><span class="pill cat-mng">🗂 ' + esc(label) + '：</span>' + html + '</div>';
   }
 
   w.Hist = {
@@ -8401,9 +9154,9 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     TF.def('checkin_hist', 'all');  // 默认显示全部时间，避免持久化残留"未来"等导致空结果
     var el = UI.sheet('打卡历史记录',
       '<div id="histTf-checkin_hist">' + TF.btn('checkin_hist') + '</div>' +
-      '<div style="height:12px"></div>' +
+      '<div style="height:4px"></div>' +
       '<input class="input hist-search" id="histQ-checkin_hist" placeholder="🔍 搜索打卡任务名称…" value="' + esc(chQ) + '">' +
-      '<div style="height:14px"></div>' +
+      '<div style="height:4px"></div>' +
       '<div id="histBody-checkin_hist"></div>' +
       '<div id="histPager-checkin_hist"></div>',
       '<button class="btn ghost tap" data-x>关闭</button>');
@@ -8444,22 +9197,23 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       else body = '<div class="list">' + pageArr.map(function (h) {
         var sb = slotBadge(h), st = habitStats(h);
         var daterange = '开始于 ' + ymd(h.start) + (h.ended ? ' · 结束于 ' + ymd(h.end) : '');
-        /* 顶层 item + item-ops 布局：内容全宽，操作区在底部一行（不再左右分栏导致空白）。
-           检查 .item > .item-ops 的 CSS（.*选择器*-ops 独立样式）以保证按钮可点、靠左对齐。 */
-        return '<div class="item hist-row"><div class="item-main">' +
+        /* 折叠行（与任务待办历史一致）：默认只显示标题/徽章/日期，点整行展开操作；
+           操作行按钮等分整行宽度，不再挤压截断 */
+        return '<div class="item clickable hist-row" data-toggle><div class="item-main">' +
           '<div class="item-title">' + esc(h.name) + (h.ended ? ' <span class="badge grey">已结束</span>' : '') + '</div>' +
           '<div class="item-meta">' + (sb ? '<span class="badge grey">' + sb + '</span>' : '') +
           '<span class="badge grey">打卡 ' + st.done + '/' + st.expected + ' 天</span>' +
           (st.missed ? '<span class="badge grey">断卡 ' + st.missed + ' 天</span>' : '') + '</div>' +
-          '<div class="small muted" style="margin-top:6px">' + daterange + '</div>' +
+          '<div class="small muted hist-date">' + daterange + '</div>' +
           '</div>' +
-          '<div class="item-ops hist-ops">' +
+          '<div class="item-detail">' +
+          '<div class="item-ops hist-ops-even">' +
           '<button class="link-btn tap" data-act="histView" data-id="' + h.id + '">查看</button>' +
           (h.ended
             ? '<button class="link-btn tap" data-act="histRestore" data-id="' + h.id + '">↩ 恢复</button>'
             : '<button class="link-btn tap" data-act="histEnd" data-id="' + h.id + '">立即结束</button>') +
           '<button class="link-btn del tap" data-act="histDel" data-id="' + h.id + '">🗑 删除</button>' +
-          '</div></div>';
+          '</div></div></div>';
       }).join('') + '</div>';
       bodyEl.innerHTML = body;
       pagerEl.innerHTML = pagerHTML(total, pages, chPg);
@@ -8476,6 +9230,11 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     if (qe) qe.oninput = function () { chQ = this.value; chPg = 1; drawList(); };
 
     el.addEventListener('click', function (e) {
+      /* 通用展开/折叠：点整行切换 open，展开后显示操作行（与主视图 data-toggle 行为一致） */
+      var tog = e.target.closest('.item.clickable');
+      if (tog && tog.hasAttribute('data-toggle') && !e.target.closest('[data-act]') && !e.target.closest('.item-ops')) {
+        e.preventDefault(); tog.classList.toggle('open'); return;
+      }
       var t = e.target.closest('[data-act]'); if (!t) return;
       var act = t.dataset.act;
       if (act === 'tfOpen') { e.preventDefault(); TF.open('checkin_hist', { onChange: function () { chPg = 1; renderTf(); drawList(); } }); return; }
@@ -9726,12 +10485,8 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     }
     return num(v.mins);
   }
-  function hm(m) {
-    m = Math.round(num(m));
-    if (!m) return '—';
-    var h = Math.floor(m / 60), mm = m % 60;
-    return (h ? h + '小时' : '') + (mm ? mm + '分' : (h ? '' : '0分'));
-  }
+  /* 时长统一走 U.minsText（全站唯一口径）：0 显示「0分」而非「—」，避免被误读成无数据/加载失败 */
+  function hm(m) { return U.minsText(m); }
 
   var worklog = {
     id: 'worklog', icon: '📝', name: '工作留痕',
@@ -10720,14 +11475,34 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
   var cal = { y: new Date().getFullYear(), m: new Date().getMonth() + 1 };
   var selDate = U.today();          // 当前选中的日期（用于显示当天日程列表）
   var schExp = {};                  // 当天日程列表：已展开备注的记录 id
-  var schView = 'day';              // 当前视图：'day'=当天 | 'all'=全部日程（近30天）
+  var schView = 'day';              // 当前视图：'day'=当天 | 'all'=全部日程（默认不限时间范围）
   var schSearch = '';               // 全部日程视图搜索关键词
   // 时间筛选使用 TF（timefilter），modId = 'schedule:all'
 
-  /* 近期日程窗口：今天起共 30 天（含今天），用于「全部日程」视图过滤 */
-  function recentWindow() {
-    var start = U.today();
-    return { start: start, end: U.shiftDay(start, 29) };
+  /* 一次性迁移：旧版该视图的时间筛选残留（如整年，按钮长期显示「2026年」）重置为全部时间；
+     首次 render 时执行（此时 Store 已加载），此后用户的选择照常持久化 */
+  function migrateSchTf() {
+    var ui = Store.data.ui = Store.data.ui || {};
+    if (ui.schTfReset) return;
+    var tf = ui.timefilter = ui.timefilter || {};
+    var s = tf['schedule:all'];
+    if (s && (s.span !== 'all' || s.from || s.to)) {
+      tf['schedule:all'] = { span: 'all', from: '', to: '', on: U.today() };
+    }
+    ui.schTfReset = true;
+    Store.save();
+  }
+
+  /* 一次性迁移 ②：该视图由「近期日程（默认近 30 天）」改为「全部日程」，
+     把此前残留的时间筛选（如按钮长期显示「近10天」）清成全部时间；
+     只执行一次，之后用户手动选的时间范围照常持久化生效。 */
+  function migrateSchTfAll() {
+    var ui = Store.data.ui = Store.data.ui || {};
+    if (ui.schTfShowAll) return;
+    var tf = ui.timefilter = ui.timefilter || {};
+    tf['schedule:all'] = { span: 'all', from: '', to: '', on: U.today() };
+    ui.schTfShowAll = true;
+    Store.save();
   }
 
   /* ---------- 颜色选项 ---------- */
@@ -10954,16 +11729,12 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       }).join('') + '</div>' + ListPager.pager('schedule:day', items.length);
   }
 
-  /* ---------- 全部日程视图（近30天，搜索 + 时间段筛选 + 时间轴 + 折叠） ---------- */
+  /* ---------- 全部日程视图（默认不限时间范围，搜索 + 时间段筛选 + 时间轴 + 折叠） ---------- */
   function allSchedulesFiltered() {
     var arr = (D().schedules || []).slice();
-    /* 近30天窗口：今天起共 30 天（含今天），只显示这段时间内的日程 */
-    var win = recentWindow();
-    arr = arr.filter(function (s) {
-      var d = s.date || '';
-      return d >= win.start && d <= win.end;
-    });
-    // 按日期+时间排序（全部日程：最近日期在前）
+    /* 全部日程：默认（未设置时间筛选）列出所有日程（含过去与未来），
+       不再叠加近 30 天隐式窗口；范围收窄完全交给右上角 TF 时间筛选器 */
+    // 按日期+时间排序（日期早的在前）
     arr.sort(function (a, b) { return (a.date || '').localeCompare(b.date || '') || (a.time || '').localeCompare(b.time || ''); });
     // 搜索过滤
     if (schSearch) {
@@ -10982,7 +11753,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var arr = allSchedulesFiltered();
     if (!arr.length) {
       return '<div class="sch-empty"><span class="sch-empty-text">' +
-        (schSearch ? '没有匹配「' + esc(schSearch) + '」的日程' : '近 30 天内暂无日程') + '</span></div>';
+        (schSearch ? '没有匹配「' + esc(schSearch) + '」的日程' : '暂无日程，点右下角 ＋ 添加') + '</span></div>';
     }
     var pageRows = ListPager.slice('schedule:all', arr);
     /* 按日期分组（参考财务流水 flow-date-header 模式） */
@@ -11307,6 +12078,8 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     id: 'schedule', icon: '📅', name: '日程提醒',
 
     render: function () {
+      migrateSchTf();
+      migrateSchTfAll();
       return UI.head('📅 日历', '管理你的日程安排') +
         calendarHTML() +
         viewTabsHTML() +
@@ -11514,12 +12287,8 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     return f;
   }
 
-  function dur(mins) {
-    mins = Math.round(num(mins));
-    if (!mins) return '0 分钟';
-    var h = Math.floor(mins / 60), m = mins % 60;
-    return (h ? h + ' 小时' : '') + (m ? m + ' 分钟' : (h ? '' : '0 分钟'));
-  }
+  /* 时长统一走 U.minsText（全站唯一口径，0 显示「0分」） */
+  function dur(mins) { return U.minsText(mins); }
   function pageBadge(x, clickable) {
     if (x.type !== 'book') return '';
     var p = num(x.page) || 0, total = num(x.pages);
@@ -11675,10 +12444,10 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       var stPills = [{ k: 'all', t: '全部' }, { k: 'wish', t: '想看' }, { k: 'doing', t: '在看' }, { k: 'done', t: '看完' }, { k: 'drop', t: '弃了' }];
       /* 分组布局：每组独占一行、标签定宽对齐；「全部时间」在卡片标题行，视图单独一行，再下一行是状态 */
       return '<div class="mf-bar">' +
-        '<div class="mf-row"><span class="mf-lbl">视图</span>' +
+        '<div class="mf-row"><span class="pill cat-mng">🗂 视图：</span>' +
           UI.pills([{ k: 'list', t: '☰ 列表' }, { k: 'grid', t: '▦ 封面墙' }], mediaView(), 'mview') +
         '</div>' +
-        '<div class="mf-row"><span class="mf-lbl">状态</span>' + UI.pills(stPills, App.tab('media', 'st', 'all'), 'st') + '</div>' +
+        '<div class="mf-row"><span class="pill cat-mng">🗂 状态：</span>' + UI.pills(stPills, App.tab('media', 'st', 'all'), 'st') + '</div>' +
         '<div class="mf-row">' + ListPager.sortPills('media:list', mediaSortKeys) + '</div>' +
         '</div>';
     },
@@ -12422,9 +13191,9 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       var wk = all.filter(function (x) { return x.date >= w0; }).reduce(function (s, x) { return s + num(x.mins); }, 0);
       return {
         stat: UI.stats([
-          ['当天学习', (tot / 60).toFixed(1) + ' 小时', true],
-          ['近 7 天', (wk / 60).toFixed(1) + ' 小时'],
-          ['累计学习', (totAll / 60).toFixed(1) + ' 小时'],
+          ['当天学习', U.minsText(tot), true],
+          ['近 7 天', U.minsText(wk)],
+          ['累计学习', U.minsText(totAll)],
           ['记录条数', all.length]
         ]),
         card: UI.card({
@@ -14330,13 +15099,13 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
       function renderTf() { tfEl.innerHTML = TF.btn(modId); }
       var el = UI.sheet('📔 历史日记',
         '<div id="dhTf">' + TF.btn(modId) + '</div>' +
-        '<div style="height:12px"></div>' +
+        '<div style="height:6px"></div>' +
         '<input class="input" id="dhq" placeholder="🔍 搜标题或正文关键词" value="' + esc(dh.q) + '">' +
-        '<div style="height:12px"></div>' +
-        '<div class="small muted" style="margin-bottom:6px">按心情</div><div id="dhMood">' + moodPills() + '</div>' +
-        '<div style="height:10px"></div>' +
-        '<div class="small muted" style="margin-bottom:6px">按标签</div><div id="dhTag">' + tagPills() + '</div>' +
-        '<div style="height:14px"></div>' +
+        '<div style="height:6px"></div>' +
+        '<div class="small muted" style="margin-bottom:3px">按心情</div><div id="dhMood">' + moodPills() + '</div>' +
+        '<div style="height:6px"></div>' +
+        '<div class="small muted" style="margin-bottom:3px">按标签</div><div id="dhTag">' + tagPills() + '</div>' +
+        '<div style="height:6px"></div>' +
         '<div id="dhList"></div>' +
         '<div id="dhPager"></div>',
         '<button class="btn ghost tap" data-x>关闭</button>');
@@ -17414,9 +18183,9 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     var prev = document.getElementById('finHistSheet'); if (prev) prev.remove();
     var fType = '', fAcc = '', q = '';
     var el = UI.sheet('💰 收支流水 · 全部历史',
-      '<div id="finHistBar"></div><div style="height:10px"></div>' +
+      '<div id="finHistBar"></div><div style="height:6px"></div>' +
       '<div class="row" style="gap:8px;align-items:center"><input class="input" id="finHistQ" placeholder="🔍 搜索分类 / 账户 / 备注…" style="flex:1;min-width:0"><span id="finHistTf"></span></div>' +
-      '<div style="height:12px"></div><div id="finHistList"></div>',
+      '<div style="height:6px"></div><div id="finHistList"></div>',
       '<button class="btn ghost tap" data-x>关闭</button>');
     el.id = 'finHistSheet';
     var barEl = el.querySelector('#finHistBar');
@@ -18329,7 +19098,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     id: 'settings', icon: '⚙️', name: '设置',
     render: function () {
       var d = D();
-      var _afs = (d.settings.fontScale && d.settings.fontScale !== 1.15) ? d.settings.fontScale : (window.UI && window.UI.deviceFontScale ? window.UI.deviceFontScale() : 1.15);
+      var _afs = (d.settings.fontScale) ? d.settings.fontScale : (window.UI && window.UI.deviceFontScale ? window.UI.deviceFontScale() : 1.15);
       var fsPct = Math.round(_afs * 100);
       var counts = [
         ['打卡任务', (d.checkin.habits || []).length],
@@ -18888,23 +19657,11 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
         else if (m <= 3) out.push({ kind: '整改临期', name: x.title + '（整改）', go: 'jiwei', tk: 'main', tv: 'inspect', warn: m === 0 });
       }
     });
-    (jw.punish || []).forEach(function (x) {
-      var e = (window.JWLink && window.JWLink.punEndDate) ? window.JWLink.punEndDate(x.cat, x.kind, x.date) : '';
-      if (!e) return;
-      var n = left(e);
-      var nm = (x.code ? x.code + '·' : '') + (x.kind || '处分');
-      if (n < 0 && n >= -30) out.push({ kind: '影响期已届满', name: nm, go: 'jiwei', tk: 'main', tv: 'punish', warn: false });
-    });
+    // 首页只展示需要处理的事项，不提示影响期已届满。
     return out;
   }
-  function fmtDur(mins) {
-    mins = Math.round(num(mins));
-    if (!mins) return '0分';
-    var h = Math.floor(mins / 60), m = mins % 60;
-    if (h && m) return h + '小时' + m + '分';
-    if (h) return h + '小时';
-    return m + '分';
-  }
+  /* 时长统一走 U.minsText（全站唯一口径，0 显示「0分」） */
+  function fmtDur(mins) { return U.minsText(mins); }
 
   /* ---------- 快速记一笔 ---------- */
   var QUICK = [
@@ -19108,7 +19865,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
             ' data-title="' + esc(it.name) + '">⏳ 延期</button>';
         }
         /* 点击整行跳转（替代原「去处理」胶囊）：跳转属性挂在行上；行内有延期按钮时 closest 自按钮命中，不会误触发跳转 */
-        return '<div class="tf-row' + (it.warn ? ' warn' : '') + '"' + jump + '>' +
+        return '<div class="tf-row home-today-row' + (it.warn ? ' warn' : '') + '"' + jump + '>' +
           '<span class="tf-tag' + (it.warn ? ' warn' : '') + '">' + esc(it.kind) + '</span>' +
           '<span class="tf-name">' + esc(it.name) + '</span>' +
           (deferBtn ? '<span class="tf-ops">' + deferBtn + '</span>' : '') +
@@ -21655,9 +22412,9 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     };
     window.applyBrand();
 
-    // 应用全局字体大小：未手动设置（沿用老默认 1.15）时按设备自动适配（手机放大 / 桌面原比例）
+    // 应用全局字体大小：只要有用户设置就严格尊重（含 1.15），仅在从未设置时按设备自动适配（手机放大 / 桌面原比例）
     var _fsPref = Store.data.settings.fontScale;
-    var _fsScale = (_fsPref && _fsPref !== 1.15) ? _fsPref : (window.UI && UI.deviceFontScale ? UI.deviceFontScale() : 1.15);
+    var _fsScale = (_fsPref) ? _fsPref : (window.UI && UI.deviceFontScale ? UI.deviceFontScale() : 1.15);
     if (window.UI && UI.applyFont) UI.applyFont(_fsScale);
 
     // 顶部导航栏固定（设置项，默认关闭 = 与当前一致：随页面滚动）
