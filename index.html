@@ -4916,6 +4916,15 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
 .home-today-row .tf-ops { flex-wrap:nowrap; }
 .home-today-row .tf-delay.btn.sm { height:38px; min-height:38px; padding:4px 12px; line-height:1.4; }
 </style>
+<style id="platform-layout-fixes">
+/* Case names and identifiers must remain inside the card at large text sizes. */
+[data-act="cExp"] .item-title { white-space:normal !important; overflow-wrap:anywhere; }
+[data-act="cExp"] .item-title .badge { max-width:100%; white-space:normal !important; overflow-wrap:anywhere; }
+@media (pointer:coarse) {
+  .jw-stage-track { max-width:100%; }
+  .modal-body input, .modal-body textarea, .modal-body select { scroll-margin-block:16px; }
+}
+</style>
 </head>
 <body data-page-node-id="k17xPH9tcBxJoIx0pey0qQ">
 
@@ -6518,6 +6527,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         var app = document.querySelector('.app');
         if (app) { app.setAttribute('aria-hidden', 'true'); app.setAttribute('inert', ''); }
       }
+      mask._returnFocus = document.activeElement;
       this.stack.push(mask);
       var modal = mask.querySelector('.modal') || mask;
       modal.setAttribute('role', 'dialog');
@@ -6525,11 +6535,17 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       if (!modal.getAttribute('aria-label') && !modal.getAttribute('aria-labelledby'))
         modal.setAttribute('aria-label', '对话框');
       var sel = 'a[href],button:not([disabled]),input:not([disabled]):not([type=hidden]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
-      var f = modal.querySelectorAll(sel);
+      function focusable() {
+        return Array.prototype.filter.call(modal.querySelectorAll(sel), function (el) {
+          return el.getClientRects().length && getComputedStyle(el).visibility !== 'hidden' && !el.closest('[inert]');
+        });
+      }
+      var f = focusable();
       // 优先聚焦首个输入控件（表单/搜索场景更自然），否则取 DOM 首个可聚焦元素
-      var first = modal.querySelector('input:not([type=hidden]),select,textarea') || f[0], last = f[f.length - 1];
-      if (!first) { modal.setAttribute('tabindex', '-1'); first = modal; last = modal; }
+      var first = f.filter(function (el) { return el.matches('input,select,textarea'); })[0] || f[0];
+      if (!first) { modal.setAttribute('tabindex', '-1'); first = modal; }
       function onKey(e) {
+        if (modalA11y.stack[modalA11y.stack.length - 1] !== mask) return;
         if (e.key === 'Escape') {
           e.preventDefault();
           var c = mask.querySelector('[data-x],[data-no]');
@@ -6537,19 +6553,24 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           return;
         }
         if (e.key === 'Tab') {
-          if (!f.length) { e.preventDefault(); return; }
-          if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-          else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+          f = focusable();
+          if (!f.length) { e.preventDefault(); modal.focus(); return; }
+          var start = f[0], end = f[f.length - 1];
+          if (e.shiftKey && (document.activeElement === start || !f.includes(document.activeElement))) { e.preventDefault(); end.focus(); }
+          else if (!e.shiftKey && (document.activeElement === end || !f.includes(document.activeElement))) { e.preventDefault(); start.focus(); }
         }
       }
       mask._a11yKey = onKey;
       mask.addEventListener('keydown', onKey);
-      setTimeout(function () { try { first.focus(); } catch (e) {} }, 40);
+      setTimeout(function () { if (!mask.isConnected || modalA11y.stack[modalA11y.stack.length - 1] !== mask) return; try { first.focus({ preventScroll: true }); } catch (e) {} }, 40);
     },
     close: function (mask) {
       var i = this.stack.indexOf(mask);
       if (i >= 0) this.stack.splice(i, 1);
       if (mask && mask._a11yKey) { try { mask.removeEventListener('keydown', mask._a11yKey); } catch (e) {} mask._a11yKey = null; }
+      if (this.stack.length && mask._returnFocus && mask._returnFocus.isConnected) {
+        try { mask._returnFocus.focus({ preventScroll: true }); } catch (e) {}
+      }
       if (!this.stack.length) {
         var app = document.querySelector('.app');
         if (app) { app.removeAttribute('aria-hidden'); app.removeAttribute('inert'); }
@@ -7430,6 +7451,8 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           window.visualViewport.addEventListener('resize', _scheduleVh);
           window.visualViewport.addEventListener('scroll', _scheduleVh);
         }
+        document.addEventListener('focusin', _scheduleVh);
+        document.addEventListener('focusout', _scheduleVh);
         window.addEventListener('resize', _scheduleVh);
         window.addEventListener('orientationchange', _scheduleVh);
       }
