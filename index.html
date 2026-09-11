@@ -1491,24 +1491,10 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 /* 图表 */
 .chart{ width:100%; overflow:hidden; }
 .chart svg{ width:100%; height:auto; display:block; }
-/* 图表可点击放大（手机端看清） */
-.chart-zoom{ position:relative; cursor:zoom-in; }
-.chart-zoom .chart-zoom-hint{
-  position:absolute; right:8px; bottom:6px; font-size:11px; color:#fff;
-  background:rgba(0,0,0,.42); padding:2px 8px; border-radius:10px; pointer-events:none;
-}
 /* 分类占比行（可点击展开明细） */
 .cat-prop-row{ padding:9px 0; border-bottom:1px solid var(--line); cursor:pointer; }
 .cat-prop-row:last-child{ border-bottom:0; }
 .cat-prop-row:active{ opacity:.6; }
-/* 图表放大灯箱 */
-.chart-lightbox{ background:rgba(20,12,10,.92); animation:lb-in .18s ease; }
-.chart-lightbox-inner{ position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; padding:calc(16px + env(safe-area-inset-top)) 14px calc(16px + env(safe-area-inset-bottom)); }
-.chart-lightbox-scroll{ max-width:100%; max-height:100%; overflow:auto; -webkit-overflow-scrolling:touch; }
-/* 放大后图表包一层白底卡片，避免透明背景看不清 */
-.chart-lightbox-card{ background:var(--card); border-radius:16px; padding:16px; width:100%; max-width:700px; box-shadow:0 12px 44px rgba(0,0,0,.45); }
-.chart-lightbox-card .chart{ width:100%; overflow:visible; }
-.chart-lightbox-card .chart svg{ width:100%; height:auto; }
 /* 备注折叠指示 */
 .item-chev{ margin-left:auto; color:var(--brown-3); font-size:12px; transition:transform var(--t); flex-shrink:0; }
 .item.clickable.open .item-chev{ transform:rotate(90deg); }
@@ -5060,7 +5046,14 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
 .fin-chart-scroll{margin-top:12px;border-radius:10px;background:var(--card);}
 .fin-plot{display:block;width:100%;height:auto;max-width:none;}.fin-axis{fill:var(--brown-2);font:11px -apple-system,sans-serif;}.fin-grid{stroke:var(--line);stroke-dasharray:3 4;}.fin-zero{stroke:var(--brown-3);stroke-dasharray:4 3;}
 .fin-inc{fill:var(--chart-accent);background:var(--chart-accent);}.fin-exp{fill:var(--chart-expense);background:var(--chart-expense);}.fin-trend{fill:none;stroke:var(--chart-accent);stroke-width:3;stroke-linejoin:round;stroke-linecap:round;}.fin-area{fill:var(--chart-accent);opacity:.10;}.fin-dot{fill:var(--chart-accent);stroke:var(--card);stroke-width:2;}
-.fin-chart-help{font-size:11px;color:var(--brown-2);margin:8px 0 12px;}.fin-data{border-top:1px solid var(--line);}.fin-data summary{padding:12px 0;font-size:12px;color:var(--brown-2);cursor:pointer;min-height:44px;}.fin-data table{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap;}.fin-data th,.fin-data td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums;}.fin-data th:first-child{text-align:left;}.fin-expand{width:100%;margin-top:10px;}.fin-empty{font-size:13px;text-align:center;color:var(--brown-2);padding:14px;}
+.fin-data{border-top:1px solid var(--line);margin-top:14px;}.fin-data summary{padding:12px 0;font-size:12px;color:var(--brown-2);cursor:pointer;min-height:44px;}.fin-data table{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap;}.fin-data th,.fin-data td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums;}.fin-data th:first-child{text-align:left;}.fin-empty{font-size:13px;text-align:center;color:var(--brown-2);padding:14px;}
+/* 数据点点击：数值浮标（替代原「放大查看」） */
+.fin-mobile-chart .fin-axis{pointer-events:none;}   /* 轴文字不挡热区 */
+.fin-hit{cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.fin-hit:active{opacity:.55;}
+.fin-tip-bg{fill:var(--card);stroke:var(--line);stroke-width:1;}
+.fin-tip-lead{stroke:var(--brown-3);stroke-dasharray:3 3;}
+.fin-mark-sel{stroke:var(--brown);stroke-width:2.2;}
 .card:has(.fin-mobile-chart)>.card-head{flex-wrap:wrap;gap:10px;}.card:has(.fin-mobile-chart)>.card-head .pills{flex-wrap:nowrap;gap:5px;}
 </style>
 <style id="charge-expanded-tint">
@@ -5135,10 +5128,13 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
 #view .worklog-timeline .wl-heading { display:flex;flex-wrap:wrap;align-items:baseline;gap:5px 7px;padding-right:12px; }
 #view .worklog-timeline .item-title { flex:0 1 auto;white-space:normal !important;overflow:visible !important;text-overflow:clip !important;overflow-wrap:anywhere;line-height:1.6; }
 #view .worklog-timeline .wl-heading>.badge { flex:none;white-space:nowrap !important; }
-#view .worklog-timeline .wl-classification { display:flex;flex-wrap:wrap;align-items:center;gap:5px 6px;margin-top:7px; }
-#view .worklog-timeline .wl-classification>.badge { flex:0 0 auto; }
-#view .worklog-timeline .wl-case-line { margin-top:7px;padding-top:7px;border-top:1px solid var(--line); }
-#view .worklog-timeline .wl-case-line>.badge { display:block;white-space:normal !important;overflow:visible !important;text-overflow:clip !important;overflow-wrap:anywhere;border-radius:8px;padding:5px 8px;line-height:1.6; }
+/* 分类标签 + 关联案件胶囊同排单行显示：案件名过长时尾部省略，绝不横向溢出
+   （nowrap 保证恰好一行；wl-case-line 负责伸缩，wl-tags 保持自然宽度） */
+#view .worklog-timeline .wl-meta-row { display:flex;flex-wrap:nowrap;align-items:center;gap:8px;margin-top:7px;min-width:0;max-width:100%; }
+#view .worklog-timeline .wl-tags { display:flex;flex:0 0 auto;align-items:center;gap:5px;min-width:0; }
+#view .worklog-timeline .wl-tags>.badge { flex:0 0 auto;white-space:nowrap !important; }
+#view .worklog-timeline .wl-case-line { display:flex;flex:1 1 auto;min-width:0;margin:0;padding:0;border-top:0; }
+#view .worklog-timeline .wl-case-line>.badge { display:block;min-width:0;max-width:100%;white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important;border-radius:8px;padding:5px 8px;line-height:1.6; }
 </style>
 <style id="cal-day-detail-readable">
 /* 日历「当天详情」弹窗：次要信息胶囊完整显示
@@ -6059,10 +6055,6 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           // 全局：列表分页 / 排序
           if (t.dataset.act === 'listPg' || t.dataset.act === 'listSort') {
             if (w.ListPager) { e.preventDefault(); w.ListPager.handle(t.dataset.act, t); } return;
-          }
-          // 全局：图表放大
-          if (t.dataset.act === 'chartZoom' && w.FinChart && w.FinChart.zoom) {
-            e.preventDefault(); w.FinChart.zoom(w.FinChart.store[t.dataset.cid]); return;
           }
           // 注：tfOpen 不在此处做全局拦截，各模块已在 acts / 本地 click 处理器中自行处理（含分页重置等业务逻辑）。
           // 若在此拦截会导致模块级 tfOpen 不会被执行（document 先于 view.onclick 触发），且与弹窗本地处理器冲突造成 picker 被重复 open 覆盖 onChange。
@@ -10158,12 +10150,14 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     if (D().worklog.some(function (w) { return w.fromTask === x.id; })) return '<span class="badge olive">📝 已留痕</span>';
     return '';
   }
-  /* 关联案件徽标：案件已删除则不显示 */
+  /* 关联案件徽标：案件已删除则不显示（只显示案件名称，完整名称见 title） */
   function tCaseBadge(x) {
     if (!x || !x.caseId || !window.JWLink) return '';
     try {
-      var nm = window.JWLink.caseName(x.caseId);
-      return nm ? '<span class="badge info">🔗 ' + U.esc(nm) + '</span>' : '';
+      var nm = window.JWLink.caseTitle(x.caseId);
+      if (!nm) return '';
+      var t = U.esc(nm);
+      return '<span class="badge info" title="关联案件：' + t + '">🔗 ' + t + '</span>';
     } catch (e) { return ''; }
   }
   /* 完成登记弹窗（通用）：用于「关联案件」或「纯工作类」任务。
@@ -10281,13 +10275,17 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         return true;
       });
       if (!all.length) return UI.empty('没有符合条件的任务', '📌', '点击悬浮「+」新建一个任务');
-      // 先按截止日期升序（逾期在前、临近在后），未设日期置顶；同日完成态排后
+      /* 排序口径：
+         · 待办（todo）：按截止日期升序 —— 逾期在前、临近在后，最该先办的排最上面；
+         · 全部 / 进行中 / 已完成：按截止日期倒序 —— 最近的时间排到上面，便于回看刚处理过的。
+         未设置日期的条目始终置顶；同一天内未完成排在已完成之前。 */
+      var desc = st !== 'todo';
       var sorted = all.slice().sort(function (a, b) {
         var da = a.due || '', db = b.due || '';
         if (da === db) return (a.status === 'done' ? 1 : 0) - (b.status === 'done' ? 1 : 0);
         if (da === '') return -1;
         if (db === '') return 1;
-        return da < db ? -1 : 1;
+        return (da < db ? -1 : 1) * (desc ? -1 : 1);
       });
       // 先分页（参考其他模块：ListPager.slice 取本页数据），再按日期分组渲染
       var ns = 'tasks:list';
@@ -10301,7 +10299,8 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         if (a === b) return 0;
         if (a === '') return -1;           // 未设置日期置顶
         if (b === '') return 1;
-        return a.localeCompare(b);          // 日期升序：逾期在前、临近在后
+        return desc ? b.localeCompare(a)   // 倒序：最近的时间在上
+                    : a.localeCompare(b);  // 升序：逾期在前、临近在后
       });
       var html = '<div class="task-timeline">';
       keys.forEach(function (d) {
@@ -10724,12 +10723,15 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     if (!x || !x.fromTask) return '';
     return '<span class="badge info">📌 来自任务</span>';
   }
-  /* 列表里的关联案件徽标；案件已删除则不显示 */
+  /* 列表里的关联案件徽标；案件已删除则不显示。只显示案件名称，不带线索/案件编号
+     名称过长时由 CSS 省略号截断，完整名称保留在 title 里可长按/悬停查看 */
   function wCaseBadge(x) {
     if (!x || !x.caseId || !window.JWLink) return '';
     try {
-      var nm = window.JWLink.caseName(x.caseId);
-      return nm ? '<span class="badge info">🔗 ' + U.esc(nm) + '</span>' : '';
+      var nm = window.JWLink.caseTitle(x.caseId);
+      if (!nm) return '';
+      var t = U.esc(nm);
+      return '<span class="badge info" title="关联案件：' + t + '">🔗 ' + t + '</span>';
     } catch (e) { return ''; }
   }
   function calcMins(v) {
@@ -10941,7 +10943,9 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           '<div class="item clickable" data-toggle data-id="' + x.id + '">' +
           '<div class="item-main">' +
           '<div class="wl-heading"><div class="item-title">' + esc(x.content || x.cat || '工作记录') + '</div></div>' +
-          (classRow ? '<div class="wl-classification">' + classRow + '</div>' : '') + (caseHtml ? '<div class="wl-case-line">' + caseHtml + '</div>' : '') +
+          (classRow || caseHtml ? '<div class="wl-meta-row">' +
+            (classRow ? '<span class="wl-tags">' + classRow + '</span>' : '') +
+            (caseHtml ? '<span class="wl-case-line">' + caseHtml + '</span>' : '') + '</div>' : '') +
           '<span class="caret">▸</span></div>' +
           '<div class="item-detail">' +
           (x.note ? '<div class="item-note">📝 ' + esc(x.note) + '</div>' : '') +
@@ -17626,9 +17630,118 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       (f.sub ? '<span class="badge grey">' + esc(f.sub) + '</span>' : '') + '</div>' +
       '</div></div>';
   }
-  // 图表点击放大：把图表 html 存进 store，点击时以更大尺寸灯箱展示
+  /* ---------- 图表数值浮标（点击柱形 / 折点显示该点数值） ----------
+     说明：图表只在原地局部更新（不整页刷新），因此横向滚动位置不会丢失。
+     调用链保持单向：finChartTap → finSetSvg（渲染），finSetSvg 不再回调其他渲染函数。 */
+  var FIN_GEO = {};                 // { chartId: {kind, rows, geo, w, h} }
+  var FIN_FS = 11, FIN_LH = 15, FIN_PAD = 10;
+  function finX(i, n, g) { return g.left + g.pw * (i + .5) / n; }
+  function finY(v, g) { return g.top + (g.hi - v) / (g.hi - g.lo) * g.ph; }
+  function finTextW(s) {
+    var w = 0;
+    for (var i = 0; i < s.length; i++) {
+      var c = s.charCodeAt(i);
+      if (c > 255) w += FIN_FS;
+      else if (c === 32) w += FIN_FS * .3;
+      else if (c === 46 || c === 44 || c === 58 || c === 47 || c === 37) w += FIN_FS * .32;
+      else w += FIN_FS * .6;
+    }
+    return w;
+  }
+  // 往 SVG 里注入标记片段（用外层 svg 解析，保证命名空间正确）
+  function finSetSvg(layer, str) {
+    layer.textContent = '';
+    if (!str) return;
+    var box = document.createElement('div');
+    box.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg">' + str + '</svg>';
+    var src = box.firstElementChild;
+    if (!src) return;
+    var frag = document.createDocumentFragment();
+    while (src.firstChild) frag.appendChild(src.firstChild);
+    layer.appendChild(frag);
+  }
+  /* lines: [{t:'文本', c:'填充色', u:是否加粗}] */
+  function finTipSvg(lines, g, cx, cy, w, h) {
+    var tw = 0;
+    lines.forEach(function (l) { tw = Math.max(tw, finTextW(l.t)); });
+    var bw = tw + FIN_PAD * 2, bh = lines.length * FIN_LH + 12;
+    // 锚点先收进绘图区，避免极端数值把浮标顶出画布
+    if (cy < g.top) cy = g.top;
+    if (cy > g.top + g.ph) cy = g.top + g.ph;
+    var bx = Math.min(Math.max(cx - bw / 2, 2), Math.max(2, w - bw - 2));
+    var above = (cy - bh - 12) >= 2;
+    var by = above ? cy - bh - 12 : cy + 12;
+    var maxY = Math.max(2, h - 2 - bh);
+    if (by < 2) by = 2;
+    if (by > maxY) by = maxY;
+    var out = '';
+    if (by + bh < cy - 1 || by > cy + 1) {
+      out += '<line class="fin-tip-lead" x1="' + cx.toFixed(1) + '" y1="' + (above ? by + bh : by).toFixed(1) +
+        '" x2="' + cx.toFixed(1) + '" y2="' + cy.toFixed(1) + '" stroke-linecap="round"/>';
+    }
+    out += '<rect class="fin-tip-bg" x="' + bx.toFixed(1) + '" y="' + by.toFixed(1) + '" width="' + bw.toFixed(1) +
+      '" height="' + bh.toFixed(1) + '" rx="7" ry="7"/>';
+    lines.forEach(function (l, i2) {
+      out += '<text x="' + (bx + FIN_PAD).toFixed(1) + '" y="' + (by + 18 + i2 * FIN_LH).toFixed(1) +
+        '" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif" font-size="' + FIN_FS +
+        '"' + (l.u ? ' font-weight="700"' : '') + ' fill="' + (l.c || '#331915') + '" class="fin-tip-t">' + esc(l.t) + '</text>';
+    });
+    return out;
+  }
+  function finSigned(v) { return (v > 0 ? '+' : v < 0 ? '-' : '') + U.moneyFull(Math.abs(v)); }
+  function finChartTap(t) {
+    var host = t.closest('.fin-mobile-chart');
+    if (!host) return;
+    var svg = host.querySelector('svg.fin-plot');
+    var layer = svg && svg.querySelector('.fin-tip-layer');
+    var meta = FIN_GEO[t.dataset.cid];
+    if (!svg || !layer || !meta) return;
+    var k = (t.dataset.k == null || t.dataset.k === '') ? null : +t.dataset.k;
+    var key = t.dataset.cid + ':' + t.dataset.i + ':' + (k === null ? '' : k);
+    var oldSel = svg.querySelector('.fin-mark-sel');
+    if (oldSel) oldSel.classList.remove('fin-mark-sel');
+    if (host.dataset.finSel === key) {          // 再点一次 → 收起浮标
+      host.dataset.finSel = '';
+      finSetSvg(layer, '');
+      return;
+    }
+    host.dataset.finSel = key;
+    var g = meta.geo, rows = meta.rows, n = rows.length, i = +t.dataset.i, r = rows[i];
+    if (!r) return;
+    var mark = svg.querySelector('[data-fin-mark="' + key + '"]');
+    if (mark) mark.classList.add('fin-mark-sel');
+    var cx, cy, lines;
+    if (meta.kind === 'bar') {
+      var v = k ? r.b : r.a, ov = k ? r.a : r.b;
+      cx = finX(i, n, g) + (k ? 10 : -10);
+      cy = Math.min(finY(v, g), finY(0, g));
+      lines = [
+        { t: r.t, u: true, c: '#331915' },
+        { t: (k ? '支出 ' : '收入 ') + U.moneyFull(v), u: true, c: k ? '#B4553F' : '#6E8A28' },
+        { t: (k ? '收入 ' : '支出 ') + U.moneyFull(ov), c: '#8A7A75' },
+        { t: '结余 ' + finSigned(r.a - r.b), c: (r.a - r.b) < 0 ? '#B4553F' : '#6E8A28' }
+      ];
+    } else {
+      cx = finX(i, n, g); cy = finY(r.v, g);
+      lines = [{ t: r.t, u: true, c: '#331915' }, { t: '资产净值 ' + U.moneyFull(r.v), u: true, c: '#6E8A28' }];
+      if (i > 0) {
+        var d = r.v - rows[i - 1].v;
+        lines.push({ t: '较上月 ' + finSigned(d), c: d < 0 ? '#B4553F' : '#6E8A28' });
+      }
+    }
+    finSetSvg(layer, finTipSvg(lines, g, cx, cy, meta.w, meta.h));
+  }
+  function finChartClear(t) {
+    var host = t.closest('.fin-mobile-chart');
+    if (!host) return;
+    host.dataset.finSel = '';
+    var layer = host.querySelector('.fin-tip-layer');
+    var sel = host.querySelector('.fin-mark-sel');
+    if (sel) sel.classList.remove('fin-mark-sel');
+    if (layer) finSetSvg(layer, '');
+  }
 
-  function mobileFinChart(rows, kind) {
+  function mobileFinChart(rows, kind, id) {
     var bar = kind === 'bar', values = [];
     rows.forEach(function(r){ if(bar) values.push(r.a,r.b); else values.push(r.v); });
     if (!rows.length) return '<div class="fin-empty">所选时间段暂无数据</div>';
@@ -17638,34 +17751,36 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     if(bar){if(lo<0)lo-=pad;if(hi>0)hi+=pad;if(hi===lo)hi=1;}else{lo-=pad;hi+=pad;}
     var width=Math.max(330,rows.length*(bar?46:56)+56), height=230, left=54,right=16,top=16,bottom=38;
     var pw=width-left-right, ph=height-top-bottom;
-    function y(v){return top+(hi-v)/(hi-lo)*ph;}
-    function x(i){return left+pw*(i+.5)/rows.length;}
+    var geo={left:left,right:right,top:top,bottom:bottom,pw:pw,ph:ph,lo:lo,hi:hi};
+    function y(v){return finY(v,geo);}
+    function x(i){return finX(i,rows.length,geo);}
+    function markOf(i,k){return id+':'+i+':'+(k===null||k===undefined?'':k);}
     function short(v){var a=Math.abs(v);return (v<0?'-':'')+(a>=10000?(a/10000).toFixed(a>=100000?0:1)+'万':a>=1000?(a/1000).toFixed(2)+'千':a.toFixed(a<10?1:0));}
     function full(v){return U.moneyFull(v);}
-    var svg='<svg class="fin-plot" viewBox="0 0 '+width+' '+height+'" style="min-width:'+width+'px" role="img" aria-label="'+(bar?'每月收入支出对比':'每月资产净值趋势')+'，准确金额见下方每月明细">';
+    var svg='<svg class="fin-plot" viewBox="0 0 '+width+' '+height+'" style="min-width:'+width+'px" role="img" aria-label="'+(bar?'每月收入支出对比，点击柱形查看该月数值':'每月资产净值趋势，点击折点查看该月数值')+'，准确金额见下方每月明细">';
     for(var j=0;j<=4;j++){var v=lo+(hi-lo)*j/4, yy=y(v);svg+='<line x1="'+left+'" y1="'+yy+'" x2="'+(width-right)+'" y2="'+yy+'" class="fin-grid"/><text x="'+(left-8)+'" y="'+(yy+4)+'" text-anchor="end" class="fin-axis">'+short(v)+'</text>';}
     if(lo<0&&hi>0)svg+='<line x1="'+left+'" y1="'+y(0)+'" x2="'+(width-right)+'" y2="'+y(0)+'" class="fin-zero"/>';
-    if(bar){rows.forEach(function(r,i){[r.a,r.b].forEach(function(v,k){svg+='<rect x="'+(x(i)+(k?3:-17))+'" y="'+Math.min(y(v),y(0))+'" width="14" height="'+Math.abs(y(v)-y(0))+'" rx="3" class="'+(k?'fin-exp':'fin-inc')+'"><title>'+esc(r.t+' '+(k?'支出':'收入')+' '+full(v))+'</title></rect>';});});}
+    if(bar){rows.forEach(function(r,i){[r.a,r.b].forEach(function(v,k){svg+='<rect x="'+(x(i)+(k?3:-17))+'" y="'+Math.min(y(v),y(0))+'" width="14" height="'+Math.abs(y(v)-y(0))+'" rx="3" class="'+(k?'fin-exp':'fin-inc')+'" data-fin-mark="'+markOf(i,k)+'"><title>'+esc(r.t+' '+(k?'支出':'收入')+' '+full(v))+'</title></rect>';});});}
     else {var path=rows.map(function(r,i){return (i?'L':'M')+x(i)+','+y(r.v);}).join(' ');
       if(rows.length>1)svg+='<path d="'+path+' L'+x(rows.length-1)+','+(height-bottom)+' L'+x(0)+','+(height-bottom)+' Z" class="fin-area"/><path d="'+path+'" class="fin-trend"/>';
-      rows.forEach(function(r,i){svg+='<circle cx="'+x(i)+'" cy="'+y(r.v)+'" r="4" class="fin-dot"><title>'+esc(r.t+' '+full(r.v))+'</title></circle>';});
+      rows.forEach(function(r,i){svg+='<circle cx="'+x(i)+'" cy="'+y(r.v)+'" r="4" class="fin-dot" data-fin-mark="'+markOf(i,null)+'"><title>'+esc(r.t+' '+full(r.v))+'</title></circle>';});
     }
-    rows.forEach(function(r,i){svg+='<text x="'+x(i)+'" y="'+(height-15)+'" text-anchor="middle" class="fin-axis">'+esc(r.t.slice(2).replace('-','/'))+'</text>';});svg+='</svg>';
+    // 点击热区：画在最上层，放大可点区域（手机好点）
+    if(bar){rows.forEach(function(r,i){[r.a,r.b].forEach(function(v,k){
+      var bx=x(i)+(k?3:-17);
+      svg+='<rect class="fin-hit" data-act="finPt" data-cid="'+id+'" data-i="'+i+'" data-k="'+k+'" x="'+(bx-6).toFixed(1)+'" y="'+top+'" width="26" height="'+ph+'" fill="transparent"><title>'+esc(r.t+' '+(k?'支出':'收入')+' '+full(v))+'</title></rect>';
+    });});}
+    else {rows.forEach(function(r,i){
+      svg+='<circle class="fin-hit" data-act="finPt" data-cid="'+id+'" data-i="'+i+'" cx="'+x(i).toFixed(1)+'" cy="'+y(r.v).toFixed(1)+'" r="13" fill="transparent"><title>'+esc(r.t+' '+full(r.v))+'</title></circle>';
+    });}
+    rows.forEach(function(r,i){svg+='<text x="'+x(i)+'" y="'+(height-15)+'" text-anchor="middle" class="fin-axis">'+esc(r.t.slice(2).replace('-','/'))+'</text>';});
+    svg+='<g class="fin-tip-layer"></g></svg>';
+    FIN_GEO[id]={kind:kind,rows:rows,geo:geo,w:width,h:height};
     var totalA=rows.reduce(function(s,r){return s+(bar?r.a:0);},0),totalB=rows.reduce(function(s,r){return s+(bar?r.b:0);},0);
     var summary=bar?'<div><span>期间收入</span><strong>'+full(totalA)+'</strong></div><div><span>期间支出</span><strong>'+full(totalB)+'</strong></div><div><span>收支结余</span><strong>'+full(totalA-totalB)+'</strong></div>':'<div><span>期末净值</span><strong>'+full(rows[rows.length-1].v)+'</strong></div><div><span>首末月差额</span><strong>'+full(rows[rows.length-1].v-rows[0].v)+'</strong></div>';
     var table='<details class="fin-data"><summary>查看每月明细 · '+rows.length+' 个月</summary><div class="fin-table-scroll"><table><thead><tr><th>月份</th>'+(bar?'<th>收入</th><th>支出</th><th>结余</th>':'<th>月末净值</th>')+'</tr></thead><tbody>'+rows.map(function(r){return '<tr><th>'+esc(r.t)+'</th>'+(bar?'<td>'+full(r.a)+'</td><td>'+full(r.b)+'</td><td>'+full(r.a-r.b)+'</td>':'<td>'+full(r.v)+'</td>')+'</tr>';}).join('')+'</tbody></table></div></details>';
-    return '<section class="fin-mobile-chart"><div class="fin-chart-summary">'+summary+'</div><div class="fin-legend">'+(bar?'<span><i class="fin-inc"></i>收入</span><span><i class="fin-exp"></i>支出</span>':'<span><i class="fin-inc"></i>资产净值</span>')+'<span>单位：元</span></div>'+(values.every(function(v){return v===0;})?'<div class="fin-empty">本时段金额均为 0</div>':'')+'<div class="fin-chart-scroll" tabindex="0" aria-label="按月份横向滚动图表">'+svg+'</div><p class="fin-chart-help">'+(width>330?'左右滑动查看月份 · ':'')+'展开明细查看准确金额</p>'+table+'</section>';
+    return '<section class="fin-mobile-chart"><div class="fin-chart-summary">'+summary+'</div><div class="fin-legend">'+(bar?'<span><i class="fin-inc"></i>收入</span><span><i class="fin-exp"></i>支出</span>':'<span><i class="fin-inc"></i>资产净值</span>')+'<span>单位：元</span></div>'+(values.every(function(v){return v===0;})?'<div class="fin-empty">本时段金额均为 0</div>':'')+'<div class="fin-chart-scroll" tabindex="0" role="group" aria-label="按月份横向滚动图表" data-act="finPtClear">'+svg+'</div>'+table+'</section>';
   }
-
-  var FIN_CHARTS = {};
-  function wrapChart(html, id) {
-    FIN_CHARTS[id] = html;
-    return html + '<button class="btn ghost sm fin-expand" data-act="chartZoom" data-cid="' + id + '">⤢ 放大查看</button>';
-  }
-  window.FinChart = {
-    store: FIN_CHARTS, wrap: wrapChart,
-    zoom: function(html) { if(html) UI.sheet('图表详情', html); }
-  };
 
   var finance = {
     id: 'finance', icon: '💰', name: '财务记账',
@@ -17845,7 +17960,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       return UI.card({
         title: '📊 收支柱状图',
         right: UI.pills([{ k: '3', t: '近3月' }, { k: '6', t: '近6月' }, { k: '12', t: '近12月' }, { k: 'year', t: '本年' }], barMon, 'barmon'),
-        body: wrapChart(mobileFinChart(barRows, 'bar'), 'finBar')
+        body: mobileFinChart(barRows, 'bar', 'finBar')
       }) +
         UI.card({
           title: '🥧 分类占比',
@@ -17859,7 +17974,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         UI.card({
           title: '📈 资产净值变化',
           right: TF.btn('finance_net', { sm: true }),
-          body: wrapChart(mobileFinChart(netPts, 'line'), 'finNet')
+          body: mobileFinChart(netPts, 'line', 'finNet')
         }) +
         UI.card({
           title: '⚙️ 收支分类管理',
@@ -17873,6 +17988,9 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       ftype: function (t) { App.setTab('finance', 'ftype', t.dataset.k); ListPager.resetPg('finance:flow'); App.refresh(); },
       facc: function (t) { App.setTab('finance', 'facc', t.dataset.k); ListPager.resetPg('finance:flow'); App.refresh(); },
       barmon: function (t) { App.setTab('finance', 'barmon', t.dataset.k); App.refresh(); },
+      // 统计图表：点柱形 / 折点显示数值（局部更新 DOM，不整页刷新，横向滚动位置不丢）
+      finPt: function (t) { finChartTap(t); },
+      finPtClear: function (t) { finChartClear(t); },
       tfOpen: function (t) {
         TF.open(t.dataset.tf, { onChange: function () { ListPager.resetPg('finance:flow'); App.refresh(); } });
       },
@@ -18997,13 +19115,13 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
   App.register(wish);
 
   /* =========================================================
-     11. 👥 家人档案
+     11. 👪 家人档案
   ========================================================= */
   var family = {
-    id: 'family', icon: '👥', name: '家人档案',
+    id: 'family', icon: '👪', name: '家人档案',
     render: function () {
       var arr = D().family;
-      return UI.head('👥 家人档案', '尺码、喜好、忌口一目了然，送礼买衣不出错') +
+      return UI.head('👪 家人档案', '尺码、喜好、忌口一目了然，送礼买衣不出错') +
         UI.card({
           title: '成员档案', sub: arr.length + ' 位', right: '',
           body: '<input class="input" id="faSearch" placeholder="🔍 搜索姓名 / 关系 / 喜好 / 忌口 / 备注" value="' + esc(faQ) + '" style="margin-bottom:14px">' +
@@ -19024,7 +19142,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       });
       return ListPager.out({
         ns: 'people:family', items: arr, defSize: 5,
-        empty: qq ? '没有匹配的家人档案' : '添加家人档案，买东西不再靠猜', emptyIcon: '👥',
+        empty: qq ? '没有匹配的家人档案' : '添加家人档案，买东西不再靠猜', emptyIcon: '👪',
         render: renderFamilyItem
       });
     },
@@ -19964,7 +20082,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     { id: 'items', name: '物品管理', icon: '📦' },
     { id: 'anniv', name: '纪念日', icon: '💝' },
     { id: 'wish', name: '愿望清单', icon: '🌟' },
-    { id: 'family', name: '家人档案', icon: '👨‍👩‍👧' },
+    { id: 'family', name: '家人档案', icon: '👪' },
     { id: 'cat', name: '猫咪档案', icon: '🐱' },
     { id: 'jiwei', name: '纪检监察', icon: '⚖️' }
   ];
@@ -20033,7 +20151,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     { pid: 'wish', name: '愿望清单', icon: '🌟', items: [
       { id: 'ws_progress', k: '愿望进度', defOn: false },
       { id: 'ws_done', k: '已完成愿望', defOn: false } ] },
-    { pid: 'family', name: '家人档案', icon: '👨‍👩‍👧', items: [
+    { pid: 'family', name: '家人档案', icon: '👪', items: [
       { id: 'fm_count', k: '家人', defOn: false } ] },
     { pid: 'cat', name: '猫咪档案', icon: '🐱', items: [
       { id: 'ct_count', k: '宠物', defOn: false } ] },
@@ -22360,6 +22478,12 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     caseName: function (id) {
       var c = findCase(id);
       return c ? ((c.no ? c.no + '·' : '') + (c.title || '未命名案件')) : '';
+    },
+    /* 只要案件名称（不带前面的线索/案件编号）：列表徽标等展示场景使用，
+       编号仅在下拉选择、确认弹窗等需要区分同名案件的场景保留 */
+    caseTitle: function (id) {
+      var c = findCase(id);
+      return c ? (c.title || '未命名案件') : '';
     },
     /* 写入 / 更新一条办理进度：同 src + srcId 视为同一条，先删后插（覆盖更新） */
     upsert: function (caseId, log) {
