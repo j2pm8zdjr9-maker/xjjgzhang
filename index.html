@@ -215,7 +215,9 @@ body{
   margin:0;
   background:var(--bg);
   color:var(--brown);
-  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",Roboto,sans-serif;
+  /* 末尾补入各平台「彩色 emoji」字体：只在前面文字字体都缺该字形时才生效，
+     用于阻止浏览器回退到「Segoe UI Symbol」等黑白符号字体，保证全站 emoji 风格统一。 */
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",Roboto,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
   font-size:15px;
   line-height:1.65;
   -webkit-font-smoothing:antialiased;
@@ -3158,7 +3160,7 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .tabs{ border-radius:999px; padding:4px; }
 .tab{ border-radius:999px; }
 .pill{ border-radius:999px; }
-/* 分类筛选条行首的「🗂 分类：」管理胶囊：深色底白字，与未选（白底灰边）/选中（橄榄色实底）胶囊明显区分，点击打开分类管理 */
+/* 分类筛选条行首的「🗂️ 分类：」管理胶囊：深色底白字，与未选（白底灰边）/选中（橄榄色实底）胶囊明显区分，点击打开分类管理 */
 .pill.cat-mng, .pill.sort-lbl{ background:var(--brown-2) !important; border-color:var(--brown-2) !important; color:var(--card) !important; font-size:12px; padding:5px 10px; border-radius:999px; }
 .pill.cat-mng:active{ background:var(--brown); border-color:var(--brown); }
 .pill.sort-lbl{ cursor:default; font-weight:600; }
@@ -3222,6 +3224,31 @@ table.tbl td.ops{ white-space:nowrap; text-align:right; }
 .jw-tl-date-hd{ margin-top:4px; }
 .jw-tl-date-text{ font-size:14px !important; font-weight:650 !important; }
 .jw-tl-group{ font-size:12.5px !important; font-weight:650 !important; color:var(--brown-2) !important; }
+
+/* 办理进度（待办/已办）卡片紧凑化：
+   问题：每条记录纵向 ~75px（卡内边距 7px + 徽章 12px 字号/10px 内边距 + 日期组头 14px + 条目间距 6px），
+   5 条记录占满一屏，移动端太松。
+   改法：卡内边距 7→5、徽章 12px/3px 10px → 11px/2px 8px、组头 14→13px、条目间距 6→4、外框 10/12→8/10。
+   零影响说明：全部选择器限定 .jw-tl-* / .jw-section-box（纪检监察办理进度专属），其他模块的 .badge / 卡片不受影响。 */
+.jw-tl-card{ padding:5px 8px !important; }
+.jw-tl-card .jw-tl-head{ margin-top:3px; gap:4px; }
+.jw-tl-card .jw-tl-head .badge{ font-size:10.5px; padding:2px 7px; gap:3px; line-height:1.25; }
+/* 标题单行省略（全文在 title 属性 / 点击后的编辑弹窗里），避免长标题折两行还把时间段徽章挤下去 */
+.jw-tl-card .jw-tl-text{ font-size:13px !important; line-height:1.4 !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+/* 卡片 = 弹性行（仅含时间徽章的已办卡片，待办卡片不受影响）：
+   左列(标题+徽章行) + 时间徽章直接子项，相对整卡上下居中 */
+.jw-tl-card:has(.jw-tl-time){ display:flex; align-items:center; gap:6px; }
+.jw-tl-card .jw-tl-maincol{ flex:1 1 0; min-width:0; }
+.jw-tl-card .jw-tl-time{ flex:0 0 auto; font-size:10.5px; padding:2px 7px; gap:3px; line-height:1.25; }
+.jw-tl-card .jw-tl-head .badge{ font-size:10.5px; padding:2px 7px; gap:3px; }
+.jw-tl-card .jw-tl-text{ font-size:13px !important; line-height:1.4 !important; }
+.jw-tl-item .jw-tl-body{ padding-bottom:4px !important; }
+.jw-tl-date-hd{ padding:3px 2px 2px !important; margin-top:2px !important; }
+.jw-tl-date-text{ font-size:13px !important; }
+.jw-tl-date-count{ font-size:11px !important; }
+.jw-section-box{ padding:8px 10px 10px !important; }
+.rec-more{ margin-top:2px; }
+.rec-more .link-btn{ font-size:11.5px; }
 
 /* ==================== 日程时间轴"全天"标签强化 ====================
    原 .tl-time 用 var(--brown-3) 浅灰 11px 小字，时间数字（如 09:30）合理但"全天"
@@ -3816,7 +3843,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
     color:#fff !important;
     box-shadow:0 5px 14px var(--olive-24) !important;
   }
-  /* 筛选条标题胶囊（🗂 分类：/排序：）深底：用深灰棕实心胶囊+浅字，避免与未选透明药丸/选中渐变药丸撞色 */
+  /* 筛选条标题胶囊（🗂️ 分类：/排序：）深底：用深灰棕实心胶囊+浅字，避免与未选透明药丸/选中渐变药丸撞色 */
   :root:not([data-theme="light"]) .pill.cat-mng,
   :root:not([data-theme="light"]) .pill.sort-lbl{
     background:var(--brown-4) !important; border-color:var(--brown-4) !important; color:var(--brown) !important;
@@ -3931,7 +3958,7 @@ body.heal-flash-on .tf-row.warn{ animation:heal-flash-warn 1.6s ease-in-out infi
   color:#fff !important;
   box-shadow:0 5px 14px var(--olive-24) !important;
 }
-/* 筛选条标题胶囊（🗂 分类：/排序：）强制深底：深灰棕实心+浅字 */
+/* 筛选条标题胶囊（🗂️ 分类：/排序：）强制深底：深灰棕实心+浅字 */
 :root[data-theme="dark"] .pill.cat-mng,
 :root[data-theme="dark"] .pill.sort-lbl{
   background:var(--brown-4) !important; border-color:var(--brown-4) !important; color:var(--brown) !important;
@@ -5151,6 +5178,113 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
 /* 标题同理：详情弹窗里不再单行截断 */
 .cal-day-sheet .item .item-title { white-space:normal !important; overflow:visible !important; text-overflow:clip !important; overflow-wrap:anywhere; }
 </style>
+<style id="task-note-like-worklog">
+/* 任务待办的「备注」对齐工作留痕的备注显示
+   问题：备注卡片样式只挂在 .item-detail .item-note 上，而任务待办的展开区分别是
+   .task-tl-detail（主列表）/ .task-detail（历史记录弹窗），两者都不在 .item-detail 内，
+   于是任务备注完全没拿到卡片样式 —— 没底色、没边框、没圆角，字号还沿用 15px，
+   在列表里和正文糊成一片，看不出这是「备注」。
+   改：给这两类容器里的备注补上与工作留痕完全一致的浅色内嵌小卡片
+   （📝 前缀 + 13px + 紧凑行距 + 圆角浅底）。
+   实现方式只新增选择器、不动任何既有声明值，因此对工作留痕等已生效的模块零影响。 */
+.task-tl-detail .item-note,
+.task-detail .item-note{
+  margin-top:0; padding:6px 10px;
+  background:var(--olive-05) !important; border:1px solid var(--line) !important;
+  border-radius:calc(var(--r) - 4px);
+  font-size:13px; line-height:1.5; color:var(--brown-2) !important;
+  white-space:pre-wrap; word-break:break-word; overflow-wrap:anywhere;
+}
+/* 历史记录弹窗里的「（无备注）」占位同样走浅色小卡片，不再是一行孤零零的灰字 */
+.task-detail .small.muted{
+  margin-top:0; padding:6px 10px;
+  background:var(--olive-05) !important; border:1px solid var(--line) !important;
+  border-radius:calc(var(--r) - 4px); color:var(--brown-3) !important;
+}
+/* 窄屏内边距与工作留痕保持一致（对应 @media(max-width:600px) 里的 5px 9px） */
+@media (max-width:600px){
+  .task-tl-detail .item-note, .task-detail .item-note,
+  .task-detail .small.muted{ padding:5px 9px; }
+}
+</style>
+<style id="task-detail-block-gap">
+/* 任务待办展开区「子块之间的垂直间距」对齐工作留痕
+   问题：操作行原先排在展开区第一位，所以从来没配过 margin-top；本轮把它移到末尾后，
+   它与上方内容（备注 / 子任务）直接贴合 —— 实测间距 0px，视觉上按钮像贴在备注卡片底边上。
+   对照工作留痕同一处：ops 自带 margin-top:6px，实测「备注 → 操作」= 6.9px。
+   改：展开区相邻子块统一 6px 间距，与留痕一致；顺带把 .subs 原本的 8px 也收齐到 6px，
+   避免出现「备注→子任务 9.2px，子任务→操作 0px」这种忽宽忽窄的节奏。
+   为什么用 !important：本容器里「办理内容 + 备注」会出现两个 .item-note 相邻，
+   而上面 task-note-like-worklog 那条 `.task-tl-detail .item-note{margin-top:0}` 是 0-2-0 优先级，
+   比 `.task-tl-detail > * + *`（0-1-0）高，会把间距重新压回 0；.subs 的 margin-top:8px 同理需要被盖掉。
+   .task-tl-detail 只用于任务待办主列表（历史弹窗走 .task-detail），因此这里加 !important 不影响别处。 */
+.task-tl-detail > * + *{ margin-top:6px !important; }
+</style>
+<style id="worklog-timeline-view">
+/* 工作留痕「时间轴视图」：按真实时钟比例定位，重叠任务自动分列 / 套叠。
+   问题：原来的「当天工作内容」是按记录顺序等距堆叠的卡片列表，纵向位置与真实时间无关，
+   时间互相重叠时必须靠肉眼比较两串时间数字才能发现（如 10:26–13:15 与 11:11–12:41 完全包含）。
+   改法：新增本视图，纵坐标 = 真实分钟数（条长即耗时），重叠任务贪心分列，包含关系套叠内嵌，
+   重叠时段加底色带，顶部给「并行 N 项」徽章。列表视图保留不动，可随时切换。
+   零影响说明：全部选择器都以 .wl- 前缀命名，且只挂在新增的 .wl-tl / .wl-view-switch 容器上，
+   不触碰任何既有类名（.timeline / .tl-item / .item 等），因此对其它模块与列表视图零影响。 */
+.wl-view-switch{ display:inline-flex; align-items:center; gap:2px; padding:2px; border-radius:999px; background:var(--olive-05); border:1px solid var(--line); flex:0 0 auto; }
+.wl-vs-btn{ border:0; background:transparent; color:var(--brown-2); font-size:12px; font-weight:550; padding:3px 10px; border-radius:999px; cursor:pointer; white-space:nowrap; line-height:1.5; }
+.wl-vs-btn.on{ background:var(--olive); color:var(--on); }
+.wl-tl-top{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin:0 0 8px; }
+.wl-tl-note{ font-size:11px; color:var(--brown-3); font-variant-numeric:tabular-nums; }
+.wl-tl-par{ font-size:11px; color:var(--olive-deep); background:var(--olive-10); border-radius:999px; padding:1px 8px; white-space:nowrap; }
+.wl-tl{ position:relative; margin:0 0 2px; }
+.wl-tl-grid{ position:absolute; left:0; right:0; border-top:1px dashed var(--line); pointer-events:none; }
+.wl-tl-hour{ position:absolute; left:0; width:36px; padding-right:3px; box-sizing:border-box; text-align:right; font-size:11px; color:var(--brown-3); font-variant-numeric:tabular-nums; background:var(--card); pointer-events:none; z-index:1; }
+.wl-tl-band{ position:absolute; left:40px; right:8px; border-radius:5px; box-sizing:border-box; background:var(--olive-16);
+  border-left:1px dashed var(--olive); border-right:1px dashed var(--olive); pointer-events:none; z-index:2; }
+.wl-tl-lanes{ position:absolute; left:40px; right:8px; top:0; bottom:0; display:flex; gap:6px; z-index:1; }
+.wl-tl-lane{ position:relative; flex:1 1 0; min-width:0; }
+.wl-tl-bar{ position:absolute; left:0; right:0; box-sizing:border-box; border-radius:8px; padding:3px 7px 3px 6px; overflow:hidden; text-align:left;
+  background:var(--olive-10); border:1px solid var(--olive-24); border-left:3px solid var(--olive-soft); cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.wl-tl-bar:active{ background:var(--olive-16); }
+.wl-tl-bar.nest{ background:var(--card); border:1px solid var(--olive-16); border-left:3px solid var(--olive); box-shadow:0 1px 3px rgba(26,42,36,.06); left:14px; right:14px; }
+.wl-tl-bar.host{ background:var(--olive-05); border:1px dashed var(--olive-soft); border-left:3px dashed var(--olive-soft); }
+.wl-tl-bar.open{ border-bottom-style:dashed; }
+.wl-tl-bar-t{ font-size:12px; font-weight:600; color:var(--brown); line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+/* 条够高时标题允许折到 2 行：移动端单列只有 ~113px，长标题（如「调贾集修常庄修路一事一议材料」）一行放不下 */
+.wl-tl-bar-t.tw{ display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; white-space:normal; overflow-wrap:anywhere; }
+.wl-tl-bar-s{ font-size:11px; color:var(--brown-2); line-height:1.35; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-variant-numeric:tabular-nums; }
+.wl-tl-notime{ margin-top:12px; padding-top:10px; border-top:1px dashed var(--line); }
+.wl-tl-notime-h{ font-size:11px; color:var(--brown-3); margin-bottom:6px; }
+.wl-tl-chip{ display:block; width:100%; box-sizing:border-box; text-align:left; background:var(--cream-soft); border:1px solid var(--line);
+  border-radius:8px; padding:7px 9px; margin-bottom:6px; font-size:12px; color:var(--brown); cursor:pointer; }
+.wl-tl-chip:active{ background:var(--card-hov); }
+.wl-tl-chip .wl-tl-note{ margin-left:6px; }
+.wl-detail{ display:flex; flex-direction:column; gap:7px; }
+.wl-detail-title{ font-size:15px; font-weight:650; color:var(--brown); margin:0; line-height:1.45; }
+</style>
+<style id="vehicle-charge-ui">
+/* 车辆管理 · 充电/加油记录行（问题 → 改法 → 为什么零影响）
+   1) 金额徽标（电费 / 免费 / 待抄表 / 加油金额）原来挂在首行 .row.between 里，视觉上贴着日期那一行顶端。
+      改成行容器的直接子项 + align-items:center，让它相对整行上下居中。
+   2) .charge-fee / .refuel-fee 只负责「不许被压缩」，避免长金额（¥1,234.56）被 flex 挤变形。
+   3) 「充电地点」标签本身是清除入口（button[data-act]），这里只补一个可点击的光标提示；
+      其余 .filter-heading（6 处纯标签）不受影响，因为选择器限定了 button + [data-act]。
+   选择器都是 .charge-* / .refuel-* / button.pill.filter-heading 专属，只新增选择器，不改任何既有声明值。 */
+.charge-row, .refuel-row{ align-items:center; }
+.charge-fee, .refuel-fee{ flex:0 0 auto; display:flex; align-items:center; }
+:root:root:root button.pill.filter-heading[data-act]{ cursor:pointer; }
+/* 充电/加油「历史记录」弹窗行重排：
+   旧：日期行(右上角一枚带框的电费大徽标) + 胶囊行 + 「─────」虚线分隔 + 独立的编辑/删除行（三行，很松）。
+   新：日期左、金额右（相对整行垂直居中，与主列表同款），说明胶囊与编辑/删除并排一行 → 两行。
+   选择器限定 .ev-hist-*，其他模块的历史行（.item.hist-row）不受影响。 */
+.item.hist-row.ev-hist-row{ flex-direction:row; align-items:center; gap:10px; }
+.item.hist-row.ev-hist-row .item-main{ flex:1 1 auto; min-width:0; gap:5px; }
+.ev-hist-fee{ flex:0 0 auto; display:flex; align-items:center; }
+.ev-hist-top{ display:flex; align-items:center; justify-content:space-between; gap:8px; min-width:0; }
+#modalRoot .item.hist-row.ev-hist-row .ev-hist-top .item-title{ flex:0 1 auto; white-space:nowrap !important; overflow:hidden; text-overflow:ellipsis; }
+.ev-hist-meta-row{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; min-width:0; }
+.ev-hist-meta-row > .item-meta{ flex:0 1 auto; min-width:0; }
+.ev-hist-ops{ flex:0 0 auto; display:flex; gap:2px; }
+#modalRoot .item.hist-row.ev-hist-row .ev-hist-ops .link-btn{ font-size:12px !important; padding:3px 6px !important; }
+</style>
 </head>
 <body data-page-node-id="k17xPH9tcBxJoIx0pey0qQ">
 
@@ -6216,7 +6350,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         return '<div class="water-log-row">' +
           '<span class="wl-time">' + esc(e.t) + '</span>' +
           '<span class="wl-amt' + (neg ? ' neg' : '') + '">' + (neg ? '' : '+') + v + ' ml</span>' +
-          '<button class="link-btn del tap" data-act="' + delAct + '" data-id="' + e.id + '">🗑 删除</button>' +
+          '<button class="link-btn del tap" data-act="' + delAct + '" data-id="' + e.id + '">🗑️ 删除</button>' +
           '</div>';
       }).join('');
       if (log.length > LIMIT) {
@@ -6888,7 +7022,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     ops: function (id, editAct, delAct, extra, cls) {
       var h = '<div class="' + (cls || 'item-ops') + '">' + (extra || '');
       if (editAct) h += '<button class="link-btn tap" data-act="' + editAct + '" data-id="' + id + '">✏️ 编辑</button>';
-      if (delAct) h += '<button class="link-btn del tap" data-act="' + delAct + '" data-id="' + id + '">🗑 删除</button>';
+      if (delAct) h += '<button class="link-btn del tap" data-act="' + delAct + '" data-id="' + id + '">🗑️ 删除</button>';
       return h + '</div>';
     },
 
@@ -7947,7 +8081,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     var title = rangeText(modId);
     var empty = s.span === 'all' || (!s.from && !s.to);
     var cls = 'tf-btn tap' + (empty ? ' tf-btn-empty' : '') + (opt.block ? ' block' : '') + (opt.sm ? ' sm' : '');
-    var icon = opt.icon || '🗓';
+    var icon = opt.icon || '🗓️';
     return '<button class="' + cls + '" data-act="tfOpen" data-tf="' + U.esc(modId) + '" title="' + U.esc(title) + '">' +
       '<span class="tf-btn-ico">' + icon + '</span>' +
       '<span class="tf-btn-txt">' + U.esc(txt) + '</span>' +
@@ -8981,7 +9115,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
               (i > 0 ? '<button class="link-btn tap" data-act="catUp" data-c="' + U.esc(c) + '">↑</button>' : '') +
               (i < cats.length - 1 ? '<button class="link-btn tap" data-act="catDown" data-c="' + U.esc(c) + '">↓</button>' : '') +
               '<button class="link-btn tap" data-act="catEdit" data-c="' + U.esc(c) + '">编辑</button>' +
-              '<button class="link-btn del tap" data-act="catDel" data-c="' + U.esc(c) + '">🗑 删除</button></div></div>';
+              '<button class="link-btn del tap" data-act="catDel" data-c="' + U.esc(c) + '">🗑️ 删除</button></div></div>';
           }).join('') : UI.empty('还没有分类，先添加一个吧')) + '</div>';
       };
       var el = UI.sheet(title || '分类管理', render(), '<button class="btn ghost tap" data-x>关闭</button>');
@@ -9138,7 +9272,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
   var esc = U.esc, num = U.num, TF = window.TF, D = function () { return Store.data; };
 
   /* =========================================================
-     1. 📋 打卡（习惯打卡追踪）
+     1. 📋️ 打卡（习惯打卡追踪）
   ========================================================= */
   var cur = { day: U.today() };
   var ccal = { y: new Date().getFullYear(), m: new Date().getMonth() + 1 };
@@ -9160,11 +9294,11 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
   function periodLabel(h) {
     if (!h) return '';
     if (h.ended) return '🏁 已结束';
-    if (h.period === 'long') return '🗓 长期（永久）';
-    if (!h.period) return h.slot ? ('🗓 ' + h.slot) : '';
-    if (h.period === 'custom') return '🗓 自定义 · ' + (h.days || 0) + ' 天';
+    if (h.period === 'long') return '🗓️ 长期（永久）';
+    if (!h.period) return h.slot ? ('🗓️ ' + h.slot) : '';
+    if (h.period === 'custom') return '🗓️ 自定义 · ' + (h.days || 0) + ' 天';
     var p = PERIOD[h.period];
-    return p ? ('🗓 ' + p.t + '（' + p.d + ' 天）') : '';
+    return p ? ('🗓️ ' + p.t + '（' + p.d + ' 天）') : '';
   }
   function slotBadge(h) { return periodLabel(h); }
   function ymd(s) { // 永远显示 年/月/日，如 2026年8月9日
@@ -9458,9 +9592,9 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           '<div class="item-ops hist-ops-even">' +
           '<button class="link-btn tap" data-act="histView" data-id="' + h.id + '">查看</button>' +
           (h.ended
-            ? '<button class="link-btn tap" data-act="histRestore" data-id="' + h.id + '">↩ 恢复</button>'
+            ? '<button class="link-btn tap" data-act="histRestore" data-id="' + h.id + '">↩️ 恢复</button>'
             : '<button class="link-btn tap" data-act="histEnd" data-id="' + h.id + '">立即结束</button>') +
-          '<button class="link-btn del tap" data-act="histDel" data-id="' + h.id + '">🗑 删除</button>' +
+          '<button class="link-btn del tap" data-act="histDel" data-id="' + h.id + '">🗑️ 删除</button>' +
           '</div></div></div>';
       }).join('') + '</div>';
       bodyEl.innerHTML = body;
@@ -9535,7 +9669,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     var e = (rng && rng.to) ? rng.to : (sp ? sp[1] : h.start);
     var st = computeStats(h, s, e);
     var sb = slotBadge(h);
-    var status = h.ended ? '🏁 已结束' : (h.period === 'long' ? '♾ 长期有效' : '🟢 进行中');
+    var status = h.ended ? '🏁 已结束' : (h.period === 'long' ? '♾️ 长期有效' : '🟢 进行中');
     var today = U.today();
     var defDate = (s <= today && today <= e) ? today : e;
     var dp = defDate.split('-');
@@ -9626,7 +9760,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
 
     /* 时间段打卡明细：逐日列出区间内每天的打卡完成情况 */
     rangeView: function (from, to) {
-      if (!from || !to) return UI.empty('请选择开始与结束日期', '🗓');
+      if (!from || !to) return UI.empty('请选择开始与结束日期', '🗓️');
       var d = from, html = '';
       while (d <= to) {
         var day = d;
@@ -9672,9 +9806,9 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
             '<span class="badge' + (on ? '' : ' grey') + '">' + (on ? '已打卡' : '未打卡') + '</span></div>';
         }
         var endBtn = h.ended
-          ? '<button class="link-btn tap" data-act="restoreHabit" data-id="' + h.id + '">↩ 恢复</button>'
+          ? '<button class="link-btn tap" data-act="restoreHabit" data-id="' + h.id + '">↩️ 恢复</button>'
           : '<button class="link-btn tap" data-act="endHabit" data-id="' + h.id + '">⏹ 立即结束</button>';
-        /* 整行可点击折叠：可见行只留圆圈+标题+徽章；「✏️编辑/⏹立即结束(↩恢复)/🗑删除」统一收入展开区一行等分 */
+        /* 整行可点击折叠：可见行只留圆圈+标题+徽章；「✏️编辑/⏹立即结束(↩️恢复)/🗑️删除」统一收入展开区一行等分 */
         return '<div class="item clickable' + (on ? ' done' : '') + '" data-toggle data-id="' + h.id + '">' +
           '<div class="item-main">' +
             UI.check(on, 'toggle', h.id) +
@@ -9689,7 +9823,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
             '<div class="item-ops">' +
               '<button class="link-btn tap" data-act="editHabit" data-id="' + h.id + '">✏️ 编辑</button>' +
               endBtn +
-              '<button class="link-btn del tap" data-act="delHabit" data-id="' + h.id + '">🗑 删除</button>' +
+              '<button class="link-btn del tap" data-act="delHabit" data-id="' + h.id + '">🗑️ 删除</button>' +
             '</div>' +
           '</div>' +
         '</div>';
@@ -9701,7 +9835,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         '<div style="text-align:center"><div style="font-weight:650">' + U.fmtDate(cur.day, true) + '</div>' +
         '<div class="small muted">' + (isToday ? '今天' : U.relDay(cur.day)) + '</div></div>' +
         '<button class="btn sm ghost tap" data-act="next"' + (isToday ? ' disabled' : '') + '>后一天 ›</button></div>' +
-        (isToday ? '' : '<div class="row" style="margin-bottom:8px"><button class="link-btn tap" data-act="today">↩ 回到今天</button></div>') +
+        (isToday ? '' : '<div class="row" style="margin-bottom:8px"><button class="link-btn tap" data-act="today">↩️ 回到今天</button></div>') +
         (habits.length ?
           '<div class="list" style="margin-top:4px">' + ListPager.slice('checkin:list', habits).map(renderHabit).join('') + '</div>' + ListPager.pager('checkin:list', habits.length) :
           (all.length ? UI.empty('「' + U.fmtDate(cur.day, true) + '」没有进行中的打卡任务', '🌿')
@@ -9805,9 +9939,9 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
             '<div class="item-ops ev-ops">' +
             '<button class="link-btn tap" data-act="evMark" data-id="' + ev.id + '">✍️ 记录</button>' +
             '<button class="link-btn tap" data-act="evBackfill" data-id="' + ev.id + '">➕ 补记</button>' +
-            '<button class="link-btn tap" data-act="evOpen" data-id="' + ev.id + '">📋 全部</button>' +
+            '<button class="link-btn tap" data-act="evOpen" data-id="' + ev.id + '">📋️ 全部</button>' +
             '<button class="link-btn tap" data-act="evEdit" data-id="' + ev.id + '">✏️ 编辑</button>' +
-            '<button class="link-btn del tap" data-act="evDel" data-id="' + ev.id + '">🗑 删除</button>' +
+            '<button class="link-btn del tap" data-act="evDel" data-id="' + ev.id + '">🗑️ 删除</button>' +
             '</div></div>' +
             '</div>';
         }).join('') + '</div>' + ListPager.pager('checkin:ev', evs.length);
@@ -10026,20 +10160,25 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         '<span class="grow">' + esc(s.t) + '</span>' +
         '<button class="link-btn del tap" data-act="subdel" data-id="' + x.id + '|' + s.id + '">×</button></div>';
     }).join('') + '</div>' : '';
+    /* 展开区顺序对齐工作留痕（留痕是「标题 → 备注 → 操作」）：
+       原先操作行排在展开区第一位、备注被压到最底部，展开后先看到一排按钮，
+       和留痕「先看内容再操作」的层级不一致。改为「内容在上、操作在下」：
+       办理内容 → 备注 → 子任务 → 操作按钮。 */
     return row + '<div class="task-tl-detail">' +
-      '<div class="task-ops-row">' +
-      '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
-      '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>' +
-      '<button class="link-btn tap" data-act="subadd" data-id="' + x.id + '">+ 子任务</button>' +
-      (x.status !== 'doing' && !isDone ? '<button class="link-btn tap" data-act="doing" data-id="' + x.id + '">标为进行中</button>' : '') +
-      '</div>' +
-      subHtml +
       (x.doneNote
         ? '<div class="item-note">办理内容：' + esc(x.doneNote) +
           ((x.startTime || x.endTime) ? '（' + esc(x.startTime || '?') + (x.endTime && x.endTime !== x.startTime ? '–' + esc(x.endTime) : '') + '）' : '') +
           (x.wcat ? ' · ' + esc(x.wcat) : '') + '</div>'
         : '') +
-      (x.desc ? '<div class="item-note">' + esc(x.desc) + '</div>' : '') + '</div></div></div>';
+      /* 备注统一带 📝 前缀（与工作留痕一致）：展开后一眼区分「备注」与「办理内容」 */
+      (x.desc ? '<div class="item-note">📝 ' + esc(x.desc) + '</div>' : '') +
+      subHtml +
+      '<div class="task-ops-row">' +
+      '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
+      '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑️ 删除</button>' +
+      '<button class="link-btn tap" data-act="subadd" data-id="' + x.id + '">+ 子任务</button>' +
+      (x.status !== 'doing' && !isDone ? '<button class="link-btn tap" data-act="doing" data-id="' + x.id + '">标为进行中</button>' : '') +
+      '</div>' + '</div></div></div>';
   }
 
   /* 关联案件（可选）：选了未办结案件，勾选完成时会弹窗登记办理进度
@@ -10254,10 +10393,10 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
             '<span class="caret">▸</span>' +
             '</div>' +
             '<div class="item-detail">' +
-            (x.desc ? '<div class="item-note">' + esc(x.desc) + '</div>' : '<div class="small muted">（无备注）</div>') +
+            (x.desc ? '<div class="item-note">📝 ' + esc(x.desc) + '</div>' : '<div class="small muted">（无备注）</div>') +
             '<div class="item-ops">' +
             '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
-            '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>' +
+            '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑️ 删除</button>' +
             '</div>' +
             '</div></div>';
           }).join('') + '</div>' : UI.empty('「' + U.fmtDate(date, true) + '」没有完成任务', '📌');
@@ -10387,7 +10526,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
               caret + '</div>';
             if (!expanded) return row;
             return row + '<div class="task-detail">' +
-              (x.desc ? '<div class="item-note">' + esc(x.desc) + '</div>' : '<div class="small muted">（无备注）</div>') +
+              (x.desc ? '<div class="item-note">📝 ' + esc(x.desc) + '</div>' : '<div class="small muted">（无备注）</div>') +
               '<div class="task-ops-row">' + UI.ops(x.id, 'edit', 'hdel') + '</div>' +
               '</div>';
           },
@@ -10657,7 +10796,137 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       '<div style="text-align:center"><div style="font-weight:650">' + U.fmtDate(d, true) + '</div>' +
       '<div class="small muted">' + (isToday ? '今天' : U.relDay(d)) + '</div></div>' +
       '<button class="btn sm ghost tap" data-act="wnext"' + (isToday ? ' disabled' : '') + '>后一天 ›</button></div>' +
-      (isToday ? '' : '<div class="row" style="margin-bottom:12px"><button class="link-btn tap" data-act="wtoday">↩ 回到今天</button></div>');
+      (isToday ? '' : '<div class="row" style="margin-bottom:12px"><button class="link-btn tap" data-act="wtoday">↩️ 回到今天</button></div>');
+  }
+
+  /* ===== 工作留痕「时间轴视图」 =====
+     动机：当天内容原本是按记录顺序等距堆叠的卡片，纵向位置和真实时间无关，
+     两段工作互相重叠时只能靠肉眼比较时间数字。时间轴视图改成「纵坐标 = 真实分钟」。
+     只读渲染，不写数据、不调 Store.save()，因此与列表视图、同步逻辑、分页都互不影响。 */
+  /* 'list' | 'timeline'：当天内容的呈现方式。
+     默认「时间轴」——这是新加的视图，默认打开才能一眼看到效果；
+     用户切到「列表」后记住选择（独立小键，不写 Store、不参与同步/备份）。 */
+  var wView = (function () {
+    try { return localStorage.getItem('workbench.worklogview') === 'list' ? 'list' : 'timeline'; }
+    catch (e) { return 'timeline'; }
+  })();
+
+  function wViewBar() {
+    /* 文案要短：和右侧胶囊同排，长了会把胶囊挤到第二行（移动端要保持单行） */
+    var tip = wView === 'timeline' ? '时间轴 · 重叠分列' : '按记录顺序';
+    return '<div class="row between" style="margin:0 0 10px;align-items:center;flex-wrap:nowrap">' +
+      '<span class="small muted" style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + tip + '</span>' +
+      '<span class="wl-view-switch" role="tablist" aria-label="工作留痕视图切换">' +
+      '<button class="wl-vs-btn tap' + (wView === 'list' ? ' on' : '') + '" role="tab" data-act="wview" data-v="list">列表</button>' +
+      '<button class="wl-vs-btn tap' + (wView === 'timeline' ? ' on' : '') + '" role="tab" data-act="wview" data-v="timeline">时间轴</button>' +
+      '</span></div>';
+  }
+
+  /* 'HH:MM' -> 当天分钟数；空或非法返回 null */
+  function wTimeMin(s) {
+    if (!s) return null;
+    var p = String(s).split(':');
+    var h = parseInt(p[0], 10), m = parseInt(p[1], 10);
+    if (isNaN(h) || isNaN(m)) return null;
+    return h * 60 + m;
+  }
+  /* 分钟数 -> 'HH:MM'（不取模，跨零点显示成 24:xx 而不是 00:xx） */
+  function wHM(m) {
+    m = Math.max(0, Math.round(m));
+    var h = Math.floor(m / 60), mm = m % 60;
+    return (h < 10 ? '0' : '') + h + ':' + (mm < 10 ? '0' : '') + mm;
+  }
+  /* 整理成「有起止分钟」的条目；没填开始时间的单独返回（它们无法定位在轴上） */
+  function wTlPrepare(arr) {
+    var withT = [], noT = [];
+    arr.forEach(function (x) {
+      var s = wTimeMin(x.start);
+      if (s == null) { noT.push(x); return; }
+      var e = wTimeMin(x.end);
+      /* 未填结束时间 / 结束早于开始（按跨零点处理）→ 用已有分钟数兜底，最少 30 分钟，保证条有可见高度 */
+      if (e == null || e <= s) e = s + Math.max(num(x.mins), 30);
+      if (e > 1440) e = 1440;
+      withT.push({ x: x, s: s, e: e, open: !x.end });
+    });
+    return { withT: withT, noT: noT };
+  }
+  /* 分列 + 套叠。输入必须按开始时间升序（同时开始则长者在前），
+     这样「容器」总会先于它的内部条目被放置。
+     · 套叠：某条完全落在已放置的某条之内、且更短、宿主还没被嵌套过 → 共用同一列，画成内嵌条
+     · 分列：否则找第一条「已经空出来」的列；都不满足就新开一列
+     返回列数 = 最大并行度（套叠不额外占列）。 */
+  function wTlLanes(items) {
+    var placed = [], lanes = [];
+    items.forEach(function (it) {
+      var host = null;
+      for (var i = 0; i < placed.length; i++) {
+        var p = placed[i];
+        if (!p.hasNest && !p.nest && it.s >= p.s && it.e <= p.e && (it.e - it.s) < (p.e - p.s)) { host = p; break; }
+      }
+      if (host) { it.nest = 1; it.lane = host.lane; host.hasNest = 1; placed.push(it); return; }
+      var col = null;
+      for (var j = 0; j < lanes.length; j++) { if (lanes[j].end <= it.s) { col = lanes[j]; break; } }
+      if (!col) { col = { end: 0, idx: lanes.length }; lanes.push(col); }
+      col.end = it.e; it.lane = col.idx; placed.push(it);
+    });
+    return lanes.length;
+  }
+  /* 重叠时段底色带：只统计「未被嵌套的顶层条目」，返回 >=2 条同时覆盖的合并区间 */
+  function wTlBands(tops) {
+    var pts = [], bands = [], cur = null;
+    tops.forEach(function (a) {
+      if (pts.indexOf(a.s) < 0) pts.push(a.s);
+      if (pts.indexOf(a.e) < 0) pts.push(a.e);
+    });
+    pts.sort(function (a, b) { return a - b; });
+    for (var i = 0; i < pts.length - 1; i++) {
+      var a = pts[i], b = pts[i + 1], n = 0;
+      tops.forEach(function (t) { if (t.s <= a && t.e >= b) n++; });
+      if (n >= 2) { if (cur && cur.e === a) cur.e = b; else { cur = { s: a, e: b }; bands.push(cur); } }
+      else cur = null;
+    }
+    return bands;
+  }
+  /* 最大同时进行数（「并行 N 项」徽章用） */
+  function wTlMaxConc(items) {
+    var best = 1;
+    items.forEach(function (a) {
+      var n = 0;
+      items.forEach(function (b) { if (b.s <= a.s && b.e > a.s) n++; });
+      if (n > best) best = n;
+    });
+    return best;
+  }
+  /* 记录详情弹窗：点时间轴上的条 / 未填时间的条目都走这里。
+     用 UI.sheet，动作按钮用 data-wtl-act（刻意避开 data-act，防止被全局委托误接）。 */
+  function wOpenDetail(id) {
+    var x = D().worklog.filter(function (a) { return a.id === id; })[0];
+    if (!x) return;
+    var timeTxt = U.timeRangeText(x.start, x.end, x.mins);
+    var meta = (x.cat ? '<span class="badge">' + esc(x.cat) + '</span>' : '') + wTaskBadge(x) + wJwBadge(x) + wCaseBadge(x);
+    /* 外面套一层 .wl-detail：.modal-body 自带的 gap:14px 太松，信息块之间统一收到 7px。
+       （原来靠 block 自带 margin-bottom 叠加 14px gap，实际间距 22px 上下，很散） */
+    var body = '<div class="wl-detail">' +
+      '<div class="wl-detail-title">' + esc(x.content || x.cat || '工作记录') + '</div>' +
+      (timeTxt ? '<div class="small muted">🕐 ' + esc(timeTxt) + '</div>' : '') +
+      (meta ? '<div class="item-meta">' + meta + '</div>' : '') +
+      (x.note ? '<div class="item-note">📝 ' + esc(x.note) + '</div>' : '') +
+      '</div>';
+    /* 底部按钮照项目惯例重做：等宽的 btn 系（左：危险操作 / 中：关闭 / 右：主操作），
+       与 UI.form 的 [删除 danger ghost][取消 ghost][保存 primary] 排布一致 */
+    var sheet = UI.sheet('工作记录详情', body,
+      '<button class="btn danger ghost tap" data-wtl-act="del">🗑️ 删除</button>' +
+      '<button class="btn ghost tap" data-x>关闭</button>' +
+      '<button class="btn primary tap" data-wtl-act="edit">✏️ 编辑</button>');
+    sheet.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-wtl-act]');
+      if (!b) return;
+      e.preventDefault();
+      var act = b.dataset.wtlAct;
+      var closeBtn = sheet.querySelector('[data-x]');
+      if (closeBtn) closeBtn.click();   // 复用 UI.sheet 自带关闭（解锁 + 无障碍还原），避免重复 remove
+      setTimeout(function () { if (worklog.acts[act]) worklog.acts[act]({ dataset: { id: id } }); }, 0);
+    });
   }
 
   function wCats() { return (Store.data.workCats || []).slice(); }
@@ -10723,6 +10992,13 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     if (!x || !x.fromTask) return '';
     return '<span class="badge info">📌 来自任务</span>';
   }
+  /* 由纪检监察「监督检查 / 材料报送」同步生成的留痕：标注来源，
+     提醒改这里会同步改纪检监察那边、删这里会连带删除来源记录 */
+  function wJwBadge(x) {
+    if (!x || !x.jwKind) return '';
+    var label = (window.JWLink && window.JWLink.srcLabel) ? window.JWLink.srcLabel(x.jwKind) : '纪检监察';
+    return '<span class="badge info" title="由纪检监察·' + U.esc(label) + '自动同步：改这里会同步改那边，删除会连带删除来源记录">🔄 同步</span>';
+  }
   /* 列表里的关联案件徽标；案件已删除则不显示。只显示案件名称，不带线索/案件编号
      名称过长时由 CSS 省略号截断，完整名称保留在 title 里可长按/悬停查看 */
   function wCaseBadge(x) {
@@ -10765,7 +11041,9 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         UI.card({
           title: '当天工作内容',
           right: '<button class="btn ghost sm tap" data-act="hist">📜 历史记录</button>',
-          body: wDayNav() + Cats.filterBar('workCats', { label: '分类' }) + (todayArr.length ? this.list() : UI.empty(isToday ? '今天还没有工作记录' : '这一天没有工作记录', '📝'))
+          body: wDayNav() + wViewBar() + Cats.filterBar('workCats', { label: '分类' }) +
+            (todayArr.length ? (wView === 'timeline' ? this.timeline() : this.list())
+              : UI.empty(isToday ? '今天还没有工作记录' : '这一天没有工作记录', '📝'))
         }) +
         (todayArr.length ? UI.card({ title: (isToday ? '今日' : '当天') + '分类时长占比', body: this.catStat() }) : '') +
         Cal.card({
@@ -10793,7 +11071,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
                 (x.note ? '<div class="item-note">📝 ' + esc(x.note) + '</div>' : '<div class="small muted">（无备注）</div>') +
                 '<div class="item-detail-ops">' +
                 '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
-                '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>' +
+                '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑️ 删除</button>' +
                 '</div>' +
                 '</div></div>';
             }).join('') + '</div>';
@@ -10866,7 +11144,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           var meta =
             (x.cat ? '<span class="badge">' + esc(x.cat) + '</span>' : '') +
             (timeTxt ? '<span class="badge grey">🕐 ' + esc(timeTxt) + '</span>' : '') +
-            wCaseBadge(x) + wTaskBadge(x);
+            wCaseBadge(x) + wTaskBadge(x) + wJwBadge(x);
           return '<div class="item clickable" data-toggle data-id="' + x.id + '">' +
             '<div class="item-main">' +
             '<div class="item-title">' + esc(x.content || '（无内容）') + '</div>' +
@@ -10875,7 +11153,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
             '<div class="item-detail">' +
             '<div class="item-ops">' +
             '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
-            '<button class="link-btn del tap" data-act="hdel" data-id="' + x.id + '">🗑 删除</button>' +
+            '<button class="link-btn del tap" data-act="hdel" data-id="' + x.id + '">🗑️ 删除</button>' +
             '</div>' +
             (x.note ? '<div class="item-note">📝 ' + esc(x.note) + '</div>' : '') +
             '</div></div>';
@@ -10935,8 +11213,8 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         var timeTxt = U.timeRangeText(x.start, x.end, x.mins);
         var caseHtml = wCaseBadge(x);
         var meta = x.cat ? '<span class="badge">' + esc(x.cat) + '</span>' : '';
-        /* 「分类」与「来自任务 / 来自待办」等来源胶囊同排显示：来源徽章从标题行移到分类行 */
-        var classRow = meta + wTaskBadge(x);
+        /* 「分类」与「来自任务 / 同步」等来源胶囊同排显示：来源徽章从标题行移到分类行 */
+        var classRow = meta + wTaskBadge(x) + wJwBadge(x);
         return '<div class="tl-item">' +
           '<div class="tl-rail" aria-hidden="true"><span class="tl-dot"></span><span class="tl-line"></span></div>' +
           '<div class="tl-body"><div class="wl-time-range">' + esc(timeTxt || '时间未填写') + '</div>' +
@@ -10951,11 +11229,97 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           (x.note ? '<div class="item-note">📝 ' + esc(x.note) + '</div>' : '') +
           '<div class="item-detail-ops">' +
           '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
-          '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>' +
+          '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑️ 删除</button>' +
           '</div>' +
           '</div></div></div></div>';
       }).join('');
       return html + '</div>' + ListPager.pager('worklog:list', arr.length);
+    },
+
+    /* 时间轴视图：纵坐标 = 真实分钟数（条长即耗时），重叠任务自动分列，包含关系套叠内嵌。
+       与列表视图共用同一份数据源与分类筛选；不分页（一天的量级不需要，且分页会破坏整轴布局）。 */
+    timeline: function () {
+      var arr = this.wFilteredToday();
+      if (!arr.length) return UI.empty('今天还没有工作记录', '📝');
+      var prep = wTlPrepare(arr);
+      var items = prep.withT, noT = prep.noT;
+      var dayMin = arr.reduce(function (s, a) { return s + num(a.mins); }, 0);
+      var html = '';
+
+      if (items.length) {
+        items.sort(function (a, b) { return a.s - b.s || b.e - a.e; });
+        var laneN = wTlLanes(items);
+        /* 3 列以上每列只剩 ~53px，塞不下「HH:MM–HH:MM」——那时时间行只显示开始时间；
+           嵌套条还要左右内缩、更窄，直接不显示时间行（轴上的位置本身已经表达了时间） */
+        var narrow = laneN >= 3;
+        var s0 = items[0].s, e0 = items[0].e;
+        items.forEach(function (it) { if (it.e > e0) e0 = it.e; });
+        /* 上下各留 30 分钟再对齐到整点，避免条贴着轴的两端；跨零点夹到 [0,1440] */
+        var start = Math.max(0, Math.floor((s0 - 30) / 60) * 60);
+        var end = Math.min(1440, Math.ceil((e0 + 30) / 60) * 60);
+        if (end - start < 120) end = Math.min(1440, start + 120);
+        var span = end - start;
+        /* 跨度越大每小时越矮，整体高度控制在约 200~460px，不至于要滑很久 */
+        var hourH = span <= 360 ? 44 : (span <= 600 ? 36 : 28);
+        var k = hourH / 60;                       // 每分钟像素数
+        var H = Math.round(span * k);
+        var step = hourH >= 36 ? 60 : 120;        // 太矮时隔 2 小时才画一条刻度，免得标签叠在一起
+        var grid = '', hours = '';
+        for (var t = start; t <= end; t += step) {
+          var gtop = Math.round((t - start) * k * 10) / 10;
+          grid += '<div class="wl-tl-grid" style="top:' + gtop + 'px"></div>';
+          hours += '<div class="wl-tl-hour" style="top:' + (gtop - 7) + 'px">' + wHM(t) + '</div>';
+        }
+        /* 并行重叠时段底色带（套叠条不参与，它的包含关系本身已经画出来了） */
+        var bands = wTlBands(items.filter(function (it) { return !it.nest; })).map(function (b) {
+          return '<div class="wl-tl-band" style="top:' + (Math.round((b.s - start) * k * 10) / 10) +
+            'px;height:' + Math.max(3, Math.round((b.e - b.s) * k * 10) / 10) + 'px"></div>';
+        }).join('');
+        /* 按列分组渲染；列宽交给 flex 平分，因此不需要在 JS 里算像素宽度 */
+        var cols = [];
+        for (var i = 0; i < laneN; i++) cols.push([]);
+        items.forEach(function (it) { cols[it.lane].push(it); });
+        var lanesHtml = cols.map(function (list) {
+          return '<div class="wl-tl-lane">' + list.map(function (it) {
+            var x = it.x;
+            var bh = Math.max(20, Math.round((it.e - it.s) * k * 10) / 10);   // 下限 20px，太短的条也要点得到
+            /* 宿主条只渲染标题当“组头”，不渲染时间行——内部子条按真实时间定位，
+               父条的时间行会与第一个子条的顶部文字相撞（截图里「10:26–13:13」压着「李运堂谈话笔录」）。
+               子条自身显示时间，父条的时间跨度由子条 + 坐标轴表达 */
+            var isHost = !!it.hasNest;
+            var two = bh >= 52 && !isHost;    // 够高时标题折 2 行；宿主强制单行，避免压到子条
+            var showTime = (bh >= 36) && !isHost && !(narrow && it.nest);
+            var timeTxt = narrow ? wHM(it.s) : (wHM(it.s) + '–' + wHM(it.e));
+            var full = (x.content || x.cat || '工作记录') + '　' + wHM(it.s) + '–' + wHM(it.e) +
+              (it.open ? '（未填结束，按 ' + hm(Math.max(num(x.mins), 30)) + ' 估算）' : '');
+            return '<div class="wl-tl-bar tap' + (it.nest ? ' nest' : '') + (it.open ? ' open' : '') + (isHost ? ' host' : '') + '"' +
+              ' style="top:' + (Math.round((it.s - start) * k * 10) / 10) + 'px;height:' + bh + 'px;' +
+              (narrow && it.nest ? 'left:8px;right:8px;' : '') + '"' +
+              ' data-act="wtl" data-id="' + x.id + '" title="' + esc(full) + '">' +
+              '<div class="wl-tl-bar-t' + (two ? ' tw' : '') + '">' + esc(x.content || x.cat || '工作记录') + '</div>' +
+              (showTime ? '<div class="wl-tl-bar-s">' + timeTxt + '</div>' : '') +
+              '</div>';
+          }).join('') + '</div>';
+        }).join('');
+        var conc = wTlMaxConc(items);
+        html += '<div class="wl-tl-top"><span class="wl-tl-note">' + wHM(start) + ' – ' + wHM(end) + ' · 共 ' + hm(dayMin) + '</span>' +
+          (conc >= 2 ? '<span class="wl-tl-par">并行 ' + conc + ' 项</span>' : '') + '</div>' +
+          '<div class="wl-tl" style="height:' + H + 'px">' + grid + hours +
+          '<div class="wl-tl-lanes">' + lanesHtml + '</div>' + bands + '</div>';
+      } else {
+        html += '<div class="small muted" style="margin:4px 0 10px">这一天的记录都没填开始时间，补上时间后这里会显示时间轴。</div>';
+      }
+
+      /* 没填开始时间的记录无法定位在轴上，单独列在轴下方，点开同样是详情弹窗 */
+      if (noT.length) {
+        html += '<div class="wl-tl-notime"><div class="wl-tl-notime-h">未填时间 · ' + noT.length + ' 条</div>' +
+          noT.map(function (x) {
+            return '<div class="wl-tl-chip tap" data-act="wtl" data-id="' + x.id + '">' +
+              esc(x.content || x.cat || '工作记录') +
+              (num(x.mins) ? '<span class="wl-tl-note">⏱ ' + hm(x.mins) + '</span>' : '') + '</div>';
+          }).join('') + '</div>';
+      }
+      return html;
     },
 
     catStat: function () {
@@ -11013,6 +11377,15 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           if (ok) { doDel(); U.toast('已删除，关联记录同步清除'); }
         });
       },
+      /* 视图切换：列表 / 时间轴。切换时复位列表分页，避免切回列表时页码越界 */
+      wview: function (t) {
+        wView = t.dataset.v === 'timeline' ? 'timeline' : 'list';
+        try { localStorage.setItem('workbench.worklogview', wView); } catch (e) {}
+        ListPager.resetPg('worklog:list');
+        App.refresh();
+      },
+      /* 时间轴上点某条记录 → 详情弹窗（编辑 / 删除复用既有 acts） */
+      wtl: function (t) { wOpenDetail(t.dataset.id); },
       wprev: function () { wCur.day = U.shiftDay(wCur.day, -1); App.refresh(); },
       wnext: function () { if (wCur.day < U.today()) { wCur.day = U.shiftDay(wCur.day, 1); App.refresh(); } },
       wtoday: function () { wCur.day = U.today(); App.refresh(); },
@@ -11195,7 +11568,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           '<div class="item-note">' + esc(m.desc || '（无描述）') + '</div>' +
           '<div class="item-detail-ops">' +
           '<button class="link-btn tap" data-act="msEdit" data-id="' + m.id + '">✏️ 编辑</button>' +
-          '<button class="link-btn del tap" data-act="msDel" data-id="' + m.id + '">🗑 删除</button>' +
+          '<button class="link-btn del tap" data-act="msDel" data-id="' + m.id + '">🗑️ 删除</button>' +
           '</div></div></div>';
       }).join('');
       if (!items.length) items = UI.empty('还没有里程碑记录，点击下方按钮添加吧', '🏆');
@@ -11233,7 +11606,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
             '</div>' +
             (v.reaction ? '<div class="small muted" style="margin-top:4px">反应：' + esc(v.reaction) + '</div>' : '') +
             '<div style="text-align:right;margin-top:6px"><button class="link-btn tap small" data-act="vxEdit" data-id="'+v.id+'">✏️ 编辑</button> ' +
-            '<button class="link-btn del tap small" data-act="vxDel" data-id="'+v.id+'">🗑 删除</button></div></div>';
+            '<button class="link-btn del tap small" data-act="vxDel" data-id="'+v.id+'">🗑️ 删除</button></div></div>';
         }).join('');
         if (!vxItems.length) vxItems = UI.empty('还没有疫苗记录', '💉');
         content = vxItems + '<div style="text-align:right;margin-top:8px"><button class="btn primary sm tap" data-act="vxNew">+ 添加疫苗</button></div>';
@@ -11357,7 +11730,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
             '<div class="edu-body"><div class="edu-title">' + esc(t.title) + '</div>' +
             '<div class="edu-meta">' + (t.type || '') + (t.duration ? ' · ' + t.duration : '') +
             (t.note ? ' · ' + t.note : '') + '</div></div>' +
-            '<div class="edu-task-ops"><button class="link-btn sm tap" data-act="eduEdit" data-id="' + t.id + '" style="font-size:11px;padding:1px 5px">✏️</button><button class="link-btn del sm tap" data-act="eduDel" data-id="' + t.id + '" style="font-size:11px;padding:1px 5px">🗑</button></div></div>';
+            '<div class="edu-task-ops"><button class="link-btn sm tap" data-act="eduEdit" data-id="' + t.id + '" style="font-size:11px;padding:1px 5px">✏️</button><button class="link-btn del sm tap" data-act="eduDel" data-id="' + t.id + '" style="font-size:11px;padding:1px 5px">🗑️</button></div></div>';
         }).join('') : '<div class="small muted" style="padding:16px;text-align:center">今日暂无任务<br><button class="btn ghost sm tap" data-act="eduSuggest" style="margin-top:8px">重新推荐</button></div>'
       }) + '</div>';
 
@@ -11982,7 +12355,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         if (exp) {
           detail = '<div class="item-detail"><div class="wl-acts">' +
             '<button class="link-btn tap" data-act="schEdit" data-id="' + s.id + '">✏️ 编辑</button>' +
-            '<button class="link-btn del tap" data-act="schDel" data-id="' + s.id + '">🗑 删除</button>' +
+            '<button class="link-btn del tap" data-act="schDel" data-id="' + s.id + '">🗑️ 删除</button>' +
           '</div>' + (s.note ? '<div class="sch-note-body">' + esc(s.note) + '</div>' : '') + '</div>';
         }
         return '<div class="item clickable' + (exp ? ' open' : '') + '" data-act="schexpand" data-id="' + s.id + '">' +
@@ -12049,7 +12422,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         if (exp) {
           detail = '<div class="item-detail"><div class="wl-acts">' +
             '<button class="link-btn tap" data-act="schEdit" data-id="' + s.id + '">✏️ 编辑</button>' +
-            '<button class="link-btn del tap" data-act="schDel" data-id="' + s.id + '">🗑 删除</button>' +
+            '<button class="link-btn del tap" data-act="schDel" data-id="' + s.id + '">🗑️ 删除</button>' +
           '</div>' + (s.note ? '<div class="sch-note-body">' + esc(s.note) + '</div>' : '') + '</div>';
         }
         html += '<div class="item clickable' + (exp ? ' open' : '') + '" data-act="schexpand" data-id="' + s.id + '">' +
@@ -12074,7 +12447,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
   function viewTabsHTML() {
     return '<div class="sch-view-tabs">' +
       '<button class="sch-vtab' + (schView === 'day' ? ' on' : '') + ' tap" data-act="schDayView">📅 当天</button>' +
-      '<button class="sch-vtab' + (schView === 'all' ? ' on' : '') + ' tap" data-act="schAllView">🗓 全部日程</button>' +
+      '<button class="sch-vtab' + (schView === 'all' ? ' on' : '') + ' tap" data-act="schAllView">🗓️ 全部日程</button>' +
       '</div>';
   }
 
@@ -12516,7 +12889,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         (x.status === '看完' || x.status === '弃了' ? '' : '<button class="link-btn tap" data-act="drop" data-id="' + x.id + '">弃了</button>') +
         '<button class="link-btn tap" data-act="minfo" data-id="' + x.id + '">详情</button>' +
         '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
-        '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>' +
+        '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑️ 删除</button>' +
       '</div>' +
       (extraMeta.length ? '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:' + (x.review ? '6' : '0') + 'px">' + extraMeta.join('') + '</div>' : '') +
       (x.review ? '<div class="note-text">📝 ' + esc(x.review) + '</div>' : '') +
@@ -12684,7 +13057,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
                 (x.status === '看完' || x.status === '弃了' ? '' : '<button class="link-btn tap" data-act="drop" data-id="' + x.id + '">弃了</button>') +
                 '<button class="link-btn tap" data-act="minfo" data-id="' + x.id + '">详情</button>' +
                 '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
-                '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>';
+                '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑️ 删除</button>';
               return '<div class="item clickable" data-toggle data-id="' + x.id + '">' +
                 '<div class="item-main">' +
                 '<div class="item-title">' + MT[x.type].i + ' ' + esc(x.title) + '</div>' +
@@ -13291,7 +13664,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       '<div style="text-align:center"><div style="font-weight:650">' + U.fmtDate(d, true) + '</div>' +
       '<div class="small muted">' + (isToday ? '今天' : U.relDay(d)) + '</div></div>' +
       '<button class="btn sm ghost tap" data-act="enext">后一天 ›</button></div>' +
-      (isToday ? '' : '<div class="row" style="margin-bottom:12px"><button class="link-btn tap" data-act="etoday">↩ 回到今天</button></div>');
+      (isToday ? '' : '<div class="row" style="margin-bottom:12px"><button class="link-btn tap" data-act="etoday">↩️ 回到今天</button></div>');
   }
   var exam = {
     id: 'exam', icon: '📚', name: '备考计划',
@@ -13300,7 +13673,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       var t = App.tab('exam', 'main', 'plan');
       return UI.head('📚 备考计划', '设定考试日期，自由安排计划、记录，按遗忘曲线复习') +
         this.countdown() +
-        UI.tabs([{ k: 'plan', t: '学习计划', i: '🗓' }, { k: 'record', t: '学习记录', i: '⏱' }, { k: 'review', t: '复习提醒', i: '🔔' }], t, 'tab') +
+        UI.tabs([{ k: 'plan', t: '学习计划', i: '🗓️' }, { k: 'record', t: '学习记录', i: '⏱' }, { k: 'review', t: '复习提醒', i: '🔔' }], t, 'tab') +
         '<div class="card exam-filter-card">' +
         examCatFilter() +
         this._statFor(t) +
@@ -13409,7 +13782,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       });
       var listHtml = '';
       if (!arr.length) {
-        listHtml = UI.empty('没有符合条件的学习计划', '🗓', '点击悬浮「+」新建一个计划');
+        listHtml = UI.empty('没有符合条件的学习计划', '🗓️', '点击悬浮「+」新建一个计划');
       } else {
         listHtml = '<div class="task-group-list">';
         keys.forEach(function (d) {
@@ -13428,7 +13801,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           ['总计划', all.length, true], ['进行中', doing], ['已逾期', overdue, overdue > 0], ['已完成', doneAll]
         ]),
         card: UI.card({
-          title: '🗓 学习计划',
+          title: '🗓️ 学习计划',
           right: '<button class="btn ghost sm tap" data-act="planHist">📜 历史记录</button>',
           body: UI.tabs([
             { k: 'doing', t: '进行中' }, { k: 'overdue', t: '逾期' },
@@ -13739,7 +14112,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           { k: 'overdue', t: '逾期' }, { k: 'done', t: '已完成' }
         ];
         Hist.open({
-          modId: modId, title: '🗓 学习计划历史记录', searchPh: '🔍 搜索计划内容 / 科目…',
+          modId: modId, title: '🗓️ 学习计划历史记录', searchPh: '🔍 搜索计划内容 / 科目…',
           pager: true, defSize: 5, items: function () { return D().exam.plans; },
           date: function (x) { return x.due; },
           match: function (x, q) { return ((x.text || '') + ' ' + (x.subject || '') + ' ' + (x.contentCat || '')).toLowerCase().indexOf(q) >= 0; },
@@ -13881,7 +14254,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           sort: function (a, b) { return String(b.x.date || b.x.due || '').localeCompare(String(a.x.date || a.x.due || '')); },
           render: function (it) {
             var x = it.x;
-            var label = it.k === 'record' ? '⏱ 学习' : '🗓 计划';
+            var label = it.k === 'record' ? '⏱ 学习' : '🗓️ 计划';
             var dd = it.k === 'plan' ? x.due : x.date;
             return '<div class="item"><div class="item-main">' +
               '<div class="row between"><span class="item-title">' + esc(it.k === 'plan' ? (x.text || '计划') : (examCatText(x) || '学习')) + '</span>' +
@@ -13967,17 +14340,15 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     var set = setArr || evPlaceSet();
     var inHist = Array.isArray(setArr); // 传入数组表示在历史弹窗内渲染
     var act = inHist ? 'histFilter' : 'evPlace';
-    var clearAct = inHist ? 'histFilter' : 'evPlaceClear';
-    var clearKAttr = inHist ? ' data-k=""' : '';
+    /* 「充电地点」标签本身就是清除入口：点它 = 取消全部地点筛选、显示所有记录。
+       主列表走 acts.evPlace（data-k 为空 → 清空集合），历史弹窗走 Hist 的 histFilter 分支（data-k="*" → 清空）。
+       没有单独的「清除」按钮，也不加任何提示文案。 */
+    var head = '<button class="pill filter-heading tap" data-act="' + act + '" data-k="' + (inHist ? '*' : '') + '"' + (inHist ? ' data-multi="1"' : '') + '>充电地点</button>';
     var btns = EV_PLACES.map(function (p) {
       return '<button class="pill tap' + (set.indexOf(p) >= 0 ? ' on' : '') + '" data-act="' + act + '" data-k="' + esc(p) + '"' + (inHist ? ' data-multi="1"' : '') + '>' + esc(p) + '</button>';
     }).join('');
-    var clear = '';
-    if (set.length) {
-      clear = '<button class="link-btn tap" data-act="' + clearAct + '"' + clearKAttr + '>清除</button>';
-    }
     return '<div class="row" style="gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 14px">' +
-      '<span class="pill filter-heading">充电地点</span>' + btns + clear + '</div>';
+      head + btns + '</div>';
   }
   /* 通用地点匹配：set 为空则全部通过 */
   function placeMatchSet(c, set) { return !set.length || set.indexOf(c.place) >= 0; }
@@ -14008,15 +14379,16 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     var pending = isPending(c);
     var homePrice = num(ev().price) || 0.3353;
     var freeSaved = dv.charged * homePrice;   // 单位充免费，按家充电价折算"已省"金额
+    /* 金额徽标（电费 / 免费 / 待抄表）独立成列：不再塞在日期行里，靠 .charge-row 的 align-items:center 上下居中 */
+    var feeBadge = dv.free ? '<span class="badge green">免费</span>'
+      : (pending ? '<span class="badge warn">待抄表</span>' : '<span class="badge meta-money">' + U.money(dv.fee) + '</span>');
     var row = '<div class="charge-row' + (open ? ' open' : '') + (pending && !dv.free ? ' pending' : '') + '" data-act="evexp" data-id="' + c.id + '">' +
       '<div class="charge-main">' +
-        '<div class="row between"><span class="item-title">' + U.fmtDate(c.date) + '</span>' +
-        '<span class="row" style="gap:6px;align-items:center;flex-shrink:0">' +
-        (dv.free ? '<span class="badge green">免费</span>' : (pending ? '<span class="badge warn">待抄表</span>' : '<span class="badge meta-money">' + U.money(dv.fee) + '</span>')) + '</span></div>' +
+        '<span class="item-title">' + U.fmtDate(c.date) + '</span>' +
         '<span class="charge-meta">' + placeBadge(c) + '<span class="badge grey">' + num(c.fromPct) + '% → ' + num(c.toPct) + '%</span>' +
         '<span class="badge meta-energy">充入 ' + dv.charged.toFixed(2) + ' 度</span>' +
         (km != null ? '<span class="badge meta-distance">行驶 ' + km + ' km</span>' : '') + '</span>' +
-      '</div>' + caret + '</div>';
+      '</div>' + '<span class="charge-fee">' + feeBadge + '</span>' + caret + '</div>';
     if (!open) return row;
     var detailInner;
     if (dv.free) {
@@ -14090,16 +14462,14 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
   function renderRefuelItem(c, km) {
     var open = fuelExpanded === c.id;
     var caret = '<span class="refuel-caret">' + (open ? '▾' : '▸') + '</span>';
-    /* 主行：始终渲染（折叠/展开都可见），参考 task-row / stock-ov-row 模式 */
+    /* 金额徽标独立成列（与充电记录的 .charge-fee 同一套做法）：靠 .refuel-row 的 align-items:center 上下居中 */
     var row = '<div class="refuel-row' + (open ? ' open' : '') + '" data-act="fuelexp" data-id="' + c.id + '">' +
       '<div class="refuel-main">' +
-        '<div class="row between"><span class="item-title">' + U.fmtDate(c.date) + '</span>' +
-        '<span class="row" style="gap:6px;align-items:center;flex-shrink:0">' +
-        '<span class="badge meta-money">' + U.money(num(c.cost)) + '</span></span></div>' +
+        '<span class="item-title">' + U.fmtDate(c.date) + '</span>' +
         '<span class="refuel-meta"><span class="badge grey">' + num(c.liters).toFixed(2) + ' 升</span>' +
         '<span class="badge meta-money">' + U.money(num(c.price)) + ' /升</span>' +
         (km != null ? '<span class="badge meta-distance">行驶 ' + km + ' km</span>' : '') + '</span>' +
-      '</div>' + caret + '</div>';
+      '</div>' + '<span class="refuel-fee"><span class="badge meta-money">' + U.money(num(c.cost)) + '</span></span>' + caret + '</div>';
     if (!open) return row;
     return row + '<div class="refuel-detail">' +
       '<div class="refuel-ops">' + UI.ops(c.id, 'fedit', 'fdel') + '</div>' +
@@ -14495,7 +14865,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         body: '<div class="ev-stats-cols">' +
           UI.stat('总里程', s.km > 0 ? s.km + ' km' : '—') +
           UI.stat('等效每公里', s.km > 0 ? U.money(eqPerKm) : '—', false, s.km > 0 ? U.moneyFull(eqPerKm) : '') +
-          UI.stat('免费充电', s.freeCharged.toFixed(2) + ' 度（' + freePct.toFixed(0) + '%）') +
+          UI.stat('免费充电', s.freeCharged.toFixed(2) + ' 度<br><span class="pn">（' + freePct.toFixed(0) + '%）</span>') +
           UI.stat('充电次数', activeCount + ' 次') +
           UI.stat('实付每公里', s.km > 0 ? U.money(perKm) : '—', true, s.km > 0 ? U.moneyFull(perKm) : '') +
           UI.stat('已抄表电量', s.meter.toFixed(2) + ' 度<br><span class="pn">（' + s.meteredCount + ' 笔）</span>') +
@@ -14648,7 +15018,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         var nominal = num(ev().battery) || 45.15;
         UI.form({
           title: '记充电',
-          values: { date: U.today(), place: '在家充', toPct: 100, price: num(ev().price) || 0.3353, capMode: 'estimated' },
+          values: { date: U.today(), place: '在家充', toPct: 100, price: num(ev().price) || 0.3353, capMode: 'nominal' },
           onMount: function (el) {
             evHideFreeFields(el);
             el.addEventListener('change', function (e) { if (e.target && e.target.name === 'place') evHideFreeFields(el); });
@@ -14658,7 +15028,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
             { k: 'place', label: '充电地点', type: 'select', options: EV_PLACES, def: '在家充' },
             { k: 'fromPct', label: '充电前电量（%）', type: 'number', min: 0, max: 100, step: 1, req: true, ph: '如 30', validate: function (v) { if (v === '' || isNaN(num(v))) return '请输入数字'; var n = num(v); if (n < 0 || n > 100) return '电量需在 0–100 之间'; return ''; } },
             { k: 'toPct', label: '充电后电量（%）', type: 'number', min: 0, max: 100, step: 1, def: 100, ph: '默认 100（充满）', validate: function (v, all) { if (v === '' || isNaN(num(v))) return '请输入数字'; var n = num(v); if (n < 0 || n > 100) return '电量需在 0–100 之间'; if (all.fromPct !== '' && !isNaN(num(all.fromPct)) && n <= num(all.fromPct)) return '充电后需大于充电前'; return ''; } },
-            { k: 'capMode', label: '充入电量按哪种容量计算', type: 'select', def: 'estimated', options: [{ v: 'estimated', t: '估算容量（按电池健康度，推荐）' }, { v: 'nominal', t: '标定容量（配置容量 ' + nominal.toFixed(2) + ' 度）' }] },
+            { k: 'capMode', label: '充入电量按哪种容量计算', type: 'select', def: 'nominal', options: [{ v: 'nominal', t: '标定容量（配置容量 ' + nominal.toFixed(2) + ' 度）' }, { v: 'estimated', t: '估算容量（按电池健康度）' }] },
             { k: 'meterKwh', label: '电表度数（度）', type: 'number', step: 0.01, min: 0, req: false, ph: '本次电表走字', hint: '电表有延迟？可先留空，记录会置顶提醒，第二天抄表后点「填电表」补填' },
             { k: 'price', label: '电价（元/度）', type: 'number', step: 0.0001, min: 0, ph: '留空用配置电价' },
             { k: 'odoBefore', label: '充电前总里程（km）', type: 'number', step: 1, min: 0, hint: '用于自动计算两次充电间里程差' }
@@ -14667,7 +15037,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           if (!v) return;
           if (num(v.fromPct) >= num(v.toPct)) { U.toast('充电后电量需大于充电前电量'); return; }
           var place = v.place || '在家充', isFree = place === '在单位充';
-          var mode = v.capMode || 'estimated';
+          var mode = v.capMode || 'nominal';
           var capKwh = mode === 'nominal' ? nominal : estCapAtDate(v.date);
           ev().charges.push({
             id: uid(), date: v.date, place: place,
@@ -14698,7 +15068,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
             { k: 'place', label: '充电地点', type: 'select', options: EV_PLACES, def: '在家充' },
             { k: 'fromPct', label: '充电前电量（%）', type: 'number', min: 0, max: 100, step: 1, req: true, validate: function (v) { if (v === '' || isNaN(num(v))) return '请输入数字'; var n = num(v); if (n < 0 || n > 100) return '电量需在 0–100 之间'; return ''; } },
             { k: 'toPct', label: '充电后电量（%）', type: 'number', min: 0, max: 100, step: 1, validate: function (v, all) { if (v === '' || isNaN(num(v))) return '请输入数字'; var n = num(v); if (n < 0 || n > 100) return '电量需在 0–100 之间'; if (all.fromPct !== '' && !isNaN(num(all.fromPct)) && n <= num(all.fromPct)) return '充电后需大于充电前'; return ''; } },
-            { k: 'capMode', label: '充入电量按哪种容量计算', type: 'select', def: 'estimated', options: [{ v: 'estimated', t: '估算容量（按电池健康度）' }, { v: 'nominal', t: '标定容量（配置容量 ' + nominal.toFixed(2) + ' 度）' }] },
+            { k: 'capMode', label: '充入电量按哪种容量计算', type: 'select', def: 'estimated', options: [{ v: 'nominal', t: '标定容量（配置容量 ' + nominal.toFixed(2) + ' 度）' }, { v: 'estimated', t: '估算容量（按电池健康度）' }] },
             { k: 'meterKwh', label: '电表度数（度）', type: 'number', step: 0.01, min: 0, req: false, hint: '可留空，稍后抄表再补填（记录会置顶提醒）' },
             { k: 'price', label: '电价（元/度）', type: 'number', step: 0.0001, min: 0 },
             { k: 'odoBefore', label: '充电前总里程（km）', type: 'number', step: 1, min: 0 }
@@ -14899,12 +15269,14 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       /* 充电地点多选筛选（任选一类或两类） */
       evPlace: function (t) {
         var set = evPlaceSet();
-        var p = t.dataset.k, i = set.indexOf(p);
-        if (i >= 0) set.splice(i, 1); else set.push(p);
+        var p = t.dataset.k;
+        /* data-k 为空 = 点的是「充电地点」标签本身 → 清空全部地点筛选（显示所有） */
+        if (p === undefined || p === '') set = [];
+        else { var i = set.indexOf(p); if (i >= 0) set.splice(i, 1); else set.push(p); }
         App.setTab('vehicle', 'evPlaces', set.join(','));
         evPg = 1; App.refresh();
       },
-      evPlaceClear: function () { App.setTab('vehicle', 'evPlaces', ''); evPg = 1; App.refresh(); },
+      /* evPlaceClear 已移除：清除入口就是「充电地点」标签本身（data-k 为空），再点一次已选胶囊取消单项 */
       /* 充电/里程 pill 切换已移除：仅保留充电记录列表，行程挂在各充电周期内记录 */
       /* 充电记录主列表分页 */
       evPage: function (t) { evPg = num(t.dataset.k) || 1; App.refresh(); },
@@ -14979,13 +15351,21 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           },
           render: function (c) {
             var dv = chargeDerived(c); var km = kmMap[c.id];
-            return '<div class="item hist-row"><div class="item-main">' +
-              '<div class="row between"><span class="item-title">' + U.fmtDate(c.date, true) + '</span>' +
-              '<span class="badge">电费 ' + U.money(dv.fee) + '</span></div>' +
-              '<div class="item-meta">' + placeBadge(c) + '<span>区间 ' + num(c.fromPct) + '%→' + num(c.toPct) + '%</span>' +
-              '<span class="badge grey">电表 ' + dv.meter.toFixed(2) + ' 度</span>' +
-              (km != null ? '<span class="badge grey">' + km + ' km</span>' : '') + '</div></div>' +
-              UI.ops(c.id, 'eedit', 'hdel') + '</div>';
+            /* 金额徽标与主列表同款口径：免费 / 待抄表 / 金额 */
+            var feeBadge = dv.free ? '<span class="badge green">免费</span>'
+              : (isPending(c) ? '<span class="badge warn">待抄表</span>'
+              : '<span class="badge meta-money">' + U.money(dv.fee) + '</span>');
+            /* 排版：首行 日期左 + 编辑/删除右；次行说明胶囊；金额右侧垂直居中，去掉独立虚线分隔行 */
+            var ops = '<div class="ev-hist-ops">' +
+              '<button class="link-btn tap" data-act="eedit" data-id="' + c.id + '">✏️ 编辑</button>' +
+              '<button class="link-btn del tap" data-act="hdel" data-id="' + c.id + '">🗑️ 删除</button></div>';
+            return '<div class="item hist-row ev-hist-row"><div class="item-main">' +
+              '<div class="ev-hist-top"><span class="item-title">' + U.fmtDate(c.date, true) + '</span>' + ops + '</div>' +
+              '<div class="ev-hist-meta-row"><div class="item-meta">' + placeBadge(c) +
+              '<span>区间 ' + num(c.fromPct) + '%→' + num(c.toPct) + '%</span>' +
+              (dv.meter > 0 ? '<span class="badge grey">电表 ' + dv.meter.toFixed(2) + ' 度</span>' : '') +
+              (km != null ? '<span class="badge grey">' + km + ' km</span>' : '') + '</div></div></div>' +
+              '<span class="ev-hist-fee">' + feeBadge + '</span></div>';
           },
           acts: {
             eedit: function (t, e, redraw) {
@@ -15046,13 +15426,16 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           },
           render: function (c) {
             var km = kmMap[c.id];
-            return '<div class="item"><div class="item-main">' +
-              '<div class="row between"><span class="item-title">' + U.fmtDate(c.date, true) + '</span>' +
-              '<span class="badge">花费 ' + U.money(num(c.cost)) + '</span></div>' +
-              '<div class="item-meta"><span class="badge grey">' + num(c.liters).toFixed(2) + ' 升</span>' +
+            /* 与充电历史同款排版：首行 日期左 + 删除右，次行胶囊，金额右侧垂直居中 */
+            return '<div class="item hist-row ev-hist-row"><div class="item-main">' +
+              '<div class="ev-hist-top"><span class="item-title">' + U.fmtDate(c.date, true) + '</span>' +
+              '<div class="ev-hist-ops">' +
+              '<button class="link-btn del tap" data-act="hdel" data-id="' + c.id + '">🗑️ 删除</button></div></div>' +
+              '<div class="ev-hist-meta-row"><div class="item-meta">' +
+              '<span class="badge grey">' + num(c.liters).toFixed(2) + ' 升</span>' +
               '<span class="badge grey">' + U.money(num(c.price)) + '/升</span>' +
-              (km != null ? '<span class="badge grey">' + km + ' km</span>' : '') + '</div></div>' +
-              UI.ops(c.id, null, 'hdel') + '</div>';
+              (km != null ? '<span class="badge grey">' + km + ' km</span>' : '') + '</div></div></div>' +
+              '<span class="ev-hist-fee"><span class="badge meta-money">' + U.money(num(c.cost)) + '</span></span></div>';
           },
           acts: {
             hdel: function (t, e, redraw) {
@@ -15248,7 +15631,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     },
 
     controls: function () {
-      return '<div class="row" style="gap:10px;align-items:center;flex-wrap:wrap">' + TF.btn('diary_main') + UI.tabs([{ k: 'list', t: '📋 列表' }, { k: 'calendar', t: '📅 日历' }], st.view, 'view') + '</div>';
+      return '<div class="row" style="gap:10px;align-items:center;flex-wrap:wrap">' + TF.btn('diary_main') + UI.tabs([{ k: 'list', t: '📋️ 列表' }, { k: 'calendar', t: '📅 日历' }], st.view, 'view') + '</div>';
     },
 
     recent: function () {
@@ -15867,7 +16250,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
                 '<div class="item-meta"><span class="badge">🔥 ' + Math.round(num(x.kcal)) + ' kcal</span><span>' + num(x.mins) + ' 分钟</span></div>' +
                 (x.note ? '<div class="item-note">' + esc(x.note) + '</div>' : '') + '</div></div>';
             }).join(''));
-            if (ml.length) parts.push('<div class="small muted" style="margin:8px 0 4px">🍽 饮食</div>' + ml.map(function (x) {
+            if (ml.length) parts.push('<div class="small muted" style="margin:8px 0 4px">🍽️ 饮食</div>' + ml.map(function (x) {
               return '<div class="item"><div class="item-main"><div class="item-title">' + esc(x.food) + '</div>' +
                 '<div class="item-meta"><span class="badge">' + num(x.kcal) + ' kcal</span>' + (x.slot ? '<span>' + esc(x.slot) + '</span>' : '') + '</div></div></div>';
             }).join(''));
@@ -15935,7 +16318,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         { k: 'measure', t: '体重围度', i: '⚖️', c: 'measure', v: wTxt, s: wSub },
         { k: 'water',   t: '饮水打卡', i: '💧', c: 'water',   v: waterTxt, s: waterSub },
         { k: 'sport',   t: '运动记录', i: '🏃', c: 'sport',   v: sportTxt,  s: sportSub },
-        { k: 'meal',    t: '饮食记录', i: '🍽', c: 'meal',    v: mealTxt,   s: mealSub }
+        { k: 'meal',    t: '饮食记录', i: '🍽️', c: 'meal',    v: mealTxt,   s: mealSub }
       ];
       return '<div class="body-grid">' + cards.map(function (c) {
         var on = c.k === cur;
@@ -15973,7 +16356,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           body: (function () {
             // 仅显示当前趋势所选指标有数据的记录
             var list = U.sortBy(arr.filter(function (x) { return num(x[metric]) > 0; }), 'date', true);
-            if (!list.length) return UI.empty('还没有「' + MN[metric] + '」的记录，点上方「+ 记录数据」添加吧', '📋');
+            if (!list.length) return UI.empty('还没有「' + MN[metric] + '」的记录，点上方「+ 记录数据」添加吧', '📋️');
             var pageRows = ListPager.slice('body:measure', list);
             var itemsHtml = pageRows.map(function (x) {
               var expanded = measureExpanded === x.id;
@@ -16040,7 +16423,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
 
       // 3) 喝水明细日志
       if (logHtml) {
-        body += '<div class="water-log-head"><span class="small muted">📋 今日喝水明细</span></div>' + logHtml;
+        body += '<div class="water-log-head"><span class="small muted">📋️ 今日喝水明细</span></div>' + logHtml;
       }
 
       return UI.card({
@@ -16098,7 +16481,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       });
 
       return UI.card({
-        title: '🍽 当日热量', sub: U.fmtDate(d, true),
+        title: '🍽️ 当日热量', sub: U.fmtDate(d, true),
           right: '<div class="row"><button class="btn sm ghost tap" data-act="mprev">‹</button>' +
           '<button class="btn sm ghost tap" data-act="mnext"' + (d >= U.today() ? ' disabled' : '') + '>›</button></div>',
         body: UI.stats([
@@ -16109,7 +16492,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         ], 2) +
           '<div class="small muted" style="margin-top:12px">基础代谢默认按体重 × 22 估算，可在 ⚙️ 设置中自定义。运动消耗自动取当日运动记录。</div>' +
           '<div style="height:18px"></div>' +
-          ListPager.out({ ns: 'body:meal', items: items, defSize: 5, empty: '记录今天吃了什么，自动核算摄入热量', emptyIcon: '🍽', render: renderMealItem })
+          ListPager.out({ ns: 'body:meal', items: items, defSize: 5, empty: '记录今天吃了什么，自动核算摄入热量', emptyIcon: '🍽️', render: renderMealItem })
       });
     },
 
@@ -16225,7 +16608,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
                   '<span class="row" style="gap:6px">' +
                   '<button class="link-btn tap" data-act="wpUp" data-i="' + i + '">↑</button>' +
                   '<button class="link-btn tap" data-act="wpDown" data-i="' + i + '">↓</button>' +
-                  '<button class="link-btn tap del" data-act="wpDel" data-i="' + i + '">🗑 删除</button>' +
+                  '<button class="link-btn tap del" data-act="wpDel" data-i="' + i + '">🗑️ 删除</button>' +
                   '</span></div>';
               }).join('') + '</div>'
             : '<div class="small muted" style="margin:10px 0">还没有预设水量</div>';
@@ -16427,7 +16810,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
                 '<div class="item-meta"><span>' + U.fmtDate(x.date, true) + '</span></div></div>' + foldOps + '</div>';
             } else {
               return '<div class="wl-hist-row"><div class="wl-hist-row-main">' +
-                '<div class="row between" style="gap:8px;align-items:center"><span class="item-title">🍽 ' + esc(x.food) + '</span>' +
+                '<div class="row between" style="gap:8px;align-items:center"><span class="item-title">🍽️ ' + esc(x.food) + '</span>' +
                 '<span class="badge" style="flex-shrink:0">' + num(x.kcal) + ' kcal</span></div>' +
                 '<div class="item-meta"><span>' + U.fmtDate(x.date, true) + '</span>' +
                 (x.slot ? '<span class="badge grey">' + esc(x.slot) + '</span>' : '') + '</div></div>' + foldOps + '</div>';
@@ -16486,7 +16869,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
   App.register(body);
 
   /* =========================================================
-     6. 🗄 物品管理
+     6. 🗄️ 物品管理
   ========================================================= */
   var CONSUM_PRESET = [
     { n: '隐形眼镜', d: 30 }, { n: '内衣裤', d: 90 }, { n: '电动牙刷头', d: 90 },
@@ -16542,7 +16925,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     var expanded = consumExpanded === x.id;
     var caret = '<span class="consum-caret">' + (expanded ? '▾' : '▸') + '</span>';
     var renewBtn = x.archived ? '' : '<button class="link-btn tap" data-act="crenew" data-id="' + x.id + '">🔄 换新</button>';
-    var archiveBtn = '<button class="link-btn tap" data-act="carchive" data-id="' + x.id + '">' + (x.archived ? '↩ 重新启用' : '📦 归档') + '</button>';
+    var archiveBtn = '<button class="link-btn tap" data-act="carchive" data-id="' + x.id + '">' + (x.archived ? '↩️ 重新启用' : '📦 归档') + '</button>';
     var archivedBadge = x.archived ? '<span class="badge grey">已归档</span> ' : '';
     /* 主行：始终渲染（折叠/展开都可见），参考 task-row / stock-ov-row 模式 */
     var row = '<div class="consum-row' + (x.archived ? ' archived' : '') + (expanded ? ' open' : '') + '" data-act="citem" data-id="' + x.id + '"><div class="consum-main">' +
@@ -16573,19 +16956,19 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     }
     var detail = '<div class="consum-ops">' + renewBtn + archiveBtn +
       '<button class="link-btn tap" data-act="cedit" data-id="' + x.id + '">✏️ 编辑</button>' +
-      '<button class="link-btn del tap" data-act="cdel" data-id="' + x.id + '">🗑 删除</button></div>' +
+      '<button class="link-btn del tap" data-act="cdel" data-id="' + x.id + '">🗑️ 删除</button></div>' +
       meta + histHtml +
       (x.note ? '<div class="note-text">📝 ' + esc(x.note) + '</div>' : '');
     return row + '<div class="consum-detail">' + detail + '</div>';
   }
 
   var items = {
-    id: 'items', icon: '🗄', name: '物品管理',
+    id: 'items', icon: '🗄️', name: '物品管理',
 
     render: function () {
       var t = App.tab('items', 'main', 'stock');
       var soon = D().items.consum.filter(function (x) { var n = normConsum(x); return !n.archived && dueDays(x) <= 7; }).length;
-      return UI.head('🗄 物品管理', '库存余量 · 采购清单 · 耗材更换提醒') +
+      return UI.head('🗄️ 物品管理', '库存余量 · 采购清单 · 耗材更换提醒') +
         UI.tabs([
           { k: 'stock', t: '物品库存', i: '📦' },
           { k: 'buy', t: '采购清单', i: '🛒' },
@@ -16701,7 +17084,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
               '<button class="link-btn tap" data-act="kuse" data-id="' + x.id + '">📉 记使用</button>' +
               '<button class="link-btn tap" data-act="ksup" data-id="' + x.id + '">➕ 补充</button>' +
               '<button class="link-btn tap" data-act="kedit" data-id="' + x.id + '">✏️ 编辑</button>' +
-              '<button class="link-btn del tap" data-act="kdel" data-id="' + x.id + '">🗑 删除</button>' +
+              '<button class="link-btn del tap" data-act="kdel" data-id="' + x.id + '">🗑️ 删除</button>' +
             '</div>' +
             '<div class="rec-sec"><div class="rec-h-row"><strong class="rec-h">📦 批次明细（' + batchSorted.length + '）</strong>' + (batchMoreBtn ? batchMoreBtn : '') + '</div>' + batchHtml + '</div>' +
             '<div class="rec-sec"><div class="rec-h-row"><strong class="rec-h">使用记录（' + logs.length + '）</strong>' + (useMoreBtn ? useMoreBtn : '') + '</div>' + useHtml + '</div>' +
@@ -16719,7 +17102,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
             ? '<button class="btn ghost sm tap" data-act="ktoggleArchived">📦 显示已归档 (' + archived.length + ')</button>'
             : '');
       var headHtml = '<div class="card-head">' +
-        '<h3 class="stock-card-title">' + (stockShowArchived ? '📦 已归档物品' : '📋 库存总览') + '</h3>' +
+        '<h3 class="stock-card-title">' + (stockShowArchived ? '📦 已归档物品' : '📋️ 库存总览') + '</h3>' +
         '<div class="row stock-card-tools">' + archiveBtn +
           '<button class="btn ghost sm tap" data-act="hist">📜 历史记录</button>' +
         '</div>' +
@@ -16877,7 +17260,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         var mv = { name: x.name, cat: x.cat || '', uname: x.uname, unit: x.unit || '', warnPct: x.warnPct, warnQty: x.warnQty, note: x.note || '' };
         UI.form({
           title: '编辑物品 · ' + x.name, values: mv, fields: stockMetaFields(),
-          danger: true, dangerText: x.archived ? '↩ 启用' : '📦 归档',
+          danger: true, dangerText: x.archived ? '↩️ 启用' : '📦 归档',
           onDanger: function () {
             if (!x.archived) {
               UI.confirm('归档「' + x.name + '」？', '归档后将不再出现在库存列表和首页预警中，可随时在「显示已归档」里重新启用。', '归档', false).then(function (ok) {
@@ -17061,7 +17444,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       hist: function () {
         Hist.open({
           modId: 'items',
-          title: '🗄 物品历史记录',
+          title: '🗄️ 物品历史记录',
           searchPh: '🔍 搜索物品名 / 分类 / 备注…',
           pager: true,
           items: function () {
@@ -17275,10 +17658,10 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     }
     var t = stockTotals(x); x.qty = t.qty; x.left = t.left;
   }
-  // 记录行操作按钮 HTML（✏️ 编辑 / 🗑 删除，emoji+文字，与打卡列表统一风格），data-kind 区分 use/buy/batch/hist
+  // 记录行操作按钮 HTML（✏️ 编辑 / 🗑️ 删除，emoji+文字，与打卡列表统一风格），data-kind 区分 use/buy/batch/hist
   function recActsHtml(kind, rid) {
     return '<button class="link-btn tap" data-rec="edit" data-rid="' + rid + '" data-kind="' + kind + '">✏️ 编辑</button>' +
-      '<button class="link-btn del tap" data-rec="del" data-rid="' + rid + '" data-kind="' + kind + '">🗑 删除</button>';
+      '<button class="link-btn del tap" data-rec="del" data-rid="' + rid + '" data-kind="' + kind + '">🗑️ 删除</button>';
   }
   function refreshRows(el, draw) { var c = el.querySelector('.rec-rows'); if (c) c.innerHTML = draw(); }
   // 编辑单条记录：使用(d,v) / 购买(d,qty,price) / 批次(d,qty,left,exp,price)
@@ -17491,7 +17874,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       '婴儿食品': '🥣', '母婴用品': '🧷', '母婴服务': '🤱',
       '还款': '💳', '人情往来': '🧧', '保险支出': '🛡️', '投资理财': '📈',
       '手机话费': '📱', '电费': '💡', '水费': '🚰',
-      '基本工资': '💵', '绩效奖金': '🏆', '津贴补助': '📋',
+      '基本工资': '💵', '绩效奖金': '🏆', '津贴补助': '📋️',
       '个体经营': '🏪', '副业兼职': '💻', '自由职业': '🖊️',
       '投资收入': '📈', '保险理赔': '🛡️', '租金收入': '🏘️',
       '退款返现': '↩️', '他人还款': '💳', '退税收入': '📤',
@@ -17828,7 +18211,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       var arr = F().accounts;
       return UI.card({
         title: '🏦 我的账户', sub: '总资产 ' + money(totalAsset()) + (Math.abs(totalAsset()) >= 1e4 ? '（' + U.moneyFull(totalAsset()) + '）' : ''),
-        right: '<button class="btn sm ghost tap" data-act="tnew">↔ 转账</button><button class="btn primary sm tap" data-act="anew">+ 新建账户</button>',
+        right: '<button class="btn sm ghost tap" data-act="tnew">↔️ 转账</button><button class="btn primary sm tap" data-act="anew">+ 新建账户</button>',
         body: '<div class="list">' + (arr.length ? arr.map(function (a) {
           var b = balance(a.id);
           var isDebt = a.type === '信用卡' && b < 0;
@@ -17978,7 +18361,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         }) +
         UI.card({
           title: '⚙️ 收支分类管理',
-          right: '<button class="btn ghost sm tap" data-act="finCatManage">🗂 分类管理</button>',
+          right: '<button class="btn ghost sm tap" data-act="finCatManage">🗂️ 分类管理</button>',
           body: '<div class="small muted">支出 / 收入分类可在「分类管理」里新增或删减，记账时选择使用。</div>'
         });
     },
@@ -18205,7 +18588,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
               }).join('') + '</div>' : '<div class="small muted" style="margin-bottom:6px">暂无二级分类</div>') +
               '<div class="row" style="gap:8px;margin-bottom:8px"><input class="input" placeholder="新增二级分类" style="flex:1;min-width:0">' +
               '<button class="btn primary sm tap" data-act="finSubAdd" data-k="' + key + '" data-c="' + esc(name) + '">+ 添加</button></div>' +
-              '<button class="link-btn del tap" data-act="finCatDel" data-k="' + key + '" data-c="' + esc(name) + '">🗑 删除该一级分类</button>' +
+              '<button class="link-btn del tap" data-act="finCatDel" data-k="' + key + '" data-c="' + esc(name) + '">🗑️ 删除该一级分类</button>' +
               '</div>'
             ) : '';
             return '<div class="cat-cap' + (open ? ' open' : '') + '" data-act="finCapToggle" data-k="' + key + '" data-c="' + esc(name) + '">' +
@@ -18220,7 +18603,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
             '<button class="btn primary sm tap" data-act="finCatAdd" data-k="' + key + '" style="margin-bottom:14px">+ 添加' + title + '</button>';
         }
         function renderAll() { return section('catExpense', '支出分类') + '<div style="height:10px"></div>' + section('catIncome', '收入分类'); }
-        var el = UI.sheet('🗂 收支分类管理', renderAll(), '<button class="btn ghost tap" data-x>关闭</button>');
+        var el = UI.sheet('🗂️ 收支分类管理', renderAll(), '<button class="btn ghost tap" data-x>关闭</button>');
         var body = el.querySelector('.modal-body');
         el.addEventListener('click', function (e) {
           var b = e.target.closest('[data-act]'); if (!b) return;
@@ -18820,7 +19203,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       (x.note ? '<span>' + esc(x.note) + '</span>' : '') + '</div>' +
       '<div class="item-ops-row">' +
       '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
-      '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>' +
+      '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑️ 删除</button>' +
       '</div></div></div>';
   }
 
@@ -19093,7 +19476,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     var expanded = wishExpanded === x.id;
     var meta =
       '<span class="badge grey">' + esc(x.cat || '目标') + '</span>' +
-      (x.when ? '<span class="badge grey">🗓 ' + esc(x.when) + '</span>' : '') +
+      (x.when ? '<span class="badge grey">🗓️ ' + esc(x.when) + '</span>' : '') +
       (x.done && x.doneAt ? '<span class="badge">🎉 ' + U.fmtDate(x.doneAt) + ' 实现</span>' : '');
     var caret = '<span class="wish-row-caret">' + (expanded ? '▾' : '▸') + '</span>';
     var row = '<div class="wish-row' + (x.done ? ' done' : '') + (expanded ? ' open' : '') + '" data-act="wexp" data-id="' + x.id + '">' +
@@ -19104,9 +19487,9 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     if (!expanded) return row;
     return row + '<div class="wish-detail">' +
       '<div class="wish-ops">' +
-        '<button class="link-btn tap" data-act="toggle" data-id="' + x.id + '">' + (x.done ? '↩ 标为未实现' : '🎉 标记已实现') + '</button>' +
+        '<button class="link-btn tap" data-act="toggle" data-id="' + x.id + '">' + (x.done ? '↩️ 标为未实现' : '🎉 标记已实现') + '</button>' +
         '<button class="link-btn tap" data-act="edit" data-id="' + x.id + '">✏️ 编辑</button>' +
-        '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑 删除</button>' +
+        '<button class="link-btn del tap" data-act="del" data-id="' + x.id + '">🗑️ 删除</button>' +
       '</div>' +
       (x.note ? '<div class="item-note">' + esc(x.note) + '</div>' : '') + '</div>';
   }
@@ -19554,7 +19937,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
             [x.subject, x.contentCat, U.timeRangeText(x.start, x.end, x.mins)].filter(Boolean).join(' · '));
         });
         (d.exam.plans || []).forEach(function (x) {
-          push(x.due, '学习', '🗓', x.text || '学习计划', [x.subject, x.done ? '已完成' : '计划'].filter(Boolean).join(' · '));
+          push(x.due, '学习', '🗓️', x.text || '学习计划', [x.subject, x.done ? '已完成' : '计划'].filter(Boolean).join(' · '));
         });
         /* 身体 */
         (d.body.measures || []).forEach(function (x) {
@@ -19568,7 +19951,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         var water = d.body.water || {};
         Object.keys(water).forEach(function (day) { if (num(water[day]) > 0) push(day, '身体', '💧', '喝水 ' + num(water[day]) + ' ml', ''); });
         (d.body.meals || []).forEach(function (x) {
-          push(x.date, '身体', '🍽', (x.slot || '餐食') + ' · ' + (x.food || ''), x.kcal ? num(x.kcal) + ' kcal' : '');
+          push(x.date, '身体', '🍽️', (x.slot || '餐食') + ' · ' + (x.food || ''), x.kcal ? num(x.kcal) + ' kcal' : '');
         });
         /* 车辆 */
         ((d.vehicles.ev || {}).charges || []).forEach(function (x) {
@@ -19627,7 +20010,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           (TF ? '<span style="margin-left:auto">' + TF.btn('archive') + '</span>' : '') +
           '</div>';
         if (!rows.length) {
-          body += UI.empty((!TF || TF.isAll('archive')) ? '还没有任何记录，去各板块记一笔吧' : '该时间段内没有记录', '🏛');
+          body += UI.empty((!TF || TF.isAll('archive')) ? '还没有任何记录，去各板块记一笔吧' : '该时间段内没有记录', '🏛️');
         } else {
           body += '<div class="list">' + flat.slice(start, end).map(function (r) {
             if (r.t === 'head') {
@@ -20677,7 +21060,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
             '<div class="wh-sub">已完成 ' + Math.round(pct) + '%' + (pct >= 100 ? ' · 达标 🎉' : '') + '</div>' +
             '</div>' +
             '<div class="water-grid">' + presetsHtml() + '</div>' +
-            '<button class="water-undo tap" data-act="hwundo"' + (lastId ? '' : ' disabled') + '>↩ 撤销上一条</button>' +
+            '<button class="water-undo tap" data-act="hwundo"' + (lastId ? '' : ' disabled') + '>↩️ 撤销上一条</button>' +
             '<div class="water-log-head"><span class="small muted">今日明细</span><button class="link-btn tap small" data-act="hwExpAll">' + (expanded ? '收起' : '展开全部') + '</button></div>' +
             logHtml;
         }
@@ -21120,22 +21503,26 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     return h + '</div>';
   }
   /* 单条已办记录卡片（主列表 / 查看全部弹窗共用）
-     布局：办理内容作标题 → 元信息行（时间段一句话 + 分类胶囊 + 来源），
-     时间段用 U.timeRangeText 合并显示「开始 – 结束（时长）」，一眼看出哪个时间段做了什么 */
+     布局：卡片为弹性行——左列 = 办理内容(标题) + 分类/来源徽章行；
+           时间段徽章是卡片的直接子项，相对整卡上下居中（与主列表电费徽章同款做法）。
+     时间胶囊不带 🕐（emoji 行盒会把胶囊撑高）且去掉「 – 」空格，更窄 */
   function renderJWLogCard(x, l) {
     var isClose = l.t === '办结';
     var timeTxt = U.timeRangeText(l.start, l.end);
+    var timeShort = timeTxt ? timeTxt.replace(/ – /g, '–') : '';
     return '<div class="jw-tl-item' + (isClose ? ' close' : '') + '">' +
       '<div class="jw-tl-rail"><span class="jw-tl-dot' + (isClose ? ' close' : '') + '"></span><span class="jw-tl-line"></span></div>' +
       '<div class="jw-tl-body">' +
-        '<div class="jw-tl-card tap" data-act="cLogEdit" data-id="' + x.id + '" data-lid="' + l.id + '">' +
-          '<div class="jw-tl-text' + (isClose ? ' jw-log-t-close' : '') + '">' + esc(l.t) + '</div>' +
-          '<div class="jw-tl-head">' +
-            (timeTxt ? '<span class="badge grey">🕐 ' + esc(timeTxt) + '</span>' : '') +
-            (l.cat ? '<span class="badge cream">' + esc(l.cat) + '</span>' : '') +
-            (l.src === 'worklog' ? '<span class="badge info jw-tl-src">工作留痕</span>' : '') +
-            (l.src === 'task' ? '<span class="badge info jw-tl-src">任务待办</span>' : '') +
+        '<div class="jw-tl-card tap" data-act="cLogEdit" data-id="' + x.id + '" data-lid="' + l.id + '" title="' + esc(l.t + (timeShort ? '　' + timeShort : '')) + '">' +
+          '<div class="jw-tl-maincol">' +
+            '<div class="jw-tl-text' + (isClose ? ' jw-log-t-close' : '') + '">' + esc(l.t) + '</div>' +
+            '<div class="jw-tl-head">' +
+              (l.cat ? '<span class="badge cream">' + esc(l.cat) + '</span>' : '') +
+              (l.src === 'worklog' ? '<span class="badge info jw-tl-src">工作留痕</span>' : '') +
+              (l.src === 'task' ? '<span class="badge info jw-tl-src">任务待办</span>' : '') +
+            '</div>' +
           '</div>' +
+          (timeShort ? '<span class="badge grey jw-tl-time">' + esc(timeShort) + '</span>' : '') +
         '</div>' +
       '</div></div>';
   }
@@ -21306,9 +21693,9 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         '<div class="item-meta">' + meta + '</div>' +
         (open ? kvRows(pairs) : '') +
         (open ? opsRow(
-          (done ? '' : '<button class="btn ghost sm tap" data-act="iDone" data-id="' + x.id + '">✔ 标记已完成</button>') +
+          (done ? '' : '<button class="btn ghost sm tap" data-act="iDone" data-id="' + x.id + '">✔️ 标记已完成</button>') +
           '<button class="btn ghost sm tap" data-act="iEdit" data-id="' + x.id + '">✏️ 编辑</button>' +
-          '<button class="btn danger sm tap" data-act="iDel" data-id="' + x.id + '">🗑 删除</button>'
+          '<button class="btn danger sm tap" data-act="iDel" data-id="' + x.id + '">🗑️ 删除</button>'
         ) : '') +
       '</div></div>';
   }
@@ -21336,10 +21723,10 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         '<div class="item-meta">' + meta + '</div>' +
         (open ? kvRows(pairs) : '') +
         (open ? opsRow(
-          (sent ? '<button class="btn ghost sm tap" data-act="sUndo" data-id="' + x.id + '">↩ 撤销已报送</button>'
-                : '<button class="btn ghost sm tap" data-act="sSend" data-id="' + x.id + '">✔ 标记已报送</button>') +
+          (sent ? '<button class="btn ghost sm tap" data-act="sUndo" data-id="' + x.id + '">↩️ 撤销已报送</button>'
+                : '<button class="btn ghost sm tap" data-act="sSend" data-id="' + x.id + '">✔️ 标记已报送</button>') +
           '<button class="btn ghost sm tap" data-act="sEdit" data-id="' + x.id + '">✏️ 编辑</button>' +
-          '<button class="btn danger sm tap" data-act="sDel" data-id="' + x.id + '">🗑 删除</button>'
+          '<button class="btn danger sm tap" data-act="sDel" data-id="' + x.id + '">🗑️ 删除</button>'
         ) : '') +
       '</div></div>';
   }
@@ -21386,7 +21773,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         (open ? kvRows(pairs) : '') +
         (open ? opsRow(
           '<button class="btn ghost sm tap" data-act="pEdit" data-id="' + x.id + '">✏️ 编辑</button>' +
-          '<button class="btn danger sm tap" data-act="pDel" data-id="' + x.id + '">🗑 删除</button>'
+          '<button class="btn danger sm tap" data-act="pDel" data-id="' + x.id + '">🗑️ 删除</button>'
         ) : '') +
       '</div></div>';
   }
@@ -21525,7 +21912,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     caseView: function () {
       return UI.card({
         title: '📁 问题线索台账',
-        right: '<div style="display:flex;align-items:center;gap:8px">' + TF.btn('jiwei:case', { icon: '🗓' }) + '</div>',
+        right: '<div style="display:flex;align-items:center;gap:8px">' + TF.btn('jiwei:case', { icon: '🗓️' }) + '</div>',
         body: Cats.filterBar('jwSources', { label: '来源' }) +
           '<div class="row cat-filter-row" style="gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 8px">' +
             '<span class="pill filter-heading">状态</span>' +
@@ -21568,7 +21955,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     inspectView: function () {
       return UI.card({
         title: '🔍 监督检查任务',
-        right: '<div style="display:flex;align-items:center;gap:8px">' + TF.btn('jiwei:inspect', { icon: '🗓' }) + '</div>',
+        right: '<div style="display:flex;align-items:center;gap:8px">' + TF.btn('jiwei:inspect', { icon: '🗓️' }) + '</div>',
         body: Cats.filterBar('jwInspectTypes', { label: '类型' }) +
           '<input class="input" id="jwQInspect" placeholder="🔍 搜索事项 / 对象 / 备注" value="' + esc(jwQ.inspect) + '" style="margin-bottom:14px">' +
           '<div id="jwListInspect">' + this.inspectList() + '</div>'
@@ -21600,7 +21987,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     submitView: function () {
       return UI.card({
         title: '📤 材料报送清单',
-        right: '<div style="display:flex;align-items:center;gap:8px">' + TF.btn('jiwei:submit', { icon: '🗓' }) + '</div>',
+        right: '<div style="display:flex;align-items:center;gap:8px">' + TF.btn('jiwei:submit', { icon: '🗓️' }) + '</div>',
         body: Cats.filterBar('jwSubmitWays', { label: '方式' }) +
           '<input class="input" id="jwQSubmit" placeholder="🔍 搜索材料 / 报送对象 / 备注" value="' + esc(jwQ.submit) + '" style="margin-bottom:14px">' +
           '<div id="jwListSubmit">' + this.submitList() + '</div>'
@@ -21632,7 +22019,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     punishView: function () {
       return UI.card({
         title: '📒 处分台账',
-        right: TF.btn('jiwei:pun', { icon: '🗓' }),
+        right: TF.btn('jiwei:pun', { icon: '🗓️' }),
         body: '<input class="input" id="jwQPun" placeholder="🔍 搜索文号 / 姓名 / 单位职务 / 种类" value="' + esc(jwQ.punish) + '" style="margin-bottom:14px">' +
           '<div id="jwListPun">' + this.punishList() + '</div>'
       });
@@ -22217,6 +22604,14 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
             (jd.inspects || []).forEach(function (x) { if (x.id === id) { x.rectifyDue = nd; ok = true; } });
           }
           if (!ok) { U.toast('该事项不存在或已处理'); return; }
+          /* 延期改了日期 → 同步刷新对应的镜像工作留痕，两边日期保持一致 */
+          if (window.JWLink && window.JWLink.upsertWlogFromSrc) {
+            try {
+              var kind = (src === 'submit') ? 'submit' : 'inspect';
+              var rec = window.JWLink.findSrcRec(kind, id);
+              if (rec) window.JWLink.upsertWlogFromSrc(kind, rec);
+            } catch (e) { /* 桥接不可用时只改本模块，不影响延期本身 */ }
+          }
           Store.save(); App.refresh();
           U.toast('⏳ 已延期「' + name + '」至 ' + U.fmtDate(nd) + ' 到期');
         });
@@ -22237,7 +22632,11 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         UI.form({ title: '新增监督检查任务', values: { status: '计划中', rectifyStatus: '不涉及', planDate: U.today() }, fields: inspectFields() })
           .then(function (v) {
             if (!v) return;
-            v.id = U.uid(); J().inspects.push(v); Store.save(); App.refresh();
+            v.id = U.uid(); J().inspects.push(v);
+            /* 同步生成对应的「工作留痕」（分类=监督检查），两边内容一致 */
+            if (window.JWLink && window.JWLink.upsertWlogFromSrc) window.JWLink.upsertWlogFromSrc('inspect', v);
+            Store.save(); App.refresh();
+            U.toast('已新增，并同步到工作留痕');
           });
       },
       iEdit: function (t) {
@@ -22246,15 +22645,22 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         UI.form({ title: '编辑检查任务', values: vals, fields: inspectFields() }).then(function (v) {
           if (!v) return;
           Object.keys(v).forEach(function (k) { x[k] = v[k]; });
+          if (window.JWLink && window.JWLink.upsertWlogFromSrc) window.JWLink.upsertWlogFromSrc('inspect', x);
           Store.save(); App.refresh();
         });
       },
       iDel: function (t) {
         var x = findInspect(t.dataset.id); if (!x) return;
-        UI.del(x.title, function () {
+        var w = (window.JWLink && window.JWLink.findWlogOfSrc) ? window.JWLink.findWlogOfSrc('inspect', x.id) : null;
+        function doDel() {
+          if (window.JWLink && window.JWLink.removeWlogBySrc) window.JWLink.removeWlogBySrc('inspect', x.id);
           J().inspects = J().inspects.filter(function (a) { return a.id !== x.id; });
           Store.save(); App.refresh();
-        });
+        }
+        if (!w) { UI.del(x.title, doDel); return; }
+        UI.confirm('删除监督检查任务？', '将一并删除以下关联记录：同步生成的监督检查工作留痕「' + (w.content || '') +
+          '」（含已填的时长 / 起止时间）。删除后不可恢复。', '删除', true)
+          .then(function (ok) { if (ok) { doDel(); U.toast('已删除，同步的工作留痕一并清除'); } });
       },
       iDone: function (t) {
         var x = findInspect(t.dataset.id); if (!x) return;
@@ -22278,6 +22684,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           x.doneDate = v.doneDate || U.today();
           x.found = (v.found === '' || v.found == null) ? '' : v.found;
           x.note = v.note || '';
+          if (window.JWLink && window.JWLink.upsertWlogFromSrc) window.JWLink.upsertWlogFromSrc('inspect', x);
           Store.save(); App.refresh(); U.toast('已标记完成');
         });
       },
@@ -22288,7 +22695,11 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         UI.form({ title: '新增材料报送任务', values: { status: '待报送', period: '一次性', dueDate: U.today() }, fields: submitFields() })
           .then(function (v) {
             if (!v) return;
-            v.id = U.uid(); J().submits.push(v); Store.save(); App.refresh();
+            v.id = U.uid(); J().submits.push(v);
+            /* 同步生成对应的「工作留痕」（分类=材料报送） */
+            if (window.JWLink && window.JWLink.upsertWlogFromSrc) window.JWLink.upsertWlogFromSrc('submit', v);
+            Store.save(); App.refresh();
+            U.toast('已新增，并同步到工作留痕');
           });
       },
       sEdit: function (t) {
@@ -22297,29 +22708,39 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         UI.form({ title: '编辑报送任务', values: vals, fields: submitFields() }).then(function (v) {
           if (!v) return;
           Object.keys(v).forEach(function (k) { x[k] = v[k]; });
+          if (window.JWLink && window.JWLink.upsertWlogFromSrc) window.JWLink.upsertWlogFromSrc('submit', x);
           Store.save(); App.refresh();
         });
       },
       sDel: function (t) {
         var x = findSubmit(t.dataset.id); if (!x) return;
-        UI.del(x.title, function () {
+        var w = (window.JWLink && window.JWLink.findWlogOfSrc) ? window.JWLink.findWlogOfSrc('submit', x.id) : null;
+        function doDel() {
+          if (window.JWLink && window.JWLink.removeWlogBySrc) window.JWLink.removeWlogBySrc('submit', x.id);
           J().submits = J().submits.filter(function (a) { return a.id !== x.id; });
           Store.save(); App.refresh();
-        });
+        }
+        if (!w) { UI.del(x.title, doDel); return; }
+        UI.confirm('删除材料报送任务？', '将一并删除以下关联记录：同步生成的材料报送工作留痕「' + (w.content || '') +
+          '」（含已填的时长 / 起止时间）。删除后不可恢复。', '删除', true)
+          .then(function (ok) { if (ok) { doDel(); U.toast('已删除，同步的工作留痕一并清除'); } });
       },
       sSend: function (t) {
         var x = findSubmit(t.dataset.id); if (!x) return;
         x.status = '已报送'; x.sentDate = U.today();
+        if (window.JWLink && window.JWLink.upsertWlogFromSrc) window.JWLink.upsertWlogFromSrc('submit', x);
         Store.save(); App.refresh(); U.toast('已标记为已报送');
       },
       sSendToday: function (t) {
         var x = findSubmit(t.dataset.id); if (!x) return;
         x.status = '已报送'; x.sentDate = U.today();
+        if (window.JWLink && window.JWLink.upsertWlogFromSrc) window.JWLink.upsertWlogFromSrc('submit', x);
         Store.save(); App.refresh(); U.toast('已标记为已报送');
       },
       sUndo: function (t) {
         var x = findSubmit(t.dataset.id); if (!x) return;
         x.status = '待报送'; x.sentDate = '';
+        if (window.JWLink && window.JWLink.upsertWlogFromSrc) window.JWLink.upsertWlogFromSrc('submit', x);
         Store.save(); App.refresh();
       },
 
@@ -22381,7 +22802,11 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       { k: 'doneDate', label: '实际开展日期', type: 'date', when: { key: 'status', val: '已完成' } },
       { k: 'found', label: '发现问题数', type: 'number', min: 0, step: 1 },
       { k: 'rectifyStatus', label: '整改状态', type: 'select', options: RECTIFY, def: '不涉及' },
-      { k: 'rectifyDue', label: '整改期限', type: 'date', },
+      /* 整改期限只在「涉及整改」的状态下出现（待整改 / 整改中 / 已整改）；
+         选「不涉及」时隐藏 —— 隐藏字段提交值为空串，因此会把之前填过的期限一并清掉。
+         用 whenFn 而非 when：RECTIFY 有 3 个非「不涉及」取值，固定值匹配覆盖不全。 */
+      { k: 'rectifyDue', label: '整改期限', type: 'date',
+        whenFn: function (all) { return String((all && all.rectifyStatus) || '不涉及') !== '不涉及'; } },
       { k: 'note', label: '备注', type: 'textarea', full: true, rows: 3 }
     ];
   }
@@ -22548,11 +22973,13 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       Store.data.worklog = (Store.data.worklog || []).filter(function (w) { return w.fromTask !== taskId; });
       Store.data.tasks = (Store.data.tasks || []).filter(function (t) { return t.id !== taskId; });
     },
-    /* 删除留痕 → 案件进度(src=worklog)；若由任务生成(fromTask)则连同来源任务一起删 */
+    /* 删除留痕 → 案件进度(src=worklog)；若由任务生成(fromTask)则连同来源任务一起删；
+       若为纪检监察镜像(jwKind)则连同来源「监督检查 / 材料报送」记录一起删 */
     cascadeFromWorklog: function (wid) {
       var w = window.JWLink.findWorklog(wid);
       window.JWLink.removeBySrc('worklog', wid);
       if (w && w.fromTask) window.JWLink.cascadeFromTask(w.fromTask);
+      if (w && w.jwKind) window.JWLink.removeSrcByWlog(w);
     },
     /* 删除案件进度 → 回删来源任务 / 留痕 */
     cascadeFromLog: function (log) {
@@ -22573,6 +23000,9 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           /* 该留痕是任务完成自动生成的镜像，编辑也应同步到来源任务的案件进度 */
           window.JWLink.eachLog('task', rec.fromTask, function (l) { window.JWLink._apply(l, 'log', c); });
         }
+        /* 该留痕是纪检监察「监督检查 / 材料报送」的镜像：改动回写到来源记录（内容→标题、备注→备注、日期→计划/期限日期）。
+           注意 pushWlogToSrc 内部只改数据、不会再回调本函数，不存在互相触发。 */
+        if (rec.jwKind) window.JWLink.pushWlogToSrc(rec);
       } else if (kind === 'log') {
         if (rec.src === 'task' && rec.srcId) {
           var t2 = window.JWLink.findTask(rec.srcId); if (t2) window.JWLink._apply(t2, 'task', c);
@@ -22590,6 +23020,78 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       }
       Store.save();
     },
+    /* ===== 监督检查 / 材料报送 ⇄ 工作留痕 双向同步 =====
+       需求：纪检监察的「监督检查」「材料报送」与「工作留痕」同步显示，改一边另一边跟着变。
+       约定：
+         · 源记录（J().inspects / J().submits）持有 wlogId → 镜像留痕 id
+         · 镜像留痕持有 jwKind('inspect'|'submit') + jwId → 源记录 id
+         · 源 → 留痕：日期 / 内容 / 备注；新建时补分类，**不覆盖** mins 与起止时间（用户手填的时长要保住）
+         · 留痕 → 源：内容→标题、备注→备注、日期→计划 / 期限日期（已办结写实际日期）
+       本对象只读写数据，落盘与刷新由调用方 Store.save()+App.refresh() 统一负责（见文件头约定，勿在此处调用）。 */
+    srcLabel: function (kind) { return kind === 'submit' ? '材料报送' : '监督检查'; },
+    wlogCatOf: function (kind) { return window.JWLink.srcLabel(kind); },
+    /* 源记录的有效日期：已办结取实际日期，否则取计划 / 期限日期 */
+    srcDateOf: function (kind, x) {
+      if (!x) return U.today();
+      if (kind === 'submit') return x.sentDate || x.dueDate || U.today();
+      return x.doneDate || x.planDate || U.today();
+    },
+    findSrcRec: function (kind, id) {
+      var arr = kind === 'submit' ? (J().submits || []) : (J().inspects || []);
+      return arr.filter(function (a) { return a.id === id; })[0] || null;
+    },
+    findWlogOfSrc: function (kind, id) {
+      return (Store.data.worklog || []).filter(function (w) { return w.jwKind === kind && w.jwId === id; })[0] || null;
+    },
+    /* 源记录 → 工作留痕：新建或更新镜像，返回镜像留痕对象 */
+    upsertWlogFromSrc: function (kind, x) {
+      if (!kind || !x || !x.id) return null;
+      if (!Array.isArray(Store.data.worklog)) Store.data.worklog = [];
+      var w = window.JWLink.findWlogOfSrc(kind, x.id), isNew = false;
+      if (!w) {
+        w = { id: U.uid(), jwKind: kind, jwId: x.id, mins: 0, start: '', end: '' };
+        Store.data.worklog.push(w);
+        isNew = true;
+      }
+      w.date = window.JWLink.srcDateOf(kind, x);
+      w.content = x.title || '';
+      w.note = x.note || '';
+      if (isNew || !w.cat) w.cat = window.JWLink.wlogCatOf(kind);
+      x.wlogId = w.id;
+      /* 分类筛选条要有这两项，否则留痕里点不出来 */
+      var cat = window.JWLink.wlogCatOf(kind);
+      if (!Array.isArray(Store.data.workCats)) Store.data.workCats = [];
+      if (Store.data.workCats.indexOf(cat) < 0) Store.data.workCats.push(cat);
+      return w;
+    },
+    /* 工作留痕 → 源记录：把镜像留痕上的编辑写回监督检查 / 材料报送（return true 表示写回了） */
+    pushWlogToSrc: function (w) {
+      if (!w || !w.jwKind || !w.jwId) return false;
+      var x = window.JWLink.findSrcRec(w.jwKind, w.jwId);
+      if (!x) return false;
+      if (typeof w.content === 'string') x.title = w.content;
+      if (typeof w.note === 'string') x.note = w.note;
+      if (w.date) {
+        if (w.jwKind === 'submit') { if (x.status === '已报送') x.sentDate = w.date; else x.dueDate = w.date; }
+        else { if (x.status === '已完成') x.doneDate = w.date; else x.planDate = w.date; }
+      }
+      return true;
+    },
+    /* 删除源记录 → 连带删除镜像留痕 */
+    removeWlogBySrc: function (kind, id) {
+      var w = window.JWLink.findWlogOfSrc(kind, id);
+      if (w) Store.data.worklog = (Store.data.worklog || []).filter(function (a) { return a.id !== w.id; });
+      return w || null;
+    },
+    /* 删除镜像留痕 → 连带删除来源记录 */
+    removeSrcByWlog: function (w) {
+      if (!w || !w.jwKind || !w.jwId) return null;
+      var kind = w.jwKind, id = w.jwId, rec = window.JWLink.findSrcRec(kind, id);
+      if (!rec) return null;
+      if (kind === 'submit') J().submits = (J().submits || []).filter(function (a) { return a.id !== id; });
+      else J().inspects = (J().inspects || []).filter(function (a) { return a.id !== id; });
+      return { kind: kind, rec: rec };
+    },
     /* 删除影响清单（供确认弹窗文案），返回字符串数组；含传递性关联，确保提示与实际删除一致 */
     impactText: function (kind, rec) {
       var lines = [];
@@ -22603,6 +23105,9 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           lines.push('生成该留痕的来源任务');
           if (hasCaseLog('task', rec.fromTask)) lines.push('关联的纪检监察案件办理进度');
         }
+        if (rec.jwKind) lines.push('来源的' + window.JWLink.srcLabel(rec.jwKind) + '记录');
+      } else if (kind === 'inspect' || kind === 'submit') {
+        if (window.JWLink.findWlogOfSrc(kind, rec.id)) lines.push('同步生成的' + window.JWLink.srcLabel(kind) + '工作留痕');
       } else if (kind === 'log') {
         if (rec.src === 'task' && rec.srcId) { lines.push('来源任务'); lines.push('由该任务自动生成的工作留痕'); }
         else if (rec.src === 'worklog' && rec.srcId) {
@@ -22613,6 +23118,21 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       }
       return lines;
     }
+  };
+
+  /* 一次性迁移：为历史「监督检查 / 材料报送」补齐镜像工作留痕（新记录在增改时自动同步）。
+     幂等：upsertWlogFromSrc 按 jwKind+jwId 查重，已存在只更新不重复创建；由 start() 在 Store.load() 后调用。 */
+  window.__migrateJwWlog = function () {
+    try {
+      var d = Store.data;
+      if (!d || !d.settings) return;
+      if (d.settings._jwWlogMigrated) return;
+      d.settings._jwWlogMigrated = true;
+      if (!window.JWLink) return;
+      (((d.jiwei || {}).inspects) || []).forEach(function (x) { window.JWLink.upsertWlogFromSrc('inspect', x); });
+      (((d.jiwei || {}).submits) || []).forEach(function (x) { window.JWLink.upsertWlogFromSrc('submit', x); });
+      Store.save();
+    } catch (e) { /* 迁移失败不影响使用，下次启动会重试（flag 已置位则不再重试） */ }
   };
 })();
 </script>
@@ -22749,6 +23269,9 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
 
     // 一次性迁移：为历史充电记录固化"记录当时"的估算容量（之后新增里程不再改变历史充电）
     if (window.__migrateVehicleCapKwh) { try { window.__migrateVehicleCapKwh(); } catch (e) {} }
+
+    // 一次性迁移：为历史「监督检查 / 材料报送」补齐镜像的工作留痕（之后增改自动双向同步）
+    if (window.__migrateJwWlog) { try { window.__migrateJwWlog(); } catch (e) {} }
 
     // 主题（auto=跟随系统 / light / dark）
     (function () {
