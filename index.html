@@ -5386,6 +5386,39 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
 }
 </style>
 <style id="smart-merge-style">.smart-merge-overlay{position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,.45);overflow:auto;padding:20px;}.smart-merge-panel{max-width:920px;margin:0 auto;background:var(--card,#fff);color:var(--brown,#222);padding:20px;border-radius:16px;overflow-wrap:anywhere}.smart-merge-panel fieldset{margin:14px 0;min-width:0;border:1px solid var(--line,#aaa);padding:12px}.smart-merge-panel button{margin:5px}.smart-merge-panel button:disabled{opacity:.4}.smart-merge-panel textarea{box-sizing:border-box;color:inherit;background:var(--card,#fff)}@media(max-width:600px){.smart-merge-overlay{padding:6px}.smart-merge-panel{padding:12px}}</style>
+<style id="worklog-timeline-collision-safe">
+/* Worklog timeline: intrinsic grid rows enforce visual collision constraints.
+   The row advances by max(time reference spacing, actual content height + gap).
+   Only the rail decorations are absolute; records and labels stay in normal flow. */
+.wl-tl-flow{--wl-row-gap:12px;--wl-col-gap:8px;--wl-min-row:3.5rem;position:relative;margin:0 0 2px;isolation:isolate;}
+.wl-tl-flow .wl-tl-row{display:grid;grid-template-columns:5.5em 20px minmax(0,1fr);column-gap:var(--wl-col-gap);align-items:start;box-sizing:border-box;min-block-size:max(var(--wl-min-row),var(--wl-time-step,0rem));padding-block-end:var(--wl-row-gap);min-width:0;}
+.wl-tl-flow .wl-tl-row:last-child{padding-block-end:0;min-block-size:0;}
+.wl-tl-flow .wl-tl-clock{min-width:0;text-align:right;padding-top:.625rem;font-size:12px;line-height:1.5;color:var(--brown-2);font-variant-numeric:tabular-nums;font-feature-settings:"tnum";}
+.wl-tl-flow .wl-tl-clock time{display:block;white-space:nowrap;}
+.wl-tl-flow .wl-tl-clock-end{font-size:11px;color:var(--brown-3);}
+.wl-tl-flow .wl-tl-clock-open{display:block;white-space:normal;font-size:11px;color:var(--brown-3);}
+.wl-tl-flow .wl-tl-rail{position:relative;align-self:stretch;min-width:0;pointer-events:none;}
+.wl-tl-flow .wl-tl-rail::before{content:"";position:absolute;left:50%;top:1rem;transform:translate(-50%,-50%);width:7px;height:7px;box-sizing:content-box;border:2px solid var(--card);border-radius:50%;background:var(--olive);z-index:2;}
+.wl-tl-flow .wl-tl-rail::after{content:"";position:absolute;left:50%;top:1rem;bottom:calc(-1 * (var(--wl-row-gap) + 1rem));border-left:1px solid var(--olive-24);}
+.wl-tl-flow .wl-tl-row:last-child .wl-tl-rail::after{display:none;}
+.wl-tl-flow .wl-tl-link{position:absolute;left:50%;right:calc(-1 * var(--wl-col-gap));top:1rem;border-top:1px solid var(--olive-24);}
+.wl-tl-flow .wl-tl-event{appearance:none;display:block;box-sizing:border-box;width:100%;min-width:0;min-height:44px;margin:0;padding:.625rem .75rem;text-align:left;font:inherit;color:var(--brown);background:var(--olive-10);border:1px solid var(--olive-24);border-left:3px solid var(--olive-soft);border-radius:8px;cursor:pointer;overflow:visible;transition:background-color .15s;}
+.wl-tl-flow .wl-tl-event:active{background:var(--olive-16);}
+.wl-tl-flow .wl-tl-event:focus-visible{outline:2px solid var(--olive);outline-offset:2px;}
+.wl-tl-flow .wl-tl-event-title{display:block;font-size:12px;font-weight:600;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal;}
+.wl-tl-flow .wl-tl-event-meta{display:flex;flex-wrap:wrap;gap:4px 8px;margin-top:5px;min-width:0;font-size:11px;line-height:1.5;color:var(--brown-2);}
+.wl-tl-flow .wl-tl-event-meta>span{min-width:0;overflow-wrap:anywhere;}
+.wl-tl-flow .wl-tl-event-note{display:block;margin-top:7px;padding-top:6px;border-top:1px solid var(--line);font-size:12px;line-height:1.6;color:var(--brown-2);white-space:pre-wrap;overflow-wrap:anywhere;}
+.wl-tl-flow .wl-tl-gap-note{display:block;margin-top:6px;font-size:11px;line-height:1.4;color:var(--brown-3);overflow-wrap:anywhere;}
+.wl-tl-top{flex-wrap:wrap;}
+.wl-tl-notime .wl-tl-chip{min-height:44px;white-space:pre-wrap;overflow-wrap:anywhere;}
+@media(max-width:600px){
+ .wl-tl-flow{--wl-col-gap:5px;--wl-row-gap:10px;}
+ .wl-tl-flow .wl-tl-row{grid-template-columns:4.8em 14px minmax(0,1fr);}
+ .wl-tl-flow .wl-tl-event{padding:.625rem .5rem;}
+}
+
+</style>
 </head>
 <body data-page-node-id="k17xPH9tcBxJoIx0pey0qQ">
 
@@ -11205,7 +11238,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
 
   function wViewBar() {
     /* 文案要短：和右侧胶囊同排，长了会把胶囊挤到第二行（移动端要保持单行） */
-    var tip = wView === 'timeline' ? '时间轴 · 重叠分列' : '按记录顺序';
+    var tip = wView === 'timeline' ? '时间轴 · 自动避让' : '按记录顺序';
     return '<div class="row between" style="margin:0 0 10px;align-items:center;flex-wrap:nowrap">' +
       '<span class="small muted" style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + tip + '</span>' +
       '<span class="wl-view-switch" role="tablist" aria-label="工作留痕视图切换">' +
@@ -11628,92 +11661,67 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       return html + '</div>' + ListPager.pager('worklog:list', arr.length);
     },
 
-    /* 时间轴视图：纵坐标 = 真实分钟数（条长即耗时），重叠任务自动分列，包含关系套叠内嵌。
-       与列表视图共用同一份数据源与分类筛选；不分页（一天的量级不需要，且分页会破坏整轴布局）。 */
+    /* Read-only timeline layout. Preserve the original start/end ordering and
+       date filtering; CSS intrinsic row sizing supplies the collision bound. */
     timeline: function () {
       var arr = this.wFilteredToday();
       if (!arr.length) return UI.empty('今天还没有工作记录', '📝');
-      var prep = wTlPrepare(arr);
-      var items = prep.withT, noT = prep.noT;
+      var prep = wTlPrepare(arr), items = prep.withT, noT = prep.noT;
       var dayMin = arr.reduce(function (s, a) { return s + num(a.mins); }, 0);
       var html = '';
-
       if (items.length) {
+        // Same comparator as the existing timeline; never sort persisted data.
         items.sort(function (a, b) { return a.s - b.s || b.e - a.e; });
-        var laneN = wTlLanes(items);
-        /* 3 列以上每列只剩 ~53px，塞不下「HH:MM–HH:MM」——那时时间行只显示开始时间；
-           嵌套条还要左右内缩、更窄，直接不显示时间行（轴上的位置本身已经表达了时间） */
-        var narrow = laneN >= 3;
-        var s0 = items[0].s, e0 = items[0].e;
-        items.forEach(function (it) { if (it.e > e0) e0 = it.e; });
-        /* 上下各留 30 分钟再对齐到整点，避免条贴着轴的两端；跨零点夹到 [0,1440] */
-        var start = Math.max(0, Math.floor((s0 - 30) / 60) * 60);
-        var end = Math.min(1440, Math.ceil((e0 + 30) / 60) * 60);
-        if (end - start < 120) end = Math.min(1440, start + 120);
-        var span = end - start;
-        /* 跨度越大每小时越矮，整体高度控制在约 200~460px，不至于要滑很久 */
-        var hourH = span <= 360 ? 44 : (span <= 600 ? 36 : 28);
-        var k = hourH / 60;                       // 每分钟像素数
-        var H = Math.round(span * k);
-        var step = hourH >= 36 ? 60 : 120;        // 太矮时隔 2 小时才画一条刻度，免得标签叠在一起
-        var grid = '', hours = '';
-        for (var t = start; t <= end; t += step) {
-          var gtop = Math.round((t - start) * k * 10) / 10;
-          grid += '<div class="wl-tl-grid" style="top:' + gtop + 'px"></div>';
-          hours += '<div class="wl-tl-hour" style="top:' + (gtop - 7) + 'px">' + wHM(t) + '</div>';
-        }
-        /* 并行重叠时段底色带（套叠条不参与，它的包含关系本身已经画出来了） */
-        var bands = wTlBands(items.filter(function (it) { return !it.nest; })).map(function (b) {
-          return '<div class="wl-tl-band" style="top:' + (Math.round((b.s - start) * k * 10) / 10) +
-            'px;height:' + Math.max(3, Math.round((b.e - b.s) * k * 10) / 10) + 'px"></div>';
-        }).join('');
-        /* 按列分组渲染；列宽交给 flex 平分，因此不需要在 JS 里算像素宽度 */
-        var cols = [];
-        for (var i = 0; i < laneN; i++) cols.push([]);
-        items.forEach(function (it) { cols[it.lane].push(it); });
-        var lanesHtml = cols.map(function (list) {
-          return '<div class="wl-tl-lane">' + list.map(function (it) {
-            var x = it.x;
-            var bh = Math.max(20, Math.round((it.e - it.s) * k * 10) / 10);   // 下限 20px，太短的条也要点得到
-            /* 宿主条只渲染标题当“组头”，不渲染时间行——内部子条按真实时间定位，
-               父条的时间行会与第一个子条的顶部文字相撞（截图里「10:26–13:13」压着「李运堂谈话笔录」）。
-               子条自身显示时间，父条的时间跨度由子条 + 坐标轴表达 */
-            var isHost = !!it.hasNest;
-            var two = bh >= 52 && !isHost;    // 够高时标题折 2 行；宿主强制单行，避免压到子条
-            var showTime = (bh >= 36) && !isHost && !(narrow && it.nest);
-            var timeTxt = narrow ? wHM(it.s) : (wHM(it.s) + '–' + wHM(it.e));
-            var full = (x.content || x.cat || '工作记录') + '　' + wHM(it.s) + '–' + wHM(it.e) +
-              (it.open ? '（未填结束，按 ' + hm(Math.max(num(x.mins), 30)) + ' 估算）' : '');
-            return '<div class="wl-tl-bar tap' + (it.nest ? ' nest' : '') + (it.open ? ' open' : '') + (isHost ? ' host' : '') + '"' +
-              ' style="top:' + (Math.round((it.s - start) * k * 10) / 10) + 'px;height:' + bh + 'px;' +
-              (narrow && it.nest ? 'left:8px;right:8px;' : '') + '"' +
-              ' data-act="wtl" data-id="' + x.id + '" title="' + esc(full) + '">' +
-              '<div class="wl-tl-bar-t' + (two ? ' tw' : '') + '">' + esc(x.content || x.cat || '工作记录') + '</div>' +
-              (showTime ? '<div class="wl-tl-bar-s">' + timeTxt + '</div>' : '') +
-              '</div>';
-          }).join('') + '</div>';
-        }).join('');
+        var near = 0;
+        for (var i = 1; i < items.length; i++) if (items[i].s - items[i - 1].s <= 10) near++;
+        var compact = items.length >= 8 && near / (items.length - 1) >= .7;
         var conc = wTlMaxConc(items);
-        html += '<div class="wl-tl-top"><span class="wl-tl-note">' + wHM(start) + ' – ' + wHM(end) + ' · 共 ' + hm(dayMin) + '</span>' +
-          (conc >= 2 ? '<span class="wl-tl-par">并行 ' + conc + ' 项</span>' : '') + '</div>' +
-          '<div class="wl-tl" style="height:' + H + 'px">' + grid + hours +
-          '<div class="wl-tl-lanes">' + lanesHtml + '</div>' + bands + '</div>';
+        html += '<div class="wl-tl-top"><span class="wl-tl-note">' +
+          esc(items[0].x.start) + ' 起 · 共 ' + hm(dayMin) + ' · ' +
+          (compact ? '密集记录 · 按顺序展开' : '间距自适应 · 时间以标签为准') + '</span>' +
+          (conc >= 2 ? '<span class="wl-tl-par">并行 ' + conc + ' 项</span>' : '') + '</div>';
+        html += '<div class="wl-tl wl-tl-flow" data-density="' + (compact ? 'compact' : 'adaptive') + '" role="list" aria-label="当天工作时间轴">';
+        var activeEnds = [];
+        html += items.map(function (it, index) {
+          var x = it.x, next = items[index + 1];
+          activeEnds = activeEnds.filter(function (end) { return end > it.s; });
+          var overlaps = activeEnds.length; activeEnds.push(it.e);
+          var delta = next ? Math.max(0, next.s - it.s) : 0;
+          // Local proportional reference spacing. The grid expands any row whose
+          // label/card is taller; dense steps require no post-render measurements.
+          // Widely separated start times are capped and explicitly labelled.
+          var step = compact && delta <= 10 ? 0 : Math.min(10, delta * .075);
+          var title = x.content || x.cat || '工作记录';
+          var actualTime = x.start + (x.end ? ' – ' + x.end : '（未填结束时间）');
+          var meta = (x.cat ? '<span>' + esc(x.cat) + '</span>' : '') +
+            (num(x.mins) ? '<span>⏱ ' + hm(x.mins) + '</span>' : '') +
+            (x.fromTask ? '<span>📌 来自任务</span>' : '') +
+            (x.jwKind ? '<span>纪检监察同步</span>' : '') +
+            (overlaps ? '<span>与前面 ' + overlaps + ' 项时段交叠</span>' : '');
+          return '<div class="wl-tl-row" role="listitem" style="--wl-time-step:' + step.toFixed(3) + 'rem">' +
+            '<div class="wl-tl-clock"><time>' + esc(x.start) + '</time>' +
+              (x.end ? '<time class="wl-tl-clock-end">– ' + esc(x.end) + '</time>' : '<span class="wl-tl-clock-open">未填结束</span>') + '</div>' +
+            '<div class="wl-tl-rail" aria-hidden="true"><span class="wl-tl-link"></span></div>' +
+            '<div style="min-width:0"><button type="button" class="wl-tl-event tap" data-act="wtl" data-id="' + esc(x.id) + '" aria-label="' + esc(actualTime + '，' + title + '，查看工作记录') + '">' +
+              '<span class="wl-tl-event-title">' + esc(title) + '</span>' +
+              (meta ? '<span class="wl-tl-event-meta">' + meta + '</span>' : '') +
+              (x.note ? '<span class="wl-tl-event-note">' + esc(x.note) + '</span>' : '') + '</button>' +
+              (delta > 120 ? '<span class="wl-tl-gap-note">下一条开始于 ' + esc(next.x.start) + ' · 相隔 ' + hm(delta) + '</span>' : '') +
+            '</div></div>';
+        }).join('') + '</div>';
       } else {
         html += '<div class="small muted" style="margin:4px 0 10px">这一天的记录都没填开始时间，补上时间后这里会显示时间轴。</div>';
       }
-
-      /* 没填开始时间的记录无法定位在轴上，单独列在轴下方，点开同样是详情弹窗 */
       if (noT.length) {
         html += '<div class="wl-tl-notime"><div class="wl-tl-notime-h">未填时间 · ' + noT.length + ' 条</div>' +
           noT.map(function (x) {
-            return '<div class="wl-tl-chip tap" data-act="wtl" data-id="' + x.id + '">' +
+            return '<button type="button" class="wl-tl-chip tap" data-act="wtl" data-id="' + esc(x.id) + '">' +
               esc(x.content || x.cat || '工作记录') +
-              (num(x.mins) ? '<span class="wl-tl-note">⏱ ' + hm(x.mins) + '</span>' : '') + '</div>';
+              (num(x.mins) ? '<span class="wl-tl-note">⏱ ' + hm(x.mins) + '</span>' : '') + '</button>';
           }).join('') + '</div>';
       }
       return html;
     },
-
     catStat: function () {
       var map = {};
       this.wFilteredToday().forEach(function (x) { map[x.cat || '未分类'] = (map[x.cat || '未分类'] || 0) + num(x.mins); });
