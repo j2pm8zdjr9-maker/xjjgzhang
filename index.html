@@ -12984,7 +12984,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     return row + '<div class="fold-detail">' +
       '<div class="fold-ops m-ops">' +
         /* 状态互斥：看完 → 不再显示 记阅读/弃了；弃了 → 不再显示 记阅读/看完（记阅读仅书籍未完结时可用） */
-        (x.type === 'book' && x.status !== '看完' && x.status !== '弃了' ? '<button class="link-btn tap" data-act="logtime" data-id="' + x.id + '">记阅读</button>' : '') +
+        (mediaStatus(x) !== '看完' && mediaStatus(x) !== '弃了' ? '<button class="link-btn tap" data-act="logtime" data-id="' + x.id + '">记' + mediaLogLabel(x) + '</button>' : '') +
         (x.end || x.status === '看完' || x.status === '弃了' ? '' : '<button class="link-btn tap" data-act="finish" data-id="' + x.id + '">看完</button>') +
         (x.status === '看完' || x.status === '弃了' ? '' : '<button class="link-btn tap" data-act="drop" data-id="' + x.id + '">弃了</button>') +
         '<button class="link-btn tap" data-act="minfo" data-id="' + x.id + '">详情</button>' +
@@ -13037,6 +13037,13 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     }
     return '<span class="badge grey">' + txt + '</span>';
   }
+  function mediaLogLabel(x) { return x.type === 'book' ? '阅读' : '观看'; }
+  function mediaStateActions(x) {
+    var st = mediaStatus(x);
+    if (st === '看完' || st === '弃了') return '';
+    return '<button class="link-btn tap" data-act="finish" data-id="' + esc(x.id) + '">看完</button>' +
+      '<button class="link-btn tap" data-act="drop" data-id="' + esc(x.id) + '">弃了</button>';
+  }
   function addReadLog(id) {
     var x = D().media.filter(function (a) { return a.id === id; })[0];
     if (!x) return;
@@ -13050,15 +13057,18 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         { k: 'to', label: '到（第几页）', type: 'number', min: 0, ph: '如：130' }
       );
     }
+    if (x.type === 'tv') fields.push({ k: 'episode', label: '本次观看集数', req: true, ph: '如：第3集、第3—5集，或第2季第1集' });
     fields.push({ k: 'mins', label: (isBook ? '本次阅读' : MT[x.type].v) + '时长（分钟）', type: 'number', min: 1, req: true, ph: '如：30' });
     UI.form({
       title: '记录' + MT[x.type].v,
-      desc: isBook ? '记录某天从哪页读到哪页、读了多久，自动更新当前页数' : '记录某天' + MT[x.type].v + '了多久',
+      desc: isBook ? '记录某天从哪页读到哪页、读了多久，自动更新当前页数' : (x.type === 'tv' ? '记录哪天看了哪集，以及本次观看的总时长' : '记录哪天观看，以及本次看了多长时间'),
       values: { d: U.today() },
       fields: fields
     }).then(function (v) {
       if (!v) return;
+      if (!v.d || !Number.isFinite(Number(v.mins)) || Number(v.mins) <= 0 || (x.type === 'tv' && !String(v.episode || '').trim())) { U.toast('请填写日期、有效时长和观看集数（电视剧）'); return; }
       var log = { id: U.uid(), d: v.d, mins: num(v.mins) };
+      if (x.type === 'tv') log.episode = String(v.episode).trim();
       if (isBook) {
         log.from = num(v.from) || 0;
         log.to = num(v.to) || 0;
@@ -13078,9 +13088,11 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
 
   /* 阅读日志单条：日期 · 第X→Y页 · 读Z */
   function renderLogItem(l, withDel, xid) {
+    var owner = D().media.filter(function (x) { return x.id === xid; })[0] || { type: 'book' };
     var parts = [U.fmtDate(l.d, true)];
-    if (l.from || l.to) parts.push('第 ' + (l.from || '0') + ' → ' + (l.to || '0') + ' 页');
-    if (l.mins) parts.push('读 ' + dur(l.mins));
+    if (owner.type === 'tv') parts.push(l.episode ? '集数：' + l.episode : '未记录集数');
+    if (owner.type === 'book' && (l.from || l.to)) parts.push('第 ' + (l.from || '0') + ' → ' + (l.to || '0') + ' 页');
+    if (l.mins) parts.push((owner.type === 'book' ? '读 ' : '观看 ') + dur(l.mins));
     return '<div class="item rl-item"><div class="item-main"><div class="item-meta">' +
       parts.map(function (p) { return '<span>' + esc(p) + '</span>'; }).join('') +
       '</div></div>' + (withDel ? '<button class="link-btn del tap" data-act="rmlog" data-id="' + xid + '" data-lid="' + l.id + '">×</button>' : '') + '</div>';
@@ -13092,15 +13104,16 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     var sorted = (x.readLogs || []).slice().sort(function (a, b) { return b.d.localeCompare(a.d); });
     var body = sorted.length
       ? '<div class="list">' + sorted.map(function (l) { return renderLogItem(l, true, x.id); }).join('') + '</div>'
-      : UI.empty('还没有阅读记录', '📖');
-    var el = UI.sheet('阅读记录 ·《' + x.title + '》', body,
-      '<button class="btn ghost tap" data-x>关闭</button><button class="btn primary tap" data-act="addlog2" data-id="' + x.id + '">+ 记阅读</button>');
+      : UI.empty('还没有' + mediaLogLabel(x) + '记录', MT[x.type].i);
+    var el = UI.sheet(mediaLogLabel(x) + '记录 ·《' + x.title + '》', body,
+      '<button class="btn ghost tap" data-x>关闭</button><button class="btn primary tap" data-act="addlog2" data-id="' + x.id + '">+ 记' + mediaLogLabel(x) + '</button>');
     el.addEventListener('click', function (e) {
       var b = e.target.closest('[data-act]'); if (!b) return;
       var a = b.dataset.act;
       if (a === 'rmlog') {
         var x2 = D().media.filter(function (m) { return m.id === b.dataset.id; })[0];
         removeLog(b.dataset.id, b.dataset.lid);
+        el.remove(); UI.unlock();
         openReadLogsAll(x2);
       } else if (a === 'addlog2') { el.remove(); UI.unlock(); addReadLog(b.dataset.id); }
     });
@@ -13152,7 +13165,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
               if (x.start && x.end) detailMeta.push('<span class="badge grey">历时 ' + (U.dayDiff(x.start, x.end) + 1) + ' 天</span>');
               if (total > 0) detailMeta.push('<span class="badge">⏱ 累计' + dur(total) + '</span>');
               var detailOps =
-                (x.type === 'book' && x.status !== '看完' && x.status !== '弃了' ? '<button class="link-btn tap" data-act="logtime" data-id="' + x.id + '">记阅读</button>' : '') +
+                (mediaStatus(x) !== '看完' && mediaStatus(x) !== '弃了' ? '<button class="link-btn tap" data-act="logtime" data-id="' + x.id + '">记' + mediaLogLabel(x) + '</button>' : '') +
                 (x.end || x.status === '看完' || x.status === '弃了' ? '' : '<button class="link-btn tap" data-act="finish" data-id="' + x.id + '">看完</button>') +
                 (x.status === '看完' || x.status === '弃了' ? '' : '<button class="link-btn tap" data-act="drop" data-id="' + x.id + '">弃了</button>') +
                 '<button class="link-btn tap" data-act="minfo" data-id="' + x.id + '">详情</button>' +
@@ -13701,7 +13714,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       '<span class="fold-caret">▾</span></div>';
     /* 展开详情：操作 + 备注 */
     var detail = '<div class="fold-detail">' +
-      '<div class="fold-ops">' + UI.ops(x.id, 'edit', 'del') + '</div>' +
+      '<div class="fold-ops">' + mediaStateActions(x) + UI.ops(x.id, 'edit', 'del') + '</div>' +
       (hasReview ? '<div class="note-text">📝 ' + esc(x.review) + '</div>' : '') +
       '</div>';
 
@@ -13711,20 +13724,22 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     if (logs.length) {
       var sorted = logs.slice().sort(function (a, b) { return b.d.localeCompare(a.d); });
       var show = sorted.slice(0, 5);
-      body += '<div class="small muted" style="margin:10px 0 6px">阅读记录（' + logs.length + ' 次）</div>' +
+      body += '<div class="small muted" style="margin:10px 0 6px">' + mediaLogLabel(x) + '记录（' + logs.length + ' 次）</div>' +
         '<div class="list rl-list">' + show.map(function (l) { return renderLogItem(l, true, x.id); }).join('') + '</div>';
       if (logs.length > 5) {
         body += '<button class="link-btn tap" data-act="morelogs" data-id="' + x.id + '" style="margin-top:6px">更多（' + logs.length + ' 次）›</button>';
       }
     } else {
-      body += '<p class="small muted" style="margin-top:8px">还没有阅读记录，点下面按钮添加。</p>';
+      body += '<p class="small muted" style="margin-top:8px">还没有' + mediaLogLabel(x) + '记录，点下面按钮添加。</p>';
     }
     var el = UI.sheet(MT[x.type].v + '记录 ·《' + x.title + '》', body,
-      '<button class="btn ghost tap" data-x>关闭</button><button class="btn primary tap" data-act="addlog" data-id="' + x.id + '">+ 记阅读</button>');
+      '<button class="btn ghost tap" data-x>关闭</button><button class="btn primary tap" data-act="addlog" data-id="' + x.id + '">+ 记' + mediaLogLabel(x) + '</button>');
     el.addEventListener('click', function (e) {
       var b = e.target.closest('[data-act]'); if (!b) return;
       var a = b.dataset.act;
-      if (a === 'addlog') { el.remove(); UI.unlock(); addReadLog(b.dataset.id); }
+      e.stopPropagation();
+      if (a === 'finish' || a === 'drop') { el.remove(); UI.unlock(); media.acts[a](b); }
+      else if (a === 'addlog') { el.remove(); UI.unlock(); addReadLog(b.dataset.id); }
       else if (a === 'edit') {
         UI.form({ title: '编辑' + MT[x.type].t + '记录', fields: mFields(x.type, x), values: x }).then(function (v) {
           if (!v) return;
@@ -13747,6 +13762,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         openReadLogsAll(D().media.filter(function (m) { return m.id === b.dataset.id; })[0]);
       } else if (a === 'rmlog') {
         removeLog(b.dataset.id, b.dataset.lid);
+        el.remove(); UI.unlock();
         openMediaInfo(id);
       }
     });
@@ -20021,15 +20037,33 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         (d.checkin.events || []).forEach(function (ev) {
           (ev.recs || []).forEach(function (r) { push(r.d, '事件', '📌', ev.name, r.note || ''); });
         });
-        /* 任务 */
+        /* Same-day task/worklog archive presentation only; never mutate records. */
+        var archiveTaskRows = new Map();
+        var archiveUnfinishedTasks = new Set((d.tasks || []).filter(function (x) { return x.status !== 'done'; }).map(function (x) { return String(x.id); }));
         (d.tasks || []).forEach(function (x) {
+          if (x.status !== 'done') return;
           var st = x.status === 'done' ? '已完成' : (x.status === 'doing' ? '进行中' : (x.status === 'archive' ? '已归档' : '待办'));
-          push(arTaskDate(x), '任务', '📌', x.title, [st, x.tag].filter(Boolean).join(' · '));
+          var day = arTaskDate(x);
+          push(day, '任务', '📌', x.title, [st, x.tag].filter(Boolean).join(' · '));
+          if (day && x.id != null && x.id !== '') {
+            var key = JSON.stringify([String(x.id), day]);
+            // Ambiguous duplicate IDs must not silently combine unrelated rows.
+            archiveTaskRows.set(key, archiveTaskRows.has(key) ? null : out[out.length - 1]);
+          }
         });
-        /* 工作留痕 */
+        /* 工作留痕：仅按明确来源关联、同一天合并；跨日期保留日期层级。 */
         (d.worklog || []).forEach(function (x) {
-          push(x.date, '工作', '📝', (x.content || '').slice(0, 60) || '工作记录',
-            [x.cat, [x.start, x.end].filter(Boolean).join('~')].filter(Boolean).join(' · '));
+          if (x.date > U.today()) return;
+          if (x.fromTask != null && x.fromTask !== '' && archiveUnfinishedTasks.has(String(x.fromTask))) return;
+          var row = x.fromTask != null && x.fromTask !== '' ? archiveTaskRows.get(JSON.stringify([String(x.fromTask), x.date])) : null;
+          var detail = [x.cat, [x.start, x.end].filter(Boolean).join('~')].filter(Boolean).join(' · ');
+          if (row) {
+            row.cat = '任务 / 工作';
+            var content = x.content && x.content !== row.title ? x.content : '';
+            row.meta += ' ｜ 留痕：' + [detail, content].filter(Boolean).join(' · ');
+          } else {
+            push(x.date, '工作', '📝', (x.content || '').slice(0, 60) || '工作记录', detail);
+          }
         });
         /* 学习 */
         (d.exam.records || []).forEach(function (x) {
@@ -20037,12 +20071,15 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
             [x.subject, x.contentCat, U.timeRangeText(x.start, x.end, x.mins)].filter(Boolean).join(' · '));
         });
         (d.exam.plans || []).forEach(function (x) {
+          if (!x.done) return;
           push(x.due, '学习', '🗓️', x.text || '学习计划', [x.subject, x.done ? '已完成' : '计划'].filter(Boolean).join(' · '));
         });
         /* 身体 */
         (d.body.measures || []).forEach(function (x) {
-          var ms = Object.keys(x).filter(function (k) { return ['id', 'date', 'note'].indexOf(k) < 0 && x[k] !== '' && x[k] != null; });
-          push(x.date, '身体', '🏃', ms.length ? ms.map(function (k) { return k + ' ' + x[k]; }).join(' · ') : '身体数据', x.note || '');
+          // Match the body module's supported measurements; exclude storage metadata.
+          var metrics = { weight: ['体重', '公斤'], waist: ['腰围', '厘米'], arm: ['臂围', '厘米'], hip: ['臀围', '厘米'], bust: ['胸围', '厘米'] };
+          var ms = Object.keys(metrics).filter(function (k) { return x[k] !== '' && x[k] != null; });
+          push(x.date, '身体', '🏃', ms.length ? ms.map(function (k) { return metrics[k][0] + ' ' + x[k] + ' ' + metrics[k][1]; }).join(' · ') : '身体数据', x.note || '');
         });
         (d.body.sports || []).forEach(function (x) {
           push(x.date, '身体', '🏃', '运动 · ' + (x.type || ''),
