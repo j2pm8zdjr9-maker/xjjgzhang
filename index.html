@@ -5385,40 +5385,6 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
  :is(#view,#modalRoot) :is(.fold-ops,.buy-item-ops,.consum-ops,.task-ops-row,.media-ops-row,.social-ops-row,.family-ops-row,.measure-ops-row,.charge-ops,.refuel-ops,.item-detail-ops,.wl-acts,.item-ops-row,.encourage-ops,.hist-ops,.ev-ops,.stock-ov-ops,.wish-ops,.cat-detail-ops,.cat-rec-ops) .link-btn {padding-left:7px;padding-right:7px;}
 }
 </style>
-<style id="smart-merge-style">.smart-merge-overlay{position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,.45);overflow:auto;padding:20px;}.smart-merge-panel{max-width:920px;margin:0 auto;background:var(--card,#fff);color:var(--brown,#222);padding:20px;border-radius:16px;overflow-wrap:anywhere}.smart-merge-panel fieldset{margin:14px 0;min-width:0;border:1px solid var(--line,#aaa);padding:12px}.smart-merge-panel button{margin:5px}.smart-merge-panel button:disabled{opacity:.4}.smart-merge-panel textarea{box-sizing:border-box;color:inherit;background:var(--card,#fff)}@media(max-width:600px){.smart-merge-overlay{padding:6px}.smart-merge-panel{padding:12px}}</style>
-<style id="worklog-timeline-collision-safe">
-/* Worklog timeline: intrinsic grid rows enforce visual collision constraints.
-   The row advances by max(time reference spacing, actual content height + gap).
-   Only the rail decorations are absolute; records and labels stay in normal flow. */
-.wl-tl-flow{--wl-row-gap:12px;--wl-col-gap:8px;--wl-min-row:3.5rem;position:relative;margin:0 0 2px;isolation:isolate;}
-.wl-tl-flow .wl-tl-row{display:grid;grid-template-columns:5.5em 20px minmax(0,1fr);column-gap:var(--wl-col-gap);align-items:start;box-sizing:border-box;min-block-size:max(var(--wl-min-row),var(--wl-time-step,0rem));padding-block-end:var(--wl-row-gap);min-width:0;}
-.wl-tl-flow .wl-tl-row:last-child{padding-block-end:0;min-block-size:0;}
-.wl-tl-flow .wl-tl-clock{min-width:0;text-align:right;padding-top:.625rem;font-size:12px;line-height:1.5;color:var(--brown-2);font-variant-numeric:tabular-nums;font-feature-settings:"tnum";}
-.wl-tl-flow .wl-tl-clock time{display:block;white-space:nowrap;}
-.wl-tl-flow .wl-tl-clock-end{font-size:11px;color:var(--brown-3);}
-.wl-tl-flow .wl-tl-clock-open{display:block;white-space:normal;font-size:11px;color:var(--brown-3);}
-.wl-tl-flow .wl-tl-rail{position:relative;align-self:stretch;min-width:0;pointer-events:none;}
-.wl-tl-flow .wl-tl-rail::before{content:"";position:absolute;left:50%;top:1rem;transform:translate(-50%,-50%);width:7px;height:7px;box-sizing:content-box;border:2px solid var(--card);border-radius:50%;background:var(--olive);z-index:2;}
-.wl-tl-flow .wl-tl-rail::after{content:"";position:absolute;left:50%;top:1rem;bottom:calc(-1 * (var(--wl-row-gap) + 1rem));border-left:1px solid var(--olive-24);}
-.wl-tl-flow .wl-tl-row:last-child .wl-tl-rail::after{display:none;}
-.wl-tl-flow .wl-tl-link{position:absolute;left:50%;right:calc(-1 * var(--wl-col-gap));top:1rem;border-top:1px solid var(--olive-24);}
-.wl-tl-flow .wl-tl-event{appearance:none;display:block;box-sizing:border-box;width:100%;min-width:0;min-height:44px;margin:0;padding:.625rem .75rem;text-align:left;font:inherit;color:var(--brown);background:var(--olive-10);border:1px solid var(--olive-24);border-left:3px solid var(--olive-soft);border-radius:8px;cursor:pointer;overflow:visible;transition:background-color .15s;}
-.wl-tl-flow .wl-tl-event:active{background:var(--olive-16);}
-.wl-tl-flow .wl-tl-event:focus-visible{outline:2px solid var(--olive);outline-offset:2px;}
-.wl-tl-flow .wl-tl-event-title{display:block;font-size:12px;font-weight:600;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal;}
-.wl-tl-flow .wl-tl-event-meta{display:flex;flex-wrap:wrap;gap:4px 8px;margin-top:5px;min-width:0;font-size:11px;line-height:1.5;color:var(--brown-2);}
-.wl-tl-flow .wl-tl-event-meta>span{min-width:0;overflow-wrap:anywhere;}
-.wl-tl-flow .wl-tl-event-note{display:block;margin-top:7px;padding-top:6px;border-top:1px solid var(--line);font-size:12px;line-height:1.6;color:var(--brown-2);white-space:pre-wrap;overflow-wrap:anywhere;}
-.wl-tl-flow .wl-tl-gap-note{display:block;margin-top:6px;font-size:11px;line-height:1.4;color:var(--brown-3);overflow-wrap:anywhere;}
-.wl-tl-top{flex-wrap:wrap;}
-.wl-tl-notime .wl-tl-chip{min-height:44px;white-space:pre-wrap;overflow-wrap:anywhere;}
-@media(max-width:600px){
- .wl-tl-flow{--wl-col-gap:5px;--wl-row-gap:10px;}
- .wl-tl-flow .wl-tl-row{grid-template-columns:4.8em 14px minmax(0,1fr);}
- .wl-tl-flow .wl-tl-event{padding:.625rem .5rem;}
-}
-
-</style>
 </head>
 <body data-page-node-id="k17xPH9tcBxJoIx0pey0qQ">
 
@@ -5466,307 +5432,6 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
 <div data-page-node-id="rxZcCV2RMlVThUj9RcHKyz" id="modalRoot"></div>
 <div data-page-node-id="LXJfnRaE5Sj0TBVYf5XEtP" class="toast-root" id="toastRoot"></div>
 <script data-page-node-id="mx27KRPkX5qXfhTmk4efos" data-pnid-children="eXQFr7p3bzttk7RsDRtSUE">
-/* Workbench smart backup merge. No timestamp-based winner selection. */
-(function (w) {
-  'use strict';
-  const KEY = 'workbench.v1', DEVICE = 'workbench.sync.device', UNDO = 'workbench.sync.undo';
-  const META = new Set(['createdAt','updatedAt','revision','parentRevision','deviceId','deviceName','deletedAt','_history']);
-  const clone = x => x === undefined ? undefined : JSON.parse(JSON.stringify(x));
-  const obj = x => x !== null && typeof x === 'object' && !Array.isArray(x);
-  const stable = x => JSON.stringify(x, function(k,v) { return obj(v) ? Object.keys(v).sort().reduce((a,k)=>(a[k]=v[k],a),{}) : v; });
-  const eq = (a,b) => stable(a) === stable(b);
-  const now = () => new Date().toISOString();
-  function uuid() { const a = new Uint8Array(16); w.crypto.getRandomValues(a); return Array.from(a,x=>x.toString(16).padStart(2,'0')).join(''); }
-  // Two independent hashes; full content is always checked before accepting equal revisions.
-  function hash(s) { let a=2166136261,b=5381; for(let i=0;i<s.length;i++){a=Math.imul(a^s.charCodeAt(i),16777619);b=Math.imul(b,33)^s.charCodeAt(i);}return (a>>>0).toString(16)+(b>>>0).toString(16); }
-  function safe(x, depth=0) {
-    if(depth>80) throw Error('数据嵌套过深');
-    if(x && typeof x==='object') Object.keys(x).forEach(k=>{if(['__proto__','constructor','prototype'].includes(k)) throw Error('文件含不安全字段'); safe(x[k],depth+1);});
-  }
-  function content(x) {
-    if(Array.isArray(x)) return x.map(content);
-    if(!obj(x)) return x;
-    const v={}; Object.keys(x).forEach(k=>{if(!META.has(k))v[k]=content(x[k]);});return v;
-  }
-  function rootContent(x){const d=clone(x);META.forEach(k=>delete d[k]);return d;}
-  function device() {
-    let d=JSON.parse(localStorage.getItem(DEVICE)||'null');
-    if(!d){d={id:uuid(),name:/iPhone|iPad/i.test(navigator.userAgent)?'iPhone / iPad':'当前电脑或手机'};localStorage.setItem(DEVICE,JSON.stringify(d));}
-    if(!d.id || typeof d.name!=='string') throw Error('设备标识损坏，请先保存现有备份');return d;
-  }
-  function recordArray(a) { return Array.isArray(a) && a.length>0 && a.every(obj); }
-  function normalizeNested(v, old, dev, path, legacy) {
-    if(Array.isArray(v)) {
-      if(!recordArray(v) && !(Array.isArray(old)&&old.some(obj))) return clone(v);
-      if(!v.every(obj)) throw Error(path+' 的记录列表结构异常');
-      const used=new Set(), occurrences=new Map(), previous=new Map((old||[]).map(r=>[String(r.id),r]));
-      const out=v.map((r,i)=>{
-        r=clone(r);if(r.id===undefined||r.id===''){const fingerprint=hash(path+'|'+stable(content(r))),occurrence=occurrences.get(fingerprint)||0;occurrences.set(fingerprint,occurrence+1);r.id=legacy?'legacy-'+fingerprint+'-'+occurrence:uuid();}
-        const id=String(r.id);if(used.has(id))throw Error(path+' 存在重复 id：'+id);used.add(id);
-        const p=previous.get(id), data={};Object.keys(r).forEach(k=>{if(!META.has(k))data[k]=normalizeNested(r[k],p&&p[k],dev,path+'/'+id+'/'+k,legacy);});
-        data.deleted=!!data.deleted;
-        const changed=p&&!eq(content(data),content(p)),fresh=!p&&!r.revision&&!legacy;
-        return Object.assign(data,{createdAt:p?p.createdAt:(r.createdAt||r.created||r.date||(fresh?now():'1970-01-01T00:00:00.000Z')),updatedAt:changed||fresh?now():(r.updatedAt||'1970-01-01T00:00:00.000Z'),revision:changed||fresh?uuid():(r.revision||'legacy-'+hash(stable(content(data)))),parentRevision:changed?p.revision:(r.parentRevision||null),deviceId:changed||fresh?dev.id:(r.deviceId||'legacy'),deviceName:changed||fresh?dev.name:(r.deviceName||'历史设备'),...(data.deleted?{deletedAt:r.deletedAt||now()}:{})});
-      });
-      (old||[]).forEach(r=>{if(!used.has(String(r.id))){const t=clone(r);if(!t.deleted)Object.assign(t,{deleted:true,deletedAt:now(),updatedAt:now(),parentRevision:t.revision,revision:uuid(),deviceId:dev.id,deviceName:dev.name});out.push(t);}});
-      return out;
-    }
-    if(obj(v)){const o={};Object.keys(v).forEach(k=>o[k]=normalizeNested(v[k],old&&old[k],dev,path+'/'+k,legacy));return o;}
-    return v;
-  }
-  function visible(v) { if(Array.isArray(v))return v.filter(x=>!obj(x)||!x.deleted).map(visible);if(obj(v)){const o={};Object.keys(v).forEach(k=>o[k]=visible(v[k]));return o;}return v; }
-  const ident = (path,id) => JSON.stringify([path,id]);
-  function flatten(data, legacy, dev) {
-    const entries=[], containers=[];
-    function visit(v,path){
-      if(path[0]==='_sync'||path[0]==='ui')return;
-      if(Array.isArray(v)){
-        const config=/^(finance\.(catExpense|catIncome))$/.test(path.join('.'));
-        if(!config&&(recordArray(v)||v.length===0)){
-          containers.push(path);
-          normalizeNested(v,null,dev,path.join('/'),legacy).forEach(r=>entries.push({path,id:r.id,kind:'record',data:r}));return;
-        }
-      }
-      if(obj(v)&&Object.keys(v).length){Object.keys(v).forEach(k=>visit(v[k],path.concat(k)));return;}
-      entries.push({path,id:'field-'+hash(stable(path)),kind:'value',data:{value:clone(v),deleted:false}});
-    }
-    visit(data,[]);return {entries,containers};
-  }
-  function stamp(e,dev,parent,legacy){
-    const suppliedCreated=e.data.createdAt,d=rootContent(e.data);e.data=d;
-    Object.assign(e,{createdAt:parent?parent.createdAt:(e.createdAt||suppliedCreated||d.created||d.date||(legacy?'1970-01-01T00:00:00.000Z':now())),updatedAt:legacy?'1970-01-01T00:00:00.000Z':now(),revision:legacy?'legacy-'+hash(stable([e.path,e.id,content(d)])):uuid(),parentRevision:parent?parent.revision:null,deviceId:legacy?'legacy':dev.id,deviceName:legacy?'历史设备':dev.name,deleted:!!d.deleted});
-    if(e.deleted)e.deletedAt=now();else delete e.deletedAt;
-    return e;
-  }
-  function bounded(nodes){const m=new Map();nodes.forEach(n=>{if(n&&n.revision&&!m.has(n.revision))m.set(n.revision,clone(n));});let size=0;return Array.from(m.values()).filter((n,i)=>{size+=stable(n).length;return i<12&&(i===0||size<600000);});}
-  const snapshot=e=>({revision:e.revision,parentRevision:e.parentRevision,parents:e.parents||[],data:content(e.data)});
-  function validateEntry(e){
-    if(!obj(e)||!validPath(e.path)||!['record','value'].includes(e.kind)||!['string','number'].includes(typeof e.id)||!obj(e.data)||typeof e.revision!=='string'||!Array.isArray(e.history)||e.history.length>12)throw Error('同步版本结构异常');
-    if(e.kind==='record'&&e.data.id!==e.id)throw Error('记录 id 与版本索引不一致');
-    if(typeof e.deleted!=='boolean'||typeof e.createdAt!=='string'||typeof e.updatedAt!=='string'||typeof e.deviceId!=='string'||!(e.parentRevision===null||typeof e.parentRevision==='string')||(e.parents!==undefined&&(!Array.isArray(e.parents)||e.parents.some(r=>typeof r!=='string'))))throw Error('缺少必要版本字段');
-    if(!!e.data.deleted!==e.deleted)throw Error('删除标记不一致');
-    e.history.forEach(n=>{if(!obj(n)||typeof n.revision!=='string'||!obj(n.data)||!(n.parentRevision===null||typeof n.parentRevision==='string')||(n.parents!==undefined&&(!Array.isArray(n.parents)||n.parents.some(r=>typeof r!=='string'))))throw Error('历史版本异常');});
-  }
-  const validPath=p=>Array.isArray(p)&&p.length&&p.every(k=>typeof k==='string'&&k&&!['_sync','ui','__proto__','constructor','prototype'].includes(k));
-  const collectionPaths='tasks media anniv social wish family worklog schedules checkin.habits checkin.events exam.exams exam.plans exam.records exam.notes body.measures body.sports body.meals vehicles.ev.charges vehicles.ev.soh vehicles.fuel.refuels items.stock items.buy items.consum finance.accounts finance.flows finance.goals diary.entries cat.pets cat.deworm cat.vaccine cat.food cat.litter baby.growth baby.milestones baby.vaccines baby.illnesses baby.allergies baby.checkups baby.eduTasks baby.resources jiwei.cases jiwei.inspects jiwei.submits jiwei.punish'.split(' ');
-  function validateShape(d){
-    'checkin exam body vehicles items finance diary cat baby jiwei settings ui'.split(' ').forEach(k=>{if(d[k]!==undefined&&!obj(d[k]))throw Error(k+' 模块结构异常');});
-    collectionPaths.forEach(path=>{let v=d;for(const k of path.split('.'))v=v&&v[k];if(v!==undefined&&(!Array.isArray(v)||!v.every(obj)))throw Error(path+' 必须是记录列表');});
-  }
-  function decode(input, dev){
-    safe(input);const d=clone(input&&input.data&&obj(input.data)?input.data:input);
-    if(!obj(d)||!Object.keys(d).some(k=>['tasks','finance','checkin','jiwei','worklog','body','diary','baby','settings'].includes(k)))throw Error('不是可识别的工作台备份');
-    validateShape(d);
-    if(d.tasks!==undefined&&!Array.isArray(d.tasks))throw Error('任务列表格式错误');
-    let ledger;
-    if(d._sync){
-      if(d._sync.schema!==1||!Array.isArray(d._sync.entries)||!Array.isArray(d._sync.containers))throw Error('不支持或损坏的同步格式');
-      ledger=clone(d._sync);ledger.entries.forEach(validateEntry);if(ledger.containers.some(p=>!validPath(p)))throw Error('集合路径异常');
-      const ids=new Set();ledger.entries.forEach(e=>{const k=ident(e.path,e.id);if(ids.has(k))throw Error('备份中存在重复记录');ids.add(k);});
-      const projection=materialize(ledger,d.ui);delete d._sync;
-      const actual=flatten(d,true,dev), expected=flatten(projection,true,dev);
-      const sorted=f=>f.entries.map(e=>[e.path,e.id,content(e.data)]).sort((a,b)=>stable(a.slice(0,2)).localeCompare(stable(b.slice(0,2))));
-      if(!eq(sorted(actual),sorted(expected)))throw Error('备份正文与版本信息不一致；可能被旧版工作台改写，请使用未改写的备份');
-    } else {
-      const f=flatten(d,true,dev);ledger={schema:1,containers:f.containers,entries:f.entries.map(e=>{stamp(e,dev,null,true);e.history=[];return e;})};
-    }
-    return ledger;
-  }
-  function put(root,path,value){let p=root;path.slice(0,-1).forEach(k=>{if(!obj(p[k]))p[k]={};p=p[k];});p[path[path.length-1]]=value;}
-  function materialize(ledger,ui){
-    const types=new Map();ledger.entries.filter(e=>!e.deleted).forEach(e=>{const path=JSON.stringify(e.path);if(types.has(path)&&types.get(path)!==e.kind)throw Error('同一路径同时含配置和业务记录');types.set(path,e.kind);});
-    const leaves=ledger.entries.filter(e=>!e.deleted&&e.kind==='value');leaves.forEach(e=>{for(let i=1;i<e.path.length;i++)if(types.get(JSON.stringify(e.path.slice(0,i))))throw Error('配置路径发生结构冲突');});
-    const d={};ledger.containers.forEach(p=>put(d,p,[]));
-    ledger.entries.forEach(e=>{
-      if(e.deleted)return;
-      if(e.kind==='value'){put(d,e.path,clone(e.data.value));return;}
-      let p=d;e.path.slice(0,-1).forEach(k=>{if(!obj(p[k]))p[k]={};p=p[k];});const k=e.path[e.path.length-1];if(!Array.isArray(p[k]))p[k]=[];
-      const r=visible(clone(e.data));META.forEach(k=>{if(k!=='_history'&&e[k]!==undefined)r[k]=e[k];});r.deleted=false;p[k].push(r);
-    });d.ui=clone(ui||{last:'settings',tabs:{}});return d;
-  }
-  function reconcile(previous,data,dev){
-    const f=flatten(data,false,dev), map=new Map(previous.entries.map(e=>[ident(e.path,e.id),e])), next=[];
-    f.entries.forEach(e=>{
-      const k=ident(e.path,e.id), p=map.get(k);map.delete(k);
-      if(e.kind==='record'&&p){e.data=normalizeNested([e.data],[p.data],dev,e.path.join('/'),false)[0];}
-      e.data=rootContent(e.data);
-      if(p&&eq(content(p.data),content(e.data))){next.push(clone(p));return;}
-      stamp(e,dev,p,false);e.history=p?bounded([snapshot(p),...p.history]):[];next.push(e);
-    });
-    map.forEach(p=>{if(p.deleted){next.push(clone(p));return;}const e=clone(p);e.data.deleted=true;stamp(e,dev,p,false);e.history=bounded([snapshot(p),...p.history]);next.push(e);});
-    return {schema:1,containers:uniquePaths([...previous.containers,...f.containers]),entries:next,...(previous.undoKey?{undoKey:previous.undoKey}:{})};
-  }
-  const uniquePaths = a => Array.from(new Map(a.map(p=>[JSON.stringify(p),p])).values());
-  function three(base,a,b,path,conflicts){
-    if(eq(a,b))return clone(a);if(eq(a,base))return clone(b);if(eq(b,base))return clone(a);
-    if(obj(a)&&obj(b)&&a.deleted&&b.deleted)return clone(a);
-    if(obj(a)&&obj(b)&&!!a.deleted!==!!b.deleted){conflicts.push(path+'（删除与修改）');return clone(a);}
-    if(obj(a)&&obj(b)&&obj(base)){
-      const out={};new Set([...Object.keys(base),...Object.keys(a),...Object.keys(b)]).forEach(k=>{if(META.has(k))return;const v=three(base[k],a[k],b[k],path?path+'.'+k:k,conflicts);if(v!==undefined)out[k]=v;});return out;
-    }
-    if(Array.isArray(a)&&Array.isArray(b)&&Array.isArray(base)&&[...a,...b,...base].every(x=>obj(x)&&x.id!==undefined)){
-      const am=new Map(a.map(x=>[String(x.id),x])),bm=new Map(b.map(x=>[String(x.id),x])),cm=new Map(base.map(x=>[String(x.id),x]));const out=[];
-      new Set([...am.keys(),...bm.keys(),...cm.keys()]).forEach(k=>{const v=three(cm.get(k),am.get(k),bm.get(k),path+'['+k+']',conflicts);if(v!==undefined)out.push(v);});return out;
-    }
-    conflicts.push(path||'整条记录');return clone(a);
-  }
-  function graph(a,b){
-    const m=new Map();[snapshot(a),...a.history,snapshot(b),...b.history].forEach(n=>{const p=m.get(n.revision);if(p&&(!eq(p.data,n.data)||p.parentRevision!==n.parentRevision||!eq(p.parents||[],n.parents||[])))throw Error('相同版本号对应不同内容或父版本，已停止合并');m.set(n.revision,n);});
-    const done=new Set(),visiting=new Set();function check(r){if(!r||done.has(r)||!m.has(r))return;if(visiting.has(r))throw Error('版本关系存在循环，已停止合并');visiting.add(r);const n=m.get(r);[n.parentRevision,...(n.parents||[])].forEach(check);visiting.delete(r);done.add(r);}m.forEach(n=>check(n.revision));return m;
-  }
-  function ancestors(e,g){const seen=new Set(),q=[e.revision];while(q.length){const r=q.shift();if(!r||seen.has(r))continue;seen.add(r);const n=g.get(r);if(n)q.push(n.parentRevision,...(n.parents||[]));}return seen;}
-  function merged(a,b,data,dev){const e=clone(a);e.data=a.kind==='record'?normalizeNested([data],[a.data],dev,a.path.join('/'),false)[0]:clone(data);stamp(e,dev,a,false);e.parents=[a.revision,b.revision];e.history=bounded([snapshot(a),snapshot(b),...a.history,...b.history]);return e;}
-  function analyze(local,remote,dev){
-    const m=new Map(remote.entries.map(e=>[ident(e.path,e.id),e])), rows=[];
-    local.entries.forEach(a=>{
-      const k=ident(a.path,a.id),b=m.get(k);m.delete(k);let result=clone(a),type='无变化',fields=[];
-      if(b){
-        const g=graph(a,b), aa=ancestors(a,g),bb=ancestors(b,g);
-        if(a.revision===b.revision){if(!eq(content(a.data),content(b.data)))throw Error('版本内容不一致');}
-        else if(aa.has(b.revision))type='采用较新版本';
-        else if(bb.has(a.revision)){result=clone(b);type=b.deleted?'删除':'采用较新版本';}
-        else if(eq(content(a.data),content(b.data))||(a.deleted&&b.deleted)){result=merged(a,b,a.data,dev);type='自动合并';}
-        else {
-          const shared=Array.from(aa).filter(r=>bb.has(r)&&g.has(r));
-          const best=shared.filter(r=>!shared.some(other=>other!==r&&ancestors({revision:other},g).has(r)));
-          const common=best.length===1?best[0]:null;
-          if(!common){fields=['缺少可靠共同基线：需人工确认'];type='冲突';}
-          else {const data=three(g.get(common).data,content(a.data),content(b.data),'',fields);if(fields.length)type='冲突';else{result=merged(a,b,data,dev);type=result.deleted?'删除':'自动合并';}}
-        }
-      }
-      rows.push({a:clone(a),b:clone(b),result,type,fields});
-    });m.forEach(b=>rows.push({b:clone(b),result:clone(b),type:b.deleted?'删除':'新增记录',fields:[]}));
-    const out={rows,containers:uniquePaths([...local.containers,...remote.containers]),localCount:local.entries.filter(e=>e.kind==='record'&&!e.deleted).length,remoteCount:remote.entries.filter(e=>e.kind==='record'&&!e.deleted).length};
-    mergeWaterTotals(out,local,remote,dev);out.relationWarnings=relationIssues(rows.map(r=>r.result));return out;
-  }
-  function mergeWaterTotals(plan,local,remote,dev){
-    function sum(l,date){const logs=l.entries.filter(e=>e.kind==='record'&&eq(e.path,['body','waterLog',date]));return logs.length?Math.max(0,logs.filter(e=>!e.deleted).reduce((n,e)=>n+(Number(e.data.amount)||0),0)):null;}
-    plan.rows.forEach(r=>{const e=r.result;if(r.resolved||e.path.length!==3||e.path[0]!=='body'||e.path[1]!=='water'||e.deleted)return;const date=e.path[2],a=sum(local,date),b=sum(remote,date),total=sum({entries:plan.rows.map(x=>x.result)},date);
-      if(total===null||Number(e.data.value)===total)return;
-      if(r.a&&r.b&&a!==null&&b!==null&&Number(r.a.data.value)===a&&Number(r.b.data.value)===b){r.result=merged(r.a,r.b,{value:total,deleted:false},dev);r.type='自动合并';r.fields=[];}
-      else if(r.a&&r.b){r.type='冲突';r.fields=['饮水总量与合并后的明细不一致；请核对手动总量'];}
-    });
-  }
-  // Existing foreign keys are preserved verbatim. Do not commit newly dangling links.
-  const relations=[['finance.flows','acc','finance.accounts'],['finance.flows','acc2','finance.accounts'],['exam.plans','recordId','exam.records'],['exam.records','planId','exam.plans'],['tasks','caseId','jiwei.cases'],['worklog','caseId','jiwei.cases'],['worklog','fromTask','tasks'],['jiwei.inspects','wlogId','worklog'],['jiwei.submits','wlogId','worklog'],...['deworm','vaccine','food','litter'].map(k=>['cat.'+k,'pet','cat.pets'])];
-  function relationIssues(entries){const all=new Map(entries.map(e=>[e.path.join('.')+'|'+e.id,e]));const issues=[];
-    relations.forEach(([path,field,target])=>entries.filter(e=>!e.deleted&&e.path.join('.')===path).forEach(e=>{const id=e.data[field];if(!id)return;const parent=all.get(target+'|'+id);if(parent&&parent.deleted)issues.push({record:ident(e.path,e.id),target:ident(parent.path,parent.id),message:path+' 的 '+field+' 引用了已删除的 '+target+'（'+id+'）'});}));return issues;
-  }
-  const api={decode,materialize,reconcile,analyze,three,clone,content,device,merged,relationIssues};w.SmartSync=api;
-  if(typeof module!=='undefined')module.exports=api;
-  if(!w.document)return;
-  let ledger=null,baseline=null,disk=null,installed=false,blocked=false,busy=false;
-  function bundle(l,ui){const d=materialize(l,ui);d._sync=clone(l);return d;}
-  api.readView=d=>bundle(decode(d,device()),d.ui);
-  function fail(e){w.U?w.U.toast('未执行：'+e.message,7000):alert(e.message);}
-  function idb(action,key,value){return new Promise((resolve,reject)=>{const r=indexedDB.open('workbench_kv',1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains('kv'))r.result.createObjectStore('kv');};r.onblocked=()=>reject(Error('数据库被其他页面占用'));r.onerror=()=>reject(r.error);r.onsuccess=()=>{const db=r.result,tx=db.transaction('kv',action==='get'?'readonly':'readwrite');const req=action==='put'?tx.objectStore('kv').put(value,key):tx.objectStore('kv')[action](key);let result;req.onsuccess=()=>result=req.result;tx.oncomplete=()=>{db.close();resolve(result);};tx.onabort=tx.onerror=()=>{db.close();reject(tx.error||Error('数据库事务失败'));};};});}
-  const mirror=d=>idb('put',KEY,d);
-  api.prepareStorage=async function(){
-    if(localStorage.getItem(KEY))return;
-    try{const fallback=await idb('get',KEY);if(fallback&&!localStorage.getItem(KEY)){decode(fallback,device());localStorage.setItem(KEY,JSON.stringify(fallback));}}
-    catch(e){fail(Error('读取本地兜底备份失败，已停止启动以保护数据：'+e.message));throw e;}
-  };
-  let mirrorQueue=Promise.resolve();
-  function queueMirror(d){mirrorQueue=mirrorQueue.catch(()=>{}).then(()=>mirror(clone(d)));mirrorQueue.catch(()=>{});}
-  function adopt(d){ledger=decode(d,device());w.Store.data=materialize(ledger,d.ui);baseline=clone(w.Store.data);disk=localStorage.getItem(KEY);}
-  api.restoreFallback=function(d){if(disk!==localStorage.getItem(KEY)||ledger&&ledger.entries.some(e=>e.deviceId!=='legacy'))return;let l=decode(d,device());if(w.Store._syncWithDefaults)l=reconcile(l,w.Store._syncWithDefaults(materialize(l,d.ui)),device());const full=bundle(l,d.ui);localStorage.setItem(KEY,JSON.stringify(full));adopt(full);w.App.refresh();};
-  api.finishRestore=function(fallback,hadLS){try{if(fallback&&!hadLS)api.restoreFallback(fallback);w.Store._restoring=false;queueMirror(bundle(ledger,w.Store.data.ui));}catch(e){blocked=true;w.Store._restoring=false;fail(e);}};
-  function persist(l,ui){
-    if(blocked)throw Error('本地数据异常，已禁止写入');
-    if(localStorage.getItem(KEY)!==disk)throw Error('其他标签页已修改数据，请刷新后重试');
-    const full=bundle(l,ui),raw=JSON.stringify(full);localStorage.setItem(KEY,raw);
-    disk=raw;ledger=clone(l);baseline=materialize(l,ui);if(!w.Store._restoring)queueMirror(full);return full;
-  }
-  api.install=function(){
-    if(installed)return;installed=true;const store=w.Store,load=store.load;
-    store.load=function(){
-      let previous=null;
-      try{const raw=localStorage.getItem(KEY);if(raw)previous=decode(JSON.parse(raw),device());}catch(e){blocked=true;store._loaded=false;fail(e);throw e;}
-      load.call(store);const normalized=previous?reconcile(previous,store.data,device()):decode(store.data,device());ledger=normalized;disk=localStorage.getItem(KEY);store.data=materialize(ledger,store.data.ui);baseline=clone(store.data);
-      // Persist automatic migration once, including stable ids. No business data replacement.
-      persist(ledger,store.data.ui);return store.data;
-    };
-    store.save=function(silent){
-      if(!store._loaded)return;
-      if(busy)throw Error('正在保存合并快照，请稍候');
-      try{const l=reconcile(ledger,store.data,device());persist(l,store.data.ui);
-        // Retain object references used by open editors; copy only version fields / new ids.
-        function patch(a,b){if(Array.isArray(a)&&Array.isArray(b)){a.forEach((x,i)=>patch(x,b[i]));}else if(obj(a)&&obj(b)){Object.keys(b).forEach(k=>{if(META.has(k)||k==='id'||k==='deleted')a[k]=clone(b[k]);else if(a[k]&&typeof a[k]==='object')patch(a[k],b[k]);});}}
-        patch(store.data,baseline);store.ok=true;if(!silent&&document.getElementById('saveFlag'))document.getElementById('saveFlag').textContent='已保存';return true;
-      }catch(e){store.ok=false;store.data=clone(baseline);fail(e);throw e;}
-    };
-    window.addEventListener('storage',e=>{if(e.key===KEY)fail(Error('其他标签页已更新工作台，请刷新后继续操作'));});
-  };
-  function download(d,name){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(d)],{type:'application/json'}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000);}
-  api.export=function(){try{w.Store.save(true);const data=bundle(ledger,w.Store.data.ui);delete data._sync.undoKey;download({app:'个人工作台',version:2,exportedAt:now(),device:device(),data},'工作台备份-'+new Date().toISOString().slice(0,10)+'.json');w.U.toast('备份已生成，请在浏览器下载或保存文件');}catch(e){fail(e);}};
-  function checkPreview(raw,memory){if(raw!==localStorage.getItem(KEY)||!eq(memory,w.Store.data))throw Error('预览期间数据发生变化，请取消后重新选择备份');}
-  api.commit=async function(plan,raw,memory){
-    if(busy||w.Store._restoring)throw Error('本地存储尚未就绪，请稍后重试');
-    checkPreview(raw,memory);if(plan.rows.some(r=>r.type==='冲突'&&!r.resolved))throw Error('请先处理全部冲突');
-    plan=clone(plan);mergeWaterTotals(plan,{entries:plan.rows.filter(r=>r.a).map(r=>r.a)},{entries:plan.rows.filter(r=>r.b).map(r=>r.b)},device());
-    if(plan.rows.some(r=>r.type==='冲突'&&!r.resolved))throw Error('处理后的饮水明细与总量仍有冲突，请核对来源数据后重新预览');
-    const l={schema:1,containers:plan.containers,entries:plan.rows.map(r=>clone(r.result))};l.entries.forEach(validateEntry);
-    const existing=new Set(relationIssues(ledger.entries).map(x=>x.message));const broken=relationIssues(l.entries).filter(x=>!existing.has(x.message));if(broken.length)throw Error('关联记录仍有冲突：'+broken[0].message+'。请取消合并并先处理这组关联记录。');
-    const before=localStorage.getItem(KEY),oldUndo=ledger.undoKey,newUndo=UNDO+'.'+uuid();l.undoKey=newUndo;const full=bundle(l,w.Store.data.ui);decode(full,device());
-    // IndexedDB avoids doubling localStorage usage. Await transaction completion before writing main data.
-    busy=true;
-    try{await mirrorQueue;checkPreview(raw,memory);await idb('put',newUndo,{savedAt:now(),raw:before});checkPreview(raw,memory);
-      persist(l,w.Store.data.ui);w.Store.data=materialize(l,w.Store.data.ui);w.App.refresh();
-      if(oldUndo&&oldUndo!==newUndo)idb('delete',oldUndo).catch(()=>{});
-    }catch(e){if(localStorage.getItem(KEY)===before)idb('delete',newUndo).catch(()=>{});throw e;}finally{busy=false;}
-  };
-  api.undo=async function(){try{if(busy)throw Error('正在保存，请稍候');const undoKey=ledger.undoKey;if(!undoKey)throw Error('没有可恢复的合并前备份');const b=await idb('get',undoKey);if(!b||!b.raw)throw Error('合并前快照不可用，请使用导出的安全备份');const d=JSON.parse(b.raw),l=decode(d,device());if(!confirm('恢复最近一次合并前的完整数据？合并后的编辑也会撤销。'))return;l.undoKey=undoKey;persist(l,d.ui);w.Store.data=materialize(l,d.ui);w.App.refresh();w.U.toast('已恢复合并前备份');}catch(e){fail(e);}};
-  api.rename=function(){try{const d=device(),name=prompt('当前设备名称（内部设备 id 保持不变）',d.name);if(name===null)return;d.name=name.trim().slice(0,80)||'未命名设备';localStorage.setItem(DEVICE,JSON.stringify(d));w.U.toast('设备名称已保存');}catch(e){fail(e);}};
-  function legacyMatch(input,remote,local){
-    const data=input&&input.data||input;if(data._sync)return false;
-    const candidates=remote.entries.filter(e=>e.kind==='record'&&String(e.id).startsWith('legacy-')&&!local.entries.some(a=>eq(a.path,e.path)&&a.id===e.id)&&local.entries.some(a=>eq(a.path,e.path)&&String(a.id).startsWith('legacy-')));
-    if(!candidates.length)return false;
-    const overlay=document.createElement('div');overlay.className='smart-merge-overlay';const panel=document.createElement('section');panel.className='smart-merge-panel';overlay.appendChild(panel);
-    const intro=document.createElement('p');intro.textContent='这份历史备份有记录缺少原始 id，且与本地内容不同。无法可靠判断是新增还是旧记录修改，请先确认身份；此步骤不会写入数据。';panel.appendChild(intro);
-    const selections=[];
-    candidates.forEach(e=>{const label=document.createElement('label');label.style.display='block';label.textContent=e.path.join('.')+' · '+(e.data.title||e.data.name||e.id);const select=document.createElement('select');select.style.cssText='display:block;max-width:100%;margin:8px 0 16px';
-      const options=[['','请选择'],['new','确实是独立新增记录']];local.entries.filter(a=>eq(a.path,e.path)&&String(a.id).startsWith('legacy-')).forEach(a=>options.push([String(a.id),'对应本地：'+(a.data.title||a.data.name||a.id)+(a.deleted?'（已删除）':'')]));
-      options.forEach(([value,text])=>{const o=document.createElement('option');o.value=value;o.textContent=text;select.appendChild(o);});label.appendChild(select);panel.appendChild(label);selections.push({e,select});});
-    const next=document.createElement('button');next.className='btn tap';next.textContent='继续生成合并预览';next.onclick=()=>{try{selections.forEach(({e,select})=>{if(!select.value)throw Error('请逐项确认历史记录身份');});const selected=new Set();selections.forEach(({e,select})=>{if(select.value==='new')return;const key=ident(e.path,select.value);if(selected.has(key))throw Error('不能把两条历史记录对应到同一条本地记录');selected.add(key);});
-      const mapped=clone(remote);selections.forEach(({e,select})=>{if(select.value==='new')return;const target=mapped.entries.find(a=>ident(a.path,a.id)===ident(e.path,e.id));target.id=select.value;target.data.id=select.value;target.revision='legacy-'+hash(stable([target.path,target.id,content(target.data)]));});
-      const full=materialize(mapped);full._sync=mapped;overlay.remove();api.preview({data:full});
-    }catch(e){fail(e);}};panel.appendChild(next);const cancel=document.createElement('button');cancel.className='btn tap';cancel.textContent='取消';cancel.onclick=()=>overlay.remove();panel.appendChild(cancel);document.body.appendChild(overlay);return true;
-  }
-  api.preview=function(input){
-    try{
-      const dev=device(),remote=decode(input,dev),raw=localStorage.getItem(KEY),memory=clone(w.Store.data),local=reconcile(ledger,memory,dev),plan=analyze(local,remote,dev);
-      if(legacyMatch(input,remote,local))return;
-      const overlay=document.createElement('div');overlay.className='smart-merge-overlay';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-label','智能合并备份');
-      const panel=document.createElement('section');panel.className='smart-merge-panel';overlay.appendChild(panel);
-      function el(tag,text,parent=panel){const n=document.createElement(tag);n.textContent=text;parent.appendChild(n);return n;}
-      function btn(text,fn,parent=panel){const n=el('button',text,parent);n.className='btn tap';n.type='button';n.onclick=fn;return n;}
-      el('h2','智能合并备份 · 预览');el('p','当前设备：'+dev.name+' · '+dev.id);el('p','预览不会写入数据。历史基线不足时需人工选择；时间仅供参考。');
-      const counts={};plan.rows.forEach(r=>counts[r.type]=(counts[r.type]||0)+1);
-      el('p','本地记录 '+plan.localCount+' ｜ 导入记录 '+plan.remoteCount);
-      el('p',['新增记录','采用较新版本','自动合并','删除','冲突','无变化'].map(k=>k+' '+(counts[k]||0)).join(' ｜ '));
-      el('p','统计包含配置项；本地/导入记录数只计算主业务记录。只在本地存在的记录会完整保留。');
-      if(plan.relationWarnings.length)el('p','关联检查：'+plan.relationWarnings.map(x=>x.message).join('；')+'。新增悬空关联会阻止确认，请先在来源设备处理关联记录后重新导出。');
-      const detail=el('div','');detail.hidden=true;btn('查看合并详情',()=>detail.hidden=!detail.hidden);
-      const unresolved=el('p','');const actions=el('div','');let confirmBtn;
-      function progress(){const n=plan.rows.filter(r=>r.type==='冲突'&&!r.resolved).length;unresolved.textContent='尚未处理的冲突：'+n;confirmBtn.disabled=n>0;}
-      let conflictIndex=0;
-      plan.rows.forEach((r,i)=>{
-        const e=r.a||r.b,label=e.path.join('.')+' · '+(e.data.title||e.data.name||e.data.no||e.id);
-        el('p',r.type+'：'+label,detail);
-        if(r.type!=='冲突')return;
-        const box=el('fieldset','');el('legend','冲突 '+(++conflictIndex)+'：'+label,box);el('p','冲突字段：'+r.fields.join('、'),box);
-        [r.a,r.b].forEach((x,j)=>{el('p',(j?'导入备份':'当前设备')+' · '+x.updatedAt+' · '+x.deviceName+' ('+x.deviceId+')',box);const pre=el('pre',JSON.stringify(x.data,null,2),box);pre.style.cssText='max-height:220px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere';});
-        const state=el('p','尚未选择',box);
-        function resolve(data,label){r.result=merged(r.a,r.b,data,dev);r.resolved=true;state.textContent=label;progress();}
-        btn('保留当前版本',()=>resolve(r.a.data,'已选择当前版本'),box);btn('保留导入版本',()=>resolve(r.b.data,'已选择导入版本'),box);
-        const edit=el('textarea','',box);edit.value=JSON.stringify(r.a.data,null,2);edit.setAttribute('aria-label','手动编辑记录 JSON');edit.style.cssText='display:none;width:100%;min-height:200px';
-        btn('手动编辑后保存',()=>{if(edit.style.display==='none'){edit.style.display='block';return;}try{const d=JSON.parse(edit.value);safe(d);if(!obj(d)||d.id!==r.a.data.id||typeof d.deleted!=='boolean')throw Error('必须保留原 id 和布尔 deleted 字段');if(r.a.kind==='value'&&!Object.hasOwn(d,'value')&&!d.deleted)throw Error('必须保留 value 字段');resolve(d,'已保存手动编辑');}catch(e){state.textContent='未保存：'+e.message;}},box);
-      });
-      confirmBtn=btn('确认合并',async()=>{confirmBtn.disabled=true;try{await api.commit(plan,raw,memory);overlay.remove();w.U.toast('合并完成，可在设置中撤销最近一次合并');}catch(e){fail(e);progress();}},actions);btn('取消',()=>{if(!busy)overlay.remove();},actions);panel.appendChild(unresolved);panel.appendChild(actions);progress();document.body.appendChild(overlay);confirmBtn.focus();
-    }catch(e){fail(e);}
-  };
-})(typeof window!=='undefined'?window:globalThis);
-
 /* ================= 核心：存储 / 路由 / 工具 ================= */
 (function (w) {
   'use strict';
@@ -6026,7 +5691,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       try {
         var raw = localStorage.getItem(KEY);
         if (raw) {
-          this.data = merge(defaults(), w.SmartSync.readView(JSON.parse(raw)));
+          this.data = merge(defaults(), JSON.parse(raw));
           if (!this.data.settings.created) this.data.settings.created = today();
         } else {
           this.data = defaults();
@@ -6045,7 +5710,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
             this.data.settings.fontScale = 1.15;
           }
           this.data.settings._fsMigrated = true;
-          /* SmartSync commits all startup migrations together after validation. */
+          localStorage.setItem(KEY, JSON.stringify(this.data));
         }
       } catch (e) {}
       // 任务「未完成(archive)」功能下线、与「逾期」合并：历史 archive 任务迁回待办（仅一次性）
@@ -6053,7 +5718,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         if (!this.data.settings._archiveMigrated) {
           (this.data.tasks || []).forEach(function (x) { if (x.status === 'archive') { x.status = 'todo'; delete x.doneAt; } });
           this.data.settings._archiveMigrated = true;
-          /* SmartSync commits all startup migrations together after validation. */
+          localStorage.setItem(KEY, JSON.stringify(this.data));
         }
       } catch (e) {}
       // 财务分类升级为「一级 / 二级」两级结构（仅一次性，把旧的扁平分类名转成一级分类）
@@ -6070,7 +5735,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           this.data.finance.catExpense = normCats(this.data.finance.catExpense);
           this.data.finance.catIncome = normCats(this.data.finance.catIncome);
           this.data.settings._cat2Migrated = true;
-          /* SmartSync commits all startup migrations together after validation. */
+          localStorage.setItem(KEY, JSON.stringify(this.data));
         }
       } catch (e) {}
       // 财务支出分类重构：丢弃旧版默认分类、并入新 13 大类，保留其它自定义分类（仅一次性）
@@ -6085,7 +5750,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           });
           this.data.finance.catExpense = defE.concat(keptE);
           this.data.settings._catExpenseV3 = true;
-          /* SmartSync commits all startup migrations together after validation. */
+          localStorage.setItem(KEY, JSON.stringify(this.data));
         }
       } catch (e) {}
       // 财务收入分类重构：丢弃旧版默认分类、并入新 8 大类，保留其它自定义分类（仅一次性）
@@ -6100,7 +5765,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           });
           this.data.finance.catIncome = defI.concat(keptI);
           this.data.settings._catIncomeV3 = true;
-          /* SmartSync commits all startup migrations together after validation. */
+          localStorage.setItem(KEY, JSON.stringify(this.data));
         }
       } catch (e) {}
       // 充电地点名称规范化：公用充电桩→公共充电桩、单位充→在单位充（仅一次性，旧数据兼容）
@@ -6110,7 +5775,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           var charges = this.data.vehicles && this.data.vehicles.ev && this.data.vehicles.ev.charges;
           if (Array.isArray(charges)) charges.forEach(function (c) { if (c && c.place && PLACE_MAP[c.place]) c.place = PLACE_MAP[c.place]; });
           this.data.settings._evPlaceRename = true;
-          /* SmartSync commits all startup migrations together after validation. */
+          localStorage.setItem(KEY, JSON.stringify(this.data));
         }
       } catch (e) {}
       // 纪检监察处分台账：党纪处分旧种类名称迁移（警告→党内警告，严重警告→党内严重警告，避免影响期查不到）
@@ -6122,7 +5787,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
             else if (x.kind === '严重警告') x.kind = '党内严重警告';
           });
           this.data.settings._punishKindMigrated = true;
-          /* SmartSync commits all startup migrations together after validation. */
+          localStorage.setItem(KEY, JSON.stringify(this.data));
         }
       } catch (e) {}
       // 纪检监察处分台账：党纪处分「种类分类列表」旧名称迁移（警告→党内警告，严重警告→党内严重警告）
@@ -6138,7 +5803,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
             this.data.jwPunDisc = uniq;
           }
           this.data.settings._punishCatMigrated = true;
-          /* SmartSync commits all startup migrations together after validation. */
+          localStorage.setItem(KEY, JSON.stringify(this.data));
         }
       } catch (e) {}
       // 纪检监察处分台账：诫勉处理形式精简为「书面诫勉」单一选项，并将旧记录同步迁移
@@ -6154,7 +5819,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
             if (x.cat === '诫勉处理' && x.kind === '诫勉谈话') x.kind = '书面诫勉';
           });
           this.data.settings._punishJmMigrated = true;
-          /* SmartSync commits all startup migrations together after validation. */
+          localStorage.setItem(KEY, JSON.stringify(this.data));
         }
       } catch (e) {}
       // 纪检监察案件办理进度：在阶段末尾追加「信访反馈」（实名举报办结后反馈）
@@ -6166,7 +5831,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
             this.data.jwStages.push('信访反馈');
           }
           this.data.settings._stageXfFeedbackMigrated = true;
-          /* SmartSync commits all startup migrations together after validation. */
+          localStorage.setItem(KEY, JSON.stringify(this.data));
         }
       } catch (e) {}
       // 纪检监察阶段拆分：「立案审查调查」→「立案」+「审查调查」，可分别记录立案时间与审查调查结束时间
@@ -6195,13 +5860,24 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
             if (c.stage === '立案审查调查') c.stage = '审查调查';
           });
           this.data.settings._stageLiAnSplitMigrated = true;
-          /* SmartSync commits all startup migrations together after validation. */
+          localStorage.setItem(KEY, JSON.stringify(this.data));
         }
       } catch (e) {}
       // 兜底：若「加载时」本机 localStorage 为空（或被 webview 清空），尝试用 IndexedDB 镜像恢复
       try {
         Store._restoring = true;
-        IDB.get(KEY).then(function (fallback) { w.SmartSync.finishRestore(fallback, hadLS); }).catch(function () { Store._restoring = false; });
+        IDB.get(KEY).then(function (fallback) {
+          if (!fallback || typeof fallback !== 'object') { Store._restoring = false; return; }
+          if (hadLS) { Store._restoring = false; return; }
+          try {
+            localStorage.setItem(KEY, JSON.stringify(fallback));
+            Store.data = merge(defaults(), fallback);
+            if (!Store.data.settings.created) Store.data.settings.created = today();
+            Store._restoring = false;
+            if (App && App.refresh) App.refresh();
+            if (U && U.toast) U.toast('已从本地备份恢复数据');
+          } catch (e) { Store._restoring = false; }
+        }).catch(function () { Store._restoring = false; });
       } catch (e) { Store._restoring = false; }
       /* 预置示例数据：仅在全新空白账户首次注入，已有数据绝不覆盖 */
       try {
@@ -6209,7 +5885,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           seedSampleData(this.data);
           this.data.settings._seeded = true;
           this.data.settings.created = this.data.settings.created || today();
-          try { /* SmartSync commits all startup migrations together after validation. */ } catch (e2) {}
+          try { localStorage.setItem(KEY, JSON.stringify(this.data)); } catch (e2) {}
         }
       } catch (e) {}
       return this.data;
@@ -6236,7 +5912,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
          localStorage 空时会自动从 IndexedDB fallback 恢复旧数据，造成清不干净的错觉。 */
       this.data = defaults();
       this.save(true);
-      // SmartSync preserves soft-deletion markers in the IndexedDB mirror.
+      try { if (typeof IDB !== 'undefined' && IDB.del) IDB.del(KEY); } catch (e) {}
       /* 清掉所有相关 localStorage keys */
       var clearKeys = ['healing.workbench.v1', 'workbench.ai.chat', 'nasToken', 'wb:fab:pos'];
       clearKeys.forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} });
@@ -6786,7 +6462,6 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     }
   };
 
-  Store._syncWithDefaults = function (data) { return merge(defaults(), data); };
   w.Store = Store;
   w.App = App;
   w.Water = Water;
@@ -11238,7 +10913,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
 
   function wViewBar() {
     /* 文案要短：和右侧胶囊同排，长了会把胶囊挤到第二行（移动端要保持单行） */
-    var tip = wView === 'timeline' ? '时间轴 · 自动避让' : '按记录顺序';
+    var tip = wView === 'timeline' ? '时间轴 · 重叠分列' : '按记录顺序';
     return '<div class="row between" style="margin:0 0 10px;align-items:center;flex-wrap:nowrap">' +
       '<span class="small muted" style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + tip + '</span>' +
       '<span class="wl-view-switch" role="tablist" aria-label="工作留痕视图切换">' +
@@ -11661,67 +11336,92 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       return html + '</div>' + ListPager.pager('worklog:list', arr.length);
     },
 
-    /* Read-only timeline layout. Preserve the original start/end ordering and
-       date filtering; CSS intrinsic row sizing supplies the collision bound. */
+    /* 时间轴视图：纵坐标 = 真实分钟数（条长即耗时），重叠任务自动分列，包含关系套叠内嵌。
+       与列表视图共用同一份数据源与分类筛选；不分页（一天的量级不需要，且分页会破坏整轴布局）。 */
     timeline: function () {
       var arr = this.wFilteredToday();
       if (!arr.length) return UI.empty('今天还没有工作记录', '📝');
-      var prep = wTlPrepare(arr), items = prep.withT, noT = prep.noT;
+      var prep = wTlPrepare(arr);
+      var items = prep.withT, noT = prep.noT;
       var dayMin = arr.reduce(function (s, a) { return s + num(a.mins); }, 0);
       var html = '';
+
       if (items.length) {
-        // Same comparator as the existing timeline; never sort persisted data.
         items.sort(function (a, b) { return a.s - b.s || b.e - a.e; });
-        var near = 0;
-        for (var i = 1; i < items.length; i++) if (items[i].s - items[i - 1].s <= 10) near++;
-        var compact = items.length >= 8 && near / (items.length - 1) >= .7;
+        var laneN = wTlLanes(items);
+        /* 3 列以上每列只剩 ~53px，塞不下「HH:MM–HH:MM」——那时时间行只显示开始时间；
+           嵌套条还要左右内缩、更窄，直接不显示时间行（轴上的位置本身已经表达了时间） */
+        var narrow = laneN >= 3;
+        var s0 = items[0].s, e0 = items[0].e;
+        items.forEach(function (it) { if (it.e > e0) e0 = it.e; });
+        /* 上下各留 30 分钟再对齐到整点，避免条贴着轴的两端；跨零点夹到 [0,1440] */
+        var start = Math.max(0, Math.floor((s0 - 30) / 60) * 60);
+        var end = Math.min(1440, Math.ceil((e0 + 30) / 60) * 60);
+        if (end - start < 120) end = Math.min(1440, start + 120);
+        var span = end - start;
+        /* 跨度越大每小时越矮，整体高度控制在约 200~460px，不至于要滑很久 */
+        var hourH = span <= 360 ? 44 : (span <= 600 ? 36 : 28);
+        var k = hourH / 60;                       // 每分钟像素数
+        var H = Math.round(span * k);
+        var step = hourH >= 36 ? 60 : 120;        // 太矮时隔 2 小时才画一条刻度，免得标签叠在一起
+        var grid = '', hours = '';
+        for (var t = start; t <= end; t += step) {
+          var gtop = Math.round((t - start) * k * 10) / 10;
+          grid += '<div class="wl-tl-grid" style="top:' + gtop + 'px"></div>';
+          hours += '<div class="wl-tl-hour" style="top:' + (gtop - 7) + 'px">' + wHM(t) + '</div>';
+        }
+        /* 并行重叠时段底色带（套叠条不参与，它的包含关系本身已经画出来了） */
+        var bands = wTlBands(items.filter(function (it) { return !it.nest; })).map(function (b) {
+          return '<div class="wl-tl-band" style="top:' + (Math.round((b.s - start) * k * 10) / 10) +
+            'px;height:' + Math.max(3, Math.round((b.e - b.s) * k * 10) / 10) + 'px"></div>';
+        }).join('');
+        /* 按列分组渲染；列宽交给 flex 平分，因此不需要在 JS 里算像素宽度 */
+        var cols = [];
+        for (var i = 0; i < laneN; i++) cols.push([]);
+        items.forEach(function (it) { cols[it.lane].push(it); });
+        var lanesHtml = cols.map(function (list) {
+          return '<div class="wl-tl-lane">' + list.map(function (it) {
+            var x = it.x;
+            var bh = Math.max(20, Math.round((it.e - it.s) * k * 10) / 10);   // 下限 20px，太短的条也要点得到
+            /* 宿主条只渲染标题当“组头”，不渲染时间行——内部子条按真实时间定位，
+               父条的时间行会与第一个子条的顶部文字相撞（截图里「10:26–13:13」压着「李运堂谈话笔录」）。
+               子条自身显示时间，父条的时间跨度由子条 + 坐标轴表达 */
+            var isHost = !!it.hasNest;
+            var two = bh >= 52 && !isHost;    // 够高时标题折 2 行；宿主强制单行，避免压到子条
+            var showTime = (bh >= 36) && !isHost && !(narrow && it.nest);
+            var timeTxt = narrow ? wHM(it.s) : (wHM(it.s) + '–' + wHM(it.e));
+            var full = (x.content || x.cat || '工作记录') + '　' + wHM(it.s) + '–' + wHM(it.e) +
+              (it.open ? '（未填结束，按 ' + hm(Math.max(num(x.mins), 30)) + ' 估算）' : '');
+            return '<div class="wl-tl-bar tap' + (it.nest ? ' nest' : '') + (it.open ? ' open' : '') + (isHost ? ' host' : '') + '"' +
+              ' style="top:' + (Math.round((it.s - start) * k * 10) / 10) + 'px;height:' + bh + 'px;' +
+              (narrow && it.nest ? 'left:8px;right:8px;' : '') + '"' +
+              ' data-act="wtl" data-id="' + x.id + '" title="' + esc(full) + '">' +
+              '<div class="wl-tl-bar-t' + (two ? ' tw' : '') + '">' + esc(x.content || x.cat || '工作记录') + '</div>' +
+              (showTime ? '<div class="wl-tl-bar-s">' + timeTxt + '</div>' : '') +
+              '</div>';
+          }).join('') + '</div>';
+        }).join('');
         var conc = wTlMaxConc(items);
-        html += '<div class="wl-tl-top"><span class="wl-tl-note">' +
-          esc(items[0].x.start) + ' 起 · 共 ' + hm(dayMin) + ' · ' +
-          (compact ? '密集记录 · 按顺序展开' : '间距自适应 · 时间以标签为准') + '</span>' +
-          (conc >= 2 ? '<span class="wl-tl-par">并行 ' + conc + ' 项</span>' : '') + '</div>';
-        html += '<div class="wl-tl wl-tl-flow" data-density="' + (compact ? 'compact' : 'adaptive') + '" role="list" aria-label="当天工作时间轴">';
-        var activeEnds = [];
-        html += items.map(function (it, index) {
-          var x = it.x, next = items[index + 1];
-          activeEnds = activeEnds.filter(function (end) { return end > it.s; });
-          var overlaps = activeEnds.length; activeEnds.push(it.e);
-          var delta = next ? Math.max(0, next.s - it.s) : 0;
-          // Local proportional reference spacing. The grid expands any row whose
-          // label/card is taller; dense steps require no post-render measurements.
-          // Widely separated start times are capped and explicitly labelled.
-          var step = compact && delta <= 10 ? 0 : Math.min(10, delta * .075);
-          var title = x.content || x.cat || '工作记录';
-          var actualTime = x.start + (x.end ? ' – ' + x.end : '（未填结束时间）');
-          var meta = (x.cat ? '<span>' + esc(x.cat) + '</span>' : '') +
-            (num(x.mins) ? '<span>⏱ ' + hm(x.mins) + '</span>' : '') +
-            (x.fromTask ? '<span>📌 来自任务</span>' : '') +
-            (x.jwKind ? '<span>纪检监察同步</span>' : '') +
-            (overlaps ? '<span>与前面 ' + overlaps + ' 项时段交叠</span>' : '');
-          return '<div class="wl-tl-row" role="listitem" style="--wl-time-step:' + step.toFixed(3) + 'rem">' +
-            '<div class="wl-tl-clock"><time>' + esc(x.start) + '</time>' +
-              (x.end ? '<time class="wl-tl-clock-end">– ' + esc(x.end) + '</time>' : '<span class="wl-tl-clock-open">未填结束</span>') + '</div>' +
-            '<div class="wl-tl-rail" aria-hidden="true"><span class="wl-tl-link"></span></div>' +
-            '<div style="min-width:0"><button type="button" class="wl-tl-event tap" data-act="wtl" data-id="' + esc(x.id) + '" aria-label="' + esc(actualTime + '，' + title + '，查看工作记录') + '">' +
-              '<span class="wl-tl-event-title">' + esc(title) + '</span>' +
-              (meta ? '<span class="wl-tl-event-meta">' + meta + '</span>' : '') +
-              (x.note ? '<span class="wl-tl-event-note">' + esc(x.note) + '</span>' : '') + '</button>' +
-              (delta > 120 ? '<span class="wl-tl-gap-note">下一条开始于 ' + esc(next.x.start) + ' · 相隔 ' + hm(delta) + '</span>' : '') +
-            '</div></div>';
-        }).join('') + '</div>';
+        html += '<div class="wl-tl-top"><span class="wl-tl-note">' + wHM(start) + ' – ' + wHM(end) + ' · 共 ' + hm(dayMin) + '</span>' +
+          (conc >= 2 ? '<span class="wl-tl-par">并行 ' + conc + ' 项</span>' : '') + '</div>' +
+          '<div class="wl-tl" style="height:' + H + 'px">' + grid + hours +
+          '<div class="wl-tl-lanes">' + lanesHtml + '</div>' + bands + '</div>';
       } else {
         html += '<div class="small muted" style="margin:4px 0 10px">这一天的记录都没填开始时间，补上时间后这里会显示时间轴。</div>';
       }
+
+      /* 没填开始时间的记录无法定位在轴上，单独列在轴下方，点开同样是详情弹窗 */
       if (noT.length) {
         html += '<div class="wl-tl-notime"><div class="wl-tl-notime-h">未填时间 · ' + noT.length + ' 条</div>' +
           noT.map(function (x) {
-            return '<button type="button" class="wl-tl-chip tap" data-act="wtl" data-id="' + esc(x.id) + '">' +
+            return '<div class="wl-tl-chip tap" data-act="wtl" data-id="' + x.id + '">' +
               esc(x.content || x.cat || '工作记录') +
-              (num(x.mins) ? '<span class="wl-tl-note">⏱ ' + hm(x.mins) + '</span>' : '') + '</button>';
+              (num(x.mins) ? '<span class="wl-tl-note">⏱ ' + hm(x.mins) + '</span>' : '') + '</div>';
           }).join('') + '</div>';
       }
       return html;
     },
+
     catStat: function () {
       var map = {};
       this.wFilteredToday().forEach(function (x) { map[x.cat || '未分类'] = (map[x.cat || '未分类'] || 0) + num(x.mins); });
@@ -20437,12 +20137,11 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
           title: '💾 数据备份（本地）',
           sub: '当前占用 ' + kb + ' KB',
           body:
-            '<p class="small muted" style="margin-bottom:12px">电脑和手机均使用新版工作台：导出全部数据备份 → 另一设备智能合并 → 处理冲突并确认。合并前自动保存安全快照，可撤销最近一次合并。</p>' +
+            '<p class="small muted" style="margin-bottom:12px">数据默认只保存在本机浏览器。换设备或清理缓存前，建议导出一份留底，需要时再用「导入」恢复。</p>' +
             '<div class="row" style="gap:8px;flex-wrap:wrap">' +
             '<button class="btn tap" data-act="export">⬇ 导出全部数据备份</button>' +
-            '<button class="btn tap" data-act="import">⇄ 智能合并备份</button>' +
+            '<button class="btn tap" data-act="import">⬆ 导入备份文件</button>' +
             '</div>' +
-            '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn tap" data-act="smartUndo">撤销最近一次合并</button><button class="btn tap" data-act="smartDevice">当前设备名称</button></div>' +
             '<input type="file" id="fileIn" accept="application/json,.json" style="display:none">'
         }) +
         UI.card({
@@ -20619,10 +20318,20 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         var r = new FileReader();
         r.onload = function () {
           try {
-            SmartSync.preview(JSON.parse(r.result));
+            var obj = JSON.parse(r.result);
+            var payload = obj.data || obj;
+            if (typeof payload !== 'object') throw new Error('格式错误');
+            UI.confirm('导入备份？', '将用备份文件覆盖当前所有数据' + (obj.exportedAt ? '（备份时间 ' + obj.exportedAt + '）' : '') + '。', '确认导入')
+              .then(function (ok) {
+                if (!ok) return;
+                Store.data = payload;
+                if (!Store.data.ui) Store.data.ui = { last: 'settings', tabs: {} };
+                Store.data.settings = Store.data.settings || {};
+                Store.data.settings.privacy = true;
+                Store.save(); Store.load(); App.refresh(); U.toast('导入成功 ✅');
+              });
           } catch (e) { U.toast('文件解析失败，请确认是本应用导出的备份'); }
         };
-        r.onerror = function () { U.toast('文件读取失败，本地数据未改变'); };
         r.readAsText(file);
         this.value = '';
       };
@@ -20652,9 +20361,17 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
         U.toast(k === 'dark' ? '已切换深色 🌙' : k === 'light' ? '已切换浅色 ☀️' : '已跟随系统 🌗');
         App.refresh();
       },
-      export: function () { SmartSync.export(); },
-      smartUndo: function () { SmartSync.undo(); },
-      smartDevice: function () { SmartSync.rename(); },
+      export: function () {
+        var payload = { app: '个人工作台', version: 1, exportedAt: new Date().toLocaleString('zh-CN'), data: Store.data };
+        /* 紧凑序列化（无缩进）：与「当前占用」同口径，导出文件大小 ≈ 页面显示的占用值 */
+        var blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = '工作台备份-' + U.today() + '.json';
+        document.body.appendChild(a); a.click();
+        setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+        U.toast('备份文件已导出');
+      },
       import: function () { document.getElementById('fileIn').click(); },
       bmr: function () {
         UI.form({
@@ -23290,12 +23007,11 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       if (!x) return null;
       if (!Array.isArray(x.logs)) x.logs = [];
       var src = log.src || '', srcId = log.srcId || '';
-      var previousLog = src && srcId ? x.logs.filter(function (l) { return l.src === src && l.srcId === srcId; })[0] : null;
       if (src && srcId) {
         x.logs = x.logs.filter(function (l) { return !(l.src === src && l.srcId === srcId); });
       }
       var o = {
-        id: previousLog ? previousLog.id : U.uid(), d: log.d || U.today(), t: log.t || '',
+        id: U.uid(), d: log.d || U.today(), t: log.t || '',
         cat: log.cat || '', start: log.start || '', end: log.end || '',
         src: src, srcId: srcId
       };
@@ -23639,9 +23355,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
     return el;
   };
 
-  async function start() {
-    await SmartSync.prepareStorage();
-    SmartSync.install();
+  function start() {
     Store.load();
 
     // 一次性迁移：为历史充电记录固化"记录当时"的估算容量（之后新增里程不再改变历史充电）
