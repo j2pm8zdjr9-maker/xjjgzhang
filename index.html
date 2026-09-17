@@ -5385,6 +5385,31 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
  :is(#view,#modalRoot) :is(.fold-ops,.buy-item-ops,.consum-ops,.task-ops-row,.media-ops-row,.social-ops-row,.family-ops-row,.measure-ops-row,.charge-ops,.refuel-ops,.item-detail-ops,.wl-acts,.item-ops-row,.encourage-ops,.hist-ops,.ev-ops,.stock-ov-ops,.wish-ops,.cat-detail-ops,.cat-rec-ops) .link-btn {padding-left:7px;padding-right:7px;}
 }
 </style>
+<style id="mobile-readable-records">
+/* Content-driven cover widths also respond to the user's font zoom. */
+.media-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;align-items:start;}
+.media-grid .mc-card{min-width:0;max-width:22rem;width:100%;}
+.media-grid .mc-info{min-width:0;gap:6px;}
+.media-grid .mc-title{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;overflow-wrap:anywhere;line-height:1.5;}
+.media-grid .mc-meta{flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:5px;min-width:0;}
+.media-grid .mc-meta>span{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;max-width:100%;overflow-wrap:anywhere;}
+.media-grid .mc-meta .score{flex:none;flex-wrap:wrap;white-space:normal!important;}
+.media-grid .mc-sub{white-space:normal;overflow-wrap:anywhere;line-height:1.5;}
+@media(max-width:700px){
+ :root :is(body,#modalRoot) :is(.item-meta,.task-row-meta,.media-row-meta,.social-row-meta,.family-row-meta){flex-wrap:wrap!important;overflow:visible!important;min-width:0;}
+ :root :is(body,#modalRoot) :is(.item-meta,.task-row-meta,.media-row-meta,.social-row-meta,.family-row-meta)>*,
+ :root :is(body,#modalRoot) :is(.item-meta,.task-row-meta,.media-row-meta,.social-row-meta,.family-row-meta) .badge{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;overflow-wrap:anywhere;word-break:normal;max-width:100%!important;height:auto!important;}
+ :root :is(body,#modalRoot) :is(.item-title,.media-row-title,.stock-ov-name){white-space:normal!important;overflow:visible!important;text-overflow:clip!important;overflow-wrap:anywhere;line-height:1.5!important;height:auto!important;-webkit-line-clamp:unset!important;}
+ :root :is(body,#modalRoot) :is(.item-main,.media-row-main,.wl-hist-row-main){min-width:0;}
+ :root :is(body,#modalRoot) .pg-bar{flex-wrap:wrap!important;gap:8px!important;height:auto!important;}
+ :root :is(body,#modalRoot) .pg-bar>*{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;max-width:100%;}
+ :root :is(body,#modalRoot) .pg-info{flex:1 1 auto!important;text-align:center;}
+ :root :is(body,#modalRoot) :is(.fold-ops,.media-ops-row,.modal-foot){flex-wrap:wrap!important;height:auto!important;}
+ .rl-item .item-meta{gap:6px 12px!important;}
+}
+
+
+</style>
 </head>
 <body data-page-node-id="k17xPH9tcBxJoIx0pey0qQ">
 
