@@ -5410,6 +5410,16 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
 
 
 </style>
+<style id="compact-media-covers">
+/* Three-column cover summaries; complete content remains in the detail sheet. */
+.media-grid{grid-template-columns:repeat(3,minmax(0,1fr));align-items:start;}
+.media-grid .mc-info{padding:7px 7px 8px;gap:5px;}
+.media-grid .mc-title{display:block!important;-webkit-line-clamp:unset!important;line-clamp:unset;overflow:hidden!important;text-overflow:ellipsis!important;line-height:1.4!important;height:1.4em;white-space:nowrap!important;}
+.media-grid .mc-summary{display:flex;justify-content:space-between;align-items:center;gap:3px;font-size:11px;line-height:1.4;color:var(--brown-3);min-width:0;flex-wrap:wrap;}
+.media-grid .mc-summary>span{white-space:nowrap;}
+.media-grid .mc-summary{flex-wrap:nowrap;gap:3px;font-size:10px;} .media-grid .mc-summary .mc-rating{flex:0 0 auto;} .media-grid .mc-summary .mc-status{flex:0 0 auto;white-space:nowrap;line-height:1.4;}
+.media-grid .mc-rating{color:var(--brown-2);font-variant-numeric:tabular-nums;}
+</style>
 </head>
 <body data-page-node-id="k17xPH9tcBxJoIx0pey0qQ">
 
@@ -12953,6 +12963,13 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
   function mediaView() { return D().settings.mediaView === 'grid' ? 'grid' : 'list'; }
 
   /* 封面墙卡片：有封面显示封面，没有显示类型图标 + 标题的素色占位（点击开详情） */
+  function mediaCoverStatus(x) {
+    var status = mediaStatus(x);
+    if (status !== '看完' || !x.end) return status;
+    var match = String(x.end).match(/^(\d{4})-(\d{2})-(\d{2})(?:$|T| )/);
+    var date = match ? match[1] + '.' + Number(match[2]) + '.' + Number(match[3]) : String(x.end);
+    return date + '看完';
+  }
   function mediaCard(x) {
     var cover = x.cover
       ? '<div class="mc-cover"><img src="' + x.cover + '" alt="' + esc(x.title) + '" loading="lazy"></div>'
@@ -12961,8 +12978,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       cover +
       '<div class="mc-info">' +
         '<div class="mc-title" title="' + esc(x.title) + '">' + esc(x.title) + '</div>' +
-        '<div class="mc-meta"><span>' + esc(MT[x.type].t) + (x.tag ? ' · ' + esc(x.tag) : '') + '</span>' + UI.scoreTag(x.score) + '</div>' +
-        '<div class="mc-sub">' + (x.end ? '✓ ' + U.fmtDate(x.end) : '进行中') + '</div>' +
+        '<div class="mc-summary"><span class="mc-rating">' + (num(x.score) > 0 ? '★ ' + normScore(x.score) : '未评分') + '</span><span class="mc-status">' + esc(mediaCoverStatus(x)) + '</span></div>' +
       '</div></div>';
   }
 
@@ -13745,6 +13761,7 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
 
     var body = (x.cover ? '<div class="mi-cover"><img src="' + x.cover + '" alt="封面"></div>' : '') +
       row + detail +
+      '<div class="item-meta" style="margin-top:8px"><span>开始：' + esc(x.start || '未填写') + '</span><span>结束：' + esc(x.end || '未填写') + '</span></div>' +
       '<div class="row between" style="margin:10px 0 8px"><strong>累计' + MT[x.type].v + '时长</strong><span class="badge">' + dur(total) + '</span></div>';
     if (logs.length) {
       var sorted = logs.slice().sort(function (a, b) { return b.d.localeCompare(a.d); });
