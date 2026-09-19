@@ -15316,13 +15316,24 @@ div.empty .e-t{ font-size:14px !important; line-height:1.4 !important; }
       },
       /* 电池健康历史记录（时间筛选 + 分页 + 区间汇总），参考充电记录 evHist */
       sohHist: function () {
-        var cyc = sohCycles();
         Hist.open({
           modId: 'vehicle_soh',
+          acts: {
+            sohIgnore: function (t, e, redraw) {
+              e.stopPropagation();
+              vehicles.acts.sohIgnore(t);
+              redraw();
+            },
+            sohUse: function (t, e, redraw) {
+              e.stopPropagation();
+              vehicles.acts.sohUse(t);
+              redraw();
+            }
+          },
           title: '🔋 电池健康 · 周期记录',
           search: false,
           pager: false,
-          items: function () { return cyc; },
+          items: function () { return sohCycles(); },
           date: function (c) { return c.cur.date; },
           match: function (c, q) { return (c.cur.date + ' ' + num(c.cur.fromPct) + ' ' + num(c.cur.toPct)).toLowerCase().indexOf(q) >= 0; },
           sort: function (a, b) { return String(b.cur.date).localeCompare(String(a.cur.date)); },
